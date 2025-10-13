@@ -3,7 +3,8 @@ import React from "react";
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-content">
+      <div className="container">
+         <div className="footer-content">
         <div className="footer-main">
           <div className="footer-info">
             <img
@@ -150,6 +151,7 @@ export default function Footer() {
         <p className="footer-copyright">
           © 2025 SS Coaching. All rights reserved.
         </p>
+      </div>
       </div>
     </footer>
   );

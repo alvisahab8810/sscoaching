@@ -123,7 +123,7 @@ export default function StudentSuccess() {
   ];
 
   return (
-    <section className="students-section ">
+    <section className="students-section mobile-none">
       <div className="container">
         <Swiper
           modules={[Autoplay, FreeMode]}

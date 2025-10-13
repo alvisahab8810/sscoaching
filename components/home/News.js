@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function News() {
   return (
-       <section className="scrolling-banner">
+       <section className="scrolling-banner  mobile-none">
          <div className="banner-content">
             <div className="banner-item">NIOS Sample paper 2024</div>
             <div className="banner-item">Updated NIOS Syllabus For 10th 2025</div>

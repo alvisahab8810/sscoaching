@@ -2,7 +2,7 @@ import React from "react";
 
 export default function StepProcess() {
   return (
-    <section className="process-section">
+    <section className="process-section mobile-none">
       <div className="container">
         <div className="process-container">
           <div className="process-content">

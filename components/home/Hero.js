@@ -63,7 +63,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="hero-section">
+    <section className="hero-section mobile-none">
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
@@ -150,7 +150,7 @@ export default function Hero() {
         /* Swiper fade transition */
         :global(.swiper-fade .swiper-slide) {
           opacity: 0 !important;
-          transition: opacity 1s ease-in-out !important;
+          // transition: opacity 1s ease-in-out !important; 
         }
 
         :global(.swiper-fade .swiper-slide-active) {

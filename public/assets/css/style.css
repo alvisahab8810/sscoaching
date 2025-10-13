@@ -164,7 +164,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin: 0 42px;
+      /* margin: 0 42px; */
     }
 
     .chip-item {
@@ -1262,7 +1262,7 @@
     }
 
     .footer-content {
-      padding: 50px 56px 0;
+      /* padding: 50px 56px 0; */
     }
 
     .footer-main {
@@ -1279,8 +1279,8 @@
     }
 
     .footer-logo {
-      width: 288px;
-      height: 74px;
+      width: 228px;
+      /* height: 74px; */
       border-radius: 6px;
     }
 
@@ -1474,7 +1474,7 @@
       }
 
       .chip-item {
-        font-size: 18px;
+        font-size: 17px;
       }
 
       .students-grid {
@@ -1649,7 +1649,7 @@
       }
 
       .chip-item {
-        font-size: 18px;
+        font-size: 17px;
       }
 
       .student-score {
@@ -1806,7 +1806,7 @@
       }
     }
 
-    @media (min-width: 1280px) {
+    @media (min-width: 1240px) {
       .hero-section {
         padding: 70px 56px;
       }
@@ -1820,7 +1820,7 @@
       }
 
       .footer-content {
-        padding: 50px 56px 0;
+        padding: 60px 0px 0;
       }
     }
 
@@ -1832,6 +1832,10 @@
 
 
 
+
+    .desktop-none{
+      display: none;;
+    }
 
 
 
@@ -1866,6 +1870,11 @@
     margin-left: auto;
     margin-right: 0;
    }
+
+
+
+
+
 
    .process-1{
       width: 50%;

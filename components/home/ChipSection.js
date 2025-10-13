@@ -3,7 +3,7 @@ import React from "react";
 export default function ChipSection() {
   return (
     <>
-      <section className="chip-section">
+      <section className="chip-section mobile-none">
         <div className="container">
           <div className="chip-container">
             <div className="chip-item"><img src="/assets/icons/arrow.svg" alt="SS Coacning pass 10th & 12th"></img> Pass 10th & 12th in same year</div>

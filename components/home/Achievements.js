@@ -182,8 +182,8 @@ const videoSources = [
   "/assets/instagram/video4.mp4",
   "/assets/instagram/video5.mp4",
   "/assets/instagram/video6.mp4",
-  "/assets/instagram/video1.mp4",
-  "/assets/instagram/video2.mp4",
+  "/assets/instagram/video7.mp4",
+  "/assets/instagram/video8.mp4",
 ];
 
 export default function Instagram() {
@@ -232,7 +232,7 @@ export default function Instagram() {
             loop={true}
             slidesPerView={4}
             breakpoints={{
-              240: { slidesPerView: 2, spaceBetween: 10, centeredSlides: true },
+              240: { slidesPerView: 1.5, spaceBetween: 10, centeredSlides: true },
               768: { slidesPerView: 3, spaceBetween: 20 },
               1024: { slidesPerView: 4, spaceBetween: 20 },
             }}

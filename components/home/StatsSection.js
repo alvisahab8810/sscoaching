@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function StatsSection() {
   return (
-       <section className="stats-section">
+       <section className="stats-section mobile-none">
         <div className="container">
             <div className="stats-grid">
             <div className="stat-item">

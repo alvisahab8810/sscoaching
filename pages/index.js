@@ -11,12 +11,17 @@ import CTA3 from "@/components/home/CTA3";
 import FAQ from "@/components/home/FAQ";
 import GoogleReview from "@/components/home/GoogleReview";
 import Hero from "@/components/home/Hero";
+import HeroMobile from "@/components/home/HeroMobile";
 import LearnersNios from "@/components/home/LearnersNios";
+import LearnersNiosMobile from "@/components/home/LearnersNiosMobile";
 import News from "@/components/home/News";
+import NewsMobile from "@/components/home/NewsMobile";
 import NIOSInfo from "@/components/home/NIOSInfo";
 import QuickLinks from "@/components/home/QuickLinks";
+import RecongnitionMobile from "@/components/home/RecognitionMobile";
 import Recongnition from "@/components/home/Recongnition";
 import StatsSection from "@/components/home/StatsSection";
+import StatsSectionMobile from "@/components/home/StatsSectionMobile";
 import StepProcess from "@/components/home/StepProcess";
 import StudentSuccess from "@/components/home/StudentSuccess";
 import Head from "next/head";
@@ -34,11 +39,19 @@ export default function Home() {
 
       <section className="home-page-area">
            <Header/>
+           <NewsMobile/>
            <Hero/>
+           <HeroMobile/>
            <ChipSection/>
            <StudentSuccess/>
            <StatsSection/>
+           <StatsSectionMobile/>
            <News/>
+
+           <RecongnitionMobile/>
+
+           <LearnersNiosMobile/>
+      
            <GoogleReview/>
            <StepProcess/>
            <LearnersNios/>
@@ -46,6 +59,7 @@ export default function Home() {
              <CTA/>
            </div>
            <CoachingStream/>
+           
            <Recongnition/>
            <Achievements/>
             <div className="container">

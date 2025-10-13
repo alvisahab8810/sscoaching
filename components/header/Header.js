@@ -30,12 +30,8 @@ export default function Header() {
               <a href="#" className="nav-item">
                 FAQ
               </a>
-              <a href="#" className="nav-item">
-                Time Table
-              </a>
-              <a href="#" className="nav-item">
-                NIOS Datesheet
-              </a>
+      
+   
               <a href="#" className="nav-item">
                 Gallery
               </a>
@@ -43,7 +39,9 @@ export default function Header() {
                 Contact Us
               </a>
             </nav>
-            <button className="hamburger">☰</button>
+            <button className="hamburger">
+               <img src="/assets/icons/burger.svg" alt="Burger Menu"></img>
+            </button>
           </div>
         </header>
       </div>

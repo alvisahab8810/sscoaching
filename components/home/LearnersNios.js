@@ -6,7 +6,7 @@ import { Autoplay, Loop } from "swiper/modules";
 
 export default function LearnersNios() {
   return (
-    <section className="reviews-section">
+    <section className="reviews-section mobile-none">
       <div className="mini-container">
         <h2 className="section-title">
           Successfull Learners of  <span className="highlight"> NIOS Board</span>

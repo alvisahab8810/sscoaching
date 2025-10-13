@@ -5,6 +5,8 @@ export default function Document() {
     <Html lang="en">
          <Head>
         <link rel="stylesheet" href="/assets/css/style.css" />
+        <link rel="stylesheet" href="/assets/css/responsive.css" />
+
       </Head>
       <body>
         <Main />
