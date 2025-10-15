@@ -111,12 +111,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 38px;
+      gap: 20px;
     }
 
     .hero-title {
       font-size: 32px;
-      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-family: 'Be Vietnam Pro', Arial, sans-serif!important;
       font-weight: 700;
       line-height: 1.3;
       text-align: center;
@@ -148,6 +148,7 @@
       transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
+      margin-bottom: 0;
     }
 
     .cta-button:hover {
@@ -332,7 +333,7 @@
 
     /* Reviews Section */
     .reviews-section {
-      padding: 60px 0;
+      padding: 80px 0;
       background-color: #ffffff;
     }
 
@@ -602,15 +603,15 @@
     .cta-bg-1 {
       bottom: 0;
       right: 0;
-      width: 210px;
-      height: 210px;
+      width: 150px;
+      height: 150px;
     }
 
     .cta-bg-2 {
       top: 0;
       left: 0;
-      width: 210px;
-      height: 210px;
+      width: 150px;
+      height: 150px;
     }
 
     .cta-content {
@@ -619,7 +620,7 @@
       background-size: cover;
       background-position: center;
       border-radius: 20px;
-      padding: 100px 90px;
+      padding: 10px 90px;
       /* margin-left: 20px; */
       color: #ffffff;
     }
@@ -632,8 +633,6 @@
 
        .cta-content3{
       background-image: url("/assets/images/home/cta3.png")!important;
-
-
     }
 
     .cta-text {
@@ -643,19 +642,19 @@
     }
 
     .cta-title {
-      font-size: 55px;
+      font-size: 45px;
       font-family: 'Plus Jakarta Sans', Arial, sans-serif;
       font-weight: 700;
-      line-height: 56px;
-      margin-bottom: 20px;
+      line-height: 48px;
+      margin-bottom: 8px;
     }
 
     .cta-subtitle {
-      font-size: 25px;
-      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-      font-weight: 500;
+      font-size: 22px;
+      font-family: 'DM Sans';
+      font-weight: 300;
       line-height: 30px;
-      margin-bottom: 25px;
+      margin-bottom: 40px;
     }
 
     .cta-btn {
@@ -681,7 +680,7 @@
 
     /* Coaching Features */
     .coaching-section {
-      padding-top:60px
+      padding-top: 80px;
     }
 
     .coaching-title {
@@ -787,7 +786,7 @@
 
     /* Student Achievements */
     .achievements-section {
-      padding: 60px 0;
+      padding: 80px 0;
       background-color: #ffffff;
     }
 
@@ -871,14 +870,14 @@
 
     /* NIOS Info */
     .nios-info {
-      padding: 60px 0;
+      padding: 80px 0;
     }
 
     .nios-content {
       background-color: #ffffff;
       border-radius: 12px;
       /* padding: 24px; */
-      margin-bottom: 60px;
+      margin-bottom: 40px;
     }
 
     .nios-title {
@@ -968,7 +967,7 @@
     /* Best Coaching Features */
     .best-coaching {
       /* padding: 60px 0; */
-      padding-bottom: 60px;
+      padding-bottom: 80px;
     }
 
     .best-title {
@@ -1142,7 +1141,7 @@
     /* FAQ Section */
     .faq-section {
       /* padding: 60px 0; */
-      padding-bottom: 60px;
+      padding-bottom: 80px;
     }
 
     .faq-container {
@@ -1825,7 +1824,7 @@
       }
 
       .cta-section {
-        padding: 21px 21px;
+        padding: 10px 10px;
       }
 
       .footer-content {
@@ -2307,7 +2306,8 @@ ease;
       display: flex;
       flex-direction: column;
       gap: 24px;
-      margin-bottom: 100px;
+      margin-bottom: 80px;
+      padding-top: 80px;
     }
 
     .quick-links-title {
