@@ -15,12 +15,12 @@ export default function GoogleReview() {
         <div className="reviews-container">
           <Swiper
             modules={[Autoplay]}
-            spaceBetween={20}
+            spaceBetween={10}
             slidesPerView={4.2}
               breakpoints={{
               240: { slidesPerView: 1.2, spaceBetween: 10, centeredSlides: true },
-              768: { slidesPerView: 3, spaceBetween: 20 },
-              1024: { slidesPerView: 4, spaceBetween: 20 },
+              768: { slidesPerView: 3, spaceBetween: 10 },
+              1024: { slidesPerView: 4, spaceBetween: 10 },
             }}
             grabCursor={true}
             

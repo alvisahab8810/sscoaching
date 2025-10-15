@@ -6,10 +6,10 @@ export default function StatsSectionMobile() {
       <div className="container">
 
         <div className="info-mob-card">
-            <img src="/assets/icons/abstract.svg" alt="Abstract Icons" className="abstrac-icon"></img>
+            {/* <img src="/assets/icons/abstract.svg" alt="Abstract Icons" className="abstrac-icon"></img> */}
     
-            <h2 className="section-title-mobile">Best NIOS Board Coaching</h2>
-        <h2 className="highlight-mobile">in Uttar Pradesh</h2>
+            {/* <h2 className="section-title-mobile">Best NIOS Board Coaching</h2> */}
+        {/* <h2 className="highlight-mobile">in Uttar Pradesh</h2> */}
         <div className="stats-grid-items">
           <div className="stat-item">
             <div className="stat-icon">

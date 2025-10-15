@@ -15,8 +15,8 @@ export default function LearnersNios() {
         <div className="reviews-container">
           <Swiper
             modules={[Autoplay]}
-            spaceBetween={20}
-            slidesPerView={4.2}
+            spaceBetween={10}
+            slidesPerView={7}
             grabCursor={true}
             // centeredSlides={true}
             loop={true}

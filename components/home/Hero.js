@@ -1,22 +1,4 @@
-// import React from "react";
 
-// export default function Hero() {
-//   return (
-//     <section className="hero-section">
-//       <div className="container">
-//         <div className="hero-content">
-//           <h1 className="hero-title">
-//             <span className="brand">Best NIOS Board Coaching</span>{" "}
-//             <span className="highlight">in India</span>
-//           </h1>
-//           <a href="#" className="cta-button">
-//             Get admission
-//           </a>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
 
 "use client";
 import React from "react";

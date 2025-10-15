@@ -9,7 +9,11 @@ export default function NIOSInfo() {
             <span className="highlight">NIOS 2025:</span> A Year of Determination,
             Dreams & Success at SS Coaching
           </h2>
-          <p className="nios-text">
+
+          <p className="nios-text desktop-none">
+            Every success story begins with a courageous decision and at SS Coaching, we proudly celebrate the inspiring journeys of our NIOS Board students who dared to dream bigger and worked tirelessly to achieve their goals.
+          </p>
+          <p className="nios-text mobile-none">
             Every success story begins with a courageous decision and at SS
             Coaching, we proudly celebrate the inspiring journeys of our NIOS
             Board students who dared to dream bigger and worked tirelessly to

@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 export default function Header() {
   return (
     <section className="header-area">
@@ -39,9 +39,19 @@ export default function Header() {
                 Contact Us
               </a>
             </nav>
-            <button className="hamburger">
-               <img src="/assets/icons/burger.svg" alt="Burger Menu"></img>
-            </button>
+          
+
+
+            
+          <Link
+            className="hamburger desktop-none"
+            data-bs-toggle="offcanvas"
+            href="#offcanvasExample"
+            role="button"
+            aria-controls=" offcanvasExample"
+          >
+           <img src="/assets/icons/burger.svg" alt="Burger Menu"></img>
+          </Link>
           </div>
         </header>
       </div>

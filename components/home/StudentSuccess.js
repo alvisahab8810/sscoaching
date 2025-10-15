@@ -123,7 +123,7 @@ export default function StudentSuccess() {
   ];
 
   return (
-    <section className="students-section mobile-none">
+    <section className="students-section">
       <div className="container">
         <Swiper
           modules={[Autoplay, FreeMode]}
@@ -134,12 +134,12 @@ export default function StudentSuccess() {
             delay: 0,
             disableOnInteraction: false,
           }}
-          slidesPerView={5}
-          spaceBetween={20}
+          slidesPerView={7}
+          spaceBetween={10}
           breakpoints={{
-            0: { slidesPerView: 1.5 },
+            0: { slidesPerView: 2.5 },
             576: { slidesPerView: 2.5 },
-            992: { slidesPerView: 5 },
+            992: { slidesPerView: 7 },
           }}
           allowTouchMove={false}
           className="students-swiper"
