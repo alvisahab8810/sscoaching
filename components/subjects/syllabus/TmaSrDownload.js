@@ -18,7 +18,7 @@ export default function TmaSrDownload() {
         </p>
       </section>
 
-      <a href="#" className="cta-button ">
+      <a href="#" className="cta-button cta-button3">
         Don’t wait until the deadline! Download, solve, and submit your TMAs today for academic success.
       </a>
     </div>

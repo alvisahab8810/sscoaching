@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Contact() {
   return (
-    <div className="container pb-5">
-      <div className="main-contact">
+    <div className="container ">
+      <div className="main-contact main-contact2">
         <section className="content-section">
           <p className="section-text">
             From the year 2020 Tutor Marked Assignment in the Secondary/Senior

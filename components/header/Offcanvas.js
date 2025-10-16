@@ -13,7 +13,7 @@ export default function Offcanvas() {
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasExampleLabel">
             <Link
-              href="index.html"
+              href="/"
               className="d-flex align-items-center  mb-md-0 me-md-auto text-dark text-decoration-none desk-logo"
             >
               <img src="/assets/images/logo.png" alt="Logo Image" />
@@ -35,7 +35,21 @@ export default function Offcanvas() {
                  Home
                 </Link>
               </li>
-              <li className="nav-item mob-dropdown">
+
+                <li className="nav-item">
+                <Link href="#" className="nav-link">
+                  NIOS Admission
+                </Link>
+              </li>
+            
+              <li className="nav-item">
+                <Link href="#" className="nav-link">
+                  About Us
+                </Link>
+              </li>
+            
+
+            <li className="nav-item mob-dropdown">
               <div className="accordion" id="familyAccordion">
                   <div className="accordion-item">
                     <h2 className="accordion-header" id="headingOne">
@@ -47,7 +61,7 @@ export default function Offcanvas() {
                         aria-expanded="true"
                         aria-controls="collapseOne"
                       >
-                        NIOS Admission
+                        Subject List
                       </button>
                     </h2>
                     <div
@@ -58,8 +72,8 @@ export default function Offcanvas() {
                     >
                       <div className="accordion-body">
                         <ul className="list-unstyled">
-                          <li><Link href="#">- NIOS Admission1</Link></li>
-                          <li><Link href="#">- NIOS Admission2</Link></li>
+                          <li><Link href="/subject/syllabus-class-10th" className="mb-2">Syllabus Class 10th </Link></li>
+                          <li><Link href="/subject/syllabus-class-12th" className="mb-2">Syllabus Class 12th </Link></li>
                         </ul>
                       </div>
                     </div>
@@ -67,20 +81,52 @@ export default function Offcanvas() {
                 </div>
 
               </li>
-              <li className="nav-item">
-                <Link href="#" className="nav-link">
-                  About Us
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="#" className="nav-link">
-                   Subject List
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="#" className="nav-link">
-                  Ques. Papers
-                </Link>
+            
+
+             <li className="nav-item mob-dropdown">
+              <div className="accordion" id="questionPapers">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="qustionOne">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne"
+                        aria-expanded="true"
+                        aria-controls="collapseOne"
+                      >
+                         Ques. Papers
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseOne"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="qustionOne"
+                      data-bs-parent="#questionPapers"
+                    >
+                      <div className="accordion-body">
+                        <ul className="list-unstyled">
+
+                         <li><Link href="/question-papers/paper-secondary-10th" className="mb-2">Papers Secondary (10th)</Link></li>
+                         <li>
+                            <Link href="question-papers/paper-secondary-12th" className="mb-2">Papers Senior Secondary (12th)</Link>
+
+                          </li> 
+                          <li>
+                             <Link href="/question-papers/tma-secondary-10th" className="mb-2">TMA Secondary 10th </Link>
+                          </li>
+
+                          <li>
+                            <Link href="/question-papers/tma-sr-secondary-12th" className="mb-2">TMA Sr. Secodary 12th</Link>
+                          </li>
+                   
+                    
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </li>
               <li className="nav-item">
                 <Link href="#" className="nav-link">
@@ -97,7 +143,7 @@ export default function Offcanvas() {
 
               
                <li className="nav-item">
-                <Link href="#" className="nav-link">
+                <Link href="/contact-us" className="nav-link">
                   Contact Us
                 </Link>
               </li>

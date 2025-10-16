@@ -4,7 +4,7 @@ export default function SeniosSecondary() {
   return (
     <div className="senior-secondary-area">
       <div className="container">
-        <h2 className="mt-4">
+        <h2 className="secondary-main-h">
           <span className="section-title">For Senior Secondary (12th)</span>{" "}
         </h2>
 

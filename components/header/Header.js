@@ -104,11 +104,12 @@ export default function Header() {
                 <span className="dropdown-toggle">
                   Subject List <FiChevronDown className="arrow-icon" />
                 </span>
-                {openDropdown === "subjects" && (
+                {openDropdown  === "subjects" && (
                   <div className="dropdown-menu">
-                    <Link href="/question-papers/paper-secondary-10th">Secondary (10th)</Link>
-                    <Link href="question-papers/paper-secondary-12th">Senior Secondary (12th)</Link>
-                    <Link href="#">Vocational Subjects</Link>
+                    <Link href="/subject/syllabus-class-10th" className="mb-2">Syllabus Class 10th </Link>
+                    <Link href="/subject/syllabus-class-12th" className="mb-2">Syllabus Class 12th </Link>
+
+                    <Link href="#">Secondary Course Material</Link>
                   </div>
                 )}
               </div>
@@ -124,10 +125,10 @@ export default function Header() {
                 </span>
                 {openDropdown === "papers" && (
                   <div className="dropdown-menu">
-                    <Link href="/subject/syllabus-class-10th">Class 10th Papers</Link>
-                    <Link href="/subject/syllabus-class-12th">Class 12th Papers</Link>
-                    <Link href="/subject/tma-secondary-10th">TMA Secondary 10th </Link>
-                    <Link href="/subject/tma-secondary-10th">TMA Secodary 12th</Link>
+                    <Link href="/question-papers/paper-secondary-10th" className="mb-2">Papers Secondary (10th)</Link>
+                    <Link href="/question-papers/paper-secondary-12th" className="mb-2">Papers Senior Secondary (12th)</Link>
+                    <Link href="/question-papers/tma-secondary-10th" className="mb-2">TMA Secondary 10th </Link>
+                    <Link href="/question-papers/tma-sr-secondary-12th" className="mb-2">TMA Sr. Secodary 12th</Link>
 
                   </div>
                 )}
@@ -196,23 +197,30 @@ export default function Header() {
           display: flex;
           flex-direction: column;
           padding: 10px 15px;
-          min-width: 230px;
+          // min-width: 250px;
           z-index: 100;
           animation: fadeIn 0.2s ease;
+          width:fit-content;
+
+             white-space: nowrap; /* prevent breaking lines */
+          width: max-content; /* fit to content width */
+          min-width: 200px; /* ensure consistent min width */
 
         }
 
         .dropdown-menu a {
           padding: 10px 16px;
           color: #111;
-          text-decoration: none;
+          text-decoration: none!important;
           font-size: 15px;
           transition: all 0.2s ease;
+          margin-bottom:15px!important;
+          
         }
 
         .dropdown-menu a:hover {
           background-color: #f5f6ff;
-          color: #0056ff;
+          color: #111;
         }
 
         @keyframes fadeIn {

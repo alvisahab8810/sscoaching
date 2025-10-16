@@ -5,7 +5,7 @@ export default function Hero() {
     //    <!-- Hero Section -->
     <section className="qustion-paper-hero-section">
       <div className="container">
-        <div className="hero-text">
+        <div className="hero-text hero-text22">
           <h1 className="qustion-paper-hero-title">
            <span className="highlight">NIOS 12th Question Papers</span>   of Previous Years Examination and NIOS Sample Paper 2025 for Senior Secondary (12th) (Academic)
           </h1>
