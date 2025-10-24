@@ -28,12 +28,26 @@ h2, h1{
 
 }
 
+
+ul, li, a, p, h5, h6, h3, h4{
+ font-family: "DM Sans", sans-serif !important; 
+}
+
 @font-face {
   font-family: SF Pro Display;
   src: url(/assets/fonts/sfpro/SFPRODISPLAYBOLD.OTF);
 }
 
 
+
+
+
+.para-primary{
+    font-size: 16px!important;
+    font-weight: 400!important;
+    line-height: 20px!important;
+    color: #293347!important;
+}
 
 
 

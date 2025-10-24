@@ -5,7 +5,8 @@ export default function CoachingStream() {
     <section className="coaching-section">
       <div className="container">
         <h2 className="coaching-title">
-          WE ARE THE BEST NIOS COACHING IN <span className="brand">LUCKNOW</span>
+
+          We Are the Best Nios Coaching in <span className="highlight">India</span>
         </h2>
         <div className="coaching-grid">
           <div className="coaching-card">
@@ -22,10 +23,9 @@ export default function CoachingStream() {
             </div>
             <div className="coaching-content">
               <h3>
-                NIOS Stream 1<br />
-                (Saves Time)
+                NIOS Stream 1 (Saves Time)
               </h3>
-              <p>
+              <p className="para-primary">
                 9th & 11th failed students can get NIOS Admission to pass
                 directly 10th & 12th in Stream 1st of NIOS board by getting NIOS
                 Admission in best NIOS Coaching in Lucknow - CBSE Pattern (GOVT
@@ -45,10 +45,9 @@ export default function CoachingStream() {
             </div>
             <div className="coaching-content">
               <h3>
-                NIOS Stream 2<br />
-                (Saves Year)
+                NIOS Stream 2 (Saves Year)
               </h3>
-              <p>
+              <p className="para-primary">
                 Failed Student from any recognize board of India can get
                 admission & pass 10th & 12th the same year through NIOS board in
                 Stream 2- CBSE Pattern (GOVT OF INDIA).
@@ -67,11 +66,9 @@ export default function CoachingStream() {
             </div>
             <div className="coaching-content">
               <h3>
-                NIOS Stream 3 & 4
-                (Saves Time, Year
-               & Pass Quickly)
+                NIOS Stream 3 & 4 (Pass in 45 Days)
               </h3>
-              <p>
+              <p className="para-primary">
                 The students who fail any recognized board in India can pass
                 within 45 Days with the top On-Demand Examination System (ODES)
                 at NIOS board, following the CBSE pattern.

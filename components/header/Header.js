@@ -108,8 +108,9 @@ export default function Header() {
                   <div className="dropdown-menu">
                     <Link href="/subject/syllabus-class-10th" className="mb-2">Syllabus Class 10th </Link>
                     <Link href="/subject/syllabus-class-12th" className="mb-2">Syllabus Class 12th </Link>
-
-                    <Link href="#">Secondary Course Material</Link>
+                    <Link href="/subject/secondary-course-material" className="mb-2">Secondary Course Material</Link>
+                    <Link href="/subject/sr-secondary-course-material" className="mb-2">Sr Secondary Course Material</Link>
+                    
                   </div>
                 )}
               </div>
@@ -129,7 +130,6 @@ export default function Header() {
                     <Link href="/question-papers/paper-secondary-12th" className="mb-2">Papers Senior Secondary (12th)</Link>
                     <Link href="/question-papers/tma-secondary-10th" className="mb-2">TMA Secondary 10th </Link>
                     <Link href="/question-papers/tma-sr-secondary-12th" className="mb-2">TMA Sr. Secodary 12th</Link>
-
                   </div>
                 )}
               </div>
@@ -137,8 +137,11 @@ export default function Header() {
               <a href="#" className="nav-item">
                 FAQ
               </a>
-              <a href="#" className="nav-item">
+              <a href="/gallery" className="nav-item">
                 Gallery
+              </a>
+               <a href="/blogs" className="nav-item">
+                Blogs
               </a>
               <a href="/contact-us" className="nav-item">
                 Contact Us

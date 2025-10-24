@@ -2,30 +2,50 @@
 import React from "react";
 import { FaFilePdf } from "react-icons/fa";
 
-export default function SubjectTable() {
+export default function SrSecondaryCourseMaterial() {
   const subjects = [
-    { code: 201, name: "Hindi" },
-    { code: 202, name: "English" },
-    { code: 213, name: "Social Science" },
-    { code: 223, name: "Indian Culture and Heritage" },
-    { code: 225, name: "Painting" },
-    { code: 229, name: "Data Entry Operation" },
-    { code: 216, name: "Home Science" },
-    { code: 211, name: "Mathematics" },
-    { code: 212, name: "Science and Technology" },
-    { code: 214, name: "Economics" },
-    { code: 215, name: "Business Studies" },
-    { code: 222, name: "Psychology" },
-    { code: 224, name: "Accountancy" },
+    // New subjects
+    { code: 301, name: "Hindi" },
+    { code: 302, name: "English" },
+    { code: 309, name: "Sanskrit" },
+    { code: 311, name: "Mathematics" },
+    { code: 312, name: "Physics" },
+    { code: 313, name: "Chemistry" },
+    { code: 314, name: "Biology" },
+    { code: 315, name: "History" },
+    { code: 316, name: "Geography" },
+    { code: 317, name: "Political Science" },
+    { code: 318, name: "Economics" },
+    { code: 319, name: "Business Studies" },
+    { code: 320, name: "Accountancy" },
+    { code: 321, name: "Home Science" },
+    { code: 328, name: "Psychology" },
+    { code: 330, name: "Computer Science" },
+    { code: 331, name: "Sociology" },
+    { code: 332, name: "Painting" },
+    { code: 333, name: "Environmental Science" },
+    { code: 335, name: "Mass Communication" },
+    { code: 336, name: "Data Entry Operations" },
+    { code: 337, name: "Tourism" },
+    { code: 338, name: "Introduction To Law" },
+    { code: 373, name: "Physical Education And Yog" },
   ];
 
   return (
     <section className="subject-table-section ">
       <div className="container">
         <div className="hero-text ">
+          <h4 className="mb-4">
+            NIOS Sr Secondary Course Materials for Class 12th
+          </h4>
           <h1 className="qustion-paper-hero-title">
-            <span className="highlight text-left">NIOS Secondary Courses</span>
+            <span className="highlight text-left">Sr. Secondary Courses</span>
           </h1>
+
+          <p className="hero-description text-left">
+            {" "}
+            Curricuram of Sr. Secondary Course 2025{" "}
+          </p>
         </div>
 
         <div className="table-responsive">
@@ -70,7 +90,7 @@ export default function SubjectTable() {
           border-radius: 12px;
           overflow: hidden;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-              border: 1px solid #ddd;
+          border: 1px solid #ddd;
         }
 
         thead tr {
@@ -81,8 +101,8 @@ export default function SubjectTable() {
           color: #222;
           border-bottom: none;
           padding: 15px 10px;
-              font-size: 16px;
-    font-weight: 700;
+          font-size: 16px;
+          font-weight: 700;
         }
 
         tbody td {

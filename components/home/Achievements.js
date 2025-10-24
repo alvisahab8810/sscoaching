@@ -266,7 +266,7 @@ export default function Instagram() {
                     className="mute-toggle-button"
                     onClick={() => toggleMute(index)}
                   >
-                    {unmutedIndex === index ? <FaVolumeUp size={20} /> : <FaVolumeMute size={20} />}
+                    {unmutedIndex === index ? <FaVolumeUp size={15} /> : <FaVolumeMute size={15} />}
                   </button>
                 </div>
               </SwiperSlide>
@@ -290,8 +290,8 @@ export default function Instagram() {
 
         .mute-toggle-button {
           position: absolute;
-          top: 10px;
-          right: 10px;
+          bottom: 19px;
+           right: 16px;
           background-color: rgba(0, 0, 0, 0.6);
           border: none;
           color: white;
@@ -300,7 +300,7 @@ export default function Instagram() {
           cursor: pointer;
           transition: background 0.3s ease;
           z-index: 10;
-          line-height: 1;
+          line-height: 0;
         }
 
         .mute-toggle-button:hover {

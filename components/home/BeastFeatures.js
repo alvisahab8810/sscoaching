@@ -4,7 +4,8 @@ export default function BeastFeatures() {
   return (
        <section className="best-coaching">
         <div className="container">
-            <h2 className="best-title"><span className="highlight">The best</span> NIOS Coaching in Lucknow</h2>
+           <div className='the-best-nios'>
+             <h2 className="best-title text-center"><span className="highlight">The best</span> NIOS Coaching in India</h2>
             <div className="features-grid">
             <div className="feature-card">
                 <div className="feature-icon-container professionals">
@@ -34,6 +35,7 @@ export default function BeastFeatures() {
                 </div>
             </div>
             </div>
+           </div>
         </div>
     </section>
   )

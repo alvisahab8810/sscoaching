@@ -1,5 +1,3 @@
-
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 
@@ -101,65 +99,65 @@
     }
 
     /* Hero Section */
-    /* .hero-section {
+    .hero-section {
       background-image: url('/assets/images/hero.png');
       background-size: cover;
       background-position: center;
       padding: 69px 56px;
       text-align: center;
       color: white;
-    } */
+    }
 
     .hero-content {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 20px;
     }
 
     .hero-title {
-      font-size: 45px;
-     
+      font-size: 32px;
+      font-family: 'Be Vietnam Pro', Arial, sans-serif!important;
       font-weight: 700;
       line-height: 1.3;
       text-align: center;
     }
 
     .hero-title .highlight {
-      color: #fff;
+      color: #00388c;
       font-weight: 600;
+      margin-left: 20px;;
     }
 
     .hero-title .brand {
-      color: #fff;
+      color: #00388c;
       font-weight: 200;
     }
 
-.hero-content .cta-button {
-    background-color: #FFC107;
-    color: #ffffff;
-    border: 1px solid #FFC107;
-    border-radius: 30px;
-    width: fit-content;
-    padding: 6px 59px;
-    font-size: 18px;
-    font-family: 'Manrope', Arial, sans-serif;
-    font-weight: 500;
-    line-height: 31px;
-    cursor: pointer;
-    transition: all 0.3s 
-ease;
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 0;
-    margin:auto
-}
+   .hero-content .cta-button {
+      background-color: #0066ff;
+      color: #ffffff;
+      border: 1px solid #0066ff;
+      border-radius: 30px;
+      width: 414px;
+      padding: 6px 34px;
+      font-size: 22px;
+      font-family: 'Manrope', Arial, sans-serif;
+      font-weight: 500;
+      line-height: 39px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 0;
+    }
+
     .hero-content .cta-button:hover{
-      background-color:  #FFC107;
+      background-color: #0066ff;
     }
 
     .cta-button:hover {
-      background-color:  #FFC107;
+      background-color: #0052cc;
       transform: translateY(-2px);
     }
 
@@ -179,13 +177,13 @@ ease;
       background-color: #33efa0;
       border: 1px solid #ededed;
       border-radius: 32px;
-      padding: 13px 20px 12px 20px;
+      padding: 15px 20px 14px 20px;
       box-shadow: 8px 8px 56px #0000000c;
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 16px;
-      font-family: 'DM Sans';
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
       font-weight: 600;
       color: #000088;
       position: relative;
@@ -280,8 +278,8 @@ ease;
     }
 
    .stat-icon {
-    width: 72.6px;
-    height: 72.6px;
+    width: 85px;
+    height: 85px;
     border: 1px solid #dbe1ee;
     border-radius: 56px;
     display: flex;
@@ -306,8 +304,7 @@ ease;
       font-size: 18px;
       font-family: 'DM Sans', Arial, sans-serif;
       font-weight: 500;
-      color: #293347;
-      margin-bottom: 0;
+      color: #262626;
     }
 
     /* Scrolling Banner */
@@ -328,7 +325,7 @@ ease;
       padding: 10px 22px;
       border-radius: 6px;
       font-size: 16px;
-      font-family: 'DM Sans';
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
       font-weight: 600;
       white-space: nowrap;
       flex-shrink: 0;
@@ -373,7 +370,7 @@ ease;
       background-color: #ffffff;
       border-radius: 16px;
       padding: 20px;
-      border: 1px solid #ddd;
+      border: 1px solid #15848F;
       flex-shrink: 0;
       /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
     }
@@ -396,7 +393,7 @@ ease;
       font-size: 18px;
       font-family: 'DM Sans', Arial, sans-serif;
       font-weight: 600;
-      color: black;
+      color: #293347;
       margin-bottom: 6px;
     }
 
@@ -453,7 +450,7 @@ ease;
     }
 
     .process-title {
-      font-size: 34px;
+      font-size: 36px;
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 600;
       margin-bottom: 30px;
@@ -483,15 +480,16 @@ ease;
       background-color: #ffffff;
       border: 1px solid #edeef0;
       border-radius: 20px;
-      padding: 22px 40px;
+      padding: 22px 24px;
       box-shadow: 6px 5px 15px #002b6b19;
       flex: 1;
     }
 
-    .process-container .step-content h3 {
-      font-size: 24px;
-      font-weight: 500;
-      color: #293347;
+    .step-content h3 {
+      font-size: 18px;
+      font-weight: 600;
+      font-family: SF Pro Display!important;
+      color: #1e242c;
       margin-bottom: 8px;
     }
 
@@ -499,16 +497,8 @@ ease;
       font-size: 14px;
       font-family: 'Manrope', Arial, sans-serif;
       font-weight: 400;
-      line-height: 20px;
-      color: #293347;
-      
-    .review-text {
-      font-size: 16px;
-      font-family: 'DM Sans', Arial, sans-serif;
-      font-weight: 400;
-      line-height: 20px;
-      color: #293347;
-};
+      line-height: 24px;
+      color: #414d60;
     }
 
     .process-images {
@@ -658,17 +648,18 @@ ease;
     }
 
     .cta-title {
-      font-size: 36px;
+      font-size: 45px;
       font-family: 'Plus Jakarta Sans', Arial, sans-serif;
       font-weight: 700;
-      line-height: 40px;
+      line-height: 48px;
       margin-bottom: 8px;
     }
 
     .cta-subtitle {
-      font-size: 16px;
+      font-size: 22px;
       font-family: 'DM Sans';
-      font-weight: 400;
+      font-weight: 300;
+      line-height: 30px;
       margin-bottom: 40px;
     }
 
@@ -678,7 +669,7 @@ ease;
       border: 1px solid #f1f1f3;
       border-radius: 6px;
       padding: 10px 35px;
-      font-size: 16px;
+      font-size: 17px;
       font-family: 'Be Vietnam Pro', Arial, sans-serif;
       font-weight: 700;
       text-transform: uppercase;
@@ -713,23 +704,23 @@ ease;
     .coaching-grid {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
       padding: 38px 0px 0px 0px;
       /* margin-top: 30px; */
     }
 
     .coaching-card {
       background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px 24px 20px 24px;
+      border-radius: 20px;
+      padding: 30px 35px 20px 35px;
       box-shadow: 0px 10px 60px #262c7514;
       position: relative;
     }
 
     .coaching-header {
       background-color: #00cbb8;
-      border-radius: 10px;
-      padding: 12px  23px;
+      border-radius: 20px;
+      padding: 20px;
       margin: -62px 0px 14px;
       width: 100%;
       display: flex;
@@ -749,20 +740,20 @@ ease;
 
  .coaching-text {
     color: #ffffff;
-    font-size: 18px;
+    font-size: 19px;
     font-family: 'DM Sans';
     font-weight: 600;
     flex: 1;
-    line-height: 20px;
+    line-height: normal;
 }
 
     .coaching-icon {
-      width: 40px;
-      height: 40px;
+      width: 52px;
+      height: 52px;
       background-color: #fcfcfc;
       border: 1px solid #f1f1f3;
       border-radius: 6px;
-      padding: 7px;
+      padding: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -774,7 +765,7 @@ ease;
       font-weight: 600;
       color: #2f327d;
       text-align: center;
-      margin: 20px 0 10px;
+      margin: 30px 0 15px;
     }
 
     .coaching-content p {
@@ -826,8 +817,8 @@ ease;
     }
 
     .slider-btn {
-      width: 43px;
-      height: 43px;
+      width: 64px;
+      height: 64px;
       border-radius: 32px;
       border: none;
       cursor: pointer;
@@ -912,8 +903,8 @@ ease;
       font-size: 16px;
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 400;
-      line-height: 20px;
-      color: #293347;
+      line-height: 25px;
+      color: #696983;
       text-align: justify;
       margin-bottom: 16px;
     }
@@ -1001,7 +992,7 @@ ease;
     .features-grid {
       display: flex;
       flex-direction: column;
-      /* gap: 10px; */
+      gap: 10px;
     }
 
     .feature-card {
@@ -1052,7 +1043,7 @@ ease;
     .feature-title {
       font-size: 18px;
       font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 600;
+      font-weight: 500;
       color: #2f327d;
       margin-bottom: 10px;
       margin-top: 15px;
@@ -1060,9 +1051,10 @@ ease;
 
     .feature-description {
       font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
       font-weight: 400;
-      line-height: 20px;
-      color: #293347;
+      line-height: 27px;
+      color: #696983;
     }
 
     /* Quick Links */
@@ -1129,7 +1121,7 @@ ease;
     }
 
     .expand-text {
-      font-size: 18px;
+      font-size: 20px;
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 400;
       color: #ffffff;
@@ -1138,8 +1130,8 @@ ease;
     }
 
     .expand-icon {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       background-color: transparent;
       border: 1px solid #ffffff;
       border-radius: 46px;
@@ -1195,7 +1187,7 @@ ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 24px;
+      padding: 20px 24px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -1206,7 +1198,7 @@ ease;
 
     .faq-question-text {
       font-size: 18px;
-      font-family: 'DM Sans';
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
       font-weight: 500;
       color: #262626;
       flex: 1;
@@ -1227,7 +1219,7 @@ ease;
     .faq-answer {
       padding: 0 24px 20px;
       font-size: 18px;
-      font-family: 'DM Sans';
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
       font-weight: 400;
       line-height: 26px;
       color: #4c4c4c;
@@ -1480,7 +1472,7 @@ ease;
       }
 
       .hero-title {
-        font-size: 45px;
+        font-size: 48px;
       }
 
       .cta-button {
@@ -1569,7 +1561,7 @@ ease;
       }
 
       .nios-text {
-        font-size: 16px;
+        font-size: 17px;
       }
 
       .admission-cards {
@@ -1617,7 +1609,7 @@ ease;
       }
 
       .faq-question-text {
-        font-size: 18px;
+        font-size: 20px;
       }
 
       .faq-answer {
@@ -1662,7 +1654,7 @@ ease;
       }
 
       .hero-title {
-        font-size:45px;
+        font-size: 60px;
       }
 
       .cta-button {
@@ -1691,7 +1683,6 @@ ease;
         font-size: 35px;
         margin-bottom: 0;
         font-weight: 600;
-        line-height: normal;
       }
 
       .stat-content p {
@@ -1717,8 +1708,6 @@ ease;
       .coaching-grid {
         flex-direction: row;
         justify-content: space-between;
-        max-width: 1240px;
-        margin: auto;
       }
 
       .coaching-card {
@@ -1730,7 +1719,7 @@ ease;
       }
 
       .coaching-content h3 {
-        font-size: 20px;
+        font-size: 24px;
       }
 
       .coaching-content p {
@@ -1772,11 +1761,11 @@ ease;
       }
 
       .feature-card {
-        width: calc(33.333% - 15px);
+        width: calc(33.333% - 7px);
       }
 
       .feature-title {
-        font-size: 20px;
+        font-size: 24px;
         margin-top: 0;
       }
 
@@ -1797,11 +1786,11 @@ ease;
       }
 
       .faq-question-text {
-        font-size: 18px;
+        font-size: 24px;
       }
 
       .faq-answer {
-        font-size: 16px;
+        font-size: 18px;
       }
     }
 
@@ -1834,7 +1823,7 @@ ease;
 
     @media (min-width: 1240px) {
       .hero-section {
-        /* padding: 70px 56px; */
+        padding: 70px 56px;
       }
 
       .process-section {
@@ -3188,13 +3177,46 @@ ease;
 .the-best-nios{
   max-width: 1100px;
   margin: auto;
-} 
-
-.blogs-collapse{
-  display: flex;
-  justify-content: space-between;
-  width:100%
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

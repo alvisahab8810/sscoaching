@@ -2,7 +2,8 @@ import React from "react";
 
 export default function TmaSrDownload() {
   return (
-    <div className="container">
+    <section className="tma-sr-downlaod">
+      <div className="container">
       <section className="download-section">
         <h2>
           <span className="section-title">Download All</span>{" "}
@@ -22,5 +23,6 @@ export default function TmaSrDownload() {
         Don’t wait until the deadline! Download, solve, and submit your TMAs today for academic success.
       </a>
     </div>
+    </section>
   );
 }
