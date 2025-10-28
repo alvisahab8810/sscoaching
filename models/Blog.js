@@ -9,6 +9,7 @@ const BlogSchema = new mongoose.Schema(
     shortDescription: { type: String },
     content: { type: String },
     coverImage: { type: String }, // store image URL or base64 if small
+    coverAltText: { type: String, default: "" }, // 👈 Add this
     status: { type: String, enum: ["draft", "published"], default: "draft" },
     metaTitle: { type: String },
     metaDescription: { type: String },

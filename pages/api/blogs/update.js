@@ -75,6 +75,7 @@ export default async function handler(req, res) {
         fields.shortDescription?.[0] || existingBlog.shortDescription,
       content: fields.content?.[0] || existingBlog.content,
       coverImage: coverImagePath,
+      coverAltText: fields.coverAltText?.[0] || existingBlog.coverAltText || "", // 👈 Added
       status: fields.status?.[0] || existingBlog.status || "draft",
       metaTitle: fields.metaTitle?.[0] || existingBlog.metaTitle,
       metaDescription: fields.metaDescription?.[0] || existingBlog.metaDescription,

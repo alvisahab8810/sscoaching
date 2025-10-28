@@ -240,8 +240,8 @@ export default function Sidebar() {
         </li>
 
         <li style={styles.navItem}>
-          <Link href="#" style={styles.navLink()}>
-            <BsPeople style={styles.icon} /> Users
+          <Link href="/dashboard/admin/faqs" style={styles.navLink()}>
+            <BsPeople style={styles.icon} /> ADD FAQ
           </Link>
         </li>
 

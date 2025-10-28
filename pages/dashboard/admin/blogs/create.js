@@ -18,6 +18,7 @@ export default function CreateBlogPost() {
     shortDescription: "",
     content: "",
     coverImage: null,
+    coverAltText: "", // 👈 ADD THIS LINE
     status: "draft",
     metaTitle: "",
     metaDescription: "",
@@ -273,9 +274,19 @@ const handleSubmit = async (e) => {
                         <img
                           src={URL.createObjectURL(formData.coverImage)}
                           alt="Preview"
-                          className="img-fluid rounded shadow-sm"
+                          className="img-fluid rounded shadow-sm mb-2"
                         />
                       )}
+
+                       {/* 👇 Add this input below the image */}
+                        <input
+                          type="text"
+                          name="coverAltText"
+                          className="form-control"
+                          placeholder="Enter alt text for image (SEO)"
+                          value={formData.coverAltText}
+                          onChange={handleChange}
+                        />
                     </div>
                   </div>
 

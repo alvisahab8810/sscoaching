@@ -18,6 +18,7 @@ import LearnersNiosMobile from "@/components/home/LearnersNiosMobile";
 import News from "@/components/home/News";
 import NewsMobile from "@/components/home/NewsMobile";
 import NIOSInfo from "@/components/home/NIOSInfo";
+import Popup from "@/components/home/Popup";
 import QueryForm from "@/components/home/QueryForm";
 import QuickLinks from "@/components/home/QuickLinks";
 import RecongnitionMobile from "@/components/home/RecognitionMobile";
@@ -88,6 +89,8 @@ export default function Home() {
 
         <QuickLinks />
         <FAQ />
+
+        <Popup/>
 
         <Footer />
       </section>

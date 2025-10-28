@@ -3197,23 +3197,128 @@ ease;
 }
 
 
+.blogs-list .card{
+      background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 5%);
+    transition: all 0.5s 
+ease;
+    overflow: hidden;
+}
+
+.blogs-list .card .card-title {
+    padding-top: 2px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.author-icons svg{
+  color:#2b6eb5;
+}
+
+.blog-details-page .author-icons{
+  font-size: 16px!important;
+}
 
 
 
 
 
+/* === Blog Detail Sticky Fix === */
+
+/* 1. Allow the row to be independent (no equal height) */
+.blog-details-page .row.main-layout {
+  display: flex;
+  align-items: flex-start !important;
+}
+
+/* 2. Left column behaves normally */
+.blog-details-page .left-col {
+  flex: 0 0 66.6666%;
+  max-width: 66.6666%;
+}
+
+/* 3. Right column wrapper */
+.blog-details-page .right-col {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  position: relative;
+  height: 100%;
+}
+
+/* 4. The sticky part itself */
+.blog-details-page .right-col .form-container {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px; /* adjust this to match your fixed header height */
+  z-index: 50;
+}
+
+/* 5. Make sure no parent breaks sticky */
+.blog-details-page,
+.blog-details-page .container,
+.blog-details-page .row,
+.blog-details-page .left-col,
+.blog-details-page .right-col {
+  overflow: visible !important;
+}
+
+/* 6. On mobile, disable sticky */
+@media (max-width: 991px) {
+  .blog-details-page .row.main-layout {
+    flex-direction: column;
+  }
+
+  .blog-details-page .right-col .form-container {
+    position: static;
+    top: auto;
+  }
+}
+
+
+.recent-posts{
+      flex-direction: row !important;
+}
+
+
+/* .blog-toc {
+  position: sticky;
+  top: 100px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-left: 4px solid #007bff10;
+  transition: all 0.3s ease;
+}
+
+.toc-link {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.toc-link:hover {
+  color: #007bff !important;
+  text-decoration: underline;
+}
+
+.active-toc {
+  color: #007bff !important;
+  font-weight: 600;
+  border-left: 3px solid #007bff;
+  padding-left: 6px;
+} */
 
 
 
+.blog-toc {
+  border-radius: 10px;
+}
 
 
-
-
-
-
-
-
-
-
-
-
+.ptb-100 {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}

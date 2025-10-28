@@ -134,7 +134,7 @@ export default function Header() {
                 )}
               </div>
 
-              <a href="#" className="nav-item">
+              <a href="/faq" className="nav-item">
                 FAQ
               </a>
               <a href="/gallery" className="nav-item">

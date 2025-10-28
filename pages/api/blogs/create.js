@@ -132,6 +132,7 @@ export default async function handler(req, res) {
       shortDescription: fields.shortDescription?.[0] || "",
       content: fields.content?.[0] || "",
       coverImage: coverImagePath,
+      coverAltText: fields.coverAltText?.[0] || "",
       status: fields.status?.[0] || "draft",
       metaTitle: fields.metaTitle?.[0] || "",
       metaDescription: fields.metaDescription?.[0] || "",
