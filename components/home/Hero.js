@@ -166,12 +166,12 @@ import "swiper/css/effect-fade";
 
 export default function Hero() {
   return (
-    <section className="hero-section">
+    <section className="hero-section mobile-none">
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
         loop={true}
-        // autoplay={{ delay: 4000, disableOnInteraction: false }}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
         className="hero-swiper"
       >
         {/* ---------- Slide 1 (Left Aligned) ---------- */}
@@ -186,11 +186,13 @@ export default function Hero() {
                 <div className="col-md-6 hero-content text-start">
                   <h1 className="hero-title fade-text mb-4">
                     <span className="brand">
-                      Best NIOS Board <br /> Coaching <span className="highlight">in India</span>
+                      Best NIOS Board <br/>
+                     
                     </span>
+                     Coaching <b>in India</b>
                     
                   </h1>
-                  <a href="#" className="cta-button fade-text">
+                  <a href="#" className="cta-button  cta-btn fade-text">
                     Get Admission
                   </a>
                 </div>
@@ -200,21 +202,24 @@ export default function Hero() {
         </SwiperSlide>
 
         {/* ---------- Slide 2 (Right Aligned) ---------- */}
-        <SwiperSlide>
+        <SwiperSlide className="second-slider-home">
           <div
             className="hero-slide text-white"
             style={{ backgroundImage: "url(/assets/images/hero2.png)" }}
           >
             <div className="overlay"></div>
             <div className="container position-relative">
-              <div className="row justify-content-end align-items-center">
+              <div className="row">
+                  <div className="col-md-6">
+                  
+                </div>
                 <div className="col-md-6 hero-content text-end">
                   <h1 className="hero-title fade-text mb-4">
                     <span className="brand">Pass 10th & 12th</span>
-                    <span className="highlight">in Same Year</span>
+                    <span className="highlight">Easily in 45 Days</span>
                   </h1>
-                  <a href="#" className="cta-button fade-text">
-                    Apply Now
+                  <a href="#" className="cta-button fade-text cta-btn">
+                    Via NIOS Board
                   </a>
                 </div>
               </div>
@@ -233,11 +238,11 @@ export default function Hero() {
               <div className="row align-items-center">
                 <div className="col-md-6 hero-content text-start">
                   <h1 className="hero-title fade-text mb-4">
-                    <span className="brand">Failed in 9th or 11th?</span>
-                    <span className="highlight">Get Admission</span>
+                    <span className="brand">Best NIOS Board</span>
+                    <span className="highlight">Coaching in India</span>
                   </h1>
-                  <a href="#" className="cta-button fade-text">
-                    Join Today
+                  <a href="#" className="cta-button fade-text cta-btn">
+                    Get Admission
                   </a>
                 </div>
               </div>

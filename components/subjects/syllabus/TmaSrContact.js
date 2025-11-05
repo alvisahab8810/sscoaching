@@ -80,7 +80,7 @@ export default function TmaSrContact() {
           </p>
          
          
-          <div className="full-btn">
+          <div className="full-btn cta-btn-2nd">
             <a href="#" className="contact-btn">
               Contact Us For help
             </a>

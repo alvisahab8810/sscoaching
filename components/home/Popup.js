@@ -16,12 +16,21 @@ export default function Popup() {
   }, []);
 
   // 👇 2️⃣ Open when clicking any ".cta-btn"
+  // useEffect(() => {
+  //   const buttons = document.querySelectorAll(".cta-btn");
+  //   const openHandler = (e) => {
+  //     e.preventDefault();
+  //     setShowPopup(true);
+  //   };
+
   useEffect(() => {
-    const buttons = document.querySelectorAll(".cta-btn");
-    const openHandler = (e) => {
-      e.preventDefault();
-      setShowPopup(true);
-    };
+  // Select both .cta-btn and .cta-btn-2nd
+  const buttons = document.querySelectorAll(".cta-btn, .cta-btn-2nd");
+
+  const openHandler = (e) => {
+    e.preventDefault();
+    setShowPopup(true);
+  };
 
     buttons.forEach((btn) => btn.addEventListener("click", openHandler));
     return () => {

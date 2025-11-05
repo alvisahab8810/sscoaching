@@ -1,6 +1,13 @@
 import React from "react";
-
+import { useState } from "react";
 export default function NIOSInfo() {
+
+    const [showFull, setShowFull] = useState(false);
+
+  const toggleText = (e) => {
+    e.preventDefault();
+    setShowFull((prev) => !prev);
+  };
   return (
     <section className="nios-info">
       <div className="container">
@@ -10,7 +17,32 @@ export default function NIOSInfo() {
             Determination, Dreams & Success at SS Coaching
           </h2>
 
-          <p className="nios-text">
+           <div className="nios-container">
+                <p className="nios-text">
+                     Every success story begins with a courageous decision and at SS
+            Coaching, we proudly celebrate the inspiring journeys of our NIOS
+            Board students who dared to dream bigger and worked tirelessly to
+            achieve their goals.
+        These shining stars enrolled in Class 10th and 12th through
+            NIOS at SS Coaching “the Best NIOS Coaching in Lucknow and today”,
+            they stand as glowing examples of dedication, perseverance, and
+            success.
+                  <br />
+                  {showFull && (
+                    <>
+                      These shining stars enrolled in Class 10th and 12th through NIOS at SS
+                      Coaching “the Best NIOS Coaching in Lucknow and today”, they stand as
+                      glowing examples of dedication, perseverance, and success.
+                    </>
+                  )}
+                </p>
+
+                <a href="#" className="read-more" onClick={toggleText}>
+                  {showFull ? "Read Less" : "Read More..."}
+                </a>
+              </div>
+
+          {/* <p className="nios-text">
             Every success story begins with a courageous decision and at SS
             Coaching, we proudly celebrate the inspiring journeys of our NIOS
             Board students who dared to dream bigger and worked tirelessly to
@@ -23,7 +55,7 @@ export default function NIOSInfo() {
 
           <a href="#" className="read-more">
             Read More...
-          </a>
+          </a> */}
         </div>
         <div className="admission-cards">
           <div className="admission-card">

@@ -46,7 +46,7 @@ export default function Contact() {
             pattern and types of questions the NIOS board typically asks.
           </span>
         </p>
-        <div className="full-btn">
+        <div className="full-btn cta-btn-2nd mobile-none">
             <a href="#" className="contact-btn">
                 Contact Us For help
             </a>
@@ -64,6 +64,22 @@ export default function Contact() {
       <div className="contact-right-img">
          <img src="/assets/images/question-papers/contact.png"></img>
       </div>
+
+
+       <div className="full-btn cta-btn-2nd desktop-none">
+            <a href="#" className="contact-btn">
+                Contact Us For help
+            </a>
+
+            <div className="contact-btn1">
+                <img
+                src="/assets/images/question-papers/icons/send.svg"
+                alt="Send"
+                width="16"
+                height="16"
+                />
+        </div>
+        </div>
      </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Footer from '@/components/footer/Footer'
 import Header from '@/components/header/Header'
 import Offcanvas from '@/components/header/Offcanvas'
 import FAQ from '@/components/home/FAQ'
+import Popup from '@/components/home/Popup'
 
 import TmaSrContact from '@/components/subjects/syllabus/TmaSrContact'
 import TmaSrDownload from '@/components/subjects/syllabus/TmaSrDownload'
@@ -11,7 +12,7 @@ import React from 'react'
 
 export default function TmaSrsecondary12th() {
   return (
-    <div id='paper-secondary-10th'>
+    <div id='paper-secondary-10th' className='paper-secondary-10th'>
     <Header/>
     <Offcanvas/>
 
@@ -24,6 +25,7 @@ export default function TmaSrsecondary12th() {
     <FAQ/>
   
     <Footer/>
+    <Popup/>
 
     </div>
   )

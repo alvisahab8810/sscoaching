@@ -119,18 +119,16 @@ export default function SubjectTable() {
         }
 
         @media (max-width: 768px) {
-          thead {
-            display: none;
-          }
+        
           tbody td {
-            display: block;
+            // display: block;
             text-align: right;
             border: none;
             padding: 10px 15px;
           }
           tbody tr {
             margin-bottom: 10px;
-            display: block;
+            // display: block;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);

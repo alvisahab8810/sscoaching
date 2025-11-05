@@ -4,12 +4,11 @@ export default function StepProcessMobile() {
   return (
     <section className="process-section desktop-none">
       <div className="container">
-         <h2 className="process-title">
-              Our Simple <span className="highlight">3-Step Process</span>
-            </h2>
+        <h2 className="process-title">
+          Our Simple <span className="highlight">3-Step Process</span>
+        </h2>
         <div className="process-container">
-          <div className="process-content">
-           
+          <div className="process-content mobile-none">
             <div className="process-steps">
               <div className="process-step">
                 <div className="step-number">01</div>
@@ -46,15 +45,47 @@ export default function StepProcessMobile() {
             </div>
           </div>
 
+          <div className="mobile-scroll-section">
+            <div className="card-one">
+              <div className="card-one-number">1</div>
+              <div className="card-one-content">
+                <h3 className="card-one-title">Free Counselling</h3>
+                <p className="card-one-text">
+                  Get expert guidance from our supportive teachers for easy
+                  admission.
+                </p>
+              </div>
+            </div>
+
+            <div className="card-two">
+              <div className="card-two-number">2</div>
+              <div className="card-two-content">
+                <h3 className="card-two-title">Start Learning</h3>
+                <p className="card-two-text">
+                  Begin your learning journey with flexible schedules and guided
+                  preparation.
+                </p>
+              </div>
+            </div>
+
+            <div className="card-three">
+              <div className="card-three-number">3</div>
+              <div className="card-three-content">
+                <h3 className="card-three-title">Achieve Success</h3>
+                <p className="card-three-text">
+                  Complete your course with confidence and achieve your
+                  educational goals.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="process-images">
             <img
               src="/assets/images/home/steps-process/photo1.svg"
               alt="Student studying"
               className="process-image process-1"
-              
             />
-
-              
 
             <div className="process-stat">
               <div className="stat-avatars">
@@ -84,7 +115,6 @@ export default function StepProcessMobile() {
               src="/assets/images/home/steps-process/photo.svg"
               alt="Students in classroom"
               className="process-image process-2"
-            
             />
           </div>
         </div>

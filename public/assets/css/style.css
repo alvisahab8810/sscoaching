@@ -118,10 +118,10 @@
     }
 
     .hero-title {
-      font-size: 45px;
+      font-size: 50px!important;
      
       font-weight: 700;
-      line-height: 1.3;
+     line-height: 50px;
       text-align: center;
     }
 
@@ -136,12 +136,12 @@
     }
 
 .hero-content .cta-button {
-    background-color: #FFC107;
+    background-color: #FF9422;
     color: #ffffff;
-    border: 1px solid #FFC107;
+    border: 1px solid #FF9422;
     border-radius: 30px;
     width: fit-content;
-    padding: 6px 59px;
+    padding: 5px 76px;
     font-size: 18px;
     font-family: 'Manrope', Arial, sans-serif;
     font-weight: 500;
@@ -893,7 +893,7 @@ ease;
       background-color: #ffffff;
       border-radius: 12px;
       /* padding: 24px; */
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
 
     .nios-title {
@@ -3321,4 +3321,1282 @@ ease;
 .ptb-100 {
   padding-top: 100px;
   padding-bottom: 100px;
+}
+
+
+
+
+
+
+.gallery-row-area{
+  display: flex;
+  justify-content: space-between;
+
+}
+.gallery-row-area > div{
+  width: calc(50% - 10px);
+  /* display: flex; */
+  /* flex-flow: column; */
+  /* justify-content: space-between; */
+}
+
+.gallery-items-row{
+  display: flex;
+  justify-content: space-between;
+}
+
+.second-g-img{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.firs-g-img {
+    width: 100%;
+}
+
+.firs-g-img img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.gallery-items-row  > div {
+    width: calc(50% - 10px);
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.gallery-items-row > div img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.second-g-img img {
+    width: calc(50% - 10px);
+    object-fit: cover;
+}
+
+.second-large-img {
+    width: 100%;
+}
+
+.second-large-img img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.gallery-first-row {
+    display: flex;
+    flex-flow: column;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.gallery-2nd-row {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+.pb-50{
+  padding-bottom: 50px;
+}
+
+.cta-button-gallery{
+      width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid #0066FF;
+    border-radius: 10px;
+    color: #0066FF;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s 
+ease;
+    margin-bottom: 50px;
+    display: block;
+}
+
+
+
+
+/*========================= Nios 12 Senior Secondary Subject list page css here==============================  */
+
+
+ /* Hero section */
+    .nios-12th-senior-hero-section {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      align-items: center;
+      width: 100%;
+      padding-top: 50px;
+      border-top: 1px solid #ddd;
+      /* padding-bottom: 80px; */
+    }
+
+    .nios-125h-senior-text {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-start;
+      width: 100%;
+      padding-bottom: 25px;
+    }
+
+    .nios-125h-senior-hero-title {
+      font-size: 32px;
+      font-family: Poppins;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #101727;
+    }
+
+    .nios-125h-senior-hero-title .nios-125h-senior-highlight {
+      color: #4441e5;
+    }
+
+    .nios-125h-senior-hero-subtitle {
+      font-size: 18px;
+      font-family: Poppins;
+      font-weight: 300;
+      line-height: 1.5;
+      color: #495565;
+    }
+
+    @media (min-width: 768px) {
+      .nios-125h-senior-hero-title {
+        font-size: 40px;
+      }
+      .nios-125h-senior-hero-subtitle {
+        font-size: 22px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .nios-125h-senior-hero-title {
+        font-size: 35px;
+        line-height: normal;
+      }
+      .nios-125h-senior-hero-subtitle {
+        font-size: 18px;
+        line-height: normal;
+      }
+    }
+
+    .nios-125h-senior-hero-image {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+
+    /* Content sections */
+    .nios-125h-senior-content-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      padding-top: 50px;
+    }
+
+    .nios-125h-senior-section-title {
+      font-size: 24px;
+      font-family: Poppins;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #262626;
+    }
+
+    .nios-125h-senior-section-text {
+      font-size: 18px;
+      font-family: Poppins;
+      font-weight: 300;
+      line-height: 1.5;
+      color: #696983;
+      text-align: justify;
+    }
+
+    @media (min-width: 768px) {
+      .nios-125h-senior-section-title {
+        font-size: 28px;
+      }
+      .nios-125h-senior-section-text {
+        font-size: 16px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .nios-125h-senior-section-title {
+        font-size: 30px;
+        line-height: normal;
+      }
+      .nios-125h-senior-ection-text {
+        font-size: 24px;
+        line-height: 36px;
+      }
+    }
+
+
+
+
+
+
+
+    /* =================subject section css============= */
+
+
+    /* Parent wrapper and general rhythm */
+.scheme-wrap {
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #111;
+  padding: 18px;
+  background: #fff;
+}
+
+/* Header (title + subtitle) */
+.scheme-header .title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.scheme-header .title .accent {
+  color: #2a3be6; /* blue accent like screenshot */
+  font-weight: 800;
+}
+
+.scheme-header .subtitle {
+  margin: 6px 0 18px 0;
+  color: #7a81a3;
+  font-size: 14px;
+}
+
+/* Card surrounding the table */
+.table-card {
+  border-radius: 8px;
+  border: 1px solid rgba(30,35,60,0.06);
+  /* padding: 18px; */
+  background: #F9FAFC;
+}
+
+/* Table title */
+.table-title {
+  text-align: center;
+  margin: 6px 0 14px 0;
+  font-size: 20px;
+  padding: 8px 12px;
+  font-weight: 700;
+  /* background: #001e5b; */
+  color: #111;
+}
+
+/* Table basics */
+.scheme-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+/* Header row styling */
+.scheme-table thead th {
+  background: #fff;
+  color: #222;
+  padding: 12px 10px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(40,45,70,0.06);
+  border-right: 2px solid rgba(40, 45, 70, 0.06);
+}
+
+/* left-most column a bit wider */
+.scheme-table .th-left {
+  width: 100%;
+  display: flex;
+  /* white-space: nowrap; */
+  /* height: 52.3px; */
+  gap: 5px;
+  /* justify-content: space-between; */
+}
+
+/* scheme cell common class */
+.scheme-cell {
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(30,35,60,0.04);
+  color: #2a2f3d;
+  font-size: 15px;
+  box-sizing: border-box;
+  border-right: 1px solid rgba(30, 35, 60, 0.04);
+}
+
+/* Group separator row (purple band) */
+.group-row .group-cell {
+  background: #F3F3FF;
+  color: #4643b4;
+  font-weight: 700;
+  padding: 12px 16px;
+  /* border-bottom: 1px solid rgba(40,45,70,0.04); */
+  /* border-right: 1px solid red!important; */
+}
+
+/* data rows subtle hover */
+.data-row:hover .scheme-cell {
+  background: rgba(0,0,0,0.01);
+}
+
+/* left column code and subject layout */
+.code {
+  color: #2b2d36;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.subject {
+  color: #2b2d36;
+  font-weight: 700;
+}
+
+/* Theory / Practical pills */
+.tp .pill {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 8px;
+  vertical-align: middle;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.02);
+}
+
+/* color variants */
+.pill.theory {
+  background: rgba(34,197,94,0.12); /* faint green */
+  color: #16a34a;
+}
+.pill.practical {
+  background: rgba(59,130,246,0.12); /* faint blue */
+  color: #2563eb;
+}
+
+/* Date note styling: center aligned multi-line box to mimic screenshot */
+.center {
+  text-align: center;
+}
+.date-note {
+  display: inline-block;
+  max-width: 220px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #6b7280;
+  border-radius: 6px;
+  line-height: 1.32;
+  background: transparent;
+}
+
+/* Numeric columns center align */
+.scheme-table .center {
+  text-align: center;
+  font-weight: 600;
+  color: #222;
+}
+.scheme-table .data-row{
+      border: 1px solid rgba(40, 45, 70, 0.06);
+}
+/* subtle alternating row background for visual separation (optional) */
+.scheme-table tbody tr:nth-child(odd):not(.group-row) td.scheme-cell {
+  background: rgba(245,246,250,0.6); /* very light */
+}
+
+/* Responsive: horizontal scroll on small screens */
+@media (max-width: 880px) {
+  .scheme-wrap { padding: 12px; }
+  .scheme-table { display: block; width: 100%; overflow-x: auto; white-space: nowrap; }
+  .scheme-table thead, .scheme-table tbody, .scheme-table tr { display: table; width: 100%; table-layout: fixed; }
+  .scheme-table td, .scheme-table th { white-space: normal; }
+}
+
+header.scheme-header {
+    padding-bottom: 20px;
+}
+
+span.pill.theory .blue-svg {
+    display: none;
+} 
+
+span.pill.practical .green-svg{
+    display: none;
+
+
+}
+
+
+    /* Notes section */
+    .notes-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      padding: 40px 0px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .note-text {
+      font-size: 18px;
+      font-family: Poppins;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #0a0a0a;
+      text-align: center;
+    }
+
+    @media (min-width: 1024px) {
+      .note-text {
+        font-size: 18px;
+        line-height: 25px;
+      }
+    }
+
+    .note-box {
+        padding: 8px 50px;
+    margin: 0 30px;
+    border: 1px solid #fc9f63;
+    border-radius: 10px;
+    background-color: rgba(252, 159, 99, 0.05);
+    width: fit-content;
+    }
+
+    .note-content {
+      font-size: 16px;
+      font-family: Poppins;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #fc9f63;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 768px) {
+      .note-content {
+        font-size: 18px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .note-content {
+        font-size: 18px;
+        line-height: 31px;
+        margin-bottom: 0;
+      }
+    }
+svg.green-svg {
+    margin-right: 4px;
+}
+
+.blue-svg{
+  margin-right: 4px;
+}
+
+
+/* ==========================================================================About us page css start from here===================================================== */
+
+
+
+.about-us-hero {
+  background: linear-gradient(to bottom, #ffffff, #e4edff);
+  /* padding: 60px 20px; */
+  /* font-family: "Inter", sans-serif; */
+  display: flex;
+}
+
+.about-us-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 50px;
+  gap: 50px;
+}
+
+.about-us-content {
+  /* flex: 1; */
+  /* min-width: 320px; */
+}
+
+.about-us-title {
+  font-size: 60px;
+  font-weight: 800;
+  line-height: normal;
+  color: #000;
+  margin-bottom: 30px;
+}
+
+.about-us-title .highlight {
+  color: #4441e5;
+  display: block;
+}
+
+.about-us-director {
+  margin-bottom: 20px;
+}
+
+.director-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.director-role,
+.director-contact {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.about-us-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #444;
+  padding-top: 50px;
+  margin-bottom: 5px;
+  text-align: justify;
+}
+
+.about-us-signature {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  padding-bottom: 50px;
+}
+
+.about-us-image {
+  /* flex-shrink: 0; */
+  /* max-width: 400px; */
+}
+
+.about-us-image img {
+  width: 100%;
+  /* border-radius: 12px; */
+  object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-us-container {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .about-us-image {
+    margin-top: 30px;
+    max-width: 100%;
+  }
+}
+
+
+.about-us-container > div {
+    width: calc(50% - 10px);
+}
+
+.about-vision-mission{
+  padding-top: 80px;
+}
+.misson-pt {
+    padding-top: 50px;
+}
+
+.faq-area-page{
+  padding-top: 50px;
+}
+
+.faq-area-page .faq-title
+{
+  text-align: left;
+}
+
+
+/* ======================================================================NIOS Admission Pages css start here============================================== */
+
+
+
+
+
+    .hero-stream1-hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+      /* width: 90%; */
+      margin: 0 auto;
+      /* margin-bottom: 22px; */
+    }
+
+    .hero-stream1-hero-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      margin-left: 12px;
+    }
+
+    .hero-stream1-hero-title {
+      font-size: 45px;
+      font-weight: 700;
+      line-height: 55px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .hero-stream1-hero-subtitle {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 29px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .hero-stream1-apply-btn {
+      background-color: #0066ff;
+      color: #ffffff;
+      border: 1px solid #0066ff;
+      border-radius: 36px;
+      padding: 8px 34px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .hero-stream1-apply-btn:hover {
+      background-color: #0052cc;
+      transform: translateY(-2px);
+    }
+
+    .hero-stream1-main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .hero-stream1-highlight-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #33efa0;
+      border: 1px solid #ededed;
+      border-radius: 44px;
+      padding: 14px;
+      box-shadow: 8px 8px 56px rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-stream1-highlight-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .hero-stream1-highlight-text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      color: #00388c;
+      margin-top: 4px;
+    }
+
+    .hero-stream1-content-row {
+      display: flex;
+      /* flex-direction: column; */
+      gap: 80px;
+      align-items: flex-start;
+      width: 100%;
+      padding-top: 60px;
+    }
+
+    .hero-stream1-content-text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      color: #636363;
+      width: 100%;
+    }
+
+    .hero-stream1-contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background-color: #704fe6;
+      color: #ffffff;
+      border: 1px solid #704fe6;
+      border-radius: 28px;
+      padding: 8px 24px 8px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 15px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .hero-stream1-contact-btn:hover {
+      background-color: #5a3fd4;
+      transform: translateY(-2px);
+    }
+
+    .hero-stream1-contact-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .hero-stream1-content-image {
+      width: 100%;
+      height: 580px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+.hero-stream1-content-row > div {
+    width: calc(50% - 10px);
+}
+
+
+/* ----------------------------------------- info section area ==---------------------- */
+
+
+.info-section {
+      background-color: #dbf4ff;
+      width: 100%;
+      padding: 50px 28px;
+      margin: 60px 0px;
+    }
+
+    .info-content {
+      display: flex;
+      /* flex-direction: column; */
+      gap: 50px;
+      align-items: center;
+    }
+
+    .info-image {
+      width: 100%;
+      max-width: 460px;
+      /* height: 323px; */
+      border-radius: 161px;
+      align-self: flex-end;
+    }
+
+    .info-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      align-items: flex-start;
+      width: 100%;
+      margin: 9px 0;
+      padding-left: 50px;
+    }
+
+    .info-text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      color: #636363;
+      width: 100%;
+      /* padding-left: 50px; */
+    }
+
+    .info-text .hightlight {
+      /* font-weight: 600; */
+      color: #6259e8;
+    }
+
+    .info-contact-btn {
+      background-color: #6259e8;
+      color: #ffffff;
+      border: 1px solid #6259e8;
+      border-radius: 28px;
+      padding: 8px 24px 8px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 15px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .info-contact-btn:hover {
+      background-color: #4f46e5;
+      transform: translateY(-2px);
+    }
+
+
+    .admission-in-nios-stream-1-area .recognition-banner {
+    background-color: #0088FF;
+    padding: 12px;
+}
+
+.admission-in-nios-stream-1-area .banner-items {
+    margin-left: 20px;
+    color: white;
+    font-weight: 600;
+}
+
+.admission-in-nios-stream-1-area .recognition-text {
+    font-size: 20px;
+}
+
+
+ .admission-table-section {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+      margin: 60px 0px;
+    }
+
+    .admission-table {
+      /* background-color: #f9fafc; */
+      border: 1px solid #e4e4e4;
+      border-radius: 12px;
+      width: 100%;
+      overflow: hidden;
+      /* margin-bottom: 50px; */
+    }
+
+    .admission-table-header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admission-table-header-row {
+      display: flex;
+      background-color: #6259e8;
+    }
+
+    .admission-table-cell {
+      padding: 15px 20px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 23px;
+      color: #ffffff;
+      flex: 1;
+      text-align: center;
+      border-right: 1px solid #e1e1e1;
+      box-shadow: 0px -1px 1px #e1e1e1;
+    }
+
+    .admission-table-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admission-table-row {
+      display: flex;
+      background-color: #f9fafc;
+    }
+
+    .admission-table-data {
+      padding: 15px 17px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 16px;
+      color: #1b2128;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+      text-align: center;
+      border-right: 1px solid #e1e1e1;
+      box-shadow: 0px -1px 1px #e1e1e1;
+    }
+
+    .admission-status-badge {
+      background-color: #41b771;
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 10px 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: fit-content;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 18px;
+    }
+
+    .admission-status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #ffffff;
+      border-radius: 3px;
+    }
+
+    .pt-50{
+      padding-top: 50px;
+    }
+
+
+    .admission-in-nios-stream-1-area .process-steps {
+    gap: 12px;
+}
+
+.admission-in-nios-stream-1-area .step-content p {
+        font-size: 18px;
+        font-weight: 500;
+        color: #1E242C !important;
+    }
+
+
+    .admission-in-nios-stream-1-area .process-1 {
+    height: 400px;
+    object-fit: cover;
+}
+
+
+.admission-in-nios-stream-1-area .process-container {
+    padding-top: 20px;
+}
+
+
+
+
+/* ======================== last date section css start here====================== */
+
+
+.last-date-section {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    .last-date-header {
+      background-color: #f9fafc;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0px -1px 1px #e1e1e1;
+    }
+
+    .last-date-title {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: normal;
+      color: #0a0a0a;
+      margin-bottom: 0;
+    }
+
+    .last-date-list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .last-date-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .last-date-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .last-date-text {
+      background-color: #ffffff;
+      padding: 20px 17px;
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 17px;
+      color: #0a0a0a;
+      box-shadow: 0px -1px 1px #e1e1e1;
+      flex: 1;
+    }
+
+    .last-date-status {
+      background-color: transparent;
+      padding: 9px 31px;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 39px;
+      /* color: #1b2128; */
+      box-shadow: 0px -1px 1px #e1e1e1;
+      /* width: 22%; */
+      text-align: center;
+    }
+
+    .warning-notice {
+      background-color: rgba(252, 159, 99, 0.05);
+      border: 1px solid #fc9f63;
+      border-radius: 10px;
+      padding: 20px 17px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 16px;
+      margin: 50px 0px;
+      text-align: center;
+      color: #fc9f63;
+      width: auto;
+    }
+
+    .why-nios-section {
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .why-nios-title {
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 27px;
+      color: #262626;
+      margin-bottom: 30px;
+    }
+
+    .why-nios-title .highlight {
+      color: #4441e5;
+    }
+
+    .why-nios-text {
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 60px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #293347;
+      text-align: justify;
+    }
+
+    .documents-section {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      /* align-items: center; */
+      width: 100%;
+    }
+
+    .documents-title {
+      font-size: 36px;
+      font-weight: 500;
+      text-align: left!important;
+      line-height: 27px;
+      color: #000000;
+    }
+
+    .documents-title .highlight {
+      color: #4441e5;
+      font-weight: 600;
+    }
+
+    .documents-cards {
+      display: flex;
+      gap: 28px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .document-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 30px 35px;
+      box-shadow: 0px 10px 60px rgba(38, 44, 117, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      height: auto;
+    }
+
+    .document-card-title {
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 22px;
+      text-align: center;
+      color: #4441e5;
+    }
+
+    .document-card-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 25px;
+      color: #696983;
+      width: 100%;
+    }
+
+
+    .documents-cards > div {
+    width: calc(50% - 10px);
+}
+
+
+.admission-in-nios-stream-1-area .quick-title {
+    margin-bottom: 40px;
+}
+
+.link-here{
+  color:#007BFF;
+}
+
+.admission-in-nios-stream-1-area .faq-title{
+  text-align: left;
+}
+
+.documents-section{
+  margin-bottom: 50px;
+}
+
+
+
+.hero-stream2-apply-btn {
+    background-color: #33efa0;
+    color: #0f1788;
+    border: none;
+    border-radius: 36px;
+    padding: 12px 60px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.admission-close-badge {
+    background-color: #EB5454;
+    color: #ffffff;
+    border-radius: 22px;
+    padding: 10px 44px;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: fit-content;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.nios-admission-text{
+  padding-top: 50px;;
+}
+
+.require-list li{
+  margin:10px 0px
+}
+
+.stream3-table{
+ margin-top: 60px;
+}
+
+/* ===============================================================Contactus Page Css Start Here ========================================= */
+.contacts-page-hero {
+    background: linear-gradient(to bottom, #4441E5, #3C26BE);
+    padding: 50px 0px;
+    text-align: center;
+}
+
+.contacts-page-hero h2{
+  font-size: 30px;
+  color:white;
+
+}
+
+.contacts-page-hero p{
+  font-size: 17px;
+  color:white;
+}
+
+.contacts-page-hero p {
+    font-size: 16px;
+    color: #FFFFFFCC;
+    padding-top: 10px;
+    margin-bottom: 0;
+}
+
+
+
+.contacts_details-row{
+  display: flex;
+  justify-content:space-between;
+  margin-top: 60px;
+  margin-bottom: 60px;
+
+
+}
+.contacts_details-row > div {
+    width: calc(33.33% - 10px);
+    border: 1px solid #0000001A;
+    border-radius: 13px;
+    text-align: center;
+    padding: 20px 30px;
+}
+.contacts_details-row .location-pins {
+    height: 38px;
+    width: 38px;
+    background-color: #0066FF1A;
+    border-radius: 8px;
+    padding: 10px;
+    margin: auto;
+}
+
+.contacts_details-row .location-title {
+    padding-top: 15px;
+    font-size: 22px;
+    padding-bottom: 5px;
+    line-height: 27px;
+}
+
+.contacts_details-row .location-text {
+        color: #717182;
+    }
+
+    .contacts_details-row .c-icons .location-text {
+        font-size: 16px;
+        color: #333333;
+    }
+
+    .details-content-area .faq-title{
+      text-align: left;
+    }
+
+    .details-content-area h3{
+      font-size: 24px;
+      color:#262626;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+
+    .hero-stream1-hero-section {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 70px 28px;
+    text-align: center;
+    background-image: url(/assets/images/nios-admission/hero.png);
+    color: white;
+    height: 620px;
+    background-size: cover;
+    width: 100%;
+    display: flex
+;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    background-position: center;
 }

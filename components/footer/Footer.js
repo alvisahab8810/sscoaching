@@ -19,7 +19,7 @@ export default function Footer() {
                   alt="Email Icon"
                   className="contact-icon"
                 />
-                <span className="contact-text">sscoachinglko@gmail.com</span>
+                <span className="contact-text"><a href="mailto:sscoachinglko@gmail.com">sscoachinglko@gmail.com</a></span>
               </div>
               <div className="contact-item">
                 <img
@@ -57,22 +57,22 @@ export default function Footer() {
                 }}
               >
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/nios-admission/admission-in-nios-stream-1" className="footer-link">
                     NIOS Admission
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/about-us" className="footer-link">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/subject/nios-10th-secondary" className="footer-link">
                     Subject List
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/question-papers/paper-secondary-10th" className="footer-link">
                     Ques. Papers
                   </a>
                 </li>
@@ -90,28 +90,30 @@ export default function Footer() {
                   gap: "8px",
                 }}
               >
+
+                 <li>
+                  <a href="/" className="footer-link">
+                    Home
+                  </a>
+                </li>
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/faq" className="footer-link">
                     FAQ
                   </a>
                 </li>
+               
                 <li>
-                  <a href="#" className="footer-link">
-                    Time Table
+                  <a href="/blogs" className="footer-link">
+                    Blogs
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="footer-link">
-                    NIOS Results
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="footer-link">
+                  <a href="/gallery" className="footer-link">
                     Gallery
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="footer-link">
+                  <a href="/contact-us" className="footer-link">
                     Contact Us
                   </a>
                 </li>
@@ -121,14 +123,14 @@ export default function Footer() {
             <div className="social-profiles">
               <h3 className="footer-section-title">Social Profiles</h3>
               <div className="social-icons">
-                <a href="#" className="social-icon">
+                <a href="https://www.facebook.com/SSCoachingLucknow" className="social-icon">
                   <img
                     src="/assets/icons/footer/facebook.svg"
                     alt="Facebook"
                     style={{ width: "24px", height: "24px" }}
                   />
                 </a>
-                <a href="#" className="social-icon">
+                <a href="https://x.com/SSCoachingTwit" className="social-icon">
                   <img
                     src="/assets/icons/footer/twitter.svg"
                     alt="Twitter"

@@ -2,19 +2,27 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
+import Popup from "@/components/home/Popup";
 import SubjectTable from "@/components/subjects/SecondaryCourseMaterial";
 
 import React from "react";
 
 export default function TmaSrsecondary12th() {
   return (
-    <div id="paper-secondary-10th">
+    <div id="paper-secondary-10th" className="tma-sr-secondary">
       <Header />
       <Offcanvas />
       <SubjectTable />
+        <div className="container desktop-none">
+        <a href="tel:+91 9935035316" className="cta-button">
+          For any help related to admission in NIOS please contact SS Coaching
+          on our Mobile No. +91 9935035316
+        </a>
+      </div>
+
       <FAQ />
-      <div className="container">
-        <a href="#" className="cta-button">
+      <div className="container mobile-none">
+        <a href="tel:+91 9935035316" className="cta-button mt-0">
           For any help related to admission in NIOS please contact SS Coaching
           on our Mobile No. +91 9935035316
         </a>
@@ -32,6 +40,7 @@ export default function TmaSrsecondary12th() {
       </div>
 
       <Footer />
+      <Popup/>
     </div>
   );
 }

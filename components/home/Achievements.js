@@ -232,7 +232,7 @@ export default function Instagram() {
             loop={true}
             slidesPerView={6}
             breakpoints={{
-              240: { slidesPerView: 1.5, spaceBetween: 10, centeredSlides: true },
+              240: { slidesPerView: 2.5, spaceBetween: 10, centeredSlides: true },
               768: { slidesPerView: 3, spaceBetween: 10 },
               1024: { slidesPerView: 6, spaceBetween: 10 },
             }}

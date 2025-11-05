@@ -352,7 +352,7 @@ const QuestionPapers = () => {
         </section>
 
 
-          <a href="#" className="cta-button">You can download Secondary class 10th previous year's NIOS question papers and NIOS Sample paper 2025 from SS Coaching website exclusively.</a>
+          <a href="#" className="cta-button">You can download Secondary className 10th previous year's NIOS question papers and NIOS Sample paper 2025 from SS Coaching website exclusively.</a>
 
       </div>
     </section>

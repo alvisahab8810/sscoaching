@@ -90,7 +90,7 @@ export default function Home() {
         <QuickLinks />
         <FAQ />
 
-        <Popup/>
+        <Popup />
 
         <Footer />
       </section>

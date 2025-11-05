@@ -94,6 +94,8 @@ import Head from "next/head";
 import Header from "@/components/header/Header";
 import { FaUser, FaCalendarAlt } from "react-icons/fa"; // React Icons
 import RegistrationForm from "@/components/home/RegistrationForm";
+import Popup from "@/components/home/Popup";
+import Offcanvas from "@/components/header/Offcanvas";
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -120,8 +122,10 @@ export default function Blogs() {
   }, []);
 
   return (
-    <div>
+    <div className="blogs-list-area">
       <Header />
+       <Offcanvas />
+      
       <div className="container py-5">
         {/* <h2 className="mb-4">Our Blogs</h2> */}
         {loading ? (
@@ -141,7 +145,7 @@ export default function Blogs() {
                             src={blog.coverImage}
                             className="card-img-top"
                             alt={blog.title}
-                            style={{ height: "250px", objectFit: "cover" }}
+                            style={{ height: "225px", objectFit: "cover" }}
                           />
                         )}
                         <div className="card-body d-flex flex-column">
@@ -199,6 +203,7 @@ export default function Blogs() {
         )}
       </div>
       <Footer />
+      <Popup/>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Link from 'next/link'
 export default function Download() {
   return (
    
@@ -32,6 +32,7 @@ export default function Download() {
         <div style={{ display: "flex", gap: "80px" }}>
           <div className="expandable-list" style={{ width: "48%" }}>
             <div className="expand-item">
+              <Link href="https://sscoaching.in/nios-datesheet_2240.html">
               <div className="expand-header stream1">
                 <div className="expand-text">Check NIOS Dates Now</div>
                 <div className="expand-icon">
@@ -42,6 +43,7 @@ export default function Download() {
                   />
                 </div>
               </div>
+              </Link>
             </div>
         
           
@@ -49,6 +51,8 @@ export default function Download() {
 
           <div className="expandable-list" style={{ width: "48%" }}>
             <div className="expand-item">
+              <Link href="https://sscoaching.in/NIOS-Hall-Ticket-For-Class-10th-&-12th_3359.html">
+
               <div className="expand-header stream34">
                 <div className="expand-text">Check Hall Ticket Tips</div>
                 <div className="expand-icon">
@@ -59,6 +63,7 @@ export default function Download() {
                   />
                 </div>
               </div>
+              </Link>
             </div>
            
           </div>

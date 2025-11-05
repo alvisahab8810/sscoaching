@@ -32,21 +32,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -57,21 +57,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -83,21 +83,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -109,21 +109,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -134,21 +134,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -159,21 +159,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -185,21 +185,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -211,21 +211,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -237,21 +237,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -264,21 +264,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -291,21 +291,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -316,21 +316,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -341,21 +341,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -366,21 +366,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -391,21 +391,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -417,21 +417,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -442,21 +442,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -467,21 +467,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -492,21 +492,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -517,21 +517,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
 
@@ -542,21 +542,21 @@ export default function TmaSrSubjects() {
                 <img
                   src="/assets/images/question-papers/icons/eye.svg"
                   alt="Preview"
-                  class="meta-icon"
+                  className="meta-icon"
                 />{" "}
                 Preview
               </button>
-              {/* <a href="#" class="">Preview</a> */}
+              {/* <a href="#" className="">Preview</a> */}
               <button className="action-btn download-btn">
                 <img
                   src="/assets/images/question-papers/icons/download.svg"
                   alt="Download"
-                  class="meta-icon"
+                  className="meta-icon"
                 ></img>{" "}
                 Download
               </button>
 
-              {/* <a href="#" class="action-btn download-btn">Download</a> */}
+              {/* <a href="#" className="action-btn download-btn">Download</a> */}
             </div>
           </div>
         </div>

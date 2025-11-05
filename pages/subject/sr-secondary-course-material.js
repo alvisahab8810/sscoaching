@@ -2,20 +2,35 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
+import Popup from "@/components/home/Popup";
 import SrSecondaryCourseMaterial from "@/components/subjects/SrSecondaryCourseMaterial";
 
 import React from "react";
 
 export default function srsecondary() {
   return (
-    <div id="paper-secondary-10th">
+    <div id="paper-secondary-10th" className="srsecondary-course-material">
       <Header />
       <Offcanvas />
       <SrSecondaryCourseMaterial/>
 
+         <div className="full-btn cta-btn-2nd">
+                <a href="#" className="contact-btn">
+                  Contact Us For help
+                </a>
+                <div className="contact-btn1">
+                  <img
+                    src="/assets/images/question-papers/icons/send.svg"
+                    alt="Send"
+                    width="16"
+                    height="16"
+                  />
+                </div>
+              </div>
+
       <FAQ />
       <div className="container">
-        <a href="#" className="cta-button">
+        <a href="tel:+91 9935035316" className="cta-button">
           For any help related to admission in NIOS please contact SS Coaching
           on our Mobile No. +91 9935035316
         </a>
@@ -30,6 +45,7 @@ export default function srsecondary() {
       </div>
 
       <Footer />
+      <Popup/>
     </div>
   );
 }

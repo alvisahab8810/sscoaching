@@ -14,6 +14,7 @@ import { FaUser, FaCalendarAlt, FaTag, FaFolder } from "react-icons/fa";
 import Link from "next/link";
 import RegistrationForm from "@/components/home/RegistrationForm";
 import Popup from "@/components/home/Popup";
+import Offcanvas from "@/components/header/Offcanvas";
 
 export default function BlogDetail() {
   const router = useRouter();
@@ -123,7 +124,7 @@ export default function BlogDetail() {
   if (!blog) return <p className="text-center py-5">Blog not found.</p>;
 
   return (
-    <div>
+    <div className="blogs-details-area">
       {/* Dynamic meta tags for SEO */}
       <Head>
         <title>{blog.metaTitle || blog.title}</title>
@@ -145,6 +146,8 @@ export default function BlogDetail() {
       </Head>
 
       <Header />
+      <Offcanvas />
+      
       <div className="container py-5 blog-details-page">
         <div className="row main-layout">
           <div className="col-md-8 left-col">
@@ -157,10 +160,10 @@ export default function BlogDetail() {
                   className="img-fluid mb-4"
                   style={{
                     maxHeight: "509px",
-                    minHeight: "509px",
+                    // minHeight: "509px",
                     objectFit: "cover",
                     width: "100%",
-                    borderRadius: "30px",
+                    borderRadius: "10px",
                   }}
                 />
               )}
@@ -339,6 +342,7 @@ export default function BlogDetail() {
 
       <Popup/>
       <Footer />
+      <Popup/>
     </div>
   );
 }
