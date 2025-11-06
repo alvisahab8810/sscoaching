@@ -1,11 +1,16 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 
 export default function Topbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
       <div className="container-fluid">
-        <span className="navbar-brand fw-bold text-primary">Dashboard</span>
+        {/* <span className="navbar-brand fw-bold text-primary">Dashboard</span> */}
+          <Link href="/dashboard" >
+        <img src="/assets/images/logo.png" alt="SS Coaching Logo" width={200} />
+      </Link>
+
 
         {/* <form className="d-none d-md-flex ms-auto me-3">
           <input
@@ -25,13 +30,15 @@ export default function Topbar() {
             aria-expanded="false"
           >
             <img
-              src="/assets/images/g-reviews/user.svg"
+              src="/assets/icons/user.svg"
               alt="mdo"
               width="32"
               height="32"
-              className="rounded-circle me-2"
+              className="rounded-circle me-1"
             />
-            <strong>Admin</strong>
+
+            Admin
+            {/* <strong></strong> */}
           </a>
           <ul
             className="dropdown-menu dropdown-menu-end"

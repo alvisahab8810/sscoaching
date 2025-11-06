@@ -99,7 +99,7 @@ export default function Sidebar() {
     sidebar: {
       width: "250px",
       minHeight: "100vh",
-      backgroundColor: "#1e1e2f",
+      backgroundColor: "#1B1B46",
       color: "#fff",
       padding: "1rem",
       display: "flex",
@@ -128,7 +128,7 @@ export default function Sidebar() {
       margin: 0,
     },
     navItem: {
-      marginBottom: "0.5rem",
+      marginBottom: "0.9rem",
     },
     navLink: (active = false) => ({
       color: active ? "#fff" : "#cfcfd1",
@@ -139,7 +139,7 @@ export default function Sidebar() {
       borderRadius: "0.5rem",
       cursor: "pointer",
       fontWeight: 500,
-      backgroundColor: active ? "#5656a3" : "transparent",
+      backgroundColor: active ? "#5641CE" : "transparent",
       transition: "all 0.3s",
     }),
     navLinkHover: {
@@ -152,7 +152,7 @@ export default function Sidebar() {
     subMenu: {
       marginTop: "0.3rem",
       marginLeft: "35px",
-      // borderLeft: "2px solid #5656a3",
+      // borderLeft: "2px solid ##5641CE",
       paddingLeft: "0.5rem",
       animation: "slideDown 0.3s ease-out",
       listStyle: "none"
@@ -180,6 +180,7 @@ export default function Sidebar() {
       transition: "transform 0.3s",
       transform: blogOpen ? "rotate(180deg)" : "rotate(0deg)",
     },
+
     keyframes: `
       @keyframes slideDown {
         from { opacity: 0; transform: translateY(-5px); }
@@ -189,18 +190,15 @@ export default function Sidebar() {
   };
 
   return (
-    <div style={styles.sidebar}>
+    <div className="dashboard-sidebar0-area" style={styles.sidebar}>
       <style>{styles.keyframes}</style>
-      <Link href="/dashboard" style={styles.logoLink}>
-        <img src="/assets/images/logo.png" alt="SS Coaching Logo" style={styles.logo} />
-      </Link>
-
+    
       <hr style={styles.divider} />
 
       <ul style={styles.navList}>
         <li style={styles.navItem}>
           <Link href="/dashboard" style={styles.navLink(pathname === "/dashboard")}>
-            <BsFolder style={styles.icon} /> Dashboard
+             <img className="dashboard-icon" src="/assets/icons/dashboard.svg"/>  Dashboard
           </Link>
         </li>
 
@@ -212,7 +210,7 @@ export default function Sidebar() {
             style={styles.navLink()}
           >
             <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <BsFolder style={styles.icon} /> Blogs
+              <img src="/assets/icons/blog.svg"></img> Blogs
             </span>
             <BsChevronDown style={styles.arrow} />
           </div>
@@ -241,15 +239,15 @@ export default function Sidebar() {
 
         <li style={styles.navItem}>
           <Link href="/dashboard/admin/faqs" style={styles.navLink()}>
-            <BsPeople style={styles.icon} /> ADD FAQ
+             <img src="/assets/icons/faq.svg" style={{marginRight:"8px"}}></img> FAQs
           </Link>
         </li>
-
+{/* 
         <li style={styles.navItem}>
           <Link href="#" style={styles.navLink()}>
             <BsGear style={styles.icon} /> Settings
           </Link>
-        </li>
+        </li> */}
       </ul>
 
       <hr style={styles.divider} />

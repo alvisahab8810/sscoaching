@@ -52,20 +52,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
@@ -109,39 +95,65 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <Sidebar />
+    <div>
+      {/* Topbar */}
+      <Topbar />
 
-      {/* Main Content Area */}
-      <div className="flex-grow-1 bg-light">
-        {/* Topbar */}
-        <Topbar />
+      <div className="d-flex" style={{ minHeight: "100vh" }}>
+        {/* Sidebar */}
+        <Sidebar />
 
-        {/* Dashboard Content */}
-        <div className="container-fluid p-4">
-          <h4 className="fw-bold mb-4">Welcome to Admin Dashboard</h4>
+        {/* Main Content Area */}
+        <div className="flex-grow-1 bg-light">
+          {/* Dashboard Content */}
+          <div className="container-fluid p-4">
+            <h4 className="fw-bold mb-4">Welcome to Admin Dashboard</h4>
 
-          <div className="row g-3">
-            <div className="col-md-3">
-              <div className="card shadow-sm border-0">
-                <div className="card-body text-center">
-                  <h6 className="card-title text-muted mb-2">Total Blogs</h6>
-                  <p className="fs-3 fw-bold text-primary">{stats.blogs}</p>
+
+            <div className="stats-cards">
+              <div className="row g-3">
+                <div className="col-md-3 col-6">
+                  <div className="stats-card stats-card-green">
+                    <div className="stats-card-header">
+                      <h6 className="stats-title">Total Blogs</h6>
+                      <span className="stats-number">4</span>
+                    </div>
+                    <p className="stats-subtext">4 this month</p>
+                  </div>
+                </div>
+
+                <div className="col-md-3 col-6">
+                  <div className="stats-card stats-card-blue">
+                    <div className="stats-card-header">
+                      <h6 className="stats-title">Total FAQs</h6>
+                      <span className="stats-number">24</span>
+                    </div>
+                    <p className="stats-subtext">4 this month</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="col-md-3">
-              <div className="card shadow-sm border-0">
-                <div className="card-body text-center">
-                  <h6 className="card-title text-muted mb-2">Total FAQs</h6>
-                  <p className="fs-3 fw-bold text-info">{stats.faqs}</p>
+
+            {/* <div className="row g-3">
+              <div className="col-md-3">
+                <div className="card shadow-sm border-0">
+                  <div className="card-body text-center">
+                    <h6 className="card-title text-muted mb-2">Total Blogs</h6>
+                    <p className="fs-3 fw-bold text-primary">{stats.blogs}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-        
+              <div className="col-md-3">
+                <div className="card shadow-sm border-0">
+                  <div className="card-body text-center">
+                    <h6 className="card-title text-muted mb-2">Total FAQs</h6>
+                    <p className="fs-3 fw-bold text-info">{stats.faqs}</p>
+                  </div>
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

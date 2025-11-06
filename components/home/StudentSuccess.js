@@ -91,34 +91,42 @@ import { Autoplay, FreeMode } from "swiper/modules";
 export default function StudentSuccess() {
   const students = [
     {
-      name: "ARPIT YADAV",
-      score: "96.2%",
-      img: "/assets/images/students/student1.png",
+      name: "Anshika Raj",
+      score: "96.4%",
+      img: "/assets/images/students/stu1.svg",
       bg: "#ffeed1",
-    },
-    {
-      name: "AYUSH RAI",
-      score: "96%",
-      img: "/assets/images/students/student2.png",
-      bg: "#f3efd0",
     },
     {
       name: "ROSHAN CHHETRI",
       score: "96%",
-      img: "/assets/images/students/student3.png",
+      img: "/assets/images/students/stu2.svg",
       bg: "#e1e9fe",
     },
     {
-      name: "ANSHIKA RAJ",
-      score: "96.4%",
-      img: "/assets/images/students/student4.png",
-      bg: "#ebf5d5",
+      name: "AYUSH RAI",
+      score: "96%",
+      img: "/assets/images/students/stu3.svg",
+      bg: "#f3efd0",
     },
+    
+   
     {
+      name: "ARPITA YADAV",
+      score: "96.2%",
+      img: "/assets/images/students/stu4.svg",
+      bg: "#ffeed1",
+    },
+     {
       name: "ASHWANI SINGH",
       score: "95.8%",
-      img: "/assets/images/students/student1.png",
+      img: "/assets/images/students/stu5.svg",
       bg: "#ffeed1",
+    },
+     {
+      name: "CHAUDHARY SANA",
+      score: "95.8%",
+      img: "/assets/images/students/stu6.svg",
+      bg: "#ebf5d5",
     },
   ];
 
@@ -129,10 +137,10 @@ export default function StudentSuccess() {
           modules={[Autoplay, FreeMode]}
           freeMode={true}
           loop={true}
-          speed={6000}
+          speed={5000}
           autoplay={{
             delay: 0,
-            disableOnInteraction: false,
+            // disableOnInteraction: false,
           }}
           slidesPerView={7}
           spaceBetween={10}
@@ -141,7 +149,7 @@ export default function StudentSuccess() {
             576: { slidesPerView: 2.5 },
             992: { slidesPerView: 7 },
           }}
-          allowTouchMove={false}
+          allowTouchMove={true}
           className="students-swiper"
         >
           {[...students, ...students].map((student, index) => (

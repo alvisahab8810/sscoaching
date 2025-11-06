@@ -41,6 +41,9 @@
 
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
+    .blog-details-page .author-icons {
+    font-size: 14px !important;
+}
    .mob-menus .accordion-body {
         padding:10px;
     }
@@ -1164,7 +1167,7 @@ ease;
 }
 
 .student-name {
-    font-size: 12px;
+    font-size: 10px;
 }
 
     .student-overlay {

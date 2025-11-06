@@ -4600,3 +4600,116 @@ svg.green-svg {
     align-items: center;
     background-position: center;
 }
+
+.dashboard-sidebar0-area .dashboard-icon {
+    margin-right: 8px;
+}
+
+#userDropdown{
+     background: #007bff33;
+    border-radius: 50px;
+    padding: 5px 10px 5px 6px;
+}
+
+
+/* 🌟 Parent Container */
+.stats-cards {
+  padding: 1rem 0;
+      border-radius: 16px;
+    padding-left: 15px;
+    border:1px solid #ddd;
+
+}
+
+.stats-cards .stats-card {
+  border-radius: 1rem;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 💚 Green Card */
+.stats-card-green {
+  background: linear-gradient(135deg, #e7f8ec, #d8f2e0);
+  color: #063d25;
+  border:1px solid #A4F4CF;
+}
+
+/* 💙 Blue Card */
+.stats-card-blue {
+  background: linear-gradient(135deg, #e8edff, #dde5ff);
+  color: #1447E6;
+  border:1px solid #BEDBFF;
+}
+
+/* 🧾 Header (Title + Number) */
+.stats-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 🏷️ Title */
+.stats-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 🔢 Number */
+.stats-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* 📅 Subtext */
+.stats-subtext {
+    font-size: 0.875rem;
+    color: #007A55;
+    margin: 0.5rem 0 0;
+}
+
+/* 🪶 Optional subtle hover effect */
+.stats-card:hover {
+  transform: translateY(-3px);
+  transition: 0.2s ease;
+}
+
+/* 📱 Mobile tweaks */
+@media (max-width: 576px) {
+  .stats-card {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+  .stats-title {
+    font-size: 0.95rem;
+  }
+  .stats-number {
+    font-size: 1.1rem;
+  }
+}
+
+
+.stats-card-green  .stats-title {
+    font-size: 22px;
+    color:#007A55;
+}
+
+.stats-card-green .stats-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: #006045;
+}
+
+.stats-card-blue .stats-title {
+    font-weight: 600;
+    margin: 0;
+    font-size: 22px;
+    color: #1447E6;
+}
+
+.stats-card-blue  .stats-subtext{
+    color: #1447E6;
+
+}
