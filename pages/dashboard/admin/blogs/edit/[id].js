@@ -8,6 +8,7 @@ import Topbar from "@/components/dashboard/Topbar";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
+import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 
 export default function EditBlog() {
   const router = useRouter();
@@ -122,6 +123,7 @@ export default function EditBlog() {
   return (
     <div className="d-flex" style={{ minHeight: "100vh" }}>
       <Sidebar />
+       <AdminOffcanvas/>
       <div className="flex-grow-1 bg-light">
         <Topbar />
         <div className="container-fluid p-4">

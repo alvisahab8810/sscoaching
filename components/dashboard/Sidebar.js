@@ -97,7 +97,7 @@ export default function Sidebar() {
 
   const styles = {
     sidebar: {
-      width: "250px",
+      width: "16%",
       minHeight: "100vh",
       backgroundColor: "#1B1B46",
       color: "#fff",
@@ -133,7 +133,6 @@ export default function Sidebar() {
     navLink: (active = false) => ({
       color: active ? "#fff" : "#cfcfd1",
       display: "flex",
-      // justifyContent: "space-between",
       alignItems: "center",
       padding: "0.6rem 0.8rem",
       borderRadius: "0.5rem",
@@ -152,7 +151,6 @@ export default function Sidebar() {
     subMenu: {
       marginTop: "0.3rem",
       marginLeft: "35px",
-      // borderLeft: "2px solid ##5641CE",
       paddingLeft: "0.5rem",
       animation: "slideDown 0.3s ease-out",
       listStyle: "none"
@@ -190,7 +188,8 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="dashboard-sidebar0-area" style={styles.sidebar}>
+
+    <div className="dashboard-sidebar0-area " style={styles.sidebar}>
       <style>{styles.keyframes}</style>
     
       <hr style={styles.divider} />
@@ -242,28 +241,11 @@ export default function Sidebar() {
              <img src="/assets/icons/faq.svg" style={{marginRight:"8px"}}></img> FAQs
           </Link>
         </li>
-{/* 
-        <li style={styles.navItem}>
-          <Link href="#" style={styles.navLink()}>
-            <BsGear style={styles.icon} /> Settings
-          </Link>
-        </li> */}
+
       </ul>
 
-      <hr style={styles.divider} />
-
-      <div style={styles.userDropdown}>
-        <a href="#!" style={styles.userLink}>
-          <img
-            src="https://via.placeholder.com/32"
-            alt="Admin"
-            width="32"
-            height="32"
-            className="rounded-circle"
-          />
-          <strong>Admin</strong>
-        </a>
-      </div>
+ 
     </div>
+
   );
 }

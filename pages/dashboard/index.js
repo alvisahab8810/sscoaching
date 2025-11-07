@@ -53,6 +53,7 @@
 // }
 
 "use client";
+import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import React, { useEffect, useState } from "react";
@@ -101,13 +102,14 @@ export default function Dashboard() {
 
       <div className="d-flex" style={{ minHeight: "100vh" }}>
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar  />
+        <AdminOffcanvas/>
 
         {/* Main Content Area */}
         <div className="flex-grow-1 bg-light">
           {/* Dashboard Content */}
           <div className="container-fluid p-4">
-            <h4 className="fw-bold mb-4">Welcome to Admin Dashboard</h4>
+            <h4 className="fw-bold mb-4 dashbaord-main-heading">Welcome to Admin Dashboard</h4>
 
 
             <div className="stats-cards">
@@ -116,9 +118,16 @@ export default function Dashboard() {
                   <div className="stats-card stats-card-green">
                     <div className="stats-card-header">
                       <h6 className="stats-title">Total Blogs</h6>
-                      <span className="stats-number">4</span>
+                      <span className="stats-number">{stats.blogs}</span>
                     </div>
-                    <p className="stats-subtext">4 this month</p>
+                    <p className="stats-subtext mobile-none">{stats.blogs} this month</p>
+
+                     <div className="desktop-none blogs-mob-btn">
+                        <a href="/dashboard/admin/blogs/create" className="d-flex add-new-blogs ">
+                         <img src="/assets/icons/add-new.svg" className="me-2" /> Add New Blog
+                        </a>
+                      </div>                     
+                    
                   </div>
                 </div>
 
@@ -126,9 +135,15 @@ export default function Dashboard() {
                   <div className="stats-card stats-card-blue">
                     <div className="stats-card-header">
                       <h6 className="stats-title">Total FAQs</h6>
-                      <span className="stats-number">24</span>
+                      <span className="stats-number">{stats.faqs}</span>
                     </div>
-                    <p className="stats-subtext">4 this month</p>
+                    <p className="stats-subtext mobile-none">{stats.faqs} this month</p>
+
+                     <div className="desktop-none faqs-mob-btn">
+                        <a href="/dashboard/admin/faqs/" className="d-flex add-new-blogs ">
+                         <img src="/assets/icons/add-new.svg" className="me-2" /> Add New FAQ
+                        </a>
+                    </div> 
                   </div>
                 </div>
               </div>

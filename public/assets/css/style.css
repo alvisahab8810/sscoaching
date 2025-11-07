@@ -4713,3 +4713,240 @@ svg.green-svg {
     color: #1447E6;
 
 }
+
+
+/* ===== Custom Dropdown Styles ===== */
+
+.user-menu {
+  width: 320px;
+  border-radius: 16px!important;
+  border: 1px solid #E8E8E8!important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+  background: white;
+}
+
+/* Header section (with image + text) */
+.user-header {
+  padding: 15px;
+  /* background: #fafafa; */
+  border-bottom: 1px solid #eee;
+}
+
+.user-header-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.user-info h6 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-info small {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Dropdown items */
+.user-item {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #444;
+  padding: 10px 15px;
+  transition: background 0.2s ease;
+}
+
+.user-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-divider {
+  margin: 0;
+  border-color: #eee;
+}
+.user-info {
+    padding-left: 10px;
+}
+
+.width-80{
+  width:84%;
+}
+
+.add-new-blogs{
+  padding:10px 15px;
+  background:#624CE5;
+  color:white;
+  border-radius: 10px;
+  width: fit-content;
+
+}
+
+.admin-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+      padding-bottom: 35px;
+}
+.admin-row h4{
+  margin-bottom: 0;
+}
+.blog-list-area h5{
+  font-size: 18px!important;
+}
+
+
+.brandbg{
+  background:#624CE5!important;
+  display: flex!important;
+  align-items: center;
+  justify-content: center;
+}
+.brandbg img{
+      margin-right: 10px;
+    width: 16px;
+}
+
+.brand-cancel{
+      color: #565e64!important;
+      background:none!important;
+}
+
+
+
+/* FAQ Table Styling */
+.table-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.faq-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.faq-table thead {
+  background: #f9fafb;
+}
+.faq-table thead th {
+    color: #111;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 18px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.faq-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.faq-table tbody tr:hover {
+  background-color: #f7f9fb;
+}
+
+.faq-table tbody td {
+  padding: 12px 18px;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Question cell */
+.faq-question {
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Date cell */
+.faq-date {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-published {
+  background: #e6f9f0;
+  color: #0f8a4a;
+}
+
+.status-draft {
+  background: #ebe7ff;
+  color: #5a35c2;
+}
+
+/* Action buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+
+
+.filter-btn{
+  border:1px solid #dee2e6!important;
+  background:white!important;
+}
+
+.filter-btn:hover{
+background:none!important;
+}
+
+.faq-section .active .page-link{
+  background:#624CE5!important;
+  border-color:#624CE5!important;
+  color:#fff!important;
+}
+
+.faq-section .page-link{
+  color:#111!important;
+}
+
+.faq-section .page-link:focus {
+    box-shadow: unset;
+}
+
+
+.faq-section .filter-btn:hover{
+  color:#111;
+}
+
+
+.faq-section-admin{
+  padding-bottom: 0!important;
+}
+
+    .admin-canvas {
+        width: 80% !important;
+        background-color: #1B1B46 !important;
+        color: #fff !important;
+    }
