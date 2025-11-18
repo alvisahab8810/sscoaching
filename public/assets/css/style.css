@@ -376,6 +376,7 @@ ease;
       border: 1px solid #ddd;
       flex-shrink: 0;
       /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
+      height:220px;
     }
 
     .review-header {
@@ -3765,22 +3766,22 @@ span.pill.practical .green-svg{
     }
 
     .note-box {
-        padding: 8px 50px;
-    margin: 0 30px;
-    border: 1px solid #fc9f63;
-    border-radius: 10px;
-    background-color: rgba(252, 159, 99, 0.05);
-    width: fit-content;
+        padding: 12px 50px;
+        margin: 0 30px;
+        border: 1px solid #fc9f63;
+        border-radius: 10px;
+        background-color: rgba(252, 159, 99, 0.05);
+        width: fit-content;
     }
 
     .note-content {
       font-size: 16px;
       font-family: Poppins;
       font-weight: 600;
-      line-height: 1.5;
       color: #fc9f63;
+      margin-bottom: 0;
+      margin-top: 0;
       text-align: center;
-      margin-top: 4px;
     }
 
     @media (min-width: 768px) {
@@ -3791,9 +3792,10 @@ span.pill.practical .green-svg{
 
     @media (min-width: 1024px) {
       .note-content {
-        font-size: 18px;
-        line-height: 31px;
+        font-size: 16px;
+        /* line-height: 31px; */
         margin-bottom: 0;
+        margin-top: 0;
       }
     }
 svg.green-svg {
@@ -4934,19 +4936,22 @@ background:none!important;
 .faq-section .page-link:focus {
     box-shadow: unset;
 }
-
-
 .faq-section .filter-btn:hover{
   color:#111;
 }
-
-
 .faq-section-admin{
   padding-bottom: 0!important;
 }
 
-    .admin-canvas {
-        width: 80% !important;
-        background-color: #1B1B46 !important;
-        color: #fff !important;
-    }
+.admin-canvas {
+    width: 80% !important;
+    background-color: #1B1B46 !important;
+    color: #fff !important;
+}
+
+
+
+
+
+
+

@@ -25,7 +25,7 @@ export default function Hero() {
           <div className="nios-125h-senior-content-section">
             <div>
               <h2 className="nios-125h-senior-section-title">
-                SENIOR SECONDARY COURSE
+               NIOS SECONDARY COURSES
               </h2>
               <p className="nios-125h-senior-section-text">
                 This Course is equivalent to the Xth standard. You can choose subjects from the Scheme of Studies given in below Table. However, for your requirement of success., complete a minimum of five subjects with atleast one language or at most two languages, which is compulsory for certification.

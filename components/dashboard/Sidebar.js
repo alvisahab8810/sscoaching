@@ -242,6 +242,12 @@ export default function Sidebar() {
           </Link>
         </li>
 
+         <li style={styles.navItem}>
+          <Link href="/dashboard/admin/leads" style={styles.navLink()}>
+             <img src="/assets/icons/faq.svg" style={{marginRight:"8px"}}></img> Leads
+          </Link>
+        </li>
+
       </ul>
 
  

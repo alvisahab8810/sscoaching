@@ -12,9 +12,26 @@ import React from "react";
 import Link from "next/link";
 import HeroStream1Mobile from "@/components/NiosAdmission/HeroStream1Mobile";
 import QueryForm from "@/components/home/QueryForm";
+import Head from "next/head";
 
 export default function AdmissionInNiosStream1() {
   return (
+    <>
+     <Head>
+        <title>
+           NIOS Admission in Lucknow 2026 | NIOS Stream-1 Admission For 10th And 12th Students (Apply Now)
+        </title>
+        <meta
+          name="description"
+          content="SS Coaching is best center for NIOS admission in Lucknow, helps to prepare you for the examination of National Institute of Open Schooling Board (NIOS) in Stream-1. Hurry-Up to save your precious time and take the NIOS admission in SS Coaching. Seats are limited."
+        />
+        <meta
+          name="keywords"
+          content="NIOS Admission, NIOS Admission 2026, Nios online admission, Nios registration, NIOS admission 2026, NIOS 12th admission, NIOS 10th admission, NIOS late admission 2025-26, NIOS late admission 2025-26, NIOS examination 2026, NIOS examination 2026, nios form, NIOS class 12 admission, NIOS class 12 admission 2026, NIOS class 12 admission 2026, NIOS class 10 admission, open 12th form, NIOS registration 2026, NIOS 12th admission 2026, 12th class open, NIOS online admission 2026, nios online, nios admission form, nios b.ed admission 2026, nios on demand examination, open 10th class form, nios admission dates, Nios registration online, Admission Open, NIOS Admission Stream-1 Block-2, NIOS Admission Stream-1 Block-2, Nios Lucknow, NIOS, Nios Online Admission, Nios Online Admission in Lucknow, NIOS Admission 2026 last date, Nios Admission Last Date, nios admission, nios deled, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios deled admission 2026, nios dled, nios register, NIOS Admission in Lucknow, nios admission in lucknow"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
     <section className="admission-in-nios-stream-1-area">
       <Header />
       <Offcanvas />
@@ -687,10 +704,12 @@ export default function AdmissionInNiosStream1() {
         </div>
       </div>
 
-      <FAQ />
+              <FAQ limit={8} showViewMore={true} />
+     
 
       <Footer />
       <Popup/>
     </section>
+    </>
   );
 }

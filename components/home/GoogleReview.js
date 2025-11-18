@@ -45,8 +45,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>Krislay Saini</h4>
+                    <p>2 months ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -58,9 +58,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 star by Students"></img>
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                  I wanted to get 12th passed with nios same year and ss coaching guided me perfectly the teachers are patientbamd the process was smooth .
                 </p>
               </div>
             </SwiperSlide>
@@ -75,8 +73,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>Kazmi Mirza</h4>
+                    <p>a month ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -88,9 +86,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 star by Students"></img>
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                 Ss coaching is the best choice for students seeking genuine guidence . I joined for contact for nios helpline , and their response was quick 
                 </p>
               </div>
             </SwiperSlide>
@@ -105,8 +101,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>Gauransh Mahendra</h4>
+                    <p>a week ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -120,9 +116,7 @@ export default function GoogleReview() {
                  
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                  Ss coaching nios admission in hazratganj lucknow is the most trusted place for students who want expert guidance smooth admission process.
                 </p>
               </div>
             </SwiperSlide>
@@ -137,8 +131,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Ethan Clark</h4>
-                    <p>April 10, 2023</p>
+                    <h4>AR Rehman</h4>
+                    <p>5 months ago</p>
                   </div>
            
                 </div>
@@ -146,9 +140,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 stars by Students"></img>
                 </div>
                 <p className="review-text">
-                  They are skilled professionals, and the service was decent.
-                  However, their pricing structure is confusing, and we had some
-                  unexpected charges.
+                 I joined ss coaching after hearing about their reputation for having the best nios teachers in hazratganj Lucknow.
                 </p>
               </div>
             </SwiperSlide>
@@ -164,8 +156,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>KR Ramesh</h4>
+                    <p>3 months ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -177,9 +169,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 star by Students"></img>
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                   The ss coaching centre has been noted for following social distancing norms, providing a safe learning environment for nios students in lucknow.
                 </p>
               </div>
             </SwiperSlide>
@@ -194,8 +184,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>Yuvraj Singh Bagga</h4>
+                    <p>5 Months ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -207,9 +197,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 star by Students"></img>
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                   I was struggling after falling my board exams, but SS coaching’s support and excellent coaching at their Nios centre in Hazratganj.
                 </p>
               </div>
             </SwiperSlide>
@@ -224,8 +212,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Chloe Patterson</h4>
-                    <p>May 5, 2023</p>
+                    <h4>Sudha Singh</h4>
+                    <p>3 months ago</p>
                   </div>
                   <img
                     src="/assets/images/g-reviews/google.svg"
@@ -239,9 +227,7 @@ export default function GoogleReview() {
                  
                 </div>
                 <p className="review-text">
-                  Great quality and attention to detail. Their designs elevated
-                  my brand. I just wish they had a more flexible payment plan for
-                  small businesses.
+                  Ss coaching boosts a strong track record of helping students, including those who previously failed, achieve excellent results in nios exam in lucknow
                 </p>
               </div>
             </SwiperSlide>
@@ -256,8 +242,8 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>Ethan Clark</h4>
-                    <p>April 10, 2023</p>
+                    <h4>Zen</h4>
+                    <p>3 months ago</p>
                   </div>
            
                 </div>
@@ -265,9 +251,7 @@ export default function GoogleReview() {
                   <img src="/assets/images/g-reviews/rating.svg" alt="SS Coaching 5 stars by Students"></img>
                 </div>
                 <p className="review-text">
-                  They are skilled professionals, and the service was decent.
-                  However, their pricing structure is confusing, and we had some
-                  unexpected charges.
+                 As one of the oldest nios centres in lucknow since 2001, ss coaching has built a legacy of excellence in providing nios services.
                 </p>
               </div>
             </SwiperSlide>

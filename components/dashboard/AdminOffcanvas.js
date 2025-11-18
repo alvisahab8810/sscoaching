@@ -191,6 +191,40 @@ export default function AdminOffcanvas() {
                   FAQs
                 </button>
               </li>
+
+
+              {/* Leads */}
+              <li className="mb-3">
+                <button
+                  onClick={() => handleNavigate("/dashboard/admin/leads")}
+                  className={`btn w-100 d-flex align-items-center text-white text-start fw-medium ${
+                    pathname === "/dashboard/admin/leads"
+                      ? "text-white"
+                      : "text-dark"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      pathname === "/dashboard/admin/leads"
+                        ? "#5641CE"
+                        : "transparent",
+                    border: "none",
+                    borderRadius: "0.5rem",
+                    padding: "0.6rem 0.8rem"
+                  }}
+                >
+                  <img
+                    src="/assets/icons/faq.svg"
+                    className="me-2"
+                    width="18"
+                    alt="FAQs"
+                    style={{ filter: "brightness(0) invert(1)" }}
+                  />
+                  Leads
+                </button>
+              </li>
+
+
+              
             </ul>
           </nav>
         </div>

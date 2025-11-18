@@ -19,7 +19,7 @@ export default function StatsSection() {
                 <img src="/assets/icons/stats/hat.svg" alt="Students Icon"  />
                 </div>
                 <div className="stat-content">
-                <h3>50K+</h3>
+                <h3>100K+</h3>
                 <p>Students passed</p>
                 </div>
             </div>

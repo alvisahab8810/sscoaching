@@ -4,32 +4,32 @@ import { FaFilePdf } from "react-icons/fa";
 
 export default function SrSecondaryCourseMaterial() {
   const subjects = [
-    // New subjects
-    { code: 301, name: "Hindi" },
-    { code: 302, name: "English" },
-    { code: 309, name: "Sanskrit" },
-    { code: 311, name: "Mathematics" },
-    { code: 312, name: "Physics" },
-    { code: 313, name: "Chemistry" },
-    { code: 314, name: "Biology" },
-    { code: 315, name: "History" },
-    { code: 316, name: "Geography" },
-    { code: 317, name: "Political Science" },
-    { code: 318, name: "Economics" },
-    { code: 319, name: "Business Studies" },
-    { code: 320, name: "Accountancy" },
-    { code: 321, name: "Home Science" },
-    { code: 328, name: "Psychology" },
-    { code: 330, name: "Computer Science" },
-    { code: 331, name: "Sociology" },
-    { code: 332, name: "Painting" },
-    { code: 333, name: "Environmental Science" },
-    { code: 335, name: "Mass Communication" },
-    { code: 336, name: "Data Entry Operations" },
-    { code: 337, name: "Tourism" },
-    { code: 338, name: "Introduction To Law" },
-    { code: 373, name: "Physical Education And Yog" },
-  ];
+  { code: 301, name: "Hindi", url: "https://sscoaching.in/Hindi(301)_3321.html" },
+  { code: 302, name: "English", url: "https://sscoaching.in/English(302)_3317.html" },
+  { code: 309, name: "Sanskrit", url: "https://sscoaching.in/Sanskrit(309)_3322.html" },
+  { code: 311, name: "Mathematics", url: "https://sscoaching.in/Mathematics-311_3352.html" },
+  { code: 312, name: "Physics", url: "https://sscoaching.in/Physics(312)_3318.html" },
+  { code: 313, name: "Chemistry", url: "https://sscoaching.in/Chemistry(313)_3320.html" },
+  { code: 314, name: "Biology", url: "https://sscoaching.in/Biology(314)_3324.html" },
+  { code: 315, name: "History", url: "https://sscoaching.in/History(315)_3325.html" },
+  { code: 316, name: "Geography", url: "https://sscoaching.in/Geography(316)_3327.html" },
+  { code: 317, name: "Political Science", url: "https://sscoaching.in/Poltical-Science(317)_3332.html" },
+  { code: 318, name: "Economics", url: "https://sscoaching.in/Economics-318_3354.html" },
+  { code: 319, name: "Business Studies", url: "https://sscoaching.in/Business-Studies(319)_3333.html" },
+  { code: 320, name: "Accountancy", url: "https://sscoaching.in/Acoountacy(320)_3334.html" },
+  { code: 321, name: "Home Science", url: "https://sscoaching.in/Home-Science(321)_3335.html" },
+  { code: 328, name: "Psychology", url: "https://sscoaching.in/Psychology(328)_3338.html" },
+  { code: 330, name: "Computer Science", url: "https://sscoaching.in/Computer-Science(330)_3339.html" },
+  { code: 331, name: "Sociology", url: "https://sscoaching.in/Sociology(331)_3340.html" },
+  { code: 332, name: "Painting", url: "https://sscoaching.in/Painting(332)_3341.html" },
+  { code: 333, name: "Environmental Science", url: "https://sscoaching.in/Enviornmental-Science-(333)_3342.html" },
+  { code: 335, name: "Mass Communication", url: "https://sscoaching.in/Mass-Communications(335)_3343.html" },
+  { code: 336, name: "Data Entry Operations", url: "https://sscoaching.in/Data-Entry-Operations(336)_3345.html" },
+  { code: 337, name: "Tourism", url: "https://sscoaching.in/Tourism(337)_3346.htmlx " },
+  { code: 338, name: "Introduction To Law", url: "https://sscoaching.in/intoduction-To-law-(338)_3347.html" },
+  { code: 373, name: "Physical Education And Yog", url: "http://sscoaching.in/Physical-Education-And-Yog-(373)_3348.html" },
+];
+
 
   return (
     <section className="subject-table-section ">
@@ -69,7 +69,7 @@ export default function SrSecondaryCourseMaterial() {
                     <strong>({subj.code})</strong> {subj.name}
                   </td>
                   <td className="text-center">
-                    <a href="#" className="pdf-icon">
+                    <a href={subj.url} target="_blank" rel="noopener noreferrer" className="pdf-icon">
                       <FaFilePdf />
                     </a>
                   </td>

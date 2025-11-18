@@ -98,7 +98,7 @@ export default function FaqManager() {
   return (
     <div className="faq-section faq-section-admin">
       <Topbar />
-      <AdminOffcanvas/>
+      <AdminOffcanvas />
 
       <div className="d-flex" style={{ minHeight: "100vh" }}>
         <Sidebar />
@@ -516,47 +516,53 @@ export default function FaqManager() {
               </nav>
             )} */}
 
-
             {totalPages > 1 && (
-  <nav className="pagination-wrapper mt-3">
-    <ul className="pagination justify-content-center flex-nowrap">
-      <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-        <button
-          className="page-link"
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
-          Prev
-        </button>
-      </li>
+              <nav className="pagination-wrapper mt-3">
+                <ul className="pagination justify-content-center flex-nowrap">
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(currentPage - 1)}
+                    >
+                      Prev
+                    </button>
+                  </li>
 
-      {Array.from({ length: totalPages }, (_, i) => (
-        <li
-          key={i}
-          className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-        >
-          <button
-            className="page-link"
-            onClick={() => setCurrentPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        </li>
-      ))}
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === i + 1 ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(i + 1)}
+                      >
+                        {i + 1}
+                      </button>
+                    </li>
+                  ))}
 
-      <li
-        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
-      >
-        <button
-          className="page-link"
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
-          Next
-        </button>
-      </li>
-    </ul>
-  </nav>
-)}
-
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            )}
           </div>
         </div>
       </div>

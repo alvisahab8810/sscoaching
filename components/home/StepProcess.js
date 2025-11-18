@@ -74,7 +74,7 @@ export default function StepProcess() {
                 />
               </div>
               <div className="stat-text">
-                <h4>50K +</h4>
+                <h4>100K +</h4>
                 <p>Students passed</p>
               </div>
             </div>

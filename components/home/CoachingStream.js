@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 export default function CoachingStream() {
   return (
     <section className="coaching-section">
@@ -15,10 +15,12 @@ export default function CoachingStream() {
                 Failed in 9th & 11th get admission in 10th & 12th
               </div>
               <div className="coaching-icon">
+                <Link href="/nios-admission/admission-in-nios-stream-1">
                 <img
                   src="/assets/icons/arrow1.svg"
                   alt="Stream 1 Icon"
                 />
+                </Link>
               </div>
             </div>
             <div className="coaching-content">
@@ -37,10 +39,13 @@ export default function CoachingStream() {
             <div className="coaching-header stream2">
               <div className="coaching-text">Pass 10th & 12th in <br/> same year</div>
               <div className="coaching-icon">
+                <Link href="/nios-admission/admission-in-nios-stream-2">
+                
                 <img
                   src="/assets/icons/arrow2.svg"
                   alt="Stream 2 Icon"
                 />
+                </Link>
               </div>
             </div>
             <div className="coaching-content">
@@ -58,10 +63,12 @@ export default function CoachingStream() {
             <div className="coaching-header stream3">
               <div className="coaching-text">Pass 10th & 12th in<br/> 45 Days</div>
               <div className="coaching-icon">
+                <Link href="/nios-admission/admission-in-nios-stream-3&4">
                 <img
                   src="/assets/icons/arrow3.svg"
                   alt="Stream 3 Icon"
                 />
+                </Link>
               </div>
             </div>
             <div className="coaching-content">

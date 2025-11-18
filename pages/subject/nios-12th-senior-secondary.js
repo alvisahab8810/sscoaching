@@ -5,12 +5,30 @@ import Popup from "@/components/home/Popup";
 import Hero from "@/components/subjects/syllabus/Nios12thSecondaryHero";
 import SchemeOfStudies from "@/components/subjects/syllabus/SubjectSection";
 import SubjectSection from "@/components/subjects/syllabus/SubjectSection";
-
+import Head from "next/head";
 import React from "react";
 
 export default function SyllabusClass12th() {
   return (
-    <div id="paper-secondary-10th">
+
+    <>
+
+       <Head>
+        <title>
+           NIOS Subject List class 12th Senior Secondary 2025-2026
+        </title>
+        <meta
+          name="description"
+          content="Senior Secondary Course is designed for those who have passed the Xth standard or equivalent examination from a recognised Board and would like to continue their education towards a Senior Secondary Certification, Equivalent to XII standard."
+        />
+        <meta
+          name="keywords"
+          content="Regular subjects 10+2 pass board, Subject list 12th 2025-26, NIOS subject codes 10+2, NIOS subject choice 12th board NIOS, Detailed overview of various subject 12th NIOS, Subject list of NIOS senior Secondary subject list of NIOS secondary, How to get a subject list of NIOS class 12th, Mandatory subjects NIOS 12th, All NIOS language subjects for 12th, 2025 list of updated subjects for 12th, Advised and beneficial senior secondary, NIOS fees structure, Subject list NIOS, Subject list NIOS 2025, NIOS subject list, NIOS subject list 2025, NIOS subject list 12th, Nios Admission Class 12Th Subject list, nios 12th subject list, nios 12th subject list 2025, nios course, nios course 2025,"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+     <div id="paper-secondary-10th">
       <Header />
       <Offcanvas />
 
@@ -65,6 +83,7 @@ export default function SyllabusClass12th() {
       <Popup/>
 
       <Footer />
-    </div>
+     </div>
+    </>
   );
 }

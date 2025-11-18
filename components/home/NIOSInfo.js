@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import Link from "next/link";
 export default function NIOSInfo() {
 
     const [showFull, setShowFull] = useState(false);
@@ -59,12 +60,15 @@ export default function NIOSInfo() {
         </div>
         <div className="admission-cards">
           <div className="admission-card">
+           
+
             <img
               src="/assets/images/home/stream1.png"
               alt="NIOS Stream 1 Block 1"
               className="admission-image"
             />
             <div className="admission-content">
+               <Link href="/nios-admission/admission-in-nios-stream-1">
               <h3 className="admission-title">
                 NIOS
                 <br />
@@ -72,15 +76,20 @@ export default function NIOSInfo() {
                 ADMISSION OPEN
               </h3>
               <div className="admission-bg"></div>
+              </Link>
             </div>
           </div>
           <div className="admission-card">
+
+            
+
             <img
               src="/assets/images/home/stream2.png"
               alt="NIOS Stream 3 & 4"
               className="admission-image"
             />
             <div className="admission-content">
+              <Link href="/nios-admission/admission-in-nios-stream-3&4">
               <h3 className="admission-title">
                 NIOS
                 <br />
@@ -88,6 +97,7 @@ export default function NIOSInfo() {
                 ADMISSION OPEN
               </h3>
               <div className="admission-bg"></div>
+              </Link>
             </div>
           </div>
         </div>

@@ -2476,6 +2476,14 @@
     .admin-blogs-create form {
         padding-bottom: 40px;
     }
+
+    .faq-question{
+        white-space: wrap!important;
+    }
+
+    .review-card {
+      height:240px;
+    }
 }
 
 

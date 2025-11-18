@@ -1,19 +1,116 @@
 import React from "react";
 
 const rows = [
+  // GROUP A (Languages)
   { code: "201", subject: "Hindi", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
-  { code: "202", subject: "English", tp: ["Theory", "Practical"], papers: "1", marks: "85/15", duration: "3/2.5" },
+  { code: "202", subject: "English", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "206", subject: "Urdu", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "209", subject: "Sanskrit", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
-  { code: "203", subject: "Bengali", tp: ["Practical"], papers: "1", marks: "100", duration: "2.5" },
+  { code: "203", subject: "Bengali", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "204", subject: "Marathi", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
-  { code: "205", subject: "Telugu", tp: ["Theory", "Practical"], papers: "1", marks: "100/85", duration: "3/2.5" },
+  { code: "205", subject: "Telugu", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "207", subject: "Gujarati", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "208", subject: "Kannada", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "210", subject: "Punjabi", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "228", subject: "Assamese", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
   { code: "231", subject: "Nepali", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+  { code: "232", subject: "Malyalam", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+  { code: "233", subject: "Oriya", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+  { code: "235", subject: "Arabic", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+  { code: "236", subject: "Persian", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+  { code: "237", subject: "Tamil", tp: ["Theory"], papers: "1", marks: "100", duration: "3" },
+
+  // GROUP B
+  {
+    code: "211",
+    subject: "Mathematics",
+    tp: ["Theory", "Practical"],
+    papers: "1/1",
+    marks: "85/15",
+    duration: "3/2.5"
+  },
+  {
+    code: "212",
+    subject: "Science and Technology",
+    tp: ["Theory", "Practical"],
+    papers: "1/1",
+    marks: "85/15",
+    duration: "3/2.5"
+  },
+  {
+    code: "213",
+    subject: "Social Science",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "214",
+    subject: "Economics",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "215",
+    subject: "Business Studies",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "216",
+    subject: "Home Science",
+    tp: ["Theory", "Practical"],
+    papers: "1/1",
+    marks: "85/15",
+    duration: "3/2.5"
+  },
+  {
+    code: "222",
+    subject: "Psychology",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "223",
+    subject: "Indian Culture and Heritage",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "224",
+    subject: "Accountancy",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "225",
+    subject: "Painting",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  },
+  {
+    code: "229",
+    subject: "Data Entry Operations",
+    tp: ["Theory"],
+    papers: "1",
+    marks: "100",
+    duration: "3"
+  }
 ];
+
 
 export default function SubjectScheme10th() {
   return (

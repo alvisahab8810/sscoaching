@@ -9,10 +9,28 @@ import StatsSection from "@/components/home/StatsSection";
 import StatsSectionMobile from "@/components/home/StatsSectionMobile";
 import StepProcess from "@/components/home/StepProcess";
 import React from "react";
+import Head from "next/head";
 
 export default function AboutUs() {
   return (
-    <section className="about-us-area">
+
+    <>
+      <Head>
+        <title>
+           About SS Coaching in Lucknow founded by Mr. Sarvesh Sonkar
+        </title>
+        <meta
+          name="description"
+          content="S.S. Coaching is private, non-traditional, non-sectarian, alternative educational institution founded by Mr. Sarvesh Sonkar. The institute has always maintained global standards of education with understanding of all job sectors requirement"
+        />
+        <meta
+          name="keywords"
+          content="About the NIOS board, about the SS coaching Lucknow, NIOS board, best solution for failed student, one goal, sure success, success for n.i.o.s, succeed in exams, help with board exam coaching, success ratio, toppers coaching institute of national institute of open and distance schooling, NIOS office articles, education for all in India, challenging future for unsuccessful students, open distance education pioneers, experienced and old coaching of NIOS, successful NIOS institute, excellent staff, brilliant facilities, standard techniques of teaching, well-disciplined, nios lucknow, nios coaching, nios classes, nios online classes, best nios coaching in lucknow, best nios institute in lko, nios lko, Nios admission, Nios lucknow, Nios exam fees, Nios institute, Nios office,Nios lko, Nios fees, Best nios institute, Nios admission, Nios classes, Best nios coaching in Lucknow, Nios."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+     <section className="about-us-area">
       <Header />
       <Offcanvas />
 
@@ -219,6 +237,7 @@ export default function AboutUs() {
 
       <Footer />
       <Popup/>
-    </section>
+     </section>
+    </>
   );
 }

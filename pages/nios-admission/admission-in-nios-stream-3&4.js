@@ -12,9 +12,26 @@ import HeroStream34 from "@/components/NiosAdmission/HeroStream3&4";
 import React from "react";
 import Link from "next/link";
 import QueryForm from "@/components/home/QueryForm";
+import Head from "next/head";
 
 export default function AdmissionInNiosStream3() {
   return (
+    <>
+     <Head>
+        <title>
+           NIOS Admission 2025 | NIOS Stream 3 & 4 Admission for 10th and 12th
+        </title>
+        <meta
+          name="description"
+          content="SS Coaching guide students to get admitted To NIOS Board Secondary and Senior Secondary Courses, under NIOS STREAM 2 ADMISSION. Fill out the form for NIOS online admissions 2025 in all streams of NIOS Board for 10th and 12th. Students who wish to be admitted to the NIOS Centre Lucknow can apply online or offline."
+        />
+        <meta
+          name="keywords"
+          content="NIOS Admission, NIOS Admission 2025, NIOS Admission Stream 2 2025, CBSE Private Admission Class 12, National Open School Admission Online form 12th Class 2025. NIOS Admission Failed 12th Class, CBSE private candidate admission form 2025 last date, NIOS stream 2, admission in 12th from open school, NIOS admission in 12th class, open schooling admission form 10th 12th, NIOS admission 2025 last date, admission stream online, NIOS 12th class admission form, NIOS 10th admission 2025, NIOS stream 2 admission form 2025 class 12, NIOS board stream 2 admission, NIOS board admission 2025, NIOS admission, NIOS Lucknow, NIOS exam fees, NIOS institute, NIOS office, NIOS , Best NIOS institute, NIOS exam, NIOS date sheet, NIOS roll number, NIOS enrollment, NIOS news, NIOS updates, NIOS current news, NIOS rules, NIOS eligibility, NIOS inquiry form, NIOS admission date, Required documents for admission in stream 2, NIOS stream 2, NIOS stream 2 admission last date, stream 2 NIOS admission, NIOS online admission stream 2, NIOS online admission for stream 2, NIOS stream 2 admission fees, NOIS Admission, NIOS from online, NIOS fail student, Nios Lucknow, NIOS, nios lucknow, Nios Online Admission, Nios Online Admission in Lucknow, Nios Online Admission in Lucknow, Nios Online Admission, Nios Admission, Nios admission lucknow, nios admission for 12th class last date, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios dled, nios register, NIOS Admission Center in Lucknow, nios admission center in lucknow,"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
     <section className="admission-in-nios-stream-3-area admission-in-nios-stream-1-area ">
       <Header />
       <Offcanvas />
@@ -291,7 +308,9 @@ export default function AdmissionInNiosStream3() {
         </div>
       </section>
 
-      <FAQ />
+      {/* <FAQ /> */}
+               <FAQ limit={8} showViewMore={true} />
+      
 
       <div className="container">
         <a href="tel:9935035316" className="cta-button cta-button1 mt-0">
@@ -335,5 +354,6 @@ export default function AdmissionInNiosStream3() {
       <Footer />
       <Popup/>
     </section>
+    </>
   );
 }
