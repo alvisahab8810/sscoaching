@@ -248,6 +248,15 @@ export default function Sidebar() {
           </Link>
         </li>
 
+
+        <li style={styles.navItem}>
+          <Link href="/dashboard/admin/student-success" style={styles.navLink()}>
+             <img src="/assets/icons/students.svg" style={{marginRight:"8px"}}></img> Students Success
+          </Link>
+        </li>
+
+        
+
       </ul>
 
  

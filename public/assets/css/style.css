@@ -218,7 +218,7 @@ ease;
     .student-card {
       position: relative;
       /* width: 286px; */
-      /* height: 338px; */
+      height: 214px;
       border-radius: 20px;
       flex-shrink: 0;
       overflow: hidden;
@@ -4948,6 +4948,48 @@ background:none!important;
     background-color: #1B1B46 !important;
     color: #fff !important;
 }
+
+
+.student-success-admin .student-form .preview-box {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-success-admin .student-form .preview-box img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.student-success-admin .student-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.student-success-admin .table-img {
+  width: 50px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.student-success-admin .color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.student-success-admin .icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 
 
 
