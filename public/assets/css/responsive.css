@@ -44,6 +44,13 @@
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
 
+    .student-card{
+        height: 190px;;
+    }
+
+    .student-meta {
+    font-size: 10px;
+}
     .pagination-wrapper {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -1218,7 +1225,7 @@
     }
 
     .student-score {
-        font-size: 25px !important;
+        font-size: 20px !important;
 
     }
 
@@ -2498,6 +2505,11 @@
         font-size: 12px;
         font-weight: bold;
     }
+
+    .student-meta {
+    color: #fff;
+    font-size: 10px;
+}
 }
 
 /* 📱 Mobile (landscape) / small tablets */

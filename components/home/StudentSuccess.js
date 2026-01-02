@@ -148,37 +148,74 @@ export default function StudentSuccess() {
           slidesPerView={7}
           spaceBetween={10}
           breakpoints={{
-            0: { slidesPerView: 2.5 },
-            576: { slidesPerView: 2.5 },
+            0: { slidesPerView: 2.2 },
+            576: { slidesPerView: 2.2 },
             992: { slidesPerView: 7 },
           }}
           allowTouchMove={true}
           className="students-swiper"
         >
           {students.map((student) => (
-            <SwiperSlide key={student._id}>
-              <div
-                className="student-card"
-                style={{
-                  backgroundColor: student.bgColor || "#ffeed1",
-                }}
-              >
-                <img
-                  src={student.image}
-                  alt={student.name}
-                  className="student-image"
-                />
+            // <SwiperSlide key={student._id}>
+            //   <div
+            //     className="student-card"
+            //     style={{
+            //       backgroundColor: student.bgColor || "#ffeed1",
+            //     }}
+            //   >
+            //     <img
+            //       src={student.image}
+            //       alt={student.name}
+            //       className="student-image"
+            //     />
 
-                <div className="student-overlay">
-                  <div className="student-score">
-                    {student.score}
-                  </div>
-                  <div className="student-name">
-                    {student.name}
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
+            //     <div className="student-overlay">
+            //       <div className="student-score">
+            //         {student.score}
+            //       </div>
+            //       <div className="student-name">
+            //         {student.name}
+            //       </div>
+            //     </div>
+            //   </div>
+            // </SwiperSlide>
+
+
+            <SwiperSlide key={student._id}>
+  <div
+    className="student-card"
+    style={{
+      backgroundColor: student.bgColor || "#ffeed1",
+    }}
+  >
+    <img
+      src={student.image}
+      alt={student.name}
+      className="student-image"
+    />
+
+    <div className="student-overlay">
+      <div className="student-score">
+        {student.score}
+      </div>
+
+      <div className="student-name">
+        <div>{student.name}</div>
+      </div>
+
+      <div className="student-meta">
+        
+        <div className="student-roll">
+           {student.rollNo}
+        </div>
+
+        <div>{student.className}</div>
+
+      </div>
+    </div>
+  </div>
+</SwiperSlide>
+
           ))}
         </Swiper>
       </div>

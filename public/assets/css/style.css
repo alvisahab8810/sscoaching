@@ -218,7 +218,7 @@ ease;
     .student-card {
       position: relative;
       /* width: 286px; */
-      height: 214px;
+      height: 220px;
       border-radius: 20px;
       flex-shrink: 0;
       overflow: hidden;
@@ -237,12 +237,12 @@ ease;
       left: 0;
       right: 0;
       background: linear-gradient(180deg, transparent 0%, #737373 100%);
-      padding: 12px;
+      padding: 9px;
       border-radius: 0 0 20px 20px;
     }
 
     .student-score {
-      font-size: 32px;
+      font-size: 20px;
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 700;
       color: #ffffff;
@@ -252,10 +252,17 @@ ease;
     }
 
     .student-name {
-      font-size: 14px;
+      font-size: 13px;
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 600;
       color: #ffffff;
+  ;
+    }
+
+    .student-meta{
+         display: flex;
+      justify-content: space-between;
+      align-items: center
     }
 
     /* Stats Section */
@@ -1675,11 +1682,11 @@ ease;
       }
 
       .student-score {
-        font-size: 30px;
+        font-size: 20px;
       }
 
       .student-name {
-        font-size: 12px;
+        font-size: 13px;
       }
 
       .stats-grid {
@@ -4995,5 +5002,9 @@ background:none!important;
 
 
 
+.student-meta {
+    color: #fff;
+    font-size: 12px;
+}
 
 
