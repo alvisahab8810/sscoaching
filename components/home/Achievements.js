@@ -177,7 +177,7 @@ import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
 const videoSources = [
   "/assets/instagram/video1.mp4",
-  "/assets/instagram/video2.mp4",
+  "/assets/instagram/video8.mp4",
   "/assets/instagram/video3.mp4",
   "/assets/instagram/video4.mp4",
   "/assets/instagram/video5.mp4",

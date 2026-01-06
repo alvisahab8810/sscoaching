@@ -198,7 +198,7 @@ export default function PhotoGallery() {
 
             <div className='gallery-items-row'>
                 <div>
-                  <img src='/assets/images/gallery/g2.png'></img>
+                  <img src='/assets/images/gallery/g9.png'></img>
                    <img src='/assets/images/gallery/g3.png'></img>
 
                 </div>
@@ -212,17 +212,17 @@ export default function PhotoGallery() {
            <div className='gallery-2nd-row'>
              <div className='second-g-img'>
                  <img src='/assets/images/gallery/g5.png'></img>
-                   <img src='/assets/images/gallery/g6.png'></img>
+                   <img src='/assets/images/gallery/g2.png'></img>
 
              </div>
-
+{/* 
               <div className='second-large-img'>
                <img src='/assets/images/gallery/g7.png'></img>
-            </div>
+            </div> */}
 
              <div className='second-g-img'>
-                 <img src='/assets/images/gallery/g8.png'></img>
-                   <img src='/assets/images/gallery/g9.png'></img>
+                 {/* <img src='/assets/images/gallery/g8.png'></img> */}
+                   {/* <img src='/assets/images/gallery/g9.png'></img> */}
 
              </div>
          </div>

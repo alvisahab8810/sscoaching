@@ -236,7 +236,8 @@ ease;
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(180deg, transparent 0%, #737373 100%);
+      /* background: linear-gradient(180deg, transparent 0%, #737373 100%); */
+          background: linear-gradient(180deg, transparent 0%, #1c1b1b 100%);
       padding: 9px;
       border-radius: 0 0 20px 20px;
     }
