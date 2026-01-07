@@ -3,6 +3,12 @@ import React from "react";
 import Link from "next/link";
 
 export default function Topbar() {
+
+  const logout = async () => {
+  await fetch("/api/admin/logout", { method: "POST" });
+  window.location.href = "/dashboard/admin/login";
+};
+
   return (
    <div className="dashboard-navbar">
      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
@@ -124,7 +130,7 @@ export default function Topbar() {
               </li> */}
 
             <li className="pb-2">
-              <a className="dropdown-item user-item d-flex" href="#">
+              <a className="dropdown-item user-item d-flex" href="#" onClick={logout}>
                 <img src="/assets/icons/logout.svg" className="me-2"></img>{" "}
                 Logout
               </a>
