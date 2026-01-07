@@ -20,63 +20,143 @@ export default function StudentSuccessAdmin() {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /* ================= FETCH ================= */
-  const fetchStudents = async () => {
-    const res = await fetch("/api/student-success");
-    const data = await res.json();
-    if (data.success) setStudents(data.data);
-  };
+  const [imageFile, setImageFile] = useState(null);
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+
+  const [page, setPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
+const limit = 10; // records per page
+
+  /* ================= FETCH ================= */
+  // const fetchStudents = async () => {
+  //   const res = await fetch("/api/student-success");
+  //   const data = await res.json();
+  //   if (data.success) setStudents(data.data);
+  // };
+
+
+
+  const fetchStudents = async (currentPage = page) => {
+  const res = await fetch(
+    `/api/student-success?page=${currentPage}&limit=${limit}`,
+    { cache: "no-store" }
+  );
+
+  const data = await res.json();
+
+  if (data.success) {
+    setStudents(data.data);
+    setTotalPages(data.pagination.totalPages);
+  }
+};
+
+useEffect(() => {
+  fetchStudents(page);
+}, [page]);
+
 
   /* ================= IMAGE ================= */
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => setImage(reader.result);
+  //   reader.readAsDataURL(file);
+  // };
+
+  /* =======
+  
+  
+  ========== SUBMIT ================= */
+
+
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result);
-    reader.readAsDataURL(file);
-  };
+  setImageFile(file);
+  setImage(URL.createObjectURL(file)); // preview only
+};
 
-  /* ================= SUBMIT ================= */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    const payload = {  name,
-  rollNo,
-  className,
-  year,
-  score,
-  bgColor,
-  image, };
-    const url = editingId
-      ? `/api/student-success/${editingId}`
-      : "/api/student-success";
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("rollNo", rollNo);
+  formData.append("className", className);
+  formData.append("year", year);
+  formData.append("score", score);
+  formData.append("bgColor", bgColor);
 
-    const method = editingId ? "PUT" : "POST";
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
 
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+  const url = editingId
+    ? `/api/student-success/${editingId}`
+    : "/api/student-success";
 
-    const data = await res.json();
+  const method = editingId ? "PUT" : "POST";
 
-    if (data.success) {
-      toast.success(editingId ? "Student updated" : "Student added");
-      resetForm();
-      fetchStudents();
-    } else {
-      toast.error("Something went wrong");
-    }
+  const res = await fetch(url, {
+    method,
+    body: formData, // ❌ no JSON
+  });
 
-    setLoading(false);
-  };
+  const data = await res.json();
+
+  if (data.success) {
+    toast.success(editingId ? "Student updated" : "Student added");
+    resetForm();
+    // fetchStudents();
+    fetchStudents(page);
+
+  } else {
+    toast.error(data.message || "Something went wrong");
+  }
+
+  setLoading(false);
+};
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   const payload = {  name,
+  // rollNo,
+  // className,
+  // year,
+  // score,
+  // bgColor,
+  // image, };
+  //   const url = editingId
+  //     ? `/api/student-success/${editingId}`
+  //     : "/api/student-success";
+
+  //   const method = editingId ? "PUT" : "POST";
+
+  //   const res = await fetch(url, {
+  //     method,
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(payload),
+  //   });
+
+  //   const data = await res.json();
+
+  //   if (data.success) {
+  //     toast.success(editingId ? "Student updated" : "Student added");
+  //     resetForm();
+  //     fetchStudents();
+  //   } else {
+  //     toast.error("Something went wrong");
+  //   }
+
+  //   setLoading(false);
+  // };
 
   /* ================= EDIT ================= */
   const handleEdit = (item) => {
@@ -101,7 +181,8 @@ export default function StudentSuccessAdmin() {
     const data = await res.json();
     if (data.success) {
       toast.success("Student deleted");
-      fetchStudents();
+      fetchStudents(page);
+
     }
   };
 
@@ -324,6 +405,58 @@ const resetForm = () => {
                 </tbody>
               </table>
             </div>
+
+            {/* ===== PAGINATION ===== */}
+{totalPages > 1 && (
+  <div className="d-flex justify-content-center align-items-center gap-2 mt-4 flex-wrap">
+
+    <button
+      className="btn btn-outline-secondary btn-sm"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </button>
+
+    {Array.from({ length: totalPages }).map((_, i) => {
+      const p = i + 1;
+
+      // show limited page numbers
+      if (
+        p === 1 ||
+        p === totalPages ||
+        (p >= page - 2 && p <= page + 2)
+      ) {
+        return (
+          <button
+            key={p}
+            className={`btn btn-sm ${
+              page === p ? "btn-primary" : "btn-outline-secondary"
+            }`}
+            onClick={() => setPage(p)}
+          >
+            {p}
+          </button>
+        );
+      }
+
+      if (p === page - 3 || p === page + 3) {
+        return <span key={p}>…</span>;
+      }
+
+      return null;
+    })}
+
+    <button
+      className="btn btn-outline-secondary btn-sm"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
 
           </div>
         </div>

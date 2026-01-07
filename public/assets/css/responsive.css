@@ -44,6 +44,15 @@
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
 
+    .all-students-results h3{
+        font-size: 20px!important;
+    }
+    .all-students-results .row > div {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-top: 10px;
+    }
+
     .student-card{
         height: 190px;;
     }
