@@ -27,7 +27,7 @@ export default function Footer() {
                   alt="Phone Icon"
                   className="contact-icon"
                 />
-                <span className="contact-text">05224029757, 9839065533</span>
+                <span className="contact-text">09935035316, 09839065533, 09792111121</span>
               </div>
               <div className="contact-item">
                 <img
