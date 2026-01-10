@@ -1,4 +1,5 @@
 "use client";
+import { withAdminAuth } from "@/lib/withAdminAuth";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
@@ -464,3 +465,11 @@ export default function CreateBlogPost() {
     </div>
   );
 }
+
+
+
+export const getServerSideProps = withAdminAuth(async () => {
+  return {
+    props: {},
+  };
+});

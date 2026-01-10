@@ -20,7 +20,7 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/Syllabus-of-English-NIOS_35.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-english-nios-202" className="subject-btn">
                 View Syllabus
               </a>
               <a href="https://sscoaching.in/Curriculum-English-SS-Coaching_47.htmlx" className="subject-btn">

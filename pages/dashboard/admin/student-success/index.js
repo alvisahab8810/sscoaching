@@ -1,5 +1,5 @@
 "use client";
-
+import { withAdminAuth } from "@/lib/withAdminAuth";
 import React, { useEffect, useState } from "react";
 import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -464,3 +464,11 @@ const resetForm = () => {
     </div>
   );
 }
+
+
+
+export const getServerSideProps = withAdminAuth(async () => {
+  return {
+    props: {},
+  };
+});

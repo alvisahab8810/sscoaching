@@ -44,6 +44,49 @@
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
 
+      /* Force horizontal scrolling only on mobile */
+  .syllabus-nios .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent table from squeezing */
+  .syllabus-nios table {
+    min-width: 900px; /* ensures horizontal scroll */
+    white-space: nowrap;
+  }
+
+  /* Prevent text breaking inside table */
+  .syllabus-nios th,
+  .syllabus-nios td {
+    white-space: nowrap;
+    word-break: keep-all;
+    line-height: 1.6;
+  }
+
+  /* Allow long lesson list to stay readable */
+  .syllabus-nios .lesson-list {
+    white-space: nowrap;
+  }
+
+  /* Improve scroll hint for users */
+  .syllabus-nios .table-wrapper::after {
+    content: "← Swipe to view →";
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+  }
+
+    .syllabus-nios .nios-125h-senior-hero-title{
+      font-size: 22px;
+    }
+
+    .syllabus-nios  h2{
+        font-size: 22px;
+    }
+
     .all-students-results h3{
         font-size: 20px!important;
     }

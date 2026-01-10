@@ -1,5 +1,6 @@
 
 "use client";
+import { withAdminAuth } from "@/lib/withAdminAuth";
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
@@ -408,3 +409,10 @@ export default function BlogList() {
     </div>
   );
 }
+
+
+export const getServerSideProps = withAdminAuth(async () => {
+  return {
+    props: {},
+  };
+});

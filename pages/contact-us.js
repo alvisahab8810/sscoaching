@@ -51,17 +51,17 @@ export default function ContactUs() {
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text">9839065533</div>
+                      <div className="location-text">09839065533</div>
                     </div>
 
-                    <div className="c-icons">
+                    {/* <div className="c-icons">
                       <img
                         src="/assets/images/contacts/telephone.svg"
                         alt="Telephone icon"
                         className="contact-icon"
                       />
                       <div className="location-text">0522-4029757</div>
-                    </div>
+                    </div> */}
 
                     <div className="c-icons">
                       <img
@@ -98,17 +98,17 @@ export default function ContactUs() {
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text"> 6392644822</div>
+                      <div className="location-text">09792111121</div>
                     </div>
 
-                    <div className="c-icons">
+                    {/* <div className="c-icons">
                       <img
                         src="/assets/images/contacts/telephone.svg"
                         alt="Telephone icon"
                         className="contact-icon"
                       />
                       <div className="location-text">0522-4079190</div>
-                    </div>
+                    </div> */}
 
                     <div className="c-icons">
                       <img
@@ -145,9 +145,9 @@ export default function ContactUs() {
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text">9935035316</div>
+                      <div className="location-text">09935035316</div>
                     </div>
-
+{/* 
                     <div className="c-icons">
                       <img
                         src="/assets/images/contacts/telephone.svg"
@@ -155,7 +155,7 @@ export default function ContactUs() {
                         className="contact-icon"
                       />
                       <div className="location-text">9935035316</div>
-                    </div>
+                    </div> */}
 
                     <div className="c-icons">
                       <img

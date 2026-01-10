@@ -1,4 +1,5 @@
 "use client";
+import { withAdminAuth } from "@/lib/withAdminAuth";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
@@ -329,3 +330,11 @@ export default function Leads() {
     </div>
   );
 }
+
+
+
+export const getServerSideProps = withAdminAuth(async () => {
+  return {
+    props: {},
+  };
+});
