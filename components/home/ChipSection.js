@@ -83,7 +83,7 @@ export default function ChipSection() {
 
         .ss-card-d-flex{
         display:flex;
-        gap: 30px;
+        gap: 20px;
         align-items:center;
          margin-bottom: 22px;
 
@@ -113,7 +113,7 @@ export default function ChipSection() {
 
         /* ===== TEXT ===== */
         .ss-feature-cards h3 {
-          font-size: 33px;
+          font-size: 31px;
     font-weight: 700;
     line-height: 37px;
     // font-family: 'Inter' !important;

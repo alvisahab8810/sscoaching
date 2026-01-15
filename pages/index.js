@@ -59,9 +59,10 @@ export default function Home() {
         <HeroMobile />
         <ChipSection />
         <MobileQuickInfo/>
+        <StatsSectionMobile />
         <StudentSuccess />
         <StatsSection />
-        <StatsSectionMobile />
+        
 
         <NewsMobile />
 

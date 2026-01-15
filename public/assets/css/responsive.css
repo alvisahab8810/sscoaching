@@ -17,11 +17,14 @@
 
 
 
-@media only screen and (min-width: 1025px) and (max-width: 1366px) {
+@media only screen and (min-width: 1025px) and (max-width: 1381px) {
     .container {
         max-width: 95% !important;
     }
-
+.ss-feature-cards h3 {
+    font-size: 31px;
+    line-height: 30px!important;
+}
 
 
     .coaching-header {
@@ -1452,7 +1455,7 @@
     }
 
     .stat-item {
-        gap: 10px;
+        gap: 5px;
     }
 
     .stat-content h3 {
@@ -1489,8 +1492,8 @@
         position: relative;
         /* border: 1px solid #ddd; */
         border-radius: 5px;
-        padding-top: 0 !important;
-        padding: 15px;
+        /* padding-top: 0 !important; */
+        padding: 15px 0px;
     }
 
     .info-mob-card .abstrac-icon {
@@ -2733,4 +2736,8 @@
   
 
         }
+
+            .stat-content p {
+        font-size: 10px;
+            }
 }

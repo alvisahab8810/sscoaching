@@ -25,7 +25,7 @@ export default function StatsSectionMobile() {
           </div>
           <div className="stat-item">
             <div className="stat-icon">
-              <img src="/assets/icons/stats/hat.svg" alt="Students Icon" />
+              <img src="/assets/icons/stats/hat1.svg" alt="Students Icon" />
             </div>
             <div className="stat-content">
               <h3>100K+</h3>
@@ -35,7 +35,7 @@ export default function StatsSectionMobile() {
           <div className="stat-item">
             <div className="stat-icon">
               <img
-                src="/assets/icons/stats/student.svg"
+                src="/assets/icons/stats/users.svg"
                 alt="Experience Icon"
               />
             </div>
@@ -46,7 +46,7 @@ export default function StatsSectionMobile() {
           </div>
           <div className="stat-item">
             <div className="stat-icon">
-              <img src="/assets/icons/stats/uni.svg" alt="Branches Icon" />
+              <img src="/assets/icons/stats/building.svg" alt="Branches Icon" />
             </div>
             <div className="stat-content">
               <h3>03</h3>
