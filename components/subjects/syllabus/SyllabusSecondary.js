@@ -23,7 +23,7 @@ export default function SyllabusSecondary() {
               <a href="/subject/syllabus-class-10th/syllabus-english-nios-202" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-English-SS-Coaching_47.htmlx" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-english-202" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -45,10 +45,10 @@ export default function SyllabusSecondary() {
               </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/Syllabus-of-Mathematics-NIOS_37.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-mathematics-nios-211" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Mathematics-SS-Coaching_48.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-mathematics" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -69,10 +69,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Science-and-Technology_38.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-science-&-technology-212" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Science-SS-Coaching_49.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-science" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -93,10 +93,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Social-Science_70.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-social-science-nios-213" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Social-Science-SS-Coaching_50.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-social-science" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -117,10 +117,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Economics_39.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-economics-nios-214" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Economics-SS-Coaching_54.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-economics" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -141,63 +141,17 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Business-Studies_41.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-business-studioes-nios-215" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Business-Studies_33.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-business-studies" className="subject-btn">
                 View Curriculum
               </a>
             </div>
           </div>
         </section>
 
-        <section className="subject-card">
-          <div className="subject-card-image">
-            <img src="/assets/images/syllabus/img1.png" alt="English subject" />
-          </div>
-
-          <div className="subject-card-content">
-            <h2 className="subject-card-title">
-               Business Studies (215) For Secondary (10th)
-            </h2>
-            <p className="subject-card-description">
-               Student explores the question ‘What is a business?’ and investigates the business functions of human resource management, accounting and finance, and marketing. In addition to improving your proficiency and awareness of business issues, the course will also help you to develop the necessary skills for getting opportunities of studying at more advanced university levels. You will have a SS Coaching tutor who will guide you with the study material and mark and comment on your written work.
-            </p>
-
-            <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Business-Studies_41.html" className="subject-btn">
-                View Syllabus
-              </a>
-              <a href="https://sscoaching.in/Curriculum-Business-Studies_33.html" className="subject-btn">
-                View Curriculum
-              </a>
-            </div>
-          </div>
-        </section>
-
-         <section className="subject-card">
-          <div className="subject-card-image">
-            <img src="/assets/images/syllabus/img1.png" alt="English subject" />
-          </div>
-
-          <div className="subject-card-content">
-            <h2 className="subject-card-title">
-               Business Studies (215) For Secondary (10th)
-            </h2>
-            <p className="subject-card-description">
-               Student explores the question ‘What is a business?’ and investigates the business functions of human resource management, accounting and finance, and marketing. In addition to improving your proficiency and awareness of business issues, the course will also help you to develop the necessary skills for getting opportunities of studying at more advanced university levels. You will have a SS Coaching tutor who will guide you with the study material and mark and comment on your written work.
-            </p>
-
-            <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Business-Studies_41.html" className="subject-btn">
-                View Syllabus
-              </a>
-              <a href="https://sscoaching.in/Curriculum-Business-Studies_33.html" className="subject-btn">
-                View Curriculum
-              </a>
-            </div>
-          </div>
-        </section>
+       
 
          <section className="subject-card">
           <div className="subject-card-image">
@@ -213,10 +167,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Home-Science_42.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-home-science-216" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Home-Science-SS-Coaching_52.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-home-science" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -238,10 +192,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Psychology_43.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-psychology-nios-222" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Psychology-SS-Coaching_51.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-psychology" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -262,10 +216,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Indian-Culture-and-Heritage_44.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-Indian-heritage-culture-nios-223" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Indian-Culture-and-Heritage-SS-Coaching_53.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-indian-culture-and-heritage" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -287,10 +241,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Painting_45.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-painting-nios-225" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Painting-SS-Coaching_55.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-painting" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -311,10 +265,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/NIOS-Syllabus-of-Data-Entry_46.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-data-entry-operations-229" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Data-Entry-SS-Coaching_56.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-data-entry" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -336,10 +290,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/Syllabus-Hindi-Secondary-NIOS_143.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-hindi-nios-201" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Hindi-Secondary-NIOS_146.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-hindi" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -360,10 +314,10 @@ export default function SyllabusSecondary() {
             </p>
 
             <div className="subject-card-buttons">
-              <a href="https://sscoaching.in/Syllabus-Sanskrit-Secondary-NIOS_144.html" className="subject-btn">
+              <a href="/subject/syllabus-class-10th/syllabus-sanskrit-nios-209" className="subject-btn">
                 View Syllabus
               </a>
-              <a href="https://sscoaching.in/Curriculum-Sanskrit-Secondary-NIOS_145.html" className="subject-btn">
+              <a href="/subject/curriculum-10th/curriculum-sanskrit" className="subject-btn">
                 View Curriculum
               </a>
             </div>

@@ -15,6 +15,7 @@ import Hero from "@/components/home/Hero";
 import HeroMobile from "@/components/home/HeroMobile";
 import LearnersNios from "@/components/home/LearnersNios";
 import LearnersNiosMobile from "@/components/home/LearnersNiosMobile";
+import MobileQuickInfo from "@/components/home/MobileQuickInfo";
 import News from "@/components/home/News";
 import NewsMobile from "@/components/home/NewsMobile";
 import NIOSInfo from "@/components/home/NIOSInfo";
@@ -57,6 +58,7 @@ export default function Home() {
         <Hero />
         <HeroMobile />
         <ChipSection />
+        <MobileQuickInfo/>
         <StudentSuccess />
         <StatsSection />
         <StatsSectionMobile />

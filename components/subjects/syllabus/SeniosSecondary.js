@@ -32,7 +32,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-English-Senior-Secondary-NIOS_94.html"
+                href="/subject/syllabus-class-12th/syllabus-english-senior-secondary-nios-302"
                 className="subject-btn"
               >
                 View Syllabus
@@ -68,13 +68,13 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Mathematics-Senior-Secondary-NIOS_98.html"
+                href="/subject/syllabus-class-12th/syllabus-mathematics-senior-secondary-nios-311"
                 className="subject-btn"
               >
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Matcematics-Senior-Secondary-NIOS_75.html"
+                href="/subject/curriculum-12th/curriculum-mathematics"
                 className="subject-btn"
               >
                 View Curriculum
@@ -106,7 +106,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Physics-Senior-Secondary-NIOS_99.html"
+                href="/subject/syllabus-class-12th/syllabus-physics-senior-secondary-nios-312"
                 className="subject-btn"
               >
                 View Syllabus
@@ -142,9 +142,9 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Chemistry-Senior-Secondary-NIOS_100.html"
+                href="/subject/syllabus-class-12th/syllabus-chemistry-senior-secondary-nios-313"
                 className="subject-btn"
-              >
+                >
                 View Syllabus
               </a>
               <a
@@ -179,7 +179,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="http://sscoaching.in/Syllabus-Biology-Senior-Secondary-NIOS_101.html"
+                href="/subject/syllabus-class-12th/syllabus-biology-senior-secondary-nios-314"
                 className="subject-btn"
               >
                 View Syllabus
@@ -221,7 +221,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-History-Senior-Secondary-NIOS_102.html"
+                href="/subject/syllabus-class-12th/syllabus-history-senior-secondary-nios-315"
                 className="subject-btn"
               >
                 View Syllabus
@@ -257,7 +257,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Geography-Senior-Secondary-NIOS_103.html"
+                href="/subject/syllabus-class-12th/syllabus-geography-senior-secondary-316"
                 className="subject-btn"
               >
                 View Syllabus
@@ -295,7 +295,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Political-Science-Senior-Secondary-NIOS_104.html"
+                href="/subject/syllabus-class-12th/syllabus-political-science-senior-secondary-nios-317"
                 className="subject-btn"
               >
                 View Syllabus
@@ -333,7 +333,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Economics-Senior-Secondary-NIOS_105.html"
+                href="/subject/syllabus-class-12th/syllabus-economics-senior-secondary-nios-318"
                 className="subject-btn"
               >
                 View Syllabus
@@ -373,7 +373,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Commerce-Senior-Secondary-NIOS_106.html"
+                href="/subject/syllabus-class-12th/syllabus-commerce-senior-secondary-nios-319"
                 className="subject-btn"
               >
                 View Syllabus
@@ -411,7 +411,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Accountancy-Senior-Secondary-NIOS_107.html"
+                href="/subject/syllabus-class-12th/syllabus-accountancy-senior-secondary-nios-320"
                 className="subject-btn"
               >
                 View Syllabus
@@ -448,7 +448,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Home-Science-Senior-Secondary-NIOS_108.html"
+                href="/subject/syllabus-class-12th/syllabus-home-science-senior-secondary-nios-321"
                 className="subject-btn"
               >
                 View Syllabus
@@ -486,7 +486,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Psychology-Senior-Secondary-NIOS_110.html"
+                href="/subject/syllabus-class-12th/syllabus-psychology-senior-secondary-nios-328"
                 className="subject-btn"
               >
                 View Syllabus
@@ -525,7 +525,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Computer-Science-Senior-Secondary-NIOS_111.html"
+                href="/subject/syllabus-class-12th/syllabus-computer-science-senior-secondary-nios-330"
                 className="subject-btn"
               >
                 View Syllabus
@@ -566,7 +566,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Sociology-Senior-Secondary-NIOS_112.html"
+                href="/subject/syllabus-class-12th/syllabus-sociology-senior-secondary-nios-331"
                 className="subject-btn"
               >
                 View Syllabus
@@ -602,7 +602,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Painting-Senior-Secondary-NIOS_113.html"
+                href="/subject/syllabus-class-12th/syllabus-painting-senior-secondary-nios-332"
                 className="subject-btn"
               >
                 View Syllabus
@@ -638,7 +638,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Mass-Communication--Senior-Secondary-NIOS_114.html"
+                href="/subject/syllabus-class-12th/syllabus-mass-communication-senior-secondary-nios"
                 className="subject-btn"
               >
                 View Syllabus
@@ -653,40 +653,7 @@ export default function SeniosSecondary() {
           </div>
         </section>
 
-        <section className="subject-card">
-          <div className="subject-card-image">
-            <img src="/assets/images/syllabus/img1.png" alt="English subject" />
-          </div>
-
-          <div className="subject-card-content">
-            <h2 className="subject-card-title">
-              Data Entry Operations (336) For Senior Secondary (12th)
-            </h2>
-            <p className="subject-card-description">
-              Data entry is the transcription of data from one form into
-              another. This course prepare students to accurately enter data,
-              such as survey results or demographics, which can then be used to
-              develop marketing, advertising and sales plans. After completion
-              of training from SS Coaching, Students can use these skills to
-              compile data, verify its accuracy and organize it.
-            </p>
-
-            <div className="subject-card-buttons">
-              <a
-                href="https://sscoaching.in/Syllabus-Data-Entry--Senior-Secondary-NIOS_115.html"
-                className="subject-btn"
-              >
-                View Syllabus
-              </a>
-              <a
-                href="https://sscoaching.in/Curriculum-Data-Entry-Senior-Secondary-NIOS_92.html"
-                className="subject-btn"
-              >
-                View Curriculum
-              </a>
-            </div>
-          </div>
-        </section>
+  
 
         <section className="subject-card">
           <div className="subject-card-image">
@@ -709,7 +676,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Environmental-Science--Senior-Secondary-NIOS_116.html"
+                href="/subject/syllabus-class-12th/syllabus-environmental-science-senior-secondary-nios-333"
                 className="subject-btn"
               >
                 View Syllabus
@@ -745,7 +712,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Hindi-Senior-Secondary-NIOS_95.html"
+                href="/subject/syllabus-class-12th/syllabus-hindi-senior-secondary-nios-301"
                 className="subject-btn"
               >
                 View Syllabus
@@ -776,7 +743,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Syllabus-Urdu-Senior-Secondary-NIOS_96.html"
+                href="/subject/syllabus-class-12th/syllabus-urdu-senior-secondary-nios-306"
                 className="subject-btn"
               >
                 View Syllabus
@@ -807,7 +774,7 @@ export default function SeniosSecondary() {
 
             <div className="subject-card-buttons">
               <a
-                href="https://sscoaching.in/Sanskrit-Subject-(309)-in-NIOS-Senior-Secondary-12th_120.html"
+                href="/subject/syllabus-class-12th/syllabus-sanskrit-senior-secondary-nios-309"
                 className="subject-btn"
               >
                 View Syllabus

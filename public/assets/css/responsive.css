@@ -22,6 +22,8 @@
         max-width: 95% !important;
     }
 
+
+
     .coaching-header {
         padding: 18px;
     }
@@ -37,12 +39,71 @@
     }
 
 
+.ss-feature-cards button {
+    height: 50px!important;
+    font-size: 25px!important;
+}
 
+.ss-feature-cards h3 {
+    font-size: 28px!important;
+    line-height: 33px;
+}
+
+.ss-feature-cards .ss-card{
+    padding: 25px 20px 25px!important;
+}
+.hero-left{
+    padding-left: 30px!important;
+}
+
+
+.hero-left h1{
+    font-size: 54px;
+}
+.hero-left p {
+    font-size: 30px;
+}
 }
 
 
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
+
+    .ss-feature-cards{
+    padding: 20px 0;
+}
+
+    .hero-wrapper {
+    padding-top: 0px;
+}
+
+ .hero-right {
+    right: 0;
+    bottom: 0;
+    /* width: 160px; */
+}
+
+    .hero-left {
+    padding-left: 0px;
+}
+
+          .hero-card {
+        padding: 20px;
+        height: 161px;
+        border-radius: 12px !important;
+        overflow: hidden;
+        background-size: cover;
+    }
+
+        .hero-left h1 {
+        font-size: 28px;
+    }
+
+       .hero-left p {
+        margin-top: 10px;
+        font-size: 12px;
+        margin-bottom: 0;
+    }
 
       /* Force horizontal scrolling only on mobile */
   .syllabus-nios .table-wrapper {
@@ -1292,8 +1353,12 @@
 
     .students-section {
         padding: 30px 0;
+          padding-top: 15px;
     }
 
+    .students-section .section-title {
+        margin-bottom: 0px;
+    }
     .scrolling-banner {
         margin-bottom: 15px;
     }
@@ -2562,6 +2627,8 @@
     color: #fff;
     font-size: 10px;
 }
+
+
 }
 
 /* 📱 Mobile (landscape) / small tablets */
@@ -2648,4 +2715,22 @@
     .footer {
         padding-top: 70px;
     }
+}
+
+
+@media(max-width:360px){
+        .hero-left h1 {
+        font-size: 25px!important;
+    }
+
+    .ss-mobile-card h4 {
+    font-size: 13px!important;
+}
+
+  .ss-mobile-card p {
+          font-size: 11px!important;
+          line-height: 120%;
+  
+
+        }
 }
