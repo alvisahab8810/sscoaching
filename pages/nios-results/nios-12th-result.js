@@ -8,11 +8,16 @@ export default function NIOSResult2025Class12April() {
     <>
       <Head>
         <title>
-          NIOS Result 2025 For April Exams Of 12th | Sr. Secondary – Direct Download Link
+          NIOS Sr. Secondary April Results 2025 Released! Check it now at results.nios.ac.in | Direct Download Link
         </title>
         <meta
           name="description"
-          content="NIOS Result 2025 For April Exams Of 12th Senior Secondary | Declared on 16th June 2025 | Direct Download Link, Marksheet, Revaluation & FAQs"
+          content="NIOS 12th Apr/May 2025 Results will be released soon! The National Institute of Open Schooling (NIOS) has announced the detailed NIOS results 2025 for Senior Secondary Examinations at results.nios.ac.in, held in Apr 2025. Access your official mark sheet and subject-wise performance on SS Coaching. Get the direct link."
+        />
+
+          <meta
+          name="keywords"
+          content="get direct download link, download nios results 12th ,senior secondary result, NIOS Board exam result, NIOS result, Senior secondary result, 12th class result, 12th result 2025, NIOS Sr secondary result, NIOS Senior secondary April exam result 2025, NIOS Download Results, Download Results NIOS Senior secondary result 2025 April exam for class 12th, Download Apr/May exam NIOS Results NIOS, NIOS On-Demand result, NIOS On-Demand result date, NIOS Result 2024 Class 12, NIOS Result 2025 Class 10, NIOS Result 2025 Class 12, NIOS Result 2024 Class 10, NIOS marksheet, NIOS marksheet download, NIOS 10th certificate, NIOS 10th marksheet download, National Institute of Open Schooling marksheet download, NIOS certificate, NIOS migration certificate, NIOS pass certificate, NIOS passing certificate online, NIOS 10th certificate, NIOS 12 certificate, National Institute of Open Schooling certificate, secondary NIOS pass certificate, certificate National Institute of Open Schooling, NIOS marksheet download, NIOS passing certificate online, NIOS original certificate, NIOS original certificate download, NIOS original marksheet, NIOS 12th Certificate Download, NIOS passing certificate online, When NIOS 12th Result will be declared, NIOS 12th marksheet download, NIOS results 2024 class 12, NIOS result 2024 class 12, NIOS result 2024, NIOS results nios ac in, NIOS ka result kab aayega 2024, Sr Secondary, October Exams 2024, NIOS Results 2025-26, Apr/May Exam 2025, NIOS secondary course, Apr/May result of NIOS 2025"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

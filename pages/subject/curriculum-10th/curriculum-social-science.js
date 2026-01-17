@@ -10,7 +10,12 @@ export default function SyllabusSocialScienceNIOS() {
         <title>Curriculum Social Science | NIOS Secondary</title>
         <meta
           name="description"
-          content="Curriculum of Social Science for NIOS Secondary Course – Rationale, Objectives and Module-wise Syllabus."
+          content="SS Coaching NIOS Center in Lucknow, Provides form filling for admission in NIOS Board (National Institute of Open Schooling) as well as NIOS Coaching Classes, Syllabus and Tuition for 10th (secondary) & 12th (senior secondary) Students. Contact us for all inquiries related to NIOS Board in Lucknow"
+        />
+
+           <meta
+          name="keywords"
+          content="NIOS exam centre registration, NIOS Study Centre Contact Number, nios head office contact number, nios regional centre list, nios contact number, NIOS Study Centre List, NIOS Coaching in Lucknow, NIOS admission Lucknow,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

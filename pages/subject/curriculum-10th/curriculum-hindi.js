@@ -7,10 +7,15 @@ export default function SyllabusHindiSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Hindi Secondary | NIOS</title>
+        <title>Hindi 10th Class Subject Curriculum in NIOS| SS Coaching</title>
         <meta
           name="description"
-          content="Curriculum Hindi Secondary NIOS in SS Coaching | Content Unavailable"
+          content="Hindi 10th Class Subject Curriculum in NIOS get access to the information about the Hindi subject of NIOS board helpful portal for every NIOS board student."
+        />
+
+         <meta
+          name="keywords"
+          content="board exam syllabus of hindi, 10th board exam, examinations for studying nios, coaching in hindi language, hindi practice, syllabus of hindi, nios hindi curriculum, hindi education in india, open school for hindi, secondary examination, nios coaching in lucknow, board paper in hindi, institute of open school, syllabus in hindi, curriculum hindi, nios hindi book class 10, hindi nios class 10, hindi online class,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

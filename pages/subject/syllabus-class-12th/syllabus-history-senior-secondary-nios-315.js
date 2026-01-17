@@ -7,14 +7,14 @@ export default function SyllabusHistorySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus History Senior Secondary NIOS</title>
+        <title>Syllabus Of History (315) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="Syllabus History Senior Secondary NIOS History (315)"
+          content="Syllabus Of History (315) In NIOS for Senior Secondary Education.SS Coaching prepare your history subject as the course of NIOS board and get the Ideas for the preparation of all subjects in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS History 315 syllabus, History Senior Secondary NIOS"
+          content="History online learning senior secondary history syllabus, NIOS study material for history, History courses online, History study material for board exam, Board history previous papers, NIOS sample papers for class 12th history, Class 12th NIOS history syllabus, NIOS history syllabus class 12, Question paper of history, History syllabus for NIOS exam, History courses, Courses in history, NIOS class 12 history question paper, Sample papers for class 12 history, History class 12th solved question papers, NIOS 12 class history syllabus, History class 12th NIOS syllabus, History question paper, Class 12 history syllabus, History sample papers for class 12 NIOS, Online history degree programs in Lucknow, History syllabus for NIOS, NIOS History sample paper 2022, 2023, NIOS History sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

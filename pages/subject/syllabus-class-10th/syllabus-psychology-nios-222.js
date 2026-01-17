@@ -7,14 +7,14 @@ export default function SyllabusPsychologyNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Psychology (222) | NIOS</title>
+        <title>Syllabus Of Psychology (222) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Psychology (222) Syllabus – Course Structure, Modules, Lessons, and Study Hours."
+          content="Syllabus of Psychology (222) Course Structure Psychology, NIOS Psychology and your Psychological Makeup Human Development Across Life Span Society and Your Well Being Yoga: A Way of Life."
         />
         <meta
           name="keywords"
-          content="NIOS Psychology 222 syllabus, NIOS psychology course, NIOS psychology chapters"
+          content="School of psychology, NIOS 10th class, Online courses in psychology, NIOS books in Hindi, NIOS 10th fees, Home science class 10 book, Psychology courses online, Psychology online education, Syllabus for NIOS, Sample papers for psychology, NIOS syllabus for senior secondary, NIOS additional subject, Open CBSE, CBSE open schooling, CBSE psychology notes for class 10, Psychology notes for class 10, Subject code for CBSE, CBSE class 10 psychology syllabus, Psychology class 10 notes, Psychology 10th CBSE, class 10 psychology notes, Distance education psychology, Question papers of psychology, Psychology CBSE class 10, NIOS syllabus for senior secondary, Institute of psychology, Psychology course in class 10th, Syllabus of psychology in NIOS class X, syllabus of psychology, nios psychology book,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

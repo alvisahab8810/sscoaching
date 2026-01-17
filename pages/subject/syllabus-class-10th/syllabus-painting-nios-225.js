@@ -7,14 +7,14 @@ export default function SyllabusPaintingNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Painting (225) | NIOS</title>
+        <title>Syllabus Of Painting (225) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Painting (225) Syllabus – Course Structure, Theory, Practicals, and Guidelines."
+          content="NIOS Syllabus of Painting for class 10th or secondary classes and get all the subject related information are here like all painting syllabus of class 10th courses is available for class 10th."
         />
         <meta
           name="keywords"
-          content="NIOS Painting 225 syllabus, NIOS painting course, NIOS fine arts syllabus"
+          content="The art college in lucknow, Painting class syllabus, Lucknow painting school, painting 10th syllabus, School of arts and culture, Board syllabus for painting , Painting in NIOS, NIOS painting syllabus, Open school for painting, Painting sample paper, Art classes in Lucknow, Art school in Uttar pradesh, Art school of NIOS, Curriculum painting class, History of art course, Online painting classes, Painting secondary curriculum, structure of painting, nios painting, nios painting book class 10, painting nios class 10,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

@@ -7,14 +7,14 @@ export default function SyllabusEnglishSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus English Senior Secondary NIOS</title>
+        <title>Syllabus English Senior Secondary NIOS English (302)</title>
         <meta
           name="description"
-          content="Syllabus English Senior Secondary NIOS English (302)"
+          content="English Course syllabus senior secondary 12th NIOS India by SS Coaching. Get all the details of English Course in NIOS board for 12th class here you can prepare you English subject of NIOS board ."
         />
         <meta
           name="keywords"
-          content="NIOS English 302 syllabus, English Senior Secondary NIOS"
+          content="NIOS English sample papers for class 12, Sample paper of English for class 12, NIOS class 12 English question paper, English sample papers for class 12 NIOS, Sample papers for class 12 English, English class 12th solved question papers, English class 12 syllabus, Board English previous papers, English online learning, NIOS sample papers for class 12 English, Class 12 NIOS English syllabus, NIOS 12 class English syllabus, Class 12 English syllabus, NIOS English syllabus class 12, English sample papers for class 12, NIOS English question paper 2022, 2023, NIOS English sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

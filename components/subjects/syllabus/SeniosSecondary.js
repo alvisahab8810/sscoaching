@@ -15,7 +15,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              English (302) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-english">English (302) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               One of the primary benefits of learning English is that it is the
@@ -51,7 +51,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Mathematics (311) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-mathematics"> Mathematics (311) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Mathematics has a big influence on our everyday lives. Mathematics
@@ -90,7 +90,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Physics (312) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-physics"> Physics (312) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               The importance of Physics to society today is most easily
@@ -112,7 +112,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Physics-Senior-Secondary-NIOS_76.html"
+                href="/subject/curriculum-12th/curriculum-physics"
                 className="subject-btn"
               >
                 View Curriculum
@@ -128,7 +128,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Chemistry (313) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-chemistry">Chemistry (313) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Chemistry is imaged for being a complicated and boring science,
@@ -144,11 +144,11 @@ export default function SeniosSecondary() {
               <a
                 href="/subject/syllabus-class-12th/syllabus-chemistry-senior-secondary-nios-313"
                 className="subject-btn"
-                >
+              >
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Chemistry-Senior-Secondary-NIOS_77.html"
+                href="/subject/curriculum-12th/curriculum-chemistry"
                 className="subject-btn"
               >
                 View Curriculum
@@ -164,7 +164,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Biology (314) For Senior Secondary XIIth(12th)
+              <a href="/subject/summary-12th/summary-biology">Biology (314) For Senior Secondary XIIth(12th)</a>
             </h2>
             <p className="subject-card-description">
               The word biology is derived from the greek words /bios/ meaning
@@ -185,7 +185,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Biology-Senior-Secondary-NIOS_78.html"
+                href="/subject/curriculum-12th/curriculum-biology"
                 className="subject-btn"
               >
                 View Curriculum
@@ -201,7 +201,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              History (315) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-history"> History (315) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               History is a systematic record of the actual events that took
@@ -227,7 +227,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-History-Senior-Secondary-NIOS_79.html"
+                href="/subject/curriculum-12th/curriculum-history"
                 className="subject-btn"
               >
                 View Curriculum
@@ -243,7 +243,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Geography (316) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-geography"> Geography (316) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               The word "geography" means Earth-description. The subject has its
@@ -263,7 +263,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Geography-Senior-Secondary-NIOS_80.html"
+                href="/subject/curriculum-12th/curriculum-geography"
                 className="subject-btn"
               >
                 View Curriculum
@@ -279,7 +279,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Political Science (317) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-political-science"> Political Science (317) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Political science is the study of governments, public policies and
@@ -301,7 +301,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Political-Science-Senior-Secondary-NIOS_81.html"
+                href="/subject/curriculum-12th/curriculum-political-science"
                 className="subject-btn"
               >
                 View Curriculum
@@ -317,7 +317,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Economics (318) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-economics">  Economics (318) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Economics is a science that deals with the production,
@@ -339,7 +339,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/CurriculumEconomics-Senior-Secondary-NIOS_82.html"
+                href="/subject/curriculum-12th/curriculum-economics"
                 className="subject-btn"
               >
                 View Curriculum
@@ -355,7 +355,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Commerce (319) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-commerce">   Commerce (319) For Senior Secondary (12th) </a>
             </h2>
             <p className="subject-card-description">
               The study of commerce focuses on understanding the economic
@@ -379,7 +379,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Commerce-Senior-Secondary-NIOS_83.html"
+                href="/subject/curriculum-12th/curriculum-commerce"
                 className="subject-btn"
               >
                 View Curriculum
@@ -395,7 +395,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Accountancy (320) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-accountancy"> Accountancy (320) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Accountants help to ensure that firms run more efficiently,
@@ -417,7 +417,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Accountancy-Senior-Secondary-NIOS_84.html"
+                href="/subject/curriculum-12th/curriculum-accountancy"
                 className="subject-btn"
               >
                 View Curriculum
@@ -433,7 +433,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Home Science (321) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-home-science"> Home Science (321) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Home Science is a unique discipline with a blend of science and
@@ -454,7 +454,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Home-Science-Senior-Secondary-NIOS_85.html"
+                href="/subject/curriculum-12th/curriculum-home-science"
                 className="subject-btn"
               >
                 View Curriculum
@@ -470,7 +470,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Psychology (328) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-psychology">Psychology (328) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               This course offers students an engaging introduction to the
@@ -492,7 +492,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Psychology-Senior-Secondary-NIOS_87.html"
+                href="/subject/curriculum-12th/curriculum-psychology"
                 className="subject-btn"
               >
                 View Curriculum
@@ -508,7 +508,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Computer Science (330) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-computer-science">Computer Science (330) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Computer Science is the study of computers and computing
@@ -531,7 +531,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Computer-Science-Senior-Secondary-NIOS_88.html"
+                href="/subject/curriculum-12th/curriculum-computer-science"
                 className="subject-btn"
               >
                 View Curriculum
@@ -547,7 +547,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Sociology (331) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-sociology"> Sociology (331) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Sociology is the scientific study of society: its composition,
@@ -572,7 +572,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Sociology-Senior-Secondary-NIOS_89.html"
+                href="/subject/curriculum-12th/curriculum-sociology"
                 className="subject-btn"
               >
                 View Curriculum
@@ -588,7 +588,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Painting (332) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-painting"> Painting (332) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Painting course is designed to give expression to one’s visual
@@ -608,7 +608,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Painting-Senior-Secondary-NIOS_90.html"
+                href="/subject/curriculum-12th/curriculum-painting"
                 className="subject-btn"
               >
                 View Curriculum
@@ -624,7 +624,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Mass Communication (335) For Senior Secondary (12th)
+              <a href="/subject/summary-12th/summary-mass-communication"> Mass Communication (335) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               The world has witnessed a phenomenal and unprecedented explosion
@@ -644,7 +644,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Mass-Comunication-Senior-Secondary-NIOS_91.html"
+                href="/subject/curriculum-12th/curriculum-mass-communication"
                 className="subject-btn"
               >
                 View Curriculum
@@ -653,8 +653,6 @@ export default function SeniosSecondary() {
           </div>
         </section>
 
-  
-
         <section className="subject-card">
           <div className="subject-card-image">
             <img src="/assets/images/syllabus/img1.png" alt="English subject" />
@@ -662,7 +660,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Environmental Science For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-environmental-science"> Environmental Science For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               Environmental Science is an interdisciplinary approach to the
@@ -682,7 +680,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Syllabus-Environmental-Science--Senior-Secondary-NIOS_116.html"
+                href="/subject/curriculum-12th/curriculum-environmental-science"
                 className="subject-btn"
               >
                 View Curriculum
@@ -698,7 +696,7 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Hindi (301) For Senior Secondary (12th)
+               <a href="/subject/summary-12th/summary-hindi"> Hindi (301) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
               The National Institute of Open Schooling (NIOS) has been taking
@@ -718,7 +716,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Hindi-Senior-Secondary-NIOS_71.html"
+                href="/subject/curriculum-12th/curriculum-hindi"
                 className="subject-btn"
               >
                 View Curriculum
@@ -727,7 +725,6 @@ export default function SeniosSecondary() {
           </div>
         </section>
 
-
         <section className="subject-card">
           <div className="subject-card-image">
             <img src="/assets/images/syllabus/img1.png" alt="English subject" />
@@ -735,10 +732,19 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Urdu (306) For Senior Secondary (12th)
+             <a href="/subject/summary-12th/summary-urdu"> Urdu (306) For Senior Secondary (12th)</a>
             </h2>
             <p className="subject-card-description">
-               Language is vital not only to communicate thoughts and ideas but it also develops information, friendship, cultural ties and economic relationship. As for Urdu is concerned, it is a most popular language spoken by millions of people across the world. Urdu language has a rich history of hundreds of years. Urdu is written from right to left just like Arabic and Persian. Urdu has 39 basic letters and 13 extra characters, all together 52 and most of these letters are from Arabic and a small quantity form Persian. It has almost all the sounds available in any other language spoken in the world.
+              Language is vital not only to communicate thoughts and ideas but
+              it also develops information, friendship, cultural ties and
+              economic relationship. As for Urdu is concerned, it is a most
+              popular language spoken by millions of people across the world.
+              Urdu language has a rich history of hundreds of years. Urdu is
+              written from right to left just like Arabic and Persian. Urdu has
+              39 basic letters and 13 extra characters, all together 52 and most
+              of these letters are from Arabic and a small quantity form
+              Persian. It has almost all the sounds available in any other
+              language spoken in the world.
             </p>
 
             <div className="subject-card-buttons">
@@ -749,7 +755,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Urdu-Senior-Secondary-NIOS_73.html"
+                href="/subject/curriculum-12th/curriculum-urdu"
                 className="subject-btn"
               >
                 View Curriculum
@@ -758,7 +764,6 @@ export default function SeniosSecondary() {
           </div>
         </section>
 
-
         <section className="subject-card">
           <div className="subject-card-image">
             <img src="/assets/images/syllabus/img1.png" alt="English subject" />
@@ -766,10 +771,17 @@ export default function SeniosSecondary() {
 
           <div className="subject-card-content">
             <h2 className="subject-card-title">
-              Sanskrit (309) For Senior Secondary (12th)
+               <a href="/subject/summary-12th/summary-sanskrit">Sanskrit (309) For Senior Secondary (12th) </a>
             </h2>
             <p className="subject-card-description">
-              There are many benefits of learning Sanskrit, it is the mother of all languages and is the powerful language of love, wisdom, knowledge and joy.  It is not a difficult to learn Sanskrit when you have a good teacher, and well crafted study materials that are easy to follow and engaging. SS Coaching Lucknow makes Sanskrit classes very easy and interesting to understand. SS Coaching makes sure that there is no gap between the teachers and students capability of teaching and understanding.
+              There are many benefits of learning Sanskrit, it is the mother of
+              all languages and is the powerful language of love, wisdom,
+              knowledge and joy. It is not a difficult to learn Sanskrit when
+              you have a good teacher, and well crafted study materials that are
+              easy to follow and engaging. SS Coaching Lucknow makes Sanskrit
+              classes very easy and interesting to understand. SS Coaching makes
+              sure that there is no gap between the teachers and students
+              capability of teaching and understanding.
             </p>
 
             <div className="subject-card-buttons">
@@ -780,7 +792,7 @@ export default function SeniosSecondary() {
                 View Syllabus
               </a>
               <a
-                href="https://sscoaching.in/Curriculum-Sanskrit-Senior-Secondary-NIOS_74.html"
+                href="/subject/curriculum-12th/curriculum-sanskrit"
                 className="subject-btn"
               >
                 View Curriculum

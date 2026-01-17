@@ -7,14 +7,14 @@ export default function SyllabusEnglishNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of English (202) | NIOS</title>
+        <title>English Course Structure in NIOS Board Lucknow</title>
         <meta
           name="description"
-          content="NIOS English (202) Syllabus – Course Structure, Chapters, Marks Distribution, and Study Hours."
+          content="Syllabus of English in National School of Open Schooling and English (202) Syllabus or Course Structure of English and English Sample paper 2024 in NIOS board Lucknow here you access all the details of English courses and Sample paper in NIOS Board Lucknow by SS Coaching"
         />
         <meta
           name="keywords"
-          content="NIOS English 202 syllabus, NIOS English course structure, NIOS English chapters"
+          content="NIOS previous question papers, National institute of open schooling Lucknow, NIOS English question paper, NIOS English question paper 2022,2023, NIOS English sample paper 2024, model question paper, NIOS question paper 2022,2023, sample paper 2024 CBSE guess paper, NIOS syllabus for 10th, national institute of open schooling hall ticket, NIOS paper, CBSE model question papers, English sample paper for class 10, 10th syllabus, English grammar lessons, Senior secondary education, Language courses, English language learning, NIOS English syllabus, English speaking classes, CBSE exam papers, NIOS senior secondary sample question paper, NIOS hall ticket 2023, National institute of open schooling sample paper, English classes syllabus, National institute of open schooling admit card, NIOS model paper, Senior secondary course. NIOS hall ticket, NIOS course, English Sample paper 2024,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

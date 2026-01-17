@@ -7,14 +7,14 @@ export default function SyllabusMathematicsSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Mathematics Senior Secondary NIOS</title>
+        <title>Syllabus Of Mathematics (311) In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="Syllabus Mathematics Senior Secondary NIOS Mathematics (311)"
+          content="Mathematics Syllabus senior secondary 12th NIOS, Get all details of mathematics subjects of 12th in NIOS board and prepare the online examination portal of mathematics. here available all syllabus of mathematics in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Mathematics 311 syllabus, Mathematics Senior Secondary NIOS"
+          content="How to learn in exams, March exams, Admission exam, Open school courses, Answers of exam questions, Failure in 12th exam, Boards results, 12th board results, 12th class exam answers, College entrance exam results, Ministry of education, Online exam system, Failure in exam, Online courses, Exam results, Answers to exam, NIOS admission, Online education in India, NIOS on-demand exam, Online certificate courses, Exams papers, Board exam sample papers, syllabus mathematics, class 12 maths syllabus, maths syllabus, nios maths class 12, nios maths book class 12, nios maths class 12, online mathematics, NIOS Maths question paper 2022, 2023, NIOS Maths sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

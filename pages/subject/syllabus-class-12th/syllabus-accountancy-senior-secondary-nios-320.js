@@ -7,14 +7,14 @@ export default function SyllabusAccountancySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Accountancy Senior Secondary NIOS</title>
+        <title>Syllabus Of Accountancy In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Accounting (320)"
+          content="Course Accountancy 12th class NIOS Board Lucknow by SS Coaching and get all syllabus details of accountancy for 12th class in NIOS board or syllabus of accountancy of 12th class in NIOS board by SS coaching."
         />
         <meta
           name="keywords"
-          content="NIOS Accounting 320 syllabus, Accountancy Senior Secondary NIOS"
+          content="Accounts class 12th NIOS syllabus, Accounts question paper, Sample papers for class 12th accounts, Accounts sample papers for class 12 NIOS, Question paper of accounts, Accounts courses, Courses in accounts, Accounts syllabus for NIOS, NIOS sample papers for class 12th accountancy, class 12 NIOS accounts syllabus, Accounts class 12th, NIOS accounts syllabus, NIOS study material for accounts, Accounts syllabus for NIOS exam, Board accounts previous papers, Accounts online learning, accounts courses online, Senior secondary accounts syllabus, Accounts coaching in Lucknow, NIOS 12 class accounts syllabus, NIOS Accountancy question paper 2022, 2023, NIOS Accountancy sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

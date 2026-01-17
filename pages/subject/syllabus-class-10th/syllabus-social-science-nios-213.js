@@ -7,14 +7,14 @@ export default function SyllabusSocialScienceNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Social Science (213) | NIOS</title>
+        <title>Syllabus Of Social Science (213) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Social Science (213) Syllabus – Course Structure, Modules, Chapters, and Study Hours."
+          content="You can get the Syllabus Of Social Science (213) In NIOS for Secondary Education. Get all the details of the social science course in NIOS board like Evolution of Human Society Environment, Resources and Development People, Society and Culture India’s Struggle for Freedom Citizen, State and the Constitution."
         />
         <meta
           name="keywords"
-          content="NIOS Social Science 213 syllabus, NIOS SST syllabus, NIOS social science course"
+          content="Social science online, Social science course in NIOS syllabus course, Social study courses, Study social science, Applied social science, Social studies curriculum, Social science course, Social science secondary education, Courses in social science, What are science courses, Social science theories related to education, Comparative study in social science, science course online, Online course structure, Social studies course, Education social studies NIOS, Social Science Syllabus, nios fees structure, syllabus nios, nios syllabus for 10th, nios online study material, nios class 10 social science notes, NIOS syllabus Social Science, NIOS social science sample paper 2024, NIOS sample paper 2024, NIOS question paper social science 2022,2023 and sample paper 2024,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

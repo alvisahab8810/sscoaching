@@ -7,14 +7,14 @@ export default function SyllabusChemistrySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Chemistry Senior Secondary NIOS</title>
+        <title>Syllabus Of Chemistry (313) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="Syllabus Chemistry Senior Secondary NIOS Chemistry (313)"
+          content="Chemistry Subject senior secondary 12th NIOS Lucknow by SS Coaching here the many details of chemistry subjects of NIOS board, and NIOS board students prepare the chemistry examination of class 12th in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Chemistry 313 syllabus, Chemistry Senior Secondary NIOS"
+          content="Chemistry class 12 syllabus, Board chemistry previous papers, Senior secondary chemistry syllabus, Chemistry online learning, Chemistry class 12th solved question papers, NIOS sample papers for class 12 chemistry, Class 12 NIOS chemistry syllabus, NIOS 12 class chemistry syllabus, Class 12 chemistry syllabus, NIOS chemistry syllabus class 12, Chemistry Olympiad syllabus, Question paper of chemistry, Chemistry syllabus for NIOS, Chemistry syllabus for NIOS exam, Chemistry question paper, Study material for chemistry, Sample papers for class 12 chemistry, NIOS class 12 chemistry question paper, Chemistry study material, Chemistry sample papers for class 12 NIOS, Syllabus Chemistry Senior Secondary NIOS, NIOS Chemistry question paper 2022, 2023, NIOS Chemistry sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

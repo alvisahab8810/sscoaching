@@ -7,14 +7,14 @@ export default function SanskritSubject309NIOS() {
   return (
     <>
       <Head>
-        <title>Sanskrit Subject (309) In NIOS Senior Secondary 12th</title>
+        <title>Sanskrit Course (309) summary for Senior Secondary-NIOS</title>
         <meta
           name="description"
-          content="Sanskrit Subject (309) In NIOS Senior Secondary 12th"
+          content="Sanskrit Course (309) for Senior Secondary NIOS. Get all the details about the Sanskrit subject of standards from the NIOS board. SS Coaching makes Sanskrit classes very easy and interesting to understand."
         />
         <meta
           name="keywords"
-          content="Sanskrit 309 NIOS, Sanskrit Senior Secondary, NIOS Sanskrit Subject"
+          content="sanskrit coaching institutes, online Sanskrit coaching, top Sanskrit Vedic style coaching institutes, coaching for Sanskrit learning, Sanskrit coaching centre 12th, nios Sanskrit books, nios coaching, nios Sanskrit coaching centre, nios Sanskrit classes,nios Sanskrit material, nios coaching online, nios Sanskrit course, nios online coaching Sanskrit, nios online course Sanskrit material, nios online study material,nios Sanskrit, nios, study material, nios tuition, study material nios, sanskrit subject, sanskrit question, NIOS Sanskrit question paper 2022, 2023, NIOS Sanskrit sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

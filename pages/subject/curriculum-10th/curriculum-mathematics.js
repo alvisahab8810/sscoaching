@@ -7,10 +7,15 @@ export default function SyllabusMathematicsNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Mathematics | NIOS Secondary Course</title>
+        <title>Mathematics (211) Secondary Course Curriculum of NIOS | SSCoaching</title>
         <meta
           name="description"
-          content="Curriculum Mathematics of NIOS for Secondary Course – Rationale, Objectives, Course Description and Module-wise details."
+          content="Mathematics secondary courses and curriculum of NIOS Board provide by SS Coaching and you get all details about the mathematics subjects of NIOS board. Mathematics is an important discipline of learning at the secondary stage."
+        />
+
+          <meta
+          name="keywords"
+          content="Mathmatics curriculum , NIOS ignou maths courses, NIOS course details, online maths course, CBSE schools in maths, Maths institute of open schooling, Maths distance learning courses, Board maths question pattern, Correspondence courses, NIOS course material, Maths distance learning, NIOS maths study material, Free online maths education, National institute open school for maths, Maths education in india, Mathmatics Curriculum For Secondary Course, Curriculum For Mathmatics 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

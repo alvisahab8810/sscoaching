@@ -7,14 +7,14 @@ export default function SyllabusPoliticalScienceSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Political Science Senior Secondary NIOS</title>
+        <title>Syllabus Of Political Science (317) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="NIOS Political Science Senior Secondary Syllabus Political (317)"
+          content="Political Science Subject 12th class NIOS Board Lucknow by SS Coaching. NIOS board syllabus for political science for 12th class here you prepare for the examination of 12th class through NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Political Science 317 syllabus, Political Senior Secondary NIOS"
+          content="NIOS political science syllabus class 12, Political science syllabus for NIOS, Class 12th NIOS Political science syllabus, Political science syllabus for NIOS exam, Senior secondary"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

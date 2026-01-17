@@ -7,14 +7,14 @@ export default function SyllabusDataEntryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Data Entry (229) | NIOS</title>
+        <title>Syllabus Of DATA ENTRY (229) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Data Entry (229) Syllabus – Course Structure, Modules, Topics, and Practical Skills."
+          content="Data Entry Syllabus High School NIOS Board and Syllabus of data entry operations (229) of NIOS Basics of Computers Operating System Basics of Word Processing Formatting Documents Mail Merge Basics of Spreadsheet Formatting Worksheets Formulas."
         />
         <meta
           name="keywords"
-          content="NIOS Data Entry 229 syllabus, NIOS data entry course, NIOS ITI syllabus"
+          content="Board data entry syllabus, Data entry scope in India, 10th data entry syllabus, NIOS data entry operations question papers, NIOS with data entry, how to do data entry course, Computer data entry benefits, Data entry details, NIOS open school in Lucknow, Data entry solved exam questions, Open school for board exam, NIOS school, Data entry question papers, Data entry coaching in Lucknow, Data entry course in 10th, Data entry sample papers, Data entry education in India, Data entry operations in NIOS, Typing data entry, Data entry scope and advantage as a subject, data entry course syllabus, data entry operator syllabus, data entry course syllabus, data entry course, data entry course online free, NIOS Data Entry question paper 2022, 2023, NIOS Data Entry sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

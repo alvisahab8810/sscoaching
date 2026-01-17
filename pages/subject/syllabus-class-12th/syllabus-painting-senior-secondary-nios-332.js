@@ -7,14 +7,14 @@ export default function SyllabusPaintingSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Painting Senior Secondary NIOS</title>
+        <title>Syllabus Of Painting In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Painting (332)"
+          content="Painting 12th standard NIOS Board Lucknow by SS Coaching. here all the syllabus details of painting subjects in NIOS board for 12th class information about the NIOS board of 12th standard."
         />
         <meta
           name="keywords"
-          content="NIOS Painting 332 syllabus, Painting Senior Secondary NIOS"
+          content="Class 12 NIOS painting syllabus, Intermediate board painting previous papers, NIOS painting syllabus class 12, Painting question paper of painting, Painting syllabus for NIOS, Sample papers for class 12th painting, Painting practical for board exam, Painting institute in Lucknow, Painting online practice, Painting courses online, Painting question paper, NIOS class 12 painting question paper, Painting sample papers for class 12 NIOS. painting nios class 12, nios painting, NIOS Painting question paper 2022, 2023, NIOS Painting"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

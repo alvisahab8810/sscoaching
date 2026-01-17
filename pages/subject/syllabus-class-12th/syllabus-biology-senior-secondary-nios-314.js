@@ -7,14 +7,14 @@ export default function SyllabusBiologySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Biology Senior Secondary NIOS</title>
+        <title>Syllabus Of Biology (314) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="Syllabus Biology Senior Secondary NIOS Biology (314)"
+          content="Biology Subject senior secondary NIOS Lucknow by SS Coaching here the many details of biology subjects of NIOS board NIOS board students prepare the biology examination of class 12th in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Biology 314 syllabus, Biology Senior Secondary NIOS"
+          content="Biology study material for board exam, Board biology previous papers, NIOS sample papers for class 12th biology, Class 12th NIOS biology syllabus, Class 12 biology syllabus, NIOS biology syllabus class 12, Question paper of biology, Biology syllabus for NIOS exam, Biology sample papers for class 12 NIOS, NIOS class 12 biology question paper, Biology class 12th solved question papers, Biology class 12th NIOS syllabus, Biology question paper, Biology syllabus for NIOS, Biology online learning, Senior secondary biology syllabus, NIOS study material for biology, NIOS 12 class biology syllabus, Sample papers for class 12 biology, NIOS Biology question paper 2022, 2023, NIOS Biology sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

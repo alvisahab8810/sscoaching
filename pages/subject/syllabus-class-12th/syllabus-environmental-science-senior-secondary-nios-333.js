@@ -7,14 +7,14 @@ export default function SyllabusEnvironmentalScienceSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Environmental Science Senior Secondary NIOS</title>
+        <title>Syllabus Of Environmental Science In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Environmental Science (333)"
+          content="Environmental Science 12th standard NIOS Board Lucknow provide by SS Coaching and all the syllabus and course details of the Environmental science of 12th standard of NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Environmental Science 333 syllabus, Environmental Science Senior Secondary NIOS"
+          content="Class 12 NIOS environmental science syllabus, Environmental science question paper, Board environmental science previous papers, NIOS 12 class environmental science syllabus, Question paper of computer science, Environmental science coaching in Lucknow, Environmental science study material for board exam, Environmental science class 12th notes, Environmental science courses, Courses in environmental science, NIOS sample papers for class 12th environmental science, syllabus environmental science, environmental science book, environmental studies books, environmental science textbook, environmental science pdf, environmental studies pdf, environmental studies book pdf, NIOS Environmental Science question paper 2022, 2023, NIOS Environmental Science sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

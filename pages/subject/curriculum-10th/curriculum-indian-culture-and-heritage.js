@@ -8,11 +8,17 @@ export default function SyllabusIndianCultureHeritageNIOS() {
     <>
       <Head>
         <title>
-          Curriculum Indian Culture and Heritage | NIOS Secondary
+          Indian Culture And Heritage (223) Secondary Course Curriculum in NIOS | SSCoaching
         </title>
         <meta
           name="description"
-          content="Curriculum Indian Culture and Heritage of NIOS in SS Coaching | Course 223 Secondary Level"
+          content="The study of one’s cultural heritage leads one to the appreciation of beauty and wisdom in life. This module is designed to develop an understanding of the concept and meaning of culture and understanding of the historical development of Indian Culture."
+        />
+
+        
+            <meta
+          name="keywords"
+          content="10th Class Curriculum Indian culture of NIOS, heritage course for NIOS, NIOS syllabus, NIOS Indian culture & heritage course, Indian culture course pdf, Indian culture syllabus in Hindi, Indian culture syllabus in English, nios indian culture and heritage, indian culture and heritage book, nios curriculum, indian culture and heritage, nios books,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

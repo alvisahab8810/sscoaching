@@ -7,14 +7,14 @@ export default function SyllabusMassCommunicationSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Mass Communication Senior Secondary NIOS</title>
+        <title>Syllabus Of Mass Communication In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Mass Communication (335)"
+          content="Mass Communication 12th standard NIOS Board Lucknow provide by SS Coaching and collect all the information of NIOS board for 12th class. Details are available for mass communication subject of 12th class of NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Mass Communication 335 syllabus, Mass Communication Senior Secondary NIOS"
+          content="Mass communication class 12th NIOS syllabus, Mass communication sample papers for class 12 NIOS, NIOS study material for mass communication, Mass communication courses, Courses in mass communication, NIOS sample papers for class 12th mass communication, NIOS mass communication syllabus, Sample papers for class 12th mass communication, ,Mass communication class 12th solved question papers, Mass communication online learning mass communication courses online, Senior secondary mass communication syllabus, Class 12 NIOS mass communication syllabus, Mass communication question paper, Board mass communication previous papers, NIOS 12 class mass communication syllabus, NIOS mass communication syllabus class 12, Question paper of computer science, NIOS class 12 mass communication question paper, Mass communication syllabus for NIOS, Mass communication coaching in Lucknow, Mass communication study material for board exam, Mass communication class 12th notes, Mass communication syllabus for NIOS exam, NIOS Mass Communication question paper 2022, 2023, NIOS Mass Communication sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

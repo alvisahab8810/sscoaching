@@ -7,14 +7,14 @@ export default function SyllabusHomeScienceNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Home Science (216) | NIOS</title>
+        <title>Syllabus Of Home Science (216) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Home Science (216) Syllabus – Course Structure, Modules, Units, and Lessons."
+          content="You can get the Syllabus Of Home Science (216) In NIOS for Secondary Education. Home Science Course material 10th Board NIOS and Home Science Course material 10th NIOS, Evolution and Characteristics of Wants Human Wants and Production Increasing Production of Goods and Services Distribution of Goods and Services."
         />
         <meta
           name="keywords"
-          content="NIOS Home Science 216 syllabus, NIOS home science course, NIOS home science chapters"
+          content="Board home science course, NIOS home science practical file, NIOS home science practical, NIOS study material, home science board exam papers, Home science class 10, Home science books in Hindi, National open school syllabus, Home science class 10 book, NIOS home science syllabus, NIOS school, NIOS home science question papers, Home science in Hindi, CBSE open school, NIOS home science, Home science course syllabus, Home science practical, NIOS home science book, NIOS home science practical book, Home science practical file class-10, Home science study materials, Syllabus for home science, What is home science course, CBSE home science, Sample papers of home science, Home science paper, What is the syllabus of home science in NIOS, home science pdf, course structure, syllabus of home science, nios home science class 10, NIOS Home Science question paper 2022, 2023, NIOS Home Science sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

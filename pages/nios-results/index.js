@@ -8,11 +8,16 @@ export default function NIOSResult2025OctNov() {
     <>
       <Head>
         <title>
-          NIOS Result 2025–2026 For Oct/Nov Exams | Expected January 2026
+          NIOS Results 2025 of Class 10th & 12th | NIOS Apr/May Exams Results 2025-26 | Check at results.nios.ac.in Now!!!
         </title>
         <meta
           name="description"
-          content="NIOS Result 2025–2026 For Oct/Nov Exams | Expected January 2026 | Check Latest NIOS 10th & 12th Result Updates"
+          content="NIOS Results 2025 for 10th (Secondary) & 12th (Senior Secondary) will be soon declared. Students who appeared in NIOS Apr/May Exams 2025-26 can now check their NIOS Results 2025 by visiting the results.nios.ac.in of the National Institute of Open Schooling. Check the direct link and all the steps to download the NIOS Marksheet 2025, Passing Marks, and Revaluation Process Here."
+        />
+
+        <meta
+          name="keywords"
+          content="nios results, nios result 2025, nios on demand result, nios 10th result, nios 12th result, NIOS Result 2025 Class 10 Result 2025, nios class 12 result, nios result 10th class 2025, nios class 10 result, national institute of open schooling result, nios result 2025 class 12, nios result check, nios exam result, nios board result, nios ka result, nios result date, NIOS result 2025, nios exam result 2025, class 10th result 2025, class 12th result 2025, Nios Online Admission in Lucknow, Nios Online Admission Lucknow, Nios Online Admission, NIOS On Demand result, NIOS On Demand result date, NIOS Result 2025 Class 12, NIOS Result 2025 Class 10, nios result 2025, NIOS Result 2025 Class 12, NIOS On Demand result, NIOS Result 2025 On-Demand, NIOS on Demand Result 2025 Date, nios marksheet, nios marksheet download, nios 10th certificate, nios 10th marksheet download, national institute of open schooling marksheet download, nios certificate, nios migration certificate, nios pass certificate, nios passing certificate online, nios 10th certificate, nios 12 certificate, national institute of open schooling certificate, secondary nios pass certificate, certificate national institute of open schooling, NIOS marksheet download, NIOS passing certificate online, nios original certificate, nios original certificate download, nios original marksheet, NIOS 12th Certificate Download, nios passing certificate online, When NIOS 12th Result will be declared, Apr/May Exams 2025-26, NIOS Results 2025, Apr/May Exams 2025-26 Apr/May Exam 2025 of 10th And 12th, results.nios.ac.in"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

@@ -5251,3 +5251,37 @@ background:none!important;
     right: 100px;
     bottom: 0;
         }
+
+
+        .image-placeholder-box img{
+          width: 100%;
+        }
+
+
+        .quote-box {
+  background: linear-gradient(135deg, #f5f7fa, #ffffff);
+  border-left: 6px solid #0b5ed7;
+  padding: 22px 26px;
+  border-radius: 14px;
+  /* box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08); */
+  margin-top: 20px;
+}
+
+.quote-box h5 {
+  font-size: 25px;
+  font-style: italic;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.quote-box h4 {
+  font-size: 16px;
+  /* text-align: right; */
+  margin: 0;
+}
+
+
+.ftr-links{
+  margin-top: 40px;
+}

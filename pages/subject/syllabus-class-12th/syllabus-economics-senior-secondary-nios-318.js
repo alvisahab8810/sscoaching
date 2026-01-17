@@ -7,14 +7,14 @@ export default function SyllabusEconomicsSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Economics Senior Secondary NIOS</title>
+        <title>Syllabus Of Economics (318) In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Economics Senior Secondary Syllabus Economics (318)"
+          content="Economics Course 12th class NIOS Board Lucknow by SS Coaching. Economics courses details and gets all syllabus information of Economics course of 12th in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Economics 318 syllabus, Economics Senior Secondary NIOS"
+          content="Economics question paper, Sample papers for class 12th economics, Class 12 economics syllabus, NIOS sample papers for class 12th economics, Economics sample papers for class 12 NIOS, Economics online learning economics courses online, Board economics previous papers, Question paper of economics, Economics courses, Courses in economics, NIOS class 12 economics question paper, Economics syllabus for NIOS, Economics study material for board exam, NIOS economics syllabus class 12, Class 12th NIOS economics syllabus, NIOS study material for economics, Economics syllabus for NIOS exam, Senior secondary economics syllabus, economics class 12th solved question papers, Economics coaching in Lucknow, NIOS 12 class economics syllabus, Economics class 12th NIOS syllabus, NIOS economics syllabus for 12th, NIOS Economics question paper 2022, 2023, NIOS Economics sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

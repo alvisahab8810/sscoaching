@@ -7,14 +7,14 @@ export default function SyllabusPhysicsSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Physics Senior Secondary NIOS</title>
+        <title>Syllabus Of Physics (312) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="Syllabus Physics Senior Secondary NIOS Physics (312)"
+          content="Physics (312) Senior Secondary (12th) Syllabus NIOS by SS Coaching. Here the many details of physics subjects of NIOS board, NIOS board students prepare the physics examination for class 12th in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Physics 312 syllabus, Physics Senior Secondary NIOS"
+          content="Sample papers for class 12 physics, Physics class 12th solved question papers, Physics class 12 syllabus, Board physics previous papers, Senior secondary physics education, Basic physics, Physics notes, Basics of physics, Physics experiments, Physics online learning, NIOS sample papers for class 12 physics, Class 12 NIOS physics syllabus, NIOS 12 class physics syllabus, Class 12 physics syllabus, NIOS physics syllabus class 12, Physics sample papers for class 12, NIOS physics sample papers for class 12, Sample paper of physics for class 12, NIOS class 12 physics question paper, Physics sample papers for class 12 NIOS, NIOS Physics question paper 2022, 2023, NIOS Physics sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

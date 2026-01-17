@@ -7,10 +7,16 @@ export default function SyllabusBusinessStudiesNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Business Studies | NIOS Secondary</title>
+        <title>Business Studies (215) Secondary Course Curriculum in NIOS | SSCoaching</title>
         <meta
           name="description"
-          content="Curriculum of Business Studies for NIOS Secondary Course – Rationale, Objectives, Course Structure and Evaluation."
+          content="Business Studies (215) Secondary Course Curriculum in NIOS, Whether we are poor or rich, the business activities around us have made our lives easy by fulfilling our basic needs and also improving our standard of living."
+        />
+
+
+           <meta
+          name="keywords"
+          content="High school business studies syllabus, High school courses online, Online learning curriculum, Business studies classes in high school, Summer business courses, Curriculum for high school, High school business organization concepts, Business study courses, Business organization secondary school, Curriculum business, High school studies program, Studies in business, Business organization syllabus for secondary school, Secondary business organization, Subject in secondary school, Secondary school business curriculum, Secondary business studies, Secondary school for business studies. curriculum pdf,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

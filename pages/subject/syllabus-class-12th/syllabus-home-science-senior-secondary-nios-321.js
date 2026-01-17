@@ -7,14 +7,14 @@ export default function SyllabusHomeScienceSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Home Science Senior Secondary NIOS</title>
+        <title>Syllabus Of Home Science In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Home Science (321)"
+          content="Syllabus Home Science 12th class NIOS Board Lucknow by SS Coaching and get all details of the home science of 12th in NIOS board and all the useful information of home science courses in NIOS board for 12th class."
         />
         <meta
           name="keywords"
-          content="NIOS Home Science 321 syllabus, Home Science Senior Secondary NIOS"
+          content="Senior secondary home science syllabus, NIOS 12 class home science syllabus, Home science class 12th NIOS syllabus, Home science question paper, Home science sample papers for class 12 NIOS, Question paper of home science, Home science courses, Courses in home science, Home science syllabus for NIOS, NIOS sample papers for class 12th economics, NIOS home science syllabus, NIOS class 12 home science question paper, Home science coaching in Lucknow, Sample papers for class 12th home science, Class 12 NIOS home science syllabus, Home science study material for board exam, Home science class 12th solved question papers, NIOS home science syllabus class 12, Home science class 12th notes, NIOS study material for home science, Home science syllabus for NIOS exam, Board home science previous papers, Home science online learning, home science courses online, NIOS Home Science question paper 2022, 2023, NIOS Home Science sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

@@ -7,14 +7,14 @@ export default function SyllabusMathematicsNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Mathematics (211) | NIOS</title>
+        <title>Mathematics Course Structure in NIOS Class 10th | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="NIOS Mathematics (211) Syllabus – Course Structure, Modules, Chapters, and Study Hours."
+          content="Mathematics Course Structure in NIOS Class 10th and the present syllabus in Mathematics has been divided into six modules namely Algebra, Commercial Mathematics, Geometry, Mensuration, Trigonometry, and Statistics. and NIOS Maths Sample paper 2024 class 10th is also given."
         />
         <meta
           name="keywords"
-          content="NIOS Mathematics 211 syllabus, NIOS maths course structure, NIOS maths chapters"
+          content="Maths syllabus, NIOS secondary subjects, NIOS maths syllabus, Senior secondary education, Mathematics solved questions, NIOS learn maths, Maths class, NIOS maths question paper, NIOS maths course syllabus, NIOS maths question paper 2022,2023 and Maths Sample paper 2024, 10th model question paper, Maths sample paper for class 10, Maths training in Lucknow, Maths problem-solving learning, Math board syllabus, Maths practice classes, national institute of open from Maths, NIOS syllabus for 10th Maths, NIOS courses, Institute of open schooling, NIOS secondary subjects, NIOS secondary subjects, nios maths class 10, syllabus of mathematics, syllabus nios, nios syllabus for 10th, NIOS Maths sample paper 2024, NIOS sample paper class 10th maths"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

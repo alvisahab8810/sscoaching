@@ -8,14 +8,14 @@ export default function SyllabusSanskritSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Sanskrit Secondary | NIOS</title>
+        <title>Syllabus Of Sanskrit (209) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Sanskrit Secondary Syllabus – Book 1, Book 2 chapters and study material downloads."
+          content="Sanskrit Course for 10th class Secondary Education NIOS Board. Get all the details about the Sanskrit subject of 10th standard from the NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Sanskrit syllabus, Sanskrit secondary NIOS, NIOS Sanskrit course"
+          content="NIOS syllabus for senior secondary, Sanskrit question paper of NIOS, NIOS sanskrit syllabus, Distance sanskrit education, Open schooling, Open institute of open schooling, NIOS sanskrit board syllabus, Open school of learning, Sanskrit language courses, NIOS sanskrit courses offered, Vocational sanskrit courses, Sanskrit senior class notes, NIOS institute, Short term sanskrit courses in lucknow, Institute of open schooling, NIOS sample paper, Open national school, Open school lucknow, Open school result 10th class, NIOS contact, NIOS sample papers, NIOS vocational courses, NIOS sanskrit question paper."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

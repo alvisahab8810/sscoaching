@@ -7,14 +7,14 @@ export default function SyllabusComputerScienceSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Computer Science Senior Secondary NIOS</title>
+        <title>Syllabus Of Computer Science In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Computer Science (330)"
+          content="Syllabus of Computer science of 12th standard of NIOS board provide by SS coaching and syllabus of computer science of NIOS board here available for useful information of NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Computer Science 330 syllabus, Computer Science Senior Secondary NIOS"
+          content="Class 12 NIOS computer science syllabus, Computer science study material for board exam, Computer science class 12th solved question papers, Computer science class 12th notes, NIOS study material for computer science, Computer science syllabus for NIOS exam, Computer science online learning computer science courses online, Senior secondary computer science syllabus, Computer science class 12th NIOS syllabus, Computer science sample papers for class 12 NIOS, Question paper of computer science, Computer science courses, Courses in computer science, NIOS sample papers for class 12th economics, NIOS computer science syllabus, NIOS 12 class computer science syllabus, Computer science question paper, Board computer science previous papers, NIOS computer science syllabus class 12, NIOS class 12 computer science question paper, Computer science syllabus for NIOS, Computer science coaching in Lucknow, sample papers for class 12th computer science, NIOS Computer Science question paper 2022, 2023, NIOS Computer Science sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

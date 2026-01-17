@@ -7,10 +7,15 @@ export default function SyllabusHomeScienceNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Home Science | NIOS Secondary</title>
+        <title>Home Science (216) Secondary Course Curriculum in NIOS | SSCoaching</title>
         <meta
           name="description"
-          content="Curriculum in Home Science at Secondary Level – NIOS | Rationale, Objectives, Modules and Course Description."
+          content="Home Science Secondary Course 10th Curriculum NIOS secondary education home science by Nios 10th home science"
+        />
+
+            <meta
+          name="keywords"
+          content="NIOS question paper for class 12 home science books in Hindi, home science for class 10 CBSE, home science of class 10 CBSE, home science study material class 10, home science model question, 10th home science curriculum, learning home science nios, distance learning home science, distance learning home science Hindi, nios curriculum, nios curriculum, nios online classes, nios online,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

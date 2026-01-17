@@ -7,14 +7,14 @@ export default function SyllabusScienceTechnologyNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Science and Technology (212) | NIOS</title>
+        <title>Science Technology Course in NIOS Class 10th | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="NIOS Science and Technology (212) Syllabus – Course Structure, Modules, Chapters, and Study Hours."
+          content="Science Technology Course in NIOS Class 10th and the Science Technology sample paper class 10th 2024, here you can prepare your NIOS board examination of class 10th and gets all the details of science subjects in 10th class in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Science 212 syllabus, NIOS Science and Technology course, NIOS science chapters"
+          content="Computer in science and technology, Diploma in computer science and technology, Forensic science course, Multimedia courses, Computer basic course, Integrated science courses, Computer science in board, Computer science syllabus, Online computer science courses, Civil engineering courses, Forensic science courses, Computer distance learning courses,technology courses, Correspondence courses, Engineering courses, Certificate courses, Science courses, Computer course, Information technology courses, National institute of open schooling, NIOS study material, computer science courses, science and technology, National open school syllabus, Computer courses, Online training, Computer science and technology course,Science & Technology Syllabus, NIOS Science & technology class 10 syllabus, nios syllabus for 10th, syllabus nios, nios online study material, study material, study material nios, nios study material, nios books, NIOS class 10th sample paper Science and Technology, Science and Technology Sample paper class 10th"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

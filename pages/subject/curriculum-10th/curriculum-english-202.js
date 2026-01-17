@@ -7,10 +7,15 @@ export default function SyllabusEnglishNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum English (202) | NIOS</title>
+        <title>English (202) Secondary Course Curriculum of NIOS | SSCoaching</title>
         <meta
           name="description"
-          content="Complete and official Curriculum of English (202) for NIOS Secondary Course with objectives, syllabus, assessment and examination details."
+          content="English Secondary Course Curriculum of NIOS provide by SS coaching in Lucknow. here the details of English curriculum and courses or syllabus of NIOS board."
+        />
+
+        <meta
+          name="keywords"
+          content="Vocational english education, English institute of open schooling, English distance learning courses, board English question pattern, NIOS english courses, English correspondence courses, NIOS course material, English distance learning, NIOS english study material, free online English education, national institute open school for english, Lucknow open school, English education in India, English speaking course, NIOS secondary course material, IGNOU courses, NIOS course details, online english course, Vocational courses, English medium schools in Lucknow, CBSE schools in english, English Secondary Course Curriculum of NIOS. nios curriculum, nios online classes, nios online classes 10, nios online study material, nios online admission, nios online, nios online classes,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

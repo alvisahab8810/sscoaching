@@ -7,14 +7,14 @@ export default function SyllabusBusinessStudiesNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Business Studies (215) | NIOS</title>
+        <title>Syllabus Of Business Studies (215) In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Business Studies (215) Syllabus – Course Structure, Modules, Lessons, and Study Hours."
+          content="You can get the Syllabus Of Business Studies (215) In NIOS for Secondary Education. NIOS Syllabus of Business Studies, Syllabus of Business Studies in NIOS, Business Environment Structure of Business Service Sector and Business Organisation Banking and Insurance Selling and Distribution Consumer Awareness Career Opportunities in Business"
         />
         <meta
           name="keywords"
-          content="NIOS Business Studies 215 syllabus, NIOS business studies course, NIOS BST syllabus"
+          content="Business studies class 10 syllabus 2024, Business studies syllabus for class 10, New syllabus of business studies, Syllabus of business studies class 10, Syllabus for business studies class 10, Business studies new syllabus, Business studies for class 10, About business studies, Best business studies book for class 10, Syllabus for business studies, Business studies book for class 10, Business studies class 10 NIOS, NIOS syllabus for 10th commerce, NIOS syllabus for senior secondary, Business studies syllabus NIOS, Syllabus of business studies, NIOS business studies notes, Business studies class 10 syllabus, Board business studies syllabus, NIOS business studies, NIOS business studies syllabus, business studies pdf, business studies notes pdf, business studies book, nios business studies,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

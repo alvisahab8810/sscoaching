@@ -7,10 +7,14 @@ export default function SyllabusMathematicsSeniorNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Mathematics Senior Secondary | NIOS</title>
+        <title>Mathematics course-12th Senior Secondary NIOS</title>
         <meta
           name="description"
-          content="Curriculum Mathematics Senior Secondary NIOS – Rationale, Objectives, Course Structure and Module-wise Distribution."
+          content="Mathematics courses 12th Senior Secondary of NIOS byThe best coaching of Mathematics of NIOS learners. Mathematics courses of Senior Secondary NIOS Board"
+        />
+          <meta
+          name="keywords"
+          content="NIOS mathematics courses, NIOS mathematics degrees, Free math courses NIOS, NIOS differential equations course, NIOS statistics class, What is applied math, NIOS courses mathematics, open university mathematics, NIOS courses, NIOS geometry classes, NIOS Maths notes, Open school new math division, Coaching centre maths, Maths courses NIOS , NIOS coaching centre for maths, Geometry classes NIOS, Statistics for math, NIOS online Maths classes, NIOS maths tuition near, NIOS Maths course 2024, NIOS geometry tuition near me, nios online classes, nios maths, nios maths book class 12 solutions pdf, nios maths book class 12, nios class 12 maths solutions,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -932,6 +936,244 @@ MODULE 8 : Integral Calculus
   </tbody>
 </table>
 </div>
+<br/>
+
+<h4>Extended Learning</h4>
+
+<ul className="chapter-list">
+  <li>
+      Application of definite integrals in finding the area under a curve
+
+  </li>
+
+   <li>
+     Formation of a differential equation
+
+  </li>
+
+   <li>
+    Higher order differential equations reducible to variable separable cases
+
+  </li>
+</ul>
+<h4>OPTIONAL MODULES</h4>
+
+<p>
+(The learner have to choose any one out three modules)
+
+</p>
+
+
+
+<hr />
+
+{/* ================= MODULE 9 ================= */}
+<h3 className="nios-125h-senior-hero-title">
+  Module 9 : Statistics and Probability
+</h3>
+
+<p>
+  <strong>Study Time:</strong> 20 hrs. &nbsp;&nbsp;
+  <strong>Max. Marks:</strong> 10
+</p>
+
+<p>
+  <strong>Pre-requisites :</strong> Mean, median and mode of ungrouped and grouped data.
+</p>
+
+<h4>Content and Extent of Coverage</h4>
+
+<ul className="chapter-list">
+  <li><strong>Measures of Dispersion</strong></li>
+  <li>Range</li>
+  <li>Mean Deviation</li>
+  <li>Variance and Standard Deviation</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Random Experiments and Events</strong></li>
+  <li>Random experiments</li>
+  <li>Sample space and events</li>
+  <li>Types of events – mutually exclusive and equally likely events</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Probability</strong></li>
+  <li>Concept of probability</li>
+  <li>Use of permutation and combination in probability</li>
+  <li>Probability as a function</li>
+  <li>Conditional probability and independent events</li>
+  <li>Random variable as a function on sample space</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Probability Distribution</strong></li>
+  <li>Introduction to probability distribution</li>
+  <li>Binomial distribution</li>
+  <li>Expected value of a random variable</li>
+  <li>Mean and variance of a binomial distribution</li>
+</ul>
+
+<h4>NOTE</h4>
+
+<ul className="chapter-list">
+  <li>
+    Probability to be explained as the ratio of number of favourable cases to the
+    total number of cases.
+  </li>
+  <li>
+    Venn diagrams to be used as frequently as possible for pictorial representation.
+  </li>
+  <li>
+    Use of addition theorem when product of events is easily identifiable.
+  </li>
+</ul>
+
+<h4>Extended Learning</h4>
+
+<ul className="chapter-list">
+  <li>Correlation and Regression</li>
+  <li>Curve fitting (fitting a line)</li>
+  <li>Mean and variance of Poisson distribution</li>
+  <li>Bivariate probability distributions</li>
+</ul>
+
+<hr />
+
+{/* ================= MODULE 10 ================= */}
+<h3 className="nios-125h-senior-hero-title">
+  Module 10 : Vectors & Analytical Solid Geometry
+</h3>
+
+<p>
+  <strong>Study Time:</strong> 20 hrs. &nbsp;&nbsp;
+  <strong>Max. Marks:</strong> 10
+</p>
+
+<p>
+  <strong>Pre-requisites :</strong> Knowledge of Two-Dimensional Geometry, Coordinate
+  Geometry and Trigonometry.
+</p>
+
+<h4>Content and Extent of Coverage</h4>
+
+<ul className="chapter-list">
+  <li><strong>Vectors</strong></li>
+  <li>Scalars and vectors</li>
+  <li>Vectors as directed line segments</li>
+  <li>Magnitude and direction of a vector</li>
+  <li>Null vector and unit vector</li>
+  <li>Equality of vectors</li>
+  <li>Position vector of a point</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Algebra of Vectors</strong></li>
+  <li>Addition and subtraction of vectors and their properties</li>
+  <li>Multiplication of a vector by a scalar and its properties</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Resolution of a Vector</strong></li>
+  <li>Resolution of a vector in two dimensions</li>
+  <li>Resolution of a vector in three dimensions</li>
+  <li>Section formula</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Coordinates of a Point</strong></li>
+  <li>Coordinates of a point in space</li>
+  <li>Distance between two points</li>
+  <li>Coordinates of a division point</li>
+  <li>Direction cosines and projection</li>
+  <li>Condition of parallelism and perpendicularity of two lines</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>The Plane</strong></li>
+  <li>General equation of a plane</li>
+  <li>Equation of a plane passing through three points</li>
+  <li>Equation of a plane in normal and intercept form</li>
+  <li>Angle between two planes</li>
+  <li>Plane bisecting angles between two planes</li>
+  <li>Homogeneous equations of second degree representing two planes</li>
+  <li>Projection and area of a triangle</li>
+  <li>Volume of tetrahedron</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>The Straight Line</strong></li>
+  <li>Equation of a line in symmetrical form</li>
+  <li>Deduction of general equation into symmetrical form</li>
+  <li>Perpendicular distance of a point from a straight line</li>
+  <li>Angle between a line and a plane</li>
+  <li>Condition of coplanarity of two lines</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>The Sphere</strong></li>
+  <li>Equation of a sphere (centre-radius form)</li>
+  <li>Equation of a sphere through four non-coplanar points</li>
+  <li>Diameter form of the equation of a sphere</li>
+  <li>Plane section of a sphere and sphere through a given circle</li>
+  <li>Intersection of a sphere and a line</li>
+</ul>
+
+<h4>Extended Learning</h4>
+
+<ul className="chapter-list">
+  <li>Skew lines</li>
+  <li>Intersection of three planes</li>
+  <li>Pole and polar plane in a sphere</li>
+  <li>Equation of a cylinder and its properties</li>
+  <li>Equation of a cone and its properties</li>
+</ul>
+
+<hr />
+
+{/* ================= MODULE 11 ================= */}
+<h3 className="nios-125h-senior-hero-title">
+  Module 11 : Linear Programming
+</h3>
+
+<p>
+  <strong>Study Time:</strong> 20 hrs. &nbsp;&nbsp;
+  <strong>Max. Marks:</strong> 10
+</p>
+
+<p>
+  <strong>Pre-requisites :</strong> Matrices
+</p>
+
+<h4>Content and Extent of Coverage</h4>
+
+<ul className="chapter-list">
+  <li><strong>Introduction</strong></li>
+  <li>Introduction through a real life problem</li>
+  <li>Solution by graphical method</li>
+  <li>
+    General terms used in linear programming (inequation, objective function,
+    convex polygon, feasible solution, optimal solution, etc.)
+  </li>
+  <li>Constraints in a linear programming problem</li>
+  <li>Feasible and optimal solutions</li>
+  <li>Simplex method</li>
+</ul>
+
+<ul className="chapter-list">
+  <li><strong>Applications</strong></li>
+  <li>Dual problem</li>
+  <li>Assignment problem</li>
+  <li>Transportation problem</li>
+</ul>
+
+<h4>Extended Learning</h4>
+
+<ul className="chapter-list">
+  <li>Product-mix problem</li>
+  <li>Duality</li>
+  <li>Simplex method</li>
+</ul>
 
 
 

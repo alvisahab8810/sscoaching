@@ -7,14 +7,14 @@ export default function SyllabusCommerceSeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Commerce Senior Secondary NIOS</title>
+        <title>Syllabus Of Commerce In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Commerce (319)"
+          content="Commerce Course 12th class NIOS Board Lucknow by SS Coaching. Commerce courses details and gets all syllabus information of commerce course of 12th in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Commerce 319 syllabus, Commerce Senior Secondary NIOS"
+          content="Commerce question paper, Sample papers for class 12th commerce, Commerce sample papers for class 12 NIOS, Commerce online learning commerce courses online, Question paper of commerce, Commerce courses, Courses in commerce, NIOS class 12 commerce question paper, Commerce syllabus for NIOS, Commerce study material for board exam, NIOS sample papers for class 12th economics, Commerce class 12th solved question papers, NIOS commerce syllabus class 12, Commerce class 12th NIOS commerce syllabus, Class 12 NIOS commerce syllabus, NIOS study material for commerce, Commerce syllabus for NIOS exam, Board commerce previous papers, Senior secondary commerce syllabus, Commerce coaching in Lucknow, NIOS 12 class commerce syllabus, Commerce class 12th NIOS syllabus, NIOS Commerce question paper 2022, 2023, NIOS Commerce sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

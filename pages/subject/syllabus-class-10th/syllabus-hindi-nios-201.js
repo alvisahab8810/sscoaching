@@ -7,14 +7,14 @@ export default function SyllabusHindiSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Hindi (201) | NIOS</title>
+        <title>Syllabus Of Hindi In NIOS for Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Hindi Secondary (201) Syllabus – Books, Course Structure, Lessons, and Downloads."
+          content="You can get the Syllabus Of Hindi In NIOS for Secondary Education. All the details of Hindi subjects in NIOS board for 10th class."
         />
         <meta
           name="keywords"
-          content="NIOS Hindi 201 syllabus, Hindi secondary NIOS, NIOS Hindi course"
+          content="Hindi senior class notes, NIOS institute, Short term Hindi courses in lucknow, NIOS hindi syllabus, Institute of open schooling, NIOS sample paper, open national school, open school lucknow, Open school result 10th class, NIOS contact, NIOS sample papers, NIOS vocational courses, NIOS hindi question paper, NIOS hindi syllabus, NIOS syllabus for senior secondary, Question paper of NIOS, NIOS hindi courses offered, Distance hindi education, Open schooling, Open institute of open schooling, Open school of learning, Hindi language courses, Vocational hindi courses, nios 10 hindi, hindi nios class 10, nios hindi, nios hindi book class 10, nios hindi book,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

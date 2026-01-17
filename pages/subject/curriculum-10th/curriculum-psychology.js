@@ -7,10 +7,16 @@ export default function SyllabusPsychologyNIOS() {
   return (
     <>
       <Head>
-        <title>Curriculum Psychology | NIOS Secondary</title>
+        <title>Secondary Psychology (222) 10th Curriculum NIOS Board</title>
         <meta
           name="description"
-          content="Curriculum Psychology of NIOS in SS Coaching | Psychology Course 222 Secondary Level"
+          content="Psychology Course Structure Psychology NIOS Psychology and your Psychological Makeup Human Development Across Life."
+        />
+
+        
+            <meta
+          name="keywords"
+          content="Psychology Course Structure Psychology NIOS Psychology and your Psychological Makeup Human Development Across Life."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

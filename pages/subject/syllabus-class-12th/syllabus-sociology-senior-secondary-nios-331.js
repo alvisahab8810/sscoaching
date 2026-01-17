@@ -7,14 +7,14 @@ export default function SyllabusSociologySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Sociology Senior Secondary NIOS</title>
+        <title>Syllabus Of Sociology In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Sociology (331)"
+          content="Sociology 12th standard NIOS Board Lucknow by SS Coaching. here all the syllabus details of painting subjects in NIOS board for 12th class information about the NIOS board of 12th standard."
         />
         <meta
           name="keywords"
-          content="NIOS Sociology 331 syllabus, Sociology Senior Secondary NIOS"
+          content="Sociology coaching in Lucknow, Sample papers for class 12th sociology, Sociology study material for board exam, Sociology class 12th solved question papers, Sociology class 12th notes, NIOS study material for computer science, Sociology syllabus for NIOS exam, Senior secondary sociology syllabus, Sociology class 12th NIOS syllabus, Sociology sample papers for class 12 NIOS, Sociology courses, Courses in sociology, NIOS sample papers for class 12th economics, NIOS 12 class sociology syllabus, NIOS sociology syllabus, Sociology online learning sociology courses online, Sociology question paper, Class 12 NIOS sociology syllabus, board sociology previous papers, NIOS sociology syllabus class 12, Question paper of computer science, NIOS class 12 sociology question paper, Sociology syllabus for NIOS, NIOS Sociology question paper 2022, 2023, NIOS Sociology sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

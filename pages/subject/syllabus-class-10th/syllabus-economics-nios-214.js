@@ -7,14 +7,14 @@ export default function SyllabusEconomicsNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus of Economics (214) | NIOS</title>
+        <title>Economics Course in NIOS Class 10th |SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="NIOS Economics (214) Syllabus – Course Structure, Modules, Chapters, and Study Hours."
+          content="Economics Course in NIOS Class 10th Uttar Pradesh, all the details of Human Wants and Production Increasing Production of Goods and Services Distribution of Goods and Services Buying of Goods and Services Selling of Goods and Services Savings: Banks, Post Offices and Insurance Indian Economy."
         />
         <meta
           name="keywords"
-          content="NIOS Economics 214 syllabus, NIOS economics course structure, NIOS economics chapters"
+          content="Institute of open schooling, Investment banking course, Open school of learning, Management courses, Economics courses online, National institute open schooling, NIOS online course material, NIOS online study material, online NIOS, NIOS secondary course material, formerly national open school NIOS, Economics course online, National open school economic syllabus class xii, NIOS economics syllabus, board economics study, Courses in economics, Economics online courses, Economics course in NIOS, NIOS economics open schooling, Economics courses, Correspondence courses, NIOS syllabus for 10th, NIOS open school, Finance courses, Economic courses, National open school syllabus, National institute of open schooling, Open schooling in economics, Board distance education, Banking course, syllabus of economics, economics class 10 syllabus, class 10 economics syllabus, course structure, nios online classes, nios online admission, nios online, nios online classes, NIOS economics question paper 2022 2023, NIOS sample paper 2024 economics, NIOS economics sample paper 2024, NIOS economics syllabus 2023, Economics syllabus 2023"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

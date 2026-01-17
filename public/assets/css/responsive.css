@@ -71,6 +71,36 @@
 
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 480px) {
+    .summary-pages p {
+        text-align: justify;
+        font-size: 14px;
+    }
+
+    .image-placeholder-box img {
+    width: 100%;
+    height: 150px;
+    border-radius: 14px;
+}
+    .syllabus-nios
+    .quote-box {
+    border-left: 3px solid #0b5ed7;
+    padding: 12px 15px;
+    margin-top: 0px;
+}
+
+    .quote-box h4 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+    .quote-box h5 {
+    font-size: 16px;
+    font-weight: bold;
+}
+    .syllabus-nios {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
 
     .ss-feature-cards{
     padding: 20px 0;

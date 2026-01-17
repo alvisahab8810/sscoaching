@@ -7,14 +7,14 @@ export default function SyllabusHindiSeniorSecondaryNIOS301() {
   return (
     <>
       <Head>
-        <title>Syllabus Hindi Senior Secondary NIOS</title>
+        <title>Syllabus Of Hindi In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Hindi (301)"
+          content="Hindi 12th standard NIOS Board provide by SS Coaching and all the details of Hindi subjects of 12 standards from NIOS board and make your career."
         />
         <meta
           name="keywords"
-          content="NIOS Hindi 301 syllabus, Hindi Senior Secondary NIOS"
+          content="Hindi class 12th solved question papers, Hindi online learning, Hindi courses online, senior secondary Hindi syllabus, class 12 NIOS Hindi syllabus, Hindi question paper, board Hindi previous papers, Hindi coaching in Lucknow, Hindi study material for board exam, Hindi class 12th notes, Hindi courses, courses in Hindi NIOS study material for Hindi, Hindi failed student, online admission for board exam, board failed students, NIOS 12 class Hindi syllabus, sample papers for class 12th Hindi, NIOS Hindi syllabus, NIOS Hindi syllabus class 12, online admission website, Hindi syllabus for NIOS exam, Hindi sample papers for class 12 NIOS, question paper of Hindi, NIOS sample papers for class 12th Hindi, Hindi class 12th NIOS syllabus, Hindi syllabus for NIOS, NIOS class 12 Hindi question paper, NIOS Hindi question paper 2022, 2023, NIOS Hindi sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

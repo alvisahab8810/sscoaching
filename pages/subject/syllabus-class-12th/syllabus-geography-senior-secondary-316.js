@@ -7,14 +7,14 @@ export default function SyllabusGeographySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Geography Senior Secondary NIOS</title>
+        <title>Syllabus Of Geography (316) In NIOS for Senior Secondary Education | SS Coaching Lucknow</title>
         <meta
           name="description"
-          content="Syllabus Geography Senior Secondary NIOS Geography (316)"
+          content="Syllabus Of Geography (316) In NIOS for Senior Secondary Education. SS Coaching prepare your Geography subject as the course of NIOS board and get the Ideas for the preparation of all subjects in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Geography 316 syllabus, Geography Senior Secondary NIOS"
+          content="Geography courses, Courses in geography, NIOS class 12 geography question paper, Sample papers for class 12 geography, NIOS geography syllabus class 12, Geography syllabus for NIOS exam, Senior secondary geography syllabus, Geography class 12th solved question papers, Geography syllabus for NIOS, NIOS 12 class Geography syllabus, Geography class 12th NIOS syllabus, Geography question paper, Class 12 geography syllabus, Geography sample papers for class 12 NIOS, Online geography degree programs in Lucknow, Geography online learning, NIOS study material for geography, Geography courses online, Geography study material for board exam, Board geography previous papers, NIOS sample papers for class 12th geography, Class 12th NIOS geography syllabus, Question paper of geography, NIOS Syllabus Geography for Senior Secondary, NIOS Geography question paper 2022, 2023, NIOS Geography sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

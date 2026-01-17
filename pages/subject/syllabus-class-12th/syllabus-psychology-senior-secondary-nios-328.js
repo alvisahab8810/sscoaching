@@ -7,14 +7,14 @@ export default function SyllabusPsychologySeniorSecondaryNIOS() {
   return (
     <>
       <Head>
-        <title>Syllabus Psychology Senior Secondary NIOS</title>
+        <title>Syllabus Of Psychology In NIOS for Senior Secondary Education</title>
         <meta
           name="description"
-          content="NIOS Syllabus For Senior Secondary Psychology (328)"
+          content="Course Psychology 12th class NIOS Board Lucknow by SS Coaching. Syllabus of the psychology of 12th class in NIOS board. SS coaching provide the psychology syllabus of 12th class in NIOS board."
         />
         <meta
           name="keywords"
-          content="NIOS Psychology 328 syllabus, Psychology Senior Secondary NIOS"
+          content="Senior secondary psychology subject syllabus, NIOS 12 class psychology subject syllabus, Psychology subject class 12th NIOS syllabus, Psychology subject question paper, Psychology subject sample papers for class 12 NIOS, Question paper of psychology subject, Psychology subject courses, Courses in psychology subject, Psychology subject syllabus for NIOS, NIOS sample papers for class 12th economics, NIOS psychology subject syllabus, Board psychology subject previous papers, NIOS class 12 psychology subject question paper, Psychology subject coaching in Lucknow, Sample papers for class 12th psychology subject, Class 12 NIOS psychology subject syllabus 2020, Psychology subject study material for board exam, Psychology subject class 12th solved question papers, NIOS psychology subject syllabus class 12, Psychology subject class 12th notes, NIOS study material for psychology subject, Psychology subject syllabus for NIOS exam, Psychology subject online learning psychology subject courses online, NIOS Psychology question paper 2022, 2023, NIOS Psychology sample paper 2024"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
