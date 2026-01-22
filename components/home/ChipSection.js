@@ -58,7 +58,8 @@ export default function ChipSection() {
           <img className="ss-icon" src="/assets/icons/group2.svg" alt="icon" />
 
         <h3>
-          Failed in 9th/11th <br /> pass 10th/12th
+          Pass 10th/12th <br /> in just 45 days
+          {/* Failed in 9th/11th <br /> pass 10th/12th */}
         </h3>
         </div>
         <button className="cta-btn-2nd">Get admission</button>
@@ -72,7 +73,9 @@ export default function ChipSection() {
           <img className="ss-icon" src="/assets/icons/group3.svg" alt="icon" />
         
         <h3>
-          Pass 10th/12th <br /> in just 45 days
+          {/* Pass 10th/12th <br /> in just 45 days */}
+          Failed in 9th/11th <br /> pass 10th/12th directly
+
         </h3>
         </div>
         <button className="cta-btn-2nd">Get admission</button>
@@ -91,7 +94,7 @@ export default function ChipSection() {
         .ss-feature-cards {
           display: flex;
           gap: 20px;
-          padding: 40px 0;
+          padding: 20px 0;
         }
 
         /* ===== CARD BASE ===== */
@@ -105,17 +108,17 @@ export default function ChipSection() {
 
         /* ===== ICON PLACEHOLDER ===== */
         .ss-feature-cards .ss-icon {
-          width: auto;
-          // height: 42px;
+          // width: auto;
+          height: 47px;
           // margin-bottom: 14px;
           object-fit: contain;
         }
 
         /* ===== TEXT ===== */
         .ss-feature-cards h3 {
-          font-size: 31px;
+          font-size: 25px;
     font-weight: 700;
-    line-height: 37px;
+    line-height: 28px;
     // font-family: 'Inter' !important;
     margin-bottom: 0 !important;
         }
@@ -123,11 +126,11 @@ export default function ChipSection() {
         /* ===== BUTTON ===== */
         .ss-feature-cards button {
           width: 100%;
-          height: 55px;
+          height: 45px;
           background: #ffffff;
           border: none;
           border-radius: 12px;
-          font-size: 30px;
+          font-size: 20px;
           font-weight: 600;
           cursor: pointer;
           // box-shadow: 0px 6px 0px rgba(0, 0, 0, 0.18);
@@ -146,7 +149,8 @@ export default function ChipSection() {
         }
         .ss-feature-cards .ss-purple button {
           color: #6D6AF5;
-          border:1px solid #1785FF;
+              color: #6d6af5;
+          border:1px solid #6d6af5;
           box-shadow: 3px 3px 8.1px rgba(21, 100, 229, 0.42);
 
         }
@@ -156,7 +160,7 @@ export default function ChipSection() {
         }
         .ss-feature-cards .ss-blue button {
           color: #0088FF;
-          border:1px solid #00A9DF;
+          border:1px solid #0088FF;
           box-shadow: 3px 3px 8.1px #62826177;
 
         }
@@ -166,7 +170,7 @@ export default function ChipSection() {
         }
         .ss-feature-cards .ss-green button {
           color: #11B3A3;
-          border:1px solid #21C0D0;
+          border:1px solid #11B3A3;
           box-shadow: 3px 3px 8.1px #af370083;
 
 

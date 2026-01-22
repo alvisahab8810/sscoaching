@@ -235,9 +235,14 @@ export default function StudentSuccess() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await fetch("/api/student-success?limit=15", {
-          cache: "no-store",
-        });
+        // const res = await fetch("/api/student-success?limit=15", {
+        //   cache: "no-store",
+        // });
+
+        const res = await fetch(
+  "/api/student-success?limit=15&minScore=95",
+  { cache: "no-store" }
+);
         const result = await res.json();
 
         if (result.success) {
@@ -279,7 +284,12 @@ export default function StudentSuccess() {
           breakpoints={{
             0: { slidesPerView: 2.2 },
             576: { slidesPerView: 2.2 },
-            992: { slidesPerView: 7 },
+            768: { slidesPerView: 4 },
+            992: { slidesPerView: 5 },
+
+            1240: { slidesPerView: 7 },
+
+
           }}
         >
           {students.map((student) => (

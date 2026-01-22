@@ -244,7 +244,7 @@ export default function Header() {
               />
             </Link>
 
-            <nav className="nav-menu">
+            <nav className="nav-menu mobile-none">
               <Link
                 href="/"
                 className={`nav-item ${isActive("/") ? "active" : ""}`}

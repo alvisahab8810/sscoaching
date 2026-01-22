@@ -67,60 +67,69 @@ export const config = {
 export default async function handler(req, res) {
   await dbConnect();
 
-  /* ===================== GET ===================== */
-  // if (req.method === "GET") {
-  //   try {
-  //     const page = Math.max(parseInt(req.query.page || "1"), 1);
-  //     const limit = Math.min(parseInt(req.query.limit || "15"), 20);
-  //     const skip = (page - 1) * limit;
+//   if (req.method === "GET") {
+//   try {
+//     const year = req.query.year ? Number(req.query.year) : null;
+//     const page = Math.max(parseInt(req.query.page || "1"), 1);
+//     const limit = Math.min(parseInt(req.query.limit || "100"), 100);
+//     const skip = (page - 1) * limit;
 
-  //     const [students, total] = await Promise.all([
-  //       StudentSuccess.find(
-  //         { isActive: true },
-  //         {
-  //           name: 1,
-  //           rollNo: 1,
-  //           className: 1,
-  //           score: 1,
-  //           image: 1,
-  //           bgColor: 1,
-  //         }
-  //       )
-  //         .sort({ createdAt: -1 })
-  //         .skip(skip)
-  //         .limit(limit)
-  //         .lean(),
+//     const filter = { isActive: true };
+//     if (year) filter.year = year;
 
-  //       StudentSuccess.countDocuments({ isActive: true }),
-  //     ]);
+//     const [students, total] = await Promise.all([
+//       StudentSuccess.find(
+//         filter,
+//         {
+//           name: 1,
+//           rollNo: 1,
+//           className: 1,
+//           score: 1,
+//           image: 1,
+//           bgColor: 1,
+//           year: 1,
+//         }
+//       )
+//         .sort({ createdAt: -1 })
+//         .skip(skip)
+//         .limit(limit)
+//         .lean(),
 
-  //     return res.status(200).json({
-  //       success: true,
-  //       data: students,
-  //       pagination: {
-  //         page,
-  //         totalPages: Math.ceil(total / limit),
-  //         totalRecords: total,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     return res.status(500).json({
-  //       success: false,
-  //       message: error.message,
-  //     });
-  //   }
-  // }
+//       StudentSuccess.countDocuments(filter),
+//     ]);
+
+//     return res.status(200).json({
+//       success: true,
+//       data: students,
+//       pagination: {
+//         page,
+//         totalPages: Math.ceil(total / limit),
+//         totalRecords: total,
+//       },
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: error.message });
+//   }
+// }
 
 
-  if (req.method === "GET") {
+
+if (req.method === "GET") {
   try {
     const year = req.query.year ? Number(req.query.year) : null;
+    const minScore = req.query.minScore
+      ? Number(req.query.minScore)
+      : null;
+
     const page = Math.max(parseInt(req.query.page || "1"), 1);
     const limit = Math.min(parseInt(req.query.limit || "100"), 100);
     const skip = (page - 1) * limit;
 
+    // ✅ BASE FILTER
     const filter = { isActive: true };
+
     if (year) filter.year = year;
+    if (minScore !== null) filter.score = { $gte: minScore };
 
     const [students, total] = await Promise.all([
       StudentSuccess.find(
@@ -135,7 +144,7 @@ export default async function handler(req, res) {
           year: 1,
         }
       )
-        .sort({ createdAt: -1 })
+        .sort({ score: -1 }) // ⭐ Highest first
         .skip(skip)
         .limit(limit)
         .lean(),
@@ -153,10 +162,12 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 }
-
 
   /* ===================== POST ===================== */
   if (req.method === "POST") {

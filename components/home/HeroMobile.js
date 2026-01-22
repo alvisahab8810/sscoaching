@@ -213,6 +213,7 @@ export default function Hero() {
                 <img
                   src="/assets/images/home/mobile-hero.svg"
                   alt="NIOS Coaching"
+                  priority
                 />
               </div>
             </div>

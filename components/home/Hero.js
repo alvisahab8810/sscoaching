@@ -419,6 +419,7 @@ export default function Hero() {
                 <img
                   src="/assets/images/home/personal.png"
                   alt="NIOS Coaching"
+                  priority
                 />
               </div>
             </div>

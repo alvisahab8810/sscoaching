@@ -7,7 +7,7 @@ import { Autoplay, Loop } from "swiper/modules";
 export default function GoogleReview() {
   return (
     <section className="reviews-section">
-      <div className="mini-container">
+      <div className="container">
         <h2 className="section-title">
           Google <span className="highlight">Reviews</span>
         </h2>
@@ -20,7 +20,7 @@ export default function GoogleReview() {
               breakpoints={{
               240: { slidesPerView: 1.2, spaceBetween: 10, centeredSlides: true },
               768: { slidesPerView: 3, spaceBetween: 10 },
-              1024: { slidesPerView: 4, spaceBetween: 10 },
+              1024: { slidesPerView: 3, spaceBetween: 10 },
             }}
             grabCursor={true}
             

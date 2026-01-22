@@ -28,7 +28,9 @@ import StatsSection from "@/components/home/StatsSection";
 import StatsSectionMobile from "@/components/home/StatsSectionMobile";
 import StepProcess from "@/components/home/StepProcess";
 import StepProcessMobile from "@/components/home/StepsProcessMobile";
-import StudentSuccess from "@/components/home/StudentSuccess";
+// import StudentSuccess from "@/components/home/StudentSuccess";
+import dynamic from "next/dynamic";
+const StudentSuccess = dynamic(() => import("@/components/home/StudentSuccess"), { ssr: false });
 import Head from "next/head";
 
 export default function Home() {
@@ -60,8 +62,9 @@ export default function Home() {
         <ChipSection />
         <MobileQuickInfo/>
         <StatsSectionMobile />
+              <StatsSection />
         <StudentSuccess />
-        <StatsSection />
+  
         
 
         <NewsMobile />
