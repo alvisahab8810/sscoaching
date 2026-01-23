@@ -119,14 +119,7 @@ img {
 }
 
 /* Hero Section */
-/* .hero-section {
-      background-image: url('/assets/images/hero.png');
-      background-size: cover;
-      background-position: center;
-      padding: 69px 56px;
-      text-align: center;
-      color: white;
-    } */
+
 
 .hero-content {
   display: flex;
@@ -221,9 +214,7 @@ img {
 }
 
 /* Student Cards */
-.students-section {
-  /* padding: 58px 0; */
-}
+
 
 .students-grid {
   display: flex;
@@ -470,7 +461,6 @@ img {
 
 /* Process Section */
 .process-section {
-  /* padding: 88px 56px; */
   background-color: #ffffff;
 }
 
@@ -507,7 +497,6 @@ img {
   font-size: 72px;
   color: #0066ff26;
   line-height: 1;
-  /* font-family: SF Pro Display!important; */
   font-weight: bolder;
 }
 
@@ -533,7 +522,7 @@ img {
   font-weight: 400;
   line-height: 20px;
   color: #293347;
-
+}
   .review-text {
     font-size: 16px;
     font-family: 'DM Sans', Arial, sans-serif;
@@ -541,9 +530,6 @@ img {
     line-height: 20px;
     color: #293347;
   }
-
-  ;
-}
 
 .process-images {
   flex: 1;
@@ -603,7 +589,6 @@ img {
   margin-bottom: 0;
 }
 
-/* Success Stories */
 .success-section {
   padding: 58px 0;
 }
@@ -636,8 +621,6 @@ img {
   position: relative;
   padding: 88px 56px;
   margin: 0 auto;
-  /* max-width: 1518px; */
-  /* background-image: url("/assets/images/home/cta.png"); */
   background-repeat: no-repeat;
 }
 
@@ -926,7 +909,6 @@ img {
 .nios-content {
   background-color: #ffffff;
   border-radius: 12px;
-  /* padding: 24px; */
   margin-bottom: 50px;
 }
 
@@ -1007,7 +989,6 @@ img {
   position: absolute;
   right: 8px;
   bottom: 0px;
-  /* z-index: -1; */
   width: 75px;
   height: 75px;
   background-color: #d7f8ec;
@@ -1016,7 +997,6 @@ img {
 
 /* Best Coaching Features */
 .best-coaching {
-  /* padding: 60px 0; */
   padding-bottom: 80px;
 }
 
@@ -1035,7 +1015,6 @@ img {
 .features-grid {
   display: flex;
   flex-direction: column;
-  /* gap: 10px; */
 }
 
 .feature-card {
@@ -1184,19 +1163,16 @@ img {
 }
 
 .expand-icon.collapsed {
-  /* padding: 44px 30px; */
 }
 
 /* FAQ Section */
 .faq-section {
-  /* padding: 60px 0; */
   padding-bottom: 80px;
 }
 
 .faq-container {
   background-color: #ffffff;
   border-radius: 12px;
-  /* padding: 24px; */
 }
 
 .faq-title {
@@ -1309,13 +1285,9 @@ img {
 /* Footer */
 .footer {
   background-color: #fafafa;
-  /* padding: 38px 0; */
-  /* padding-top:50px; */
+
 }
 
-.footer-content {
-  /* padding: 50px 56px 0; */
-}
 
 .footer-main {
   display: flex;
@@ -1332,7 +1304,6 @@ img {
 
 .footer-logo {
   width: 228px;
-  /* height: 74px; */
   border-radius: 6px;
 }
 
@@ -1417,7 +1388,6 @@ img {
 }
 
 .social-icon:hover {
-  /* background-color: #0066ff; */
   transform: translateY(-2px);
 }
 
@@ -1490,30 +1460,6 @@ button:focus,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Responsive media queries */
 @media (min-width: 640px) {
   .container {
@@ -1542,28 +1488,19 @@ button:focus,
     justify-content: center;
   }
 
-  .stats-grid {}
 
-  .stat-item {}
 
   .stat-content h3 {
     font-size: 35px;
     margin-bottom: 0;
-    ;
+ 
   }
 
   .stat-content p {
     font-size: 18px;
   }
 
-  .banner-item {}
-
-  .section-title {}
-
-  .process-container {
-    /* flex-direction: row; */
-  }
-
+ 
   .step-content h3 {
     font-size: 20px;
   }
@@ -1583,19 +1520,12 @@ button:focus,
     width: calc(50% - 12px);
   }
 
-  .coaching-text {
-    /* font-size: 18px; */
-  }
 
   .coaching-content h3 {
     font-size: 20px;
   }
 
-  .coaching-content p {}
 
-  .recognition-text {
-    /* font-size: 24px; */
-  }
 
   .achievements-title {
     font-size: 28px;
@@ -1615,9 +1545,7 @@ button:focus,
     justify-content: center;
   }
 
-  .admission-title {
-    /* font-size: 32px; */
-  }
+
 
   .best-title {
     font-size: 28px;
@@ -1637,17 +1565,13 @@ button:focus,
     font-size: 20px;
   }
 
-  .feature-description {
-    /* font-size: 18px; */
-  }
+ 
 
   .quick-title {
     font-size: 28px;
   }
 
-  .expand-text {
-    /* font-size: 26px; */
-  }
+
 
   .faq-title {
     font-size: 28px;
@@ -1718,9 +1642,7 @@ button:focus,
     font-size: 13px;
   }
 
-  .stats-grid {}
-
-  .stat-item {}
+}
 
   .stat-content h3 {
     font-size: 35px;
@@ -1731,12 +1653,9 @@ button:focus,
 
   .stat-content p {
     font-size: 18px;
-    /* margin-bottom: 0; */
   }
 
-  .banner-item {}
-
-  .section-title {}
+ 
 
   .step-number {
     font-size: 108px;
@@ -1758,9 +1677,7 @@ button:focus,
     width: calc(33.333% - 16px);
   }
 
-  .coaching-text {
-    /* font-size: 20px; */
-  }
+
 
   .coaching-content h3 {
     font-size: 20px;
@@ -1771,9 +1688,6 @@ button:focus,
     margin-bottom: 0;
   }
 
-  .recognition-text {
-    /* font-size: 28px; */
-  }
 
   .achievements-slider {
     justify-content: center;
@@ -1787,13 +1701,6 @@ button:focus,
     font-size: 36px;
   }
 
-  .nios-text {
-    /* font-size: 20px; */
-  }
-
-  .admission-title {
-    /* font-size: 43px; */
-  }
 
   .best-title {
     font-size: 36px;
@@ -1813,17 +1720,6 @@ button:focus,
     margin-top: 0;
   }
 
-  .feature-description {
-    /* font-size: 20px; */
-  }
-
-  .quick-title {
-    font-size: 36px;
-  }
-
-  .expand-text {
-    /* font-size: 32px; */
-  }
 
   .faq-title {
     font-size: 36px;
@@ -1835,7 +1731,6 @@ button:focus,
 
   .faq-answer {
     font-size: 16px;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -1848,31 +1743,11 @@ button:focus,
     justify-content: space-between;
   }
 
-  .process-container {
-    /* gap: 75px; */
-  }
-
-  .cta-title {
-    /* font-size: 64px; */
-  }
-
-  .cta-subtitle {
-    /* font-size: 41px; */
-  }
-
-  .cta-btn {
-    /* font-size: 18px; */
-  }
+ 
 }
 
 @media (min-width: 1240px) {
-  .hero-section {
-    /* padding: 70px 56px; */
-  }
 
-  .process-section {
-    /* padding: 88px 56px; */
-  }
 
   .cta-section {
     padding: 10px 10px;
@@ -1894,7 +1769,6 @@ button:focus,
 
 .desktop-none {
   display: none;
-  ;
 }
 
 
@@ -1942,7 +1816,6 @@ span.highlight {
 
 .banner-items {
   margin-left: 20px;
-  ;
 }
 
 .play-button img {
@@ -2174,7 +2047,6 @@ span.highlight {
   width: 100%;
   margin-bottom: 50px;
   margin-top: 24px;
-  ;
 }
 
 .paper-card {
@@ -2207,7 +2079,6 @@ span.highlight {
   text-align: center;
   padding: 0 10px;
   margin-top: 8px;
-  ;
 }
 
 .paper-details {
@@ -2531,7 +2402,7 @@ button:hover,
 
 .serarch-filter-bx.p-relative {
   width: 72%;
-  position: relative
+  position: relative;
 }
 
 
@@ -2590,7 +2461,6 @@ button:hover,
   height: 620px;
   width: 100%;
   object-fit: cover;
-  ;
 }
 
 /* Root container */
@@ -5074,10 +4944,6 @@ svg.green-svg {
 }
 
 
-
-
-
-
 .student-meta {
   color: #fff;
   font-size: 12px;
@@ -5085,19 +4951,8 @@ svg.green-svg {
 
 
 
-
 /* =============================== Syllabus class 10th ====================== */
 
-/* .syllabus-nios {
-  background: #f8f9fc;
-  font-family: "Inter", sans-serif;
-}
-
-.syllabus-container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 40px 20px;
-} */
 
 .syllabus-nios {
   padding-top: 50px;
@@ -5135,7 +4990,6 @@ svg.green-svg {
   margin-top: 20px;
   padding: 15px;
   border: 1px solid #ddd
-    /* box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05); */
 }
 
 .table-wrapper table {
@@ -5171,9 +5025,6 @@ svg.green-svg {
   padding: 10px 40px;
   margin-top: 20px;
   border-radius: 10px;
-  /* box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-     */
-
   border: 1px solid #ddd
 }
 
@@ -5260,18 +5111,15 @@ svg.green-svg {
 
 .hero-wrapper {
   width: 100%;
-  /* padding-top: 20px; */
 }
 
 .hero-card {
   margin: auto;
-  /* height: 387px; */
   height: 287px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* padding: 60px; */
   padding: 30px;
 
   border-radius: 20px;
@@ -5310,10 +5158,7 @@ svg.green-svg {
   font-weight: 500;
 }
 
-/* .hero-right img {
-          height: auto;
-          object-fit: contain;
-        } */
+
 
 @media (max-width: 1024px) {
   .hero-card {
@@ -5380,7 +5225,7 @@ svg.green-svg {
   width: 329px;
 }
 
-.process-images {
+.process-images{
   display: flex;
   position: relative;
 }

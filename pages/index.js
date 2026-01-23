@@ -1,3 +1,4 @@
+
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
@@ -19,7 +20,8 @@ import MobileQuickInfo from "@/components/home/MobileQuickInfo";
 import News from "@/components/home/News";
 import NewsMobile from "@/components/home/NewsMobile";
 import NIOSInfo from "@/components/home/NIOSInfo";
-import Popup from "@/components/home/Popup";
+// import Popup from "@/components/home/Popup";
+
 import QueryForm from "@/components/home/QueryForm";
 import QuickLinks from "@/components/home/QuickLinks";
 import RecongnitionMobile from "@/components/home/RecognitionMobile";
@@ -31,6 +33,10 @@ import StepProcessMobile from "@/components/home/StepsProcessMobile";
 // import StudentSuccess from "@/components/home/StudentSuccess";
 import dynamic from "next/dynamic";
 const StudentSuccess = dynamic(() => import("@/components/home/StudentSuccess"), { ssr: false });
+const Popup = dynamic(() => import("@/components/home/Popup"), {
+  
+  ssr: false,
+});
 import Head from "next/head";
 
 export default function Home() {

@@ -254,7 +254,7 @@ export default function Popup() {
   const handleClose = () => setShowPopup(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 1000);
+    const timer = setTimeout(() => setShowPopup(true), 4000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -441,7 +441,7 @@ export default function Popup() {
         }
 
         .form-header {
-          background-image: url("/assets/images/cta.png");
+          background-image: url("/assets/images/cta.webp");
           background-size: cover;
           background-position: center;
           height: 180px;

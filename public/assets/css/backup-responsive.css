@@ -33,8 +33,6 @@
 @media only screen and (min-width: 1025px) and (max-width: 1381px) {
     .container {
         width: 100%;
-        /* max-width: 90%!important; */
-
 
         max-width: 1300px !important;
     }
@@ -109,14 +107,7 @@
         font-size: 22px;
     }
 
-    /* 
-        .desktop-none {
-        display: block !important;
-    }
 
-        .mobile-none {
-        display: none;
-    } */
 
     .header-content {
 
@@ -579,6 +570,24 @@
         width: auto;
     }
 
+        .coaching-grid {
+        gap: 50px;
+        flex-wrap: wrap;
+    }
+
+    .coaching-card {
+    /* width: calc(33.333% - 16px); */
+    width: 100%;
+}
+
+.features-grid{
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    /* width: calc(33.333% - 15px); */
+        width: 100%;
+}
     .summary-pages p {
         text-align: justify;
         font-size: 14px;
@@ -3181,10 +3190,7 @@
 
 }
 
-/* 📱 Mobile (landscape) / small tablets */
-@media only screen and (min-width: 481px) and (max-width: 767px) {
-    /* Styles for large phones / small tablets */
-}
+
 
 /* Tablets (portrait & landscape, e.g., iPad, Galaxy Tab) */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
