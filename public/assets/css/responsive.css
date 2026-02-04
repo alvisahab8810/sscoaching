@@ -582,9 +582,25 @@
 }
 }
 
+@media (min-width: 470px) and (max-width: 768px) {
+      .hero-card-mobile {
+        height: 262px!important;
+    }
 
+        .hero-right img {
+        width: 230px!important;
+    }
+
+    .hero-card {
+        height: 262px!important;
+    }
+
+        .hero-left h1 {
+        font-size:38px!important;
+    }
+}
 /* 📱 Mobile (portrait) — small phones */
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 768px) {
 
     .mobile-hero-section{
     display: block;
