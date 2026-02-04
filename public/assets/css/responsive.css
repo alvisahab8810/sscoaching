@@ -679,6 +679,7 @@
            .hero-card-mobile img {
         width:100%;
         object-fit: cover;
+        height:100%;
     }
     .hero-left h1 {
         font-size: 28px;
