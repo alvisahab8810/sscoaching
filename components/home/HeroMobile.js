@@ -187,10 +187,10 @@ export default function Hero() {
           slidesPerView={1}
           loop={true} // ✅ infinite loop
           allowTouchMove={true} // ✅ swipe enabled
-          // autoplay={{
-          //   delay: 3000, // ⏱️ 3 seconds
-          //   disableOnInteraction: false, // ✅ keeps autoplay after swipe
-          // }}
+          autoplay={{
+            delay: 3000, // ⏱️ 3 seconds
+            disableOnInteraction: false, // ✅ keeps autoplay after swipe
+          }}
           modules={[Autoplay]} // ✅ IMPORTANT
         >
           {/* SINGLE SLIDE ONLY */}
