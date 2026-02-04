@@ -1,7 +1,3 @@
-
-
-
-
 // "use client";
 // import React from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -32,12 +28,12 @@
 //                   <h1 className="hero-title fade-text mb-4">
 //                     <span className="brand">
 //                       Best NIOS Board <br/>
-                     
+
 //                     </span>
 //                      Coaching <b>in India</b>
-                    
+
 //                   </h1>
-                 
+
 //                 </div>
 //               </div>
 //             </div>
@@ -54,14 +50,14 @@
 //             <div className="container position-relative">
 //               <div className="row">
 //                   <div className="col-md-6">
-                  
+
 //                 </div>
 //                 <div className="col-md-6 hero-content text-end">
 //                   <h1 className="hero-title fade-text mb-4">
 //                     <span className="brand">Pass 10th & 12th</span>
 //                     <span className="highlight">Easily in 45 Days</span>
 //                   </h1>
-                  
+
 //                 </div>
 //               </div>
 //             </div>
@@ -82,7 +78,7 @@
 //                     <span className="brand">Best NIOS Board</span>
 //                     <span className="highlight">Coaching in India</span>
 //                   </h1>
-                  
+
 //                 </div>
 //               </div>
 //             </div>
@@ -123,14 +119,12 @@
 //     max-width: fit-content;
 //     margin: auto;
 //     padding: 40px 0px 207px 0px;
-//     animation: 1s 
+//     animation: 1s
 // ease-in-out fadeUp;
 //     position: relative;
 
 //         }
 
-    
-      
 //         .brand {
 //           color: #fff;
 //           display: block;
@@ -140,8 +134,6 @@
 //           color: #fff;
 //           display: block;
 //         }
-
-  
 
 //         /* Animations */
 //         @keyframes fadeUp {
@@ -166,8 +158,6 @@
 //         }
 
 //         @media (max-width: 768px) {
-         
-
 
 //           .cta-button {
 //             margin-top: 10px;
@@ -182,29 +172,40 @@
 //   );
 // }
 
-
-
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Autoplay } from "swiper/modules";
 
 export default function Hero() {
   return (
-    <section className="hero-wrapper desktop-none">
-      <Swiper
-        slidesPerView={1}
-        allowTouchMove={false}   // ❌ no swipe
-        loop={false}             // ❌ no loop
-      >
-        {/* SINGLE SLIDE ONLY */}
-        <SwiperSlide>
-          <div className="container">
+    <section className="mobile-hero-section">
+      <section className="hero-wrapper ">
+      <div className="container">
+        <Swiper
+          slidesPerView={1}
+          loop={true} // ✅ infinite loop
+          allowTouchMove={true} // ✅ swipe enabled
+          // autoplay={{
+          //   delay: 3000, // ⏱️ 3 seconds
+          //   disableOnInteraction: false, // ✅ keeps autoplay after swipe
+          // }}
+          modules={[Autoplay]} // ✅ IMPORTANT
+        >
+          {/* SINGLE SLIDE ONLY */}
+
+          <SwiperSlide>
+            <div className="hero-card-mobile">
+              <img src="/assets/images/home/mobile-banner.jpeg"></img>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
             <div className="hero-card">
               <div className="hero-left">
                 <h1>
-                  India’s Most<br/> Trusted
-                 NIOS  <br /> Coaching
+                  India’s Most
+                  <br /> Trusted NIOS <br /> Coaching
                 </h1>
                 <p>Helping students since 2001</p>
               </div>
@@ -217,9 +218,10 @@ export default function Hero() {
                 />
               </div>
             </div>
-          </div>
-        </SwiperSlide>
-      </Swiper>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </section>
     </section>
   );
 }

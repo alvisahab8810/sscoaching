@@ -1,5 +1,3 @@
-
-
 // // "use client";
 // // import React from "react";
 // // import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,7 +11,7 @@
 // //       image: "/assets/images/hero1.png",
 // //       title: (
 // //         <>
-// //           <span className="brand">Best NIOS Board <br/> Coaching </span> 
+// //           <span className="brand">Best NIOS Board <br/> Coaching </span>
 
 // //           <span className="highlight">in India</span>
 // //         </>
@@ -24,7 +22,7 @@
 // //       image: "/assets/images/hero2.png",
 // //       title: (
 // //         <>
-// //           <span className="brand">Pass 10th & 12th</span> 
+// //           <span className="brand">Pass 10th & 12th</span>
 
 // //           <span className="highlight">in Same Year</span>
 // //         </>
@@ -80,7 +78,6 @@
 // //           overflow: hidden;
 // //         }
 
-
 // //         .hero-slide {
 // //           width: 100%;
 // //           height: 475px;
@@ -133,7 +130,7 @@
 // //         /* Swiper fade transition */
 // //         :global(.swiper-fade .swiper-slide) {
 // //           opacity: 0 !important;
-// //           // transition: opacity 1s ease-in-out !important; 
+// //           // transition: opacity 1s ease-in-out !important;
 // //         }
 
 // //         :global(.swiper-fade .swiper-slide-active) {
@@ -143,19 +140,6 @@
 // //     </section>
 // //   );
 // // }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 // import React from "react";
@@ -187,10 +171,10 @@
 //                   <h1 className="hero-title fade-text mb-4">
 //                     <span className="brand">
 //                       Best NIOS Board <br/>
-                     
+
 //                     </span>
 //                      Coaching <b>in India</b>
-                    
+
 //                   </h1>
 //                   <a href="#" className="cta-button  cta-btn fade-text">
 //                     Get Admission
@@ -211,7 +195,7 @@
 //             <div className="container position-relative">
 //               <div className="row">
 //                   <div className="col-md-6">
-                  
+
 //                 </div>
 //                 <div className="col-md-6 hero-content text-end">
 //                   <h1 className="hero-title fade-text mb-4">
@@ -287,7 +271,6 @@
 //           padding: 158px 0px;
 //         }
 
-      
 //         .brand {
 //           color: #fff;
 //           display: block;
@@ -297,8 +280,6 @@
 //           color: #fff;
 //           display: block;
 //         }
-
-  
 
 //         /* Animations */
 //         @keyframes fadeUp {
@@ -323,8 +304,6 @@
 //         }
 
 //         @media (max-width: 768px) {
-         
-
 
 //           .cta-button {
 //             margin-top: 10px;
@@ -334,9 +313,6 @@
 //     </section>
 //   );
 // }
-
-
-
 
 // "use client";
 // import React from "react";
@@ -376,36 +352,39 @@
 //             </div>
 //           </SwiperSlide>
 
-          
-
-          
 //         ))}
 //       </Swiper>
 
-    
 //     </section>
 //   );
 // }
-
-
-
 
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Autoplay } from "swiper/modules";
 
 export default function Hero() {
   return (
-    <section className="hero-wrapper mobile-none">
-      <Swiper
-        slidesPerView={1}
-        allowTouchMove={false}   // ❌ no swipe
-        loop={false}             // ❌ no loop
-      >
-        {/* SINGLE SLIDE ONLY */}
-        <SwiperSlide>
-          <div className="container">
+    <section className="hero-desktop-section">
+          <section className="hero-wrapper mobile-none">
+      <div className="container">
+          <Swiper
+          slidesPerView={1}
+          loop={true}                 // ✅ infinite loop
+          allowTouchMove={true}       // ✅ swipe enabled
+          autoplay={{
+            delay: 3000,              // ⏱️ 3 seconds
+            disableOnInteraction: false, // ✅ keeps autoplay after swipe
+          }}
+          modules={[Autoplay]}        // ✅ IMPORTANT
+        >
+          <SwiperSlide>
+            <div className="hero-card1"></div>
+          </SwiperSlide>
+          {/* SINGLE SLIDE ONLY */}
+          <SwiperSlide>
             <div className="hero-card">
               <div className="hero-left">
                 <h1>
@@ -423,9 +402,34 @@ export default function Hero() {
                 />
               </div>
             </div>
-          </div>
-        </SwiperSlide>
-      </Swiper>
+          </SwiperSlide>
+
+          <SwiperSlide>
+            <div className="hero-card1"></div>
+          </SwiperSlide>
+          {/* SINGLE SLIDE ONLY */}
+          <SwiperSlide>
+            <div className="hero-card">
+              <div className="hero-left">
+                <h1>
+                  India’s Most Trusted <br />
+                  <span>NIOS Coaching</span>
+                </h1>
+                <p>Helping students since 2001</p>
+              </div>
+
+              <div className="hero-right">
+                <img
+                  src="/assets/images/home/personal.png"
+                  alt="NIOS Coaching"
+                  priority
+                />
+              </div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </section>
     </section>
   );
 }
