@@ -3,6 +3,11 @@
         width: 100%;
         max-width: 1180px !important;
     }
+
+    .hero-card1 {
+    height: 260px;
+
+}
 }
 
 @media only screen and (min-width: 1380px) and (max-width: 1400px) {
@@ -80,12 +85,29 @@
 
 
 @media (min-width: 768px) and (max-width: 1199px) {
+
+         .hero-card-mobile {
+        height: 387px;
+        border-radius: 12px !important;
+        overflow: hidden;
+    }
+
+
+    
+         .hero-card {
+        height: 387px;
+     
+    }
     /* ALL tablets & phablets */
 
     body .container {
         max-width: 95% !important;
     }
-
+   
+    .hero-card-mobile img{
+        object-fit: cover;
+    height: 100%;
+    }
     .logo {
         width: 154px;
         height: 45px;
@@ -100,7 +122,7 @@
     }
 
     .hero-left h1 {
-        font-size: 40px;
+        font-size: 55px;
     }
 
     .hero-left p {
@@ -187,9 +209,6 @@
         font-size: 28px;
     }
 
-    .ss-feature-cards {
-        display: none !important;
-    }
 
     .stat-item {
         gap: 10px;
@@ -563,9 +582,29 @@
 }
 }
 
+@media (min-width: 470px) and (max-width: 768px) {
+      .hero-card-mobile {
+        height: 262px!important;
+    }
 
+        .hero-right img {
+        width: 230px!important;
+    }
+
+    .hero-card {
+        height: 262px!important;
+    }
+
+        .hero-left h1 {
+        font-size:38px!important;
+    }
+}
 /* 📱 Mobile (portrait) — small phones */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 768px) {
+
+    .mobile-hero-section{
+    display: block;
+}
     .hero-right img {
         width: auto;
     }
@@ -646,6 +685,18 @@
         background-size: cover;
     }
 
+
+       .hero-card-mobile {
+        height: 161px;
+        border-radius: 12px !important;
+        overflow: hidden;
+    }
+
+           .hero-card-mobile img {
+        width:100%;
+        object-fit: cover;
+        height:100%;
+    }
     .hero-left h1 {
         font-size: 28px;
     }
@@ -3194,6 +3245,14 @@
 
 /* Tablets (portrait & landscape, e.g., iPad, Galaxy Tab) */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+      .mobile-hero-section{
+    display: block;
+}
+
+.hero-desktop-section{
+    display: none;
+}
     .logo {
         width: 160px;
         height: auto;
@@ -3279,6 +3338,11 @@
 
     .hamburger {
         display: block !important;
+    }
+
+    
+    .ss-feature-cards {
+        display: none !important;
     }
 }
 

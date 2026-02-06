@@ -5116,12 +5116,11 @@ svg.green-svg {
 .hero-card {
   margin: auto;
   height: 287px;
-
+ background-size: cover;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 30px;
-
   border-radius: 20px;
   background-image: url("/assets/images/home/bg-hero.svg");
   background-repeat: no-repeat;
@@ -5129,6 +5128,25 @@ svg.green-svg {
 
 }
 
+
+.hero-card1 {
+  margin: auto;
+  height: 287px;
+ background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+
+  border-radius: 20px;
+  /* background-image: url("/assets/images/home/bg-hero.svg"); */
+  background-image: url("/assets/images/home/home.jpeg");
+
+
+  background-repeat: no-repeat;
+  position: relative;
+
+}
 .hero-left {
   text-align: center;
   padding-left: 80px;
@@ -5228,4 +5246,9 @@ svg.green-svg {
 .process-images{
   display: flex;
   position: relative;
+}
+
+
+.mobile-hero-section{
+    display: none;;
 }
