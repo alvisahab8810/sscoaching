@@ -254,7 +254,7 @@ export default function Popup() {
   const handleClose = () => setShowPopup(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 4000);
+    const timer = setTimeout(() => setShowPopup(true), 5000);
     return () => clearTimeout(timer);
   }, []);
 

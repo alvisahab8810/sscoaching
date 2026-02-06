@@ -8,7 +8,7 @@ export default function MobileQuickInfo() {
       <div className="ss-mobile-grid">
         {/* Card 1 */}
         <div className="ss-mobile-card">
-           <img className="ss-icon" src="/assets/icons/group1.svg" alt="icon" />
+           <img className="ss-icon" src="/assets/icons/group1.png" alt="icon" />
           <h4>Save Year</h4>
           <p>
             Pass 10th/12th <br /> in same year
@@ -26,7 +26,7 @@ export default function MobileQuickInfo() {
 
         {/* Card 3 */}
         <div className="ss-mobile-card">
-           <img className="ss-icon" src="/assets/icons/group3.svg" alt="icon" />
+           <img className="ss-icon" src="/assets/icons/group3.png" alt="icon" />
 
           <h4>Direct Entry</h4>
           <p>
@@ -110,7 +110,7 @@ export default function MobileQuickInfo() {
     margin-bottom: 4px;
     font-size: 14px;
     line-height:115%;
-    font-weight: bold;
+    font-weight: 900!important;
     font-family: "Outfit", sans-serif !important;
 
         }

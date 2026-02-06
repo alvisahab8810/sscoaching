@@ -41,7 +41,7 @@ export default function ChipSection() {
       {/* Card 1 */}
       <div className="ss-card ss-purple">
         <div className="ss-card-d-flex">
-          <img className="ss-icon" src="/assets/icons/group1.svg" alt="icon" />
+          <img className="ss-icon" src="/assets/icons/group1.png" alt="icon" />
         <h3>
           Pass 10th/12th <br /> in same year
         </h3>
@@ -70,7 +70,7 @@ export default function ChipSection() {
 
         <div className="ss-card-d-flex">
 
-          <img className="ss-icon" src="/assets/icons/group3.svg" alt="icon" />
+          <img className="ss-icon" src="/assets/icons/group3.png" alt="icon" />
         
         <h3>
           {/* Pass 10th/12th <br /> in just 45 days */}
