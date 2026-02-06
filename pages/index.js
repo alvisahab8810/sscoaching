@@ -93,7 +93,7 @@ export default function Home() {
         <CoachingStream />
 
         <Recongnition />
-        {/* <Achievements /> */}
+        <Achievements />
         <div className="container">
           <CTA2 />
         </div>
