@@ -4,19 +4,19 @@ import { FaFilePdf } from "react-icons/fa";
 
 export default function SubjectTable() {
  const subjects = [
-    { code: 201, name: "Hindi", url: "https://sscoaching.in/hindi-201_3357.html" },
-    { code: 202, name: "English", url: "https://sscoaching.in/ENGLISH-202_3309.html" },
-    { code: 213, name: "Social Science", url: "https://sscoaching.in/social-science_3314.html" },
-    { code: 223, name: "Indian Culture and Heritage", url: "https://sscoaching.in/Indian-Culture-and-Heritage(223)_3312.html" },
-    { code: 225, name: "Painting", url: "https://sscoaching.in/Painting-(225)_3315.html" },
-    { code: 229, name: "Data Entry Operation", url: "https://sscoaching.in/Data-Entry-Operations-(229)_3316.html" },
-    { code: 216, name: "Home Science", url: "https://sscoaching.in/Home-Science-(216)_3323.html" },
-    { code: 211, name: "Mathematics", url: "https://sscoaching.in/Mathematics-(211)_3326.html" },
-    { code: 212, name: "Science and Technology", url: "https://sscoaching.in/Science-and-Technology-(212)_3328.html" },
-    { code: 214, name: "Economics", url: "https://sscoaching.in/Economics-(214)_3329.html" },
-    { code: 215, name: "Business Studies", url: "https://sscoaching.in/Business-Studies-(215)_3330.html" },
-    { code: 222, name: "Psychology", url: "https://sscoaching.in/Psychology-(222)_3331.html" },
-    { code: 224, name: "Accountancy", url: "https://sscoaching.in/Accountancy-(224)_3319.html" },
+    { code: 201, name: "Hindi", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/201.pdf" },
+    { code: 202, name: "English", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/202.pdf" },
+    { code: 213, name: "Social Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/213.pdf" },
+    { code: 223, name: "Indian Culture and Heritage", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/223.pdf" },
+    { code: 225, name: "Painting", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/225.pdf" },
+    { code: 229, name: "Data Entry Operation", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/229.pdf" },
+    { code: 216, name: "Home Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/216.pdf" },
+    { code: 211, name: "Mathematics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/211.pdf" },
+    { code: 212, name: "Science and Technology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/212.pdf" },
+    { code: 214, name: "Economics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/214.pdf" },
+    { code: 215, name: "Business Studies", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/215.pdf" },
+    { code: 222, name: "Psychology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/222.pdf" },
+    { code: 224, name: "Accountancy", url: "https://nios.ac.in/media/documents/Course_Bifurcation_2023/10th/224.pdf" },
   ];
 
   return (
