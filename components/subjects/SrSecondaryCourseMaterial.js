@@ -4,34 +4,107 @@ import { FaFilePdf } from "react-icons/fa";
 
 export default function SrSecondaryCourseMaterial() {
   const subjects = [
-  { code: 301, name: "Hindi", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/301Bifurcation_new.pdf" },
-  { code: 302, name: "English", url: "https://nios.ac.in/media/documents/Course_Bifurcation_2023/12th/302Bifurcation_new.pdf" },
-  { code: 309, name: "Sanskrit", url: "https://nios.ac.in/media/documents/Course_Bifurcation_2023/12th/309Bifurcation.pdf" },
-  { code: 311, name: "Mathematics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/311Bifurcation.pdf" },
-  { code: 312, name: "Physics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/312Bifurcation.pdf" },
-  { code: 313, name: "Chemistry", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/313Bifurcation.pdf" },
-  { code: 314, name: "Biology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/314Bifurcation.pdf" },
-  { code: 315, name: "History", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/315Bifurcation.pdf" },
-  { code: 316, name: "Geography", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/316Bifurcation_new.pdf" },
-  { code: 317, name: "Political Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/317Bifurcation.pdf" },
-  { code: 318, name: "Economics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/318Bifurcation.pdf" },
-  { code: 319, name: "Business Studies", url: "https://nios.ac.in/media/documents/Course_Bifurcation_2023/12th/319Bifurcation_new.pdf" },
-  { code: 320, name: "Accountancy", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/320Bifurcation.pdf" },
-  { code: 321, name: "Home Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/321Bifurcation.pdf" },
-  { code: 328, name: "Psychology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/328Bifurcation_new.pdf" },
-  { code: 330, name: "Computer Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/330Bifurcation.pdf" },
-  { code: 331, name: "Sociology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/331Bifurcation.pdf" },
-  { code: 332, name: "Painting", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/332Bifurcation_new.pdf" },
-  { code: 333, name: "Environmental Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/333Bifurcation.pdf" },
-  { code: 335, name: "Mass Communication", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/12th/335Bifurcation.pdf" },
-  { code: 336, name: "Data Entry Operations", url: "https://cdn.nios.ac.in/cms/documents/2020/Jul/02/srsec336eng.pdf" },
-  { code: 337, name: "Tourism", url: "http://nios.ac.in/media/documents/Course_Bifurcation_2023/12th/337Bifurcation.pdf" },
-  { code: 338, name: "Introduction To Law", url: "http://nios.ac.in/media/documents/Course_Bifurcation_2023/12th/338Bifurcation.pdf" },
-  { code: 373, name: "Physical Education And Yog", url: "https://nios.ac.in/media/documents/Physical_Education_and_Yog_373/Book-2-373.pdf" },
+
+
+    
+  { code: 301, name: "Hindi Book-1", url: "https://nios.ac.in/media/documents/301-New/Book-1/301-Book-1.pdf" },
+  { code: 301, name: "Hindi Book-2", url: "https://nios.ac.in/media/documents/301-New/Book-2/301-Book-2.pdf" },
+
+  { code: 302, name: "English Book-1", url: "https://nios.ac.in/media/documents/302-New/Book-1/Book-1.pdf" },
+  { code: 302, name: "English Book-2", url: "https://nios.ac.in/media/documents/302-New/Book-2/Book-2.pdf" },
+
+
+  { code: 309, name: "Sanskrit Book-1", url: "https://nios.ac.in/media/documents/309sanskrit_new/book_309_1.pdf" },
+  { code: 309, name: "Sanskrit Book-2", url: "https://nios.ac.in/media/documents/309sanskrit_new/book_309_2.pdf" },
+
+
+  { code: 311, name: "Mathematics Book-1", url: "https://nios.ac.in/media/documents/SrSec311NEW/311_E_book1.pdf" },
+  { code: 311, name: "Mathematics Book-2", url: "https://nios.ac.in/media/documents/SrSec311NEW/311_E_book2.pdf" },
+
+
+  { code: 312, name: "Physics Book-1", url: "https://nios.ac.in/media/documents/SrSec312NEW/312_E_book1.pdf" },
+  { code: 312, name: "Physics Book-2", url: "https://nios.ac.in/media/documents/SrSec312NEW/312_E_book2.pdf" },
+
+
+  { code: 313, name: "Chemistry Book-1", url: "https://nios.ac.in/media/documents/SrSec313NEW/313_E_book1.pdf" },
+  { code: 313, name: "Chemistry Book-2", url: "https://nios.ac.in/media/documents/SrSec313NEW/313_E_book2.pdf" },
+
+
+  { code: 314, name: "Biology Book-1", url: "https://nios.ac.in/media/documents/SrSec314NewE/314_Book-1_Eng.pdf" },
+  { code: 314, name: "Biology Book-2  ", url: "https://nios.ac.in/media/documents/SrSec314NewE/314_Book-2_Eng.pdf" },
+
+  { code: 315, name: "History Book-1", url: "https://nios.ac.in/media/documents/SrSec315NewH/historybook1hindi.pdf" },
+  { code: 315, name: "History Book-2", url: "https://nios.ac.in/media/documents/SrSec315NewH/History16_21.pdf" },
+  { code: 315, name: "History Book-3", url: "https://nios.ac.in/media/documents/SrSec315NewH/historybook3hindi.pdf" },
+
+
+  { code: 316, name: "Geography Book-1", url: "https://nios.ac.in/media/documents/316-New/Book-1/Geography-316-Book-1.pdf" },
+  { code: 316, name: "Geography Book-2", url: "https://nios.ac.in/media/documents/316-New/Book-2/Geography-316-New-Book-2.pdf" },
+
+
+
+  { code: 317, name: "Political Science", url: "https://nios.ac.in/media/documents/DAISYSECENG/srsec/317_Political_Science_Eng_Sr_sec.zip" },
+
+  { code: 318, name: "Economics Book-1", url: "https://nios.ac.in/media/documents/SrSec318NEW/Book1_318.pdf" },
+  { code: 318, name: "Economics Book-2", url: "https://nios.ac.in/media/documents/SrSec318NEW/Book2_318.pdf" },
+
+
+
+  { code: 319, name: "Business Studies Book-1", url: "https://nios.ac.in/media/documents/319-New/HindiMedium/Book-1.pdf" },
+  { code: 319, name: "Business Studies Book-2", url: "https://nios.ac.in/media/documents/319-New/HindiMedium/Book-2.pdf" },
+
+
+
+  { code: 320, name: "Accountancy Book-1", url: "https://nios.ac.in/media/documents/SrSec320NEW/320_E_book1.pdf" },
+  { code: 320, name: "Accountancy Book-2", url: "https://nios.ac.in/media/documents/SrSec320NEW/320_E_book2.pdf" },
+  { code: 320, name: "Accountancy Book-3", url: "https://nios.ac.in/media/documents/SrSec320NEW/320_E_book3.pdf" },
+
+
+
+
+  { code: 321, name: "Home Science", url: "https://nios.ac.in/online-course-material/sr-secondary-courses/Home-Science-(321)/english-medium.aspx" },
+
+
+  { code: 328, name: "Psychology Book-1", url: "https://nios.ac.in/media/documents/328-New/328_New_Eng_Book-1.pdf" },
+  { code: 328, name: "Psychology Book-2", url: "https://nios.ac.in/media/documents/328-New/328_New_Eng_Book-2.pdf" },
+
+
+  { code: 330, name: "Computer Science", url: "https://nios.ac.in/online-course-material/sr-secondary-courses/Computer-Science-(330).aspx" },
+
+
+
+  { code: 331, name: "Sociology", url: "https://nios.ac.in/online-course-material/sr-secondary-courses/Sociology-(331)/english-medium.aspx" },
+
+
+  { code: 332, name: "Painting Book-1 (Theory)", url: "https://nios.ac.in/media/documents/332-New/Book-1/332_Painting_Theory_New.pdf" },
+  { code: 332, name: "Painting Book-2 (Practical)", url: "https://nios.ac.in/media/documents/332-New/Book-2/332_Painting_Practical_New.pdf" },
+  { code: 332, name: "Painting Book-3 (Guide Book)", url: "https://nios.ac.in/media/documents/332-New/Book-3/332_Painting_guide-book_New.pdf" },
+
+
+
+  { code: 333, name: "Environmental Science", url: "https://nios.ac.in/online-course-material/sr-secondary-courses/Enviornmental-Science-(333)/english-medium.aspx" },
+  
+  { code: 335, name: "Mass Communication", url: "https://nios.ac.in/media/documents/srsec335new/335EContent.pdf" },
+
+  { code: 336, name: "Data Entry Operations", url: "https://nios.ac.in/media/documents/SrSec336Neweng/srsec336eng.pdf" },
+
+  { code: 337, name: "Tourism Book-1", url: "https://nios.ac.in/media/documents/tourism_337_courseE/Tourism_Book-01.pdf" },
+  { code: 337, name: "Tourism Book-2", url: "https://nios.ac.in/media/documents/tourism_337_courseE/Tourism_Book-02.pdf" },
+  { code: 337, name: "Tourism Book-3", url: "https://nios.ac.in/media/documents/tourism_337_courseE/Tourism_Book-03.pdf" },
+  { code: 337, name: "Tourism Book-4", url: "https://nios.ac.in/media/documents/tourism_337_courseE/Tourism_Book-04.pdf" },
+
+
+
+  
+  { code: 338, name: "Introduction To Law Book-1", url: "https://nios.ac.in/media/documents/SrSec338new/338_Book1_New.pdf" },
+  { code: 338, name: "Introduction To Law Book-2", url: "https://nios.ac.in/media/documents/SrSec338new/338_Book2_New.pdf" },
+
+  { code: 373, name: "Physical Education And Yog", url: "https://nios.ac.in/media/documents/Physical_Education_and_Yog_373/Book-1-373.pdf" },
+
 ];
 
 
-  return (
+  return (  
     <section className="subject-table-section ">
       <div className="container">
         <div className="hero-text ">

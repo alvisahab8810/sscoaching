@@ -4,19 +4,29 @@ import { FaFilePdf } from "react-icons/fa";
 
 export default function SubjectTable() {
  const subjects = [
-    { code: 201, name: "Hindi", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/201.pdf" },
-    { code: 202, name: "English", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/202.pdf" },
-    { code: 213, name: "Social Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/213.pdf" },
-    { code: 223, name: "Indian Culture and Heritage", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/223.pdf" },
-    { code: 225, name: "Painting", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/225.pdf" },
-    { code: 229, name: "Data Entry Operation", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/229.pdf" },
-    { code: 216, name: "Home Science", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/216.pdf" },
-    { code: 211, name: "Mathematics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/211.pdf" },
-    { code: 212, name: "Science and Technology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/212.pdf" },
-    { code: 214, name: "Economics", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/214.pdf" },
-    { code: 215, name: "Business Studies", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/215.pdf" },
-    { code: 222, name: "Psychology", url: "https://www.nios.ac.in/media/documents/Course_Bifurcation_2023/10th/222.pdf" },
-    { code: 224, name: "Accountancy", url: "https://nios.ac.in/media/documents/Course_Bifurcation_2023/10th/224.pdf" },
+    { code: 201, name: "Hindi", url: "https://nios.ac.in/online-course-material/secondary-courses/hindi-(201)-syllabus.aspx" },
+    { code: 202, name: "English", url: "https://nios.ac.in/online-course-material/secondary-courses/english-(202)-syllabus.aspx" },
+
+    { code: 213, name: "Social Science Book-1", url: "https://nios.ac.in/media/documents/SecSocSciCour/English/Book1.pdf" },
+    { code: 213, name: "Social Science Book-2", url: "https://nios.ac.in/media/documents/SecSocSciCour/English/Book2.pdf" },
+
+    { code: 223, name: "Indian Culture and Heritage", url: "https://nios.ac.in/media/documents/SecICHCour/Hindi/223-ICH_HindiMed.pdf" },
+
+    { code: 225, name: "Painting", url: "https://nios.ac.in/media/documents/sec225new/225EContent.pdf" },
+
+    { code: 229, name: "Data Entry Operation", url: "https://nios.ac.in/media/documents/sec229new/deo_229_content_complete1.pdf" },
+
+    { code: 216, name: "Home Science", url: "https://nios.ac.in/online-course-material/secondary-courses/home-science-(216)-syllabus.aspx" },
+
+    { code: 211, name: "Mathematics", url: "https://nios.ac.in/online-course-material/secondary-courses/Mathematics-(211)-Syllabus.aspx" },
+    { code: 212, name: "Science and Technology", url: "https://nios.ac.in/online-course-material/secondary-courses/Science-and-Technology-(212)-Syllabus.aspx" },
+
+    { code: 214, name: "Economics", url: "https://nios.ac.in/online-course-material/secondary-courses/economics-(214)-syllabus.aspx" },
+
+    { code: 215, name: "Business Studies", url: "https://nios.ac.in/online-course-material/secondary-courses/business-studies-(215)-syllabus.aspx" },
+
+    { code: 222, name: "Psychology", url: "https://nios.ac.in/online-course-material/secondary-courses/psychology-(222)-syllabus.aspx" },
+    { code: 224, name: "Accountancy", url: "https://nios.ac.in/media/documents/Seccour224New/224_Account_Hindi.pdf" },
   ];
 
   return (
