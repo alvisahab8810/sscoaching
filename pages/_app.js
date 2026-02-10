@@ -242,7 +242,6 @@
 
 
 
-
 // pages/_app.js
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@/styles/globals.css';
@@ -251,8 +250,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Toaster } from "sonner";
 import Head from 'next/head';
+import Script from 'next/script';
 
-// ✅ Next.js optimized fonts (UNCHANGED)
+// Fonts (UNCHANGED)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -267,6 +267,9 @@ const outfit = Outfit({
   display: 'swap',
 });
 
+// ✅ YOUR GA4 MEASUREMENT ID
+const GA_MEASUREMENT_ID = 'G-9CHVHWT8CN';
+
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
@@ -275,44 +278,49 @@ function MyApp({ Component, pageProps }) {
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
 
-  // ✅ SUPERCOUNTER – WORKS WITH NEXT.JS ROUTING
+  // ✅ Track SPA page views
   useEffect(() => {
-    const loadSupercounter = () => {
-      // Remove old script if exists
-      const oldScript = document.getElementById('supercounter-js');
-      if (oldScript) oldScript.remove();
-
-      // Required Supercounter globals (DO NOT CHANGE)
-      window.sc_project = 581586;
-      window.sc_invisible = 1;
-
-      // Inject script again (SPA fix)
-      const sc = document.createElement('script');
-      sc.src = 'https://www.supercounters.com/online_i.js';
-      sc.async = true;
-      sc.id = 'supercounter-js';
-
-      document.body.appendChild(sc);
+    const handleRouteChange = (url) => {
+      if (window.gtag) {
+        window.gtag('config', GA_MEASUREMENT_ID, {
+          page_path: url,
+        });
+      }
     };
 
-    // Initial page load
-    loadSupercounter();
-
-    // Track SPA route changes
-    router.events.on('routeChangeComplete', loadSupercounter);
-
+    router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
-      router.events.off('routeChangeComplete', loadSupercounter);
+      router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router.events]);
 
   return (
     <>
-      <Head>
-        {/* Fonts intentionally managed via next/font (unchanged) */}
-      </Head>
+      {/* ✅ Google Analytics base script */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+      />
 
-      {/* ✅ Fonts applied globally */}
+      {/* ✅ Google Analytics init */}
+      <Script
+        id="ga4-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
+
+      <Head />
+
+      {/* Fonts applied globally */}
       <div className={`${beVietnam.className} ${outfit.className}`}>
         <Component {...pageProps} />
       </div>
