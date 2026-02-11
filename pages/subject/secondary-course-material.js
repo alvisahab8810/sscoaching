@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
@@ -23,6 +24,8 @@ export default function TmaSrsecondary12th() {
       <div id="paper-secondary-10th" className="tma-sr-secondary">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
         <SubjectTable />
         <div className="container desktop-none">
           <a href="tel:+91 9935035316" className="cta-button">

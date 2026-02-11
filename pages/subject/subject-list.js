@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import Offcanvas from "@/components/header/Offcanvas";
 import Head from "next/head";
 import SecondaryOrSrSecondary from "@/components/subjects/SecondaryOrSrSecodary";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function NIOSCompleteSubjectsList() {
   return (
@@ -19,6 +20,8 @@ export default function NIOSCompleteSubjectsList() {
       <section className="home-page-area">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
 
         <div className="syllabus-nios">
           <div className="container">

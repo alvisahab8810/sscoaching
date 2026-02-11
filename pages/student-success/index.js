@@ -172,6 +172,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import Offcanvas from "@/components/header/Offcanvas";
 
 const YEARS = [2026, 2025, 2024, 2023]; // auto works even if no data
 
@@ -179,6 +181,9 @@ export default function StudentSuccessPage() {
   return (
     <>
       <Header />
+       <BranchContactCanvas/>
+       <Offcanvas />
+      
       <section className="students-page py-5">
         <div className="container">
           {YEARS.map((year) => (

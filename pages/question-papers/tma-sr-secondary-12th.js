@@ -10,6 +10,7 @@ import TmaSrHero from "@/components/subjects/syllabus/TmaSrHero";
 import TmaSrSubjects from "@/components/subjects/syllabus/TmaSrSubjects";
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 export default function TmaSrsecondary12th() {
   return (
     <>
@@ -25,6 +26,8 @@ export default function TmaSrsecondary12th() {
       <div id="paper-secondary-10th" className="paper-secondary-10th">
         <Header />
         <Offcanvas />
+                <BranchContactCanvas/>
+        
 
         <TmaSrHero />
         <TmaSrSubjects />

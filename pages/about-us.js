@@ -10,6 +10,7 @@ import StatsSectionMobile from "@/components/home/StatsSectionMobile";
 import StepProcess from "@/components/home/StepProcess";
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function AboutUs() {
   return (
@@ -33,6 +34,8 @@ export default function AboutUs() {
      <section className="about-us-area">
       <Header />
       <Offcanvas />
+              <BranchContactCanvas/>
+      
 
       <AboutUsHero />
 

@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import Head from "next/head";
@@ -24,6 +25,8 @@ export default function SyllabusPaintingSeniorNIOS() {
       <section className="home-page-area syllabus-nios1">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
 
         <div className="syllabus-nios summary-pages">
           <div className="container">

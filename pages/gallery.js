@@ -2,6 +2,7 @@ import Hero from "@/components/contacts/Hero";
 import Map from "@/components/contacts/Map";
 import Footer from "@/components/footer/Footer";
 import Gallery from "@/components/Gallery";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
@@ -29,6 +30,8 @@ export default function Galleryy() {
         <section className="home-page-area">
           <Header />
           <Offcanvas />
+                  <BranchContactCanvas/>
+          
 
           <section className="qustion-paper-hero-section tma-hero ">
             <div className="container">

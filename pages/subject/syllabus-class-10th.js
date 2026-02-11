@@ -8,6 +8,7 @@ import SyllabusSecondary from "@/components/subjects/syllabus/SyllabusSecondary"
 import React from "react";
 
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 export default function SyllabusClass12th() {
   return (
     <>
@@ -25,6 +26,8 @@ export default function SyllabusClass12th() {
         <Offcanvas />
         <Hero10th />
         <SyllabusSecondary />
+               <BranchContactCanvas/>
+        
 
         <Footer />
         <Popup />

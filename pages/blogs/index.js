@@ -10,6 +10,7 @@ import { FaUser, FaCalendarAlt } from "react-icons/fa"; // React Icons
 import RegistrationForm from "@/components/home/RegistrationForm";
 import Popup from "@/components/home/Popup";
 import Offcanvas from "@/components/header/Offcanvas";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -106,6 +107,7 @@ const getPaginationNumbers = () => {
     <div className="blogs-list-area">
       <Header />
        <Offcanvas />
+              <BranchContactCanvas/>
       
       <div className="container py-5">
         {/* <h2 className="mb-4">Our Blogs</h2> */}

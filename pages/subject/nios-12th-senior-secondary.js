@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import Popup from "@/components/home/Popup";
@@ -31,6 +32,8 @@ export default function SyllabusClass12th() {
      <div id="paper-secondary-10th">
       <Header />
       <Offcanvas />
+             <BranchContactCanvas/>
+      
 
       <Hero />
 

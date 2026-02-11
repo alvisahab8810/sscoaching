@@ -4,6 +4,7 @@ import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function FAQSection() {
   return (
@@ -20,6 +21,8 @@ export default function FAQSection() {
       <section className="faq-section ">
         <Header />
         <Offcanvas />
+                <BranchContactCanvas/>
+        
 
         <section className="faq-area-page">
           <FAQ />

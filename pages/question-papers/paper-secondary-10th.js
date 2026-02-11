@@ -9,6 +9,7 @@ import QuestionPapers from "@/components/question-papers/paper-secondary-10th/Fi
 import Hero from "@/components/question-papers/paper-secondary-10th/Hero";
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function paperSeconday10th() {
   return (
@@ -26,6 +27,8 @@ export default function paperSeconday10th() {
       <div id="paper-secondary-10th">
         <Header />
         <Offcanvas />
+                <BranchContactCanvas/>
+        
         <Hero />
         <QuestionPapers />
         <Contact />

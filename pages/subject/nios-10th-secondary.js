@@ -9,6 +9,7 @@ import SubjectScheme10th from "@/components/subjects/syllabus/SubjectSection10th
 
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function SyllabusClass12th() {
   return (
@@ -30,6 +31,8 @@ export default function SyllabusClass12th() {
       <div id="paper-secondary-10th">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
         <Hero />
 
         <SubjectScheme10th />

@@ -1,6 +1,7 @@
 import Hero from "@/components/contacts/Hero";
 import Map from "@/components/contacts/Map";
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import CTA3 from "@/components/home/CTA3";
@@ -26,6 +27,8 @@ export default function ContactUs() {
         <Header />
         <Offcanvas />
         <Hero />
+                <BranchContactCanvas/>
+        
 
         <section className="contacts_details-area">
           <div className="container">

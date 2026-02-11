@@ -10,6 +10,7 @@ import Hero from "@/components/subjects/syllabus/Hero";
 import SeniosSecondary from "@/components/subjects/syllabus/SeniosSecondary";
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 export default function SyllabusClass12th() {
   return (
     <>
@@ -26,6 +27,8 @@ export default function SyllabusClass12th() {
       <div id="paper-secondary-10th">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
         <Hero />
         <SeniosSecondary />
 

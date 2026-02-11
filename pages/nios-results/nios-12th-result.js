@@ -2,6 +2,7 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import Offcanvas from "@/components/header/Offcanvas";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function NIOSResult2025Class12April() {
   return (
@@ -25,6 +26,8 @@ export default function NIOSResult2025Class12April() {
       <section className="home-page-area">
         <Header />
         <Offcanvas />
+                <BranchContactCanvas/>
+        
 
         <div className="syllabus-nios">
           <div className="container">

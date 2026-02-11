@@ -11,6 +11,7 @@ import TmaHero from "@/components/subjects/syllabus/TmaHero";
 import TmaSubjects from "@/components/subjects/syllabus/TmaSubjects";
 import React from "react";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 export default function SyllabusClass12th() {
   return (
     <>
@@ -30,6 +31,8 @@ export default function SyllabusClass12th() {
       >
         <Header />
         <Offcanvas />
+                <BranchContactCanvas/>
+        
         <TmaHero />
         <TmaSubjects />
         <Download />

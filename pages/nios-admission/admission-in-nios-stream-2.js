@@ -13,6 +13,7 @@ import React from "react";
 import Link from "next/link";
 import QueryForm from "@/components/home/QueryForm";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function AdmissionInNiosStream2() {
   return (
@@ -36,6 +37,8 @@ export default function AdmissionInNiosStream2() {
       <Header />
       <Offcanvas />
       <HeroStream2 />
+              <BranchContactCanvas/>
+      
 
       {/* <!-- Admission Table Section --> */}
       <section className="admission-table-section">

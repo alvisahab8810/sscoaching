@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
@@ -23,6 +24,8 @@ export default function srsecondary() {
       <div id="paper-secondary-10th" className="srsecondary-course-material">
         <Header />
         <Offcanvas />
+               <BranchContactCanvas/>
+        
         <SrSecondaryCourseMaterial />
 
         {/* <div className="full-btn cta-btn-2nd">

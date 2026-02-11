@@ -15,6 +15,7 @@ import Link from "next/link";
 import RegistrationForm from "@/components/home/RegistrationForm";
 import Popup from "@/components/home/Popup";
 import Offcanvas from "@/components/header/Offcanvas";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function BlogDetail() {
   const router = useRouter();
@@ -147,6 +148,8 @@ export default function BlogDetail() {
 
       <Header />
       <Offcanvas />
+              <BranchContactCanvas/>
+      
       
       <div className="container py-5 blog-details-page">
         <div className="row main-layout">

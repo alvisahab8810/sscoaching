@@ -13,6 +13,7 @@ import Link from "next/link";
 import HeroStream1Mobile from "@/components/NiosAdmission/HeroStream1Mobile";
 import QueryForm from "@/components/home/QueryForm";
 import Head from "next/head";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
 export default function AdmissionInNiosStream1() {
   return (
@@ -37,6 +38,8 @@ export default function AdmissionInNiosStream1() {
       <Offcanvas />
       <HeroStream1 />
       <HeroStream1Mobile />
+              <BranchContactCanvas/>
+      
 
 
       <div className="hero-stream1-main-content">
