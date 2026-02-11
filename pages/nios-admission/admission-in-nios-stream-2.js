@@ -189,7 +189,8 @@ export default function AdmissionInNiosStream2() {
                     1. For learners enrolled in Stream-1, Block-I for April/May
                     2026 Examinations
                   </div>
-                  <div className="last-date-status">Block 2 is open</div>
+                  <div className="last-date-status">Will be Updating Soon
+</div>
                 </div>
               </div>
               <div className="last-date-item">
@@ -198,7 +199,8 @@ export default function AdmissionInNiosStream2() {
                     2. For eligible learners for examinations prior to Sep/Oct
                     2026 Examinations
                   </div>
-                  <div className="last-date-status">Block 2 is open</div>
+                  <div className="last-date-status">Will be Updating Soon
+</div>
                 </div>
               </div>
               <div className="last-date-item">

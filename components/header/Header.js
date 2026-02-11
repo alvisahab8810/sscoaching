@@ -1,4 +1,3 @@
-
 // import React, { useState } from "react";
 // import Link from "next/link";
 // import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
@@ -26,7 +25,6 @@
 //                 Home
 //               </a>
 
-              
 //               {/* Subject List Dropdown */}
 //               <div
 //                 className="nav-item dropdown"
@@ -41,8 +39,7 @@
 //                     <Link href="/nios-admission/admission-in-nios-stream-1" className="mb-2">Admission In Stream 1</Link>
 //                     <Link href="/nios-admission/admission-in-nios-stream-2" className="mb-2">Admission In Stream 2 </Link>
 //                     <Link href="/nios-admission/admission-in-nios-stream-3&4" className="mb-2">Admission In Stream 3 & 4</Link>
-                    
-                    
+
 //                   </div>
 //                 )}
 //               </div>
@@ -70,7 +67,7 @@
 //                     <Link href="/subject/syllabus-class-12th" className="mb-2">Syllabus Class 12th </Link>
 //                     <Link href="/subject/secondary-course-material" className="mb-2">Secondary Course Material</Link>
 //                     <Link href="/subject/sr-secondary-course-material" className="mb-2">Sr Secondary Course Material</Link>
-                    
+
 //                   </div>
 //                 )}
 //               </div>
@@ -180,7 +177,7 @@
 //           font-size: 15px;
 //           transition: all 0.2s ease;
 //           margin-bottom:15px!important;
-          
+
 //         }
 
 //         .dropdown-menu a:hover {
@@ -203,23 +200,12 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
-
+import { FaPhoneAlt } from "react-icons/fa";
 export default function Header() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
@@ -236,21 +222,55 @@ export default function Header() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <Link href="/">
+
+              <div  className="d-flex gap-2">
+                 <Link
+              className="hamburger desktop-none"
+              data-bs-toggle="offcanvas"
+              href="#offcanvasExample"
+              role="button"
+              aria-controls="offcanvasExample"
+            >
+              <img src="/assets/icons/burger.svg" alt="Burger Menu" />
+            </Link>
+
+
+               <Link href="/">
               <img
                 src="/assets/images/logo.png"
                 alt="SS Coaching Logo"
                 className="logo"
               />
             </Link>
+              </div>
+
+            <div className="phone-btn-mob" >
+              <button
+                className="phone-btn "
+                data-bs-toggle="offcanvas"
+                data-bs-target="#branchContactCanvas"
+              >
+                <FaPhoneAlt />
+              </button>
+</div>
+
+
+            
+
+
+        
+
+
+
+         
 
             <nav className="nav-menu mobile-none">
-              <Link
+              {/* <Link
                 href="/"
                 className={`nav-item ${isActive("/") ? "active" : ""}`}
               >
                 Home
-              </Link>
+              </Link> */}
 
               {/* NIOS Admission Dropdown */}
               <div
@@ -297,12 +317,12 @@ export default function Header() {
                 )}
               </div>
 
-              <Link
+              {/* <Link
                 href="/about-us"
                 className={`nav-item ${isActive("/about-us") ? "active" : ""}`}
               >
                 About Us
-              </Link>
+              </Link> */}
 
               {/* Subject List Dropdown */}
               <div
@@ -318,9 +338,7 @@ export default function Header() {
                     <Link
                       href="/subject/nios-10th-secondary"
                       className={`mb-2 ${
-                        isActive("/subject/nios-10th-secondary")
-                          ? "active"
-                          : ""
+                        isActive("/subject/nios-10th-secondary") ? "active" : ""
                       }`}
                     >
                       Subject List Class 10th
@@ -340,9 +358,7 @@ export default function Header() {
                     <Link
                       href="/subject/syllabus-class-10th"
                       className={`mb-2 ${
-                        isActive("/subject/syllabus-class-10th")
-                          ? "active"
-                          : ""
+                        isActive("/subject/syllabus-class-10th") ? "active" : ""
                       }`}
                     >
                       Syllabus Class 10th
@@ -351,9 +367,7 @@ export default function Header() {
                     <Link
                       href="/subject/syllabus-class-12th"
                       className={`mb-2 ${
-                        isActive("/subject/syllabus-class-12th")
-                          ? "active"
-                          : ""
+                        isActive("/subject/syllabus-class-12th") ? "active" : ""
                       }`}
                     >
                       Syllabus Class 12th
@@ -453,12 +467,12 @@ export default function Header() {
                 Gallery
               </Link>
 
-              <Link
+              {/* <Link
                 href="/blogs"
                 className={`nav-item ${isActive("/blogs") ? "active" : ""}`}
               >
                 Blogs
-              </Link>
+              </Link> */}
 
               <Link
                 href="/contact-us"
@@ -466,17 +480,19 @@ export default function Header() {
               >
                 Contact Us
               </Link>
+
+              <button
+                className="phone-btn"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#branchContactCanvas"
+              >
+                <FaPhoneAlt />
+              </button>
             </nav>
 
-            <Link
-              className="hamburger desktop-none"
-              data-bs-toggle="offcanvas"
-              href="#offcanvasExample"
-              role="button"
-              aria-controls="offcanvasExample"
-            >
-              <img src="/assets/icons/burger.svg" alt="Burger Menu" />
-            </Link>
+         
+
+           
           </div>
         </header>
       </div>

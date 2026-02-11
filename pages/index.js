@@ -1,5 +1,7 @@
 
 import Footer from "@/components/footer/Footer";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import ContactsN from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import Achievements from "@/components/home/Achievements";
@@ -62,6 +64,7 @@ export default function Home() {
       <section className="home-page-area">
         <Header />
         <Offcanvas />
+        <BranchContactCanvas/>
         {/* <NewsMobile/> */}
         <Hero />
         <HeroMobile />

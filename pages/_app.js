@@ -275,7 +275,7 @@ function MyApp({ Component, pageProps }) {
       <Toaster richColors position="top-right" />
   
     </>
-  );
+  );s
 }
 
 export default MyApp;
