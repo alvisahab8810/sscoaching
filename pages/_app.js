@@ -150,101 +150,10 @@
 
 
 
-// // pages/_app.js
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import '@/styles/globals.css';
-
-// import { useEffect } from 'react';
-// import { useRouter } from 'next/router';
-// import { Toaster } from "sonner";
-// import Head from 'next/head';
-// import Script from 'next/script';
-
-// // ✅ Next.js optimized fonts (removes render-blocking)
-// import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
-
-// const beVietnam = Be_Vietnam_Pro({
-//   subsets: ['latin'],
-//   weight: ['100','200','300','400','500','600','700','800','900'],
-//   display: 'swap',
-// });
-
-// const outfit = Outfit({
-//   subsets: ['latin'],
-//   weight: ['100','200','300','400','500','600','700','800','900'],
-//   display: 'swap',
-// });
-
-// function MyApp({ Component, pageProps }) {
-//   const router = useRouter();
-
-//   // Bootstrap JS (client only)
-//   useEffect(() => {
-//     import('bootstrap/dist/js/bootstrap.bundle.min.js');
-//   }, []);
-
-//   // 🔥 SUPERCOUNTER FIX — reload on every route change
-//   useEffect(() => {
-//     const handleRouteChange = () => {
-//       if (window.sc_project) {
-//         const oldScript = document.getElementById("supercounter-js");
-//         if (oldScript) oldScript.remove();
-
-//         const script = document.createElement("script");
-//         script.src = "https://www.supercounters.com/online_i.js";
-//         script.async = true;
-//         script.id = "supercounter-js";
-//         document.body.appendChild(script);
-//       }
-//     };
-
-//     router.events.on("routeChangeComplete", handleRouteChange);
-//     return () => {
-//       router.events.off("routeChangeComplete", handleRouteChange);
-//     };
-//   }, [router.events]);
-
-//   return (
-//     <>
-//       <Head>
-//         {/* Head kept intentionally – no font links now */}
-//       </Head>
-
-//       {/* ✅ Fonts applied globally without blocking */}
-//       <div className={`${beVietnam.className} ${outfit.className}`}>
-//         <Component {...pageProps} />
-//       </div>
-
-//       <Toaster richColors position="top-right" />
-
-//       {/* ✅ Supercounter base config */}
-//       <Script
-//         id="supercounter-config"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: `
-//             var sc_project=581586;
-//             var sc_invisible=1;
-//           `,
-//         }}
-//       />
-
-//       <Script
-//         id="supercounter-js"
-//         src="https://www.supercounters.com/online_i.js"
-//         strategy="afterInteractive"
-//       />
-//     </>
-//   );
-// }
-
-// export default MyApp;
-
-
-
 // pages/_app.js
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@/styles/globals.css';
+
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -252,7 +161,7 @@ import { Toaster } from "sonner";
 import Head from 'next/head';
 import Script from 'next/script';
 
-// Fonts (UNCHANGED)
+// ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 
 const beVietnam = Be_Vietnam_Pro({
@@ -267,9 +176,6 @@ const outfit = Outfit({
   display: 'swap',
 });
 
-// ✅ YOUR GA4 MEASUREMENT ID
-const GA_MEASUREMENT_ID = 'G-9CHVHWT8CN';
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
@@ -278,56 +184,99 @@ function MyApp({ Component, pageProps }) {
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
 
-  // ✅ Track SPA page views
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      if (window.gtag) {
-        window.gtag('config', GA_MEASUREMENT_ID, {
-          page_path: url,
-        });
-      }
-    };
-
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
 
   return (
     <>
-      {/* ✅ Google Analytics base script */}
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+      <Head>
+        {/* <!-- Google Search Console Verification --> */}
+         <meta name="google-site-verification" content="u4uLVEr7luIqu3vdMVQ_ef5jVyiotOBcVuImXZCthCE" />
+         <meta name="google-site-verification" content="QoOhqK5CHWXyjbIZF-iesLPbhUupUkgFqNLc7LgiTvk" />
+      </Head>
+      
+
+        {/* ========================= */}
+    {/* ✅ Google Tag Manager */}
+    {/* ========================= */}
+    <Script id="gtm-script" strategy="afterInteractive">
+      {`
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id=GTM-NRB9MG28'+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NRB9MG28');
+      `}
+    </Script>
+
+
+     {/* ========================= */}
+    {/* ✅ Google Analytics + Ads */}
+    {/* ========================= */}
+    <Script
+      src="https://www.googletagmanager.com/gtag/js?id=G-C161K5LKC7"
+      strategy="afterInteractive"
+    />
+
+    <Script id="ga-ads-script" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-C161K5LKC7');
+        gtag('config', 'AW-11087287759');
+        gtag('config', 'AW-11159082776');
+        gtag('config', 'AW-16913091466');
+        gtag('config', 'AW-17044419719');
+        gtag('config', 'AW-17094613051');
+      `}
+    </Script>
+
+    {/* ========================= */}
+    {/* ✅ Meta Pixel */}
+    {/* ========================= */}
+    <Script id="meta-pixel" strategy="afterInteractive">
+      {`
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}
+        (window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+
+        fbq('init', '1032968578803017');
+        fbq('track', 'PageView');
+      `}
+    </Script>
+
+    {/* ========================= */}
+    {/* ✅ GTM Noscript */}
+    {/* ========================= */}
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NRB9MG28"
+        height="0"
+        width="0"
+        style={{ display: "none", visibility: "hidden" }}
       />
+    </noscript>
 
-      {/* ✅ Google Analytics init */}
-      <Script
-        id="ga4-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
+    {/* ========================= */}
+    {/* ✅ Your App Content */}
+    {/* ========================= */}
 
-      <Head />
-
-      {/* Fonts applied globally */}
+      {/* ✅ Fonts applied globally without blocking */}
       <div className={`${beVietnam.className} ${outfit.className}`}>
         <Component {...pageProps} />
       </div>
 
       <Toaster richColors position="top-right" />
+  
     </>
   );
 }
 
 export default MyApp;
+

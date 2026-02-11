@@ -19,15 +19,15 @@ export default function AdmissionInNiosStream3() {
     <>
      <Head>
         <title>
-           NIOS Admission 2025 | NIOS Stream 3 & 4 Admission for 10th and 12th
+           NIOS Admission 2026 | NIOS Stream 3 & 4 Admission for 10th and 12th
         </title>
         <meta
           name="description"
-          content="SS Coaching guide students to get admitted To NIOS Board Secondary and Senior Secondary Courses, under NIOS STREAM 2 ADMISSION. Fill out the form for NIOS online admissions 2025 in all streams of NIOS Board for 10th and 12th. Students who wish to be admitted to the NIOS Centre Lucknow can apply online or offline."
+          content="SS Coaching guide students to get admitted To NIOS Board Secondary and Senior Secondary Courses, under NIOS STREAM 2 ADMISSION. Fill out the form for NIOS online admissions 2026 in all streams of NIOS Board for 10th and 12th. Students who wish to be admitted to the NIOS Centre Lucknow can apply online or offline."
         />
         <meta
           name="keywords"
-          content="NIOS Admission, NIOS Admission 2025, NIOS Admission Stream 2 2025, CBSE Private Admission Class 12, National Open School Admission Online form 12th Class 2025. NIOS Admission Failed 12th Class, CBSE private candidate admission form 2025 last date, NIOS stream 2, admission in 12th from open school, NIOS admission in 12th class, open schooling admission form 10th 12th, NIOS admission 2025 last date, admission stream online, NIOS 12th class admission form, NIOS 10th admission 2025, NIOS stream 2 admission form 2025 class 12, NIOS board stream 2 admission, NIOS board admission 2025, NIOS admission, NIOS Lucknow, NIOS exam fees, NIOS institute, NIOS office, NIOS , Best NIOS institute, NIOS exam, NIOS date sheet, NIOS roll number, NIOS enrollment, NIOS news, NIOS updates, NIOS current news, NIOS rules, NIOS eligibility, NIOS inquiry form, NIOS admission date, Required documents for admission in stream 2, NIOS stream 2, NIOS stream 2 admission last date, stream 2 NIOS admission, NIOS online admission stream 2, NIOS online admission for stream 2, NIOS stream 2 admission fees, NOIS Admission, NIOS from online, NIOS fail student, Nios Lucknow, NIOS, nios lucknow, Nios Online Admission, Nios Online Admission in Lucknow, Nios Online Admission in Lucknow, Nios Online Admission, Nios Admission, Nios admission lucknow, nios admission for 12th class last date, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios dled, nios register, NIOS Admission Center in Lucknow, nios admission center in lucknow,"
+          content="NIOS Admission, NIOS Admission 2026, NIOS Admission Stream 2 2026, CBSE Private Admission Class 12, National Open School Admission Online form 12th Class 2026. NIOS Admission Failed 12th Class, CBSE private candidate admission form 2026 last date, NIOS stream 2, admission in 12th from open school, NIOS admission in 12th class, open schooling admission form 10th 12th, NIOS admission 2026 last date, admission stream online, NIOS 12th class admission form, NIOS 10th admission 2026, NIOS stream 2 admission form 2026 class 12, NIOS board stream 2 admission, NIOS board admission 2026, NIOS admission, NIOS Lucknow, NIOS exam fees, NIOS institute, NIOS office, NIOS , Best NIOS institute, NIOS exam, NIOS date sheet, NIOS roll number, NIOS enrollment, NIOS news, NIOS updates, NIOS current news, NIOS rules, NIOS eligibility, NIOS inquiry form, NIOS admission date, Required documents for admission in stream 2, NIOS stream 2, NIOS stream 2 admission last date, stream 2 NIOS admission, NIOS online admission stream 2, NIOS online admission for stream 2, NIOS stream 2 admission fees, NOIS Admission, NIOS from online, NIOS fail student, Nios Lucknow, NIOS, nios lucknow, Nios Online Admission, Nios Online Admission in Lucknow, Nios Online Admission in Lucknow, Nios Online Admission, Nios Admission, Nios admission lucknow, nios admission for 12th class last date, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios dled, nios register, NIOS Admission Center in Lucknow, nios admission center in lucknow,"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -67,7 +67,7 @@ export default function AdmissionInNiosStream3() {
             <div className="admission-table-body">
               <div className="admission-table-row">
                 <div className="admission-table-data">
-                  Failed Students Can Pass From NIOS Stream 2 
+                  Failed Students Can Pass From NIOS 
                 </div>
                 <div className="admission-table-data">
                   <div className="admission-status-badge">
@@ -76,7 +76,7 @@ export default function AdmissionInNiosStream3() {
                   </div>
                 </div>
                 <div className="admission-table-data">
-                  All months of the year 2025 except April, May, October,
+                  All months of the year 2026 except April, May, October,
                   November
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function AdmissionInNiosStream3() {
 
           <div className="why-nios-section nios-admission-text">
             <p className="why-nios-text">
-              NIOS Admission 2025-26 for Stream 3 and 4 stream is open now. It
+              NIOS Admission 2026-27 for Stream 3 and 4 stream is open now. It
               will open current year for those learners who have already passed
               Secondary from recognized Board and want to take part admission in
               one subject or uptu 4 subjects for updating their qualification or
@@ -104,7 +104,7 @@ export default function AdmissionInNiosStream3() {
               conditions given in NIOS Prospectus. In Stream 3 of NIOS
               Board Marksheet, provisional certificate, migration cum transfer
               certificate and passing certificate will be awarded of the year
-              2025-26 to successful learners. Hurry-Up to save the year, seats
+              2026-27 to successful learners. Hurry-Up to save the year, seats
               are limited, Hurry-Up to save the year, seats are limited,
               contact SS Coaching for NIOS coaching in lucknow for help and
               guidance for admission in nios , Call Now 9935035316, 9839065533.
@@ -190,7 +190,7 @@ export default function AdmissionInNiosStream3() {
               or reach out to SS Coaching  directly.
               <br />
               <br />
-              SS Coaching helps with NIOS Admission 2025-26 in Lucknow,
+              SS Coaching helps with NIOS Admission 2026-27in Lucknow,
                provides the information about NIOS board (National Institute of
               Open Schooling) as well as coaching classes, syllabus and tuition
               for 10th (secondary) & 12th (senior secondary) students of NIOS
@@ -215,7 +215,7 @@ export default function AdmissionInNiosStream3() {
               <div className="expand-item">
                 <div className="expand-header stream1">
                   <div className="expand-text">
-                    Form for NIOS Admission 2025-26
+                    Form for NIOS Admission 2026-27
                   </div>
                   <div className="expand-icon">
                     <img
@@ -245,7 +245,7 @@ export default function AdmissionInNiosStream3() {
               </div>
               <div className="expand-item">
                 <div className="expand-header branch2">
-                  <div className="expand-text">NIOS Prospectus 2025-26</div>
+                  <div className="expand-text">NIOS Prospectus 2026-27</div>
                   <div className="expand-icon collapsed">
                     <img src="/assets/icons/link-arrow.svg" alt="Collapse" />
                   </div>
@@ -276,7 +276,7 @@ export default function AdmissionInNiosStream3() {
 
                 <div className="expand-header branch3">
                   <div className="expand-text">
-                    NIOS Admission 2025 for Stream 1
+                    NIOS Admission 2026 for Stream 1
                   </div>
                   <div className="expand-icon">
                     <img
@@ -291,7 +291,7 @@ export default function AdmissionInNiosStream3() {
               <div className="expand-item">
                 <div className="expand-header message">
                   <div className="expand-text">
-                    NIOS Admission status 2025-26
+                    NIOS Admission status 2026-27
                   </div>
                   <div className="expand-icon collapsed">
                     <img src="/assets/icons/link-arrow.svg" alt="Collapse" />
@@ -322,15 +322,15 @@ export default function AdmissionInNiosStream3() {
       <div className="footer-park">
         <div className="container">
           <p>
-            NIOS Admission, NIOS Admission 2025, NIOS Admission Stream 2 2025,
+            NIOS Admission, NIOS Admission 2026, NIOS Admission Stream 2 2026,
             CBSE Private Admission Class 12, National Open School Admission
-            Online form 12th Class 2025. NIOS Admission Failed 12th Class, CBSE
-            private candidate admission form 2025 last date, NIOS stream 2,
+            Online form 12th Class 2026. NIOS Admission Failed 12th Class, CBSE
+            private candidate admission form 2026 last date, NIOS stream 2,
             admission in 12th from open school, NIOS admission in 12th class,
-            open schooling admission form 10th 12th, NIOS admission 2025 last
+            open schooling admission form 10th 12th, NIOS admission 2026 last
             date, admission stream online, NIOS 12th class admission form, NIOS
-            10th admission 2025, NIOS stream 2 admission form 2025 class 12,
-            NIOS board stream 2 admission, NIOS board admission 2025, NIOS
+            10th admission 2026, NIOS stream 2 admission form 2026 class 12,
+            NIOS board stream 2 admission, NIOS board admission 2026, NIOS
             admission, NIOS Lucknow, NIOS exam fees, NIOS institute, NIOS
             office, NIOS , Best NIOS institute, NIOS exam, NIOS date sheet, NIOS
             roll number, NIOS enrollment, NIOS news, NIOS updates, NIOS current

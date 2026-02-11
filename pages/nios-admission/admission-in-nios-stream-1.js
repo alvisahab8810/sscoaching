@@ -27,7 +27,7 @@ export default function AdmissionInNiosStream1() {
         />
         <meta
           name="keywords"
-          content="NIOS Admission, NIOS Admission 2026, Nios online admission, Nios registration, NIOS admission 2026, NIOS 12th admission, NIOS 10th admission, NIOS late admission 2025-26, NIOS late admission 2025-26, NIOS examination 2026, NIOS examination 2026, nios form, NIOS class 12 admission, NIOS class 12 admission 2026, NIOS class 12 admission 2026, NIOS class 10 admission, open 12th form, NIOS registration 2026, NIOS 12th admission 2026, 12th class open, NIOS online admission 2026, nios online, nios admission form, nios b.ed admission 2026, nios on demand examination, open 10th class form, nios admission dates, Nios registration online, Admission Open, NIOS Admission Stream-1 Block-2, NIOS Admission Stream-1 Block-2, Nios Lucknow, NIOS, Nios Online Admission, Nios Online Admission in Lucknow, NIOS Admission 2026 last date, Nios Admission Last Date, nios admission, nios deled, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios deled admission 2026, nios dled, nios register, NIOS Admission in Lucknow, nios admission in lucknow"
+          content="NIOS Admission, NIOS Admission 2026, Nios online admission, Nios registration, NIOS admission 2026, NIOS 12th admission, NIOS 10th admission, NIOS late admission 2026-27, NIOS late admission 2026-27, NIOS examination 2026, NIOS examination 2026, nios form, NIOS class 12 admission, NIOS class 12 admission 2026, NIOS class 12 admission 2026, NIOS class 10 admission, open 12th form, NIOS registration 2026, NIOS 12th admission 2026, 12th class open, NIOS online admission 2026, nios online, nios admission form, nios b.ed admission 2026, nios on demand examination, open 10th class form, nios admission dates, Nios registration online, Admission Open, NIOS Admission Stream-1 Block-2, NIOS Admission Stream-1 Block-2, Nios Lucknow, NIOS, Nios Online Admission, Nios Online Admission in Lucknow, NIOS Admission 2026 last date, Nios Admission Last Date, nios admission, nios deled, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios deled admission 2026, nios dled, nios register, NIOS Admission in Lucknow, nios admission in lucknow"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -76,7 +76,7 @@ export default function AdmissionInNiosStream1() {
             <p className="hero-stream1-content-text desktop-none">
              
                 The final date to apply for Class 10th and class 12th NIOS
-                Admission 2025-26 without incurring a late fee will be updated
+                Admission 2026-27 without incurring a late fee will be updated
                 soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
                 the examination of National Institute of Open Schooling Board
                 (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
@@ -99,7 +99,7 @@ export default function AdmissionInNiosStream1() {
                 <br />
                 <br />
                 The final date to apply for Class 10th and class 12th NIOS
-                Admission 2025-26 without incurring a late fee will be updated
+                Admission 2026-27 without incurring a late fee will be updated
                 soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
                 the examination of National Institute of Open Schooling Board
                 (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
@@ -117,7 +117,7 @@ export default function AdmissionInNiosStream1() {
                 <br />
                 <br />
                 The final date to apply for Class 10th and class 12th NIOS
-                Admission 2025-26 without incurring a late fee will be updated
+                Admission 2026-27 without incurring a late fee will be updated
                 soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
                 the examination of National Institute of Open Schooling Board
                 (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
@@ -559,7 +559,7 @@ export default function AdmissionInNiosStream1() {
                 <Link href="#">
                 <div className="expand-header stream1">
                   <div className="expand-text">
-                    Form for NIOS Admission 2025-26
+                    Form for NIOS Admission 2026-27
                   </div>
                   <div className="expand-icon">
                     <img
@@ -589,7 +589,7 @@ export default function AdmissionInNiosStream1() {
                 <Link href="#">
 
                 <div className="expand-header branch2">
-                  <div className="expand-text">NIOS Prospectus 2025-26</div>
+                  <div className="expand-text">NIOS Prospectus 2026-27</div>
                   <div className="expand-icon collapsed">
                     <img src="/assets/icons/link-arrow.svg" alt="Collapse" />
                   </div>
@@ -638,7 +638,7 @@ export default function AdmissionInNiosStream1() {
                 <Link href="/nios-admission/admission-in-nios-stream-2">
                 
                 <div className="expand-header message">
-                  <div className="expand-text">NIOS Admission 2025-26</div>
+                  <div className="expand-text">NIOS Admission 2026-27</div>
                   <div className="expand-icon collapsed">
                     <img src="/assets/icons/link-arrow.svg" alt="Collapse" />
                   </div>
