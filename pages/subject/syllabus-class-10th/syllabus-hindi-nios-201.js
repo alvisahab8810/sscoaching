@@ -24,7 +24,7 @@ export default function SyllabusHindiSecondaryNIOS() {
       <section className="home-page-area syllabus-nios1">
         <Header />
         <Offcanvas />
-               <BranchContactCanvas>
+               <BranchContactCanvas/>
         
 
         <div className="syllabus-nios">
