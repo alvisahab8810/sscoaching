@@ -260,6 +260,10 @@
         gap: 10px;
     }
 
+
+    .subject-table-section .table-striped tr td a{
+        font-size: 12px!important;
+    }
     .stat-avatar {
         width: 40px;
         height: 40px;
@@ -1053,7 +1057,9 @@
     .contact-right-img {
         width: 100%;
     }
-
+ .subject-table-section .table-striped tr td a{
+        font-size: 12px!important;
+    }
     .content-section {
         width: 100%;
         padding-right: 0;
@@ -1155,7 +1161,7 @@
         color: #333;
         border-top: 1px solid #f1f1f1;
         padding: 3px 9px !important;
-        font-size: 13px !important;
+        font-size: 12px !important;
         border-right: 1px solid #dddd !important;
         text-align: center !important;
     }

@@ -24,7 +24,7 @@ export default function TmaSrsecondary12th() {
       <div id="paper-secondary-10th" className="tma-sr-secondary">
         <Header />
         <Offcanvas />
-               <BranchContactCanvas/>
+        <BranchContactCanvas/>
         
         <SubjectTable />
         <div className="container desktop-none">

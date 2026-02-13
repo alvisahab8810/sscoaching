@@ -1,0 +1,170 @@
+"use client";
+import React from "react";
+import { FaFilePdf } from "react-icons/fa";
+import Head from "next/head";
+import Header from "@/components/header/Header";
+import Offcanvas from "@/components/header/Offcanvas";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import Footer from "@/components/footer/Footer";
+
+export default function ICH223() {
+
+const chapters = [
+  { name: "Culture: An Introduction", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.01.pdf" },
+  { name: "Indian Culture", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.02.pdf" },
+  { name: "Ancient India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.03.pdf" },
+  { name: "Medieval India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.04.pdf" },
+  { name: "Modern India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.05.pdf" },
+  { name: "Indian Languages and Literature - I", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.06.pdf" },
+  { name: "Indian Languages and Literature - II", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.07.pdf" },
+  { name: "Religion and Philosophy in Ancient India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.08.pdf" },
+  { name: "Religion and Philosophy in Medieval India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.09.pdf" },
+  { name: "Religious Reform Movements in Modern India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.10.pdf" },
+  { name: "Indian Painting", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.11.pdf" },
+  { name: "Performing Arts: Music, Dance and Drama", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.12.pdf" },
+  { name: "Indian Architecture", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.13.pdf" },
+  { name: "Science and Technology in India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.14.pdf" },
+  { name: "Scientists of Ancient India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.15.pdf" },
+  { name: "Science and Scientists of Medieval India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.16.pdf" },
+  { name: "Scientists of Modern India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.17.pdf" },
+  { name: "Education in India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.18.pdf" },
+  { name: "Indian Social Structure", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.19.pdf" },
+  { name: "Socio-Cultural Issues in Contemporary India", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.20.pdf" },
+  { name: "Spread of Indian Culture Abroad", url: "https://nios.ac.in/media/documents/SecICHCour/English/CH.21.pdf" },
+];
+
+
+  return (
+    <div>
+      <Head>
+        <title>NIOS Secondary Course Indian Culture and Heritage 223</title>
+      </Head>
+
+      <div id="paper-secondary-10th" className="tma-sr-secondary">
+        <Header />
+        <Offcanvas />
+        <BranchContactCanvas />
+
+        <section className="subject-table-section">
+          <div className="container">
+
+            <div className="hero-text">
+              <h1 className="qustion-paper-hero-title">
+                <span className="highlight text-left">
+                  Indian Culture and Heritage (223) - Chapters
+                </span>
+              </h1>
+            </div>
+
+            {/* Main Book */}
+            <div className="mb-4">
+              <p>
+                📘 <a
+                  href="https://nios.ac.in/media/documents/SecICHCour/Hindi/223-ICH_HindiMed.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="book-link"
+                >
+                  Download Full Book (Hindi)
+                </a>
+              </p>
+            </div>
+
+            {/* Chapters Table */}
+            <div className="table-responsive">
+              <table className="table table-striped custom-table align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th className="text-center1">Sr. no.</th>
+                    <th>Chapter Name</th>
+                    <th className="text-center">PDF</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {chapters.map((chapter, index) => (
+                    <tr key={index} className={index % 2 === 0 ? "even-row" : ""}>
+                      <td className="text-center1">{index + 1}</td>
+                      <td><strong>{chapter.name}</strong></td>
+                      <td className="text-center">
+                        <a
+                          href={chapter.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pdf-icon"
+                        >
+                          <FaFilePdf />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          {/* SAME CSS AS HINDI */}
+          <style jsx>{`
+            .custom-table {
+              width: 100%;
+              border-collapse: separate;
+              border-spacing: 0;
+              background: #fff;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+              border: 1px solid #ddd;
+            }
+
+            thead tr { background: #f9fafc; }
+
+            thead th {
+              padding: 15px 10px;
+              font-size: 16px;
+              font-weight: 700;
+            }
+
+            tbody td {
+              padding: 10px;
+              font-size: 15px;
+              border-top: 1px solid #f1f1f1;
+            }
+
+            .even-row { background-color: #f9fafc; }
+
+            tbody tr:hover {
+              background-color: #f1f5ff;
+              transition: 0.2s ease;
+            }
+
+            .pdf-icon {
+              color: #e63946;
+              font-size: 22px;
+              transition: 0.2s ease;
+            }
+
+            .pdf-icon:hover {
+              transform: scale(1.1);
+              color: #c71f1f;
+            }
+
+            .book-link {
+              font-weight: 600;
+              color: #2563eb;
+              text-decoration: none;
+            }
+
+            .book-link:hover {
+              text-decoration: underline;
+              color: #1d4ed8;
+            }
+          `}</style>
+
+        </section>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
