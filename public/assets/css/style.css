@@ -5401,8 +5401,7 @@ svg.green-svg {
   transition: 0.3s;
 }
 
-.branch-contact a:hover {
-}
+
 
 .contact-icon {
   width: 18px;
@@ -5417,3 +5416,181 @@ svg.green-svg {
     display: none!important;
 }
 
+.custom-table{
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================
+   SS Coaching Contact Strip
+========================= */
+
+.ss-contact-strip-v2 {
+  width: 100%;
+  padding: 28px 0;
+  margin-top: 20px;
+  background: #f6f8fc;
+}
+
+/* Container */
+.ss-contact-strip-v2 .ss-strip-container {
+  max-width: 1200px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(31, 45, 90, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px;
+  position: relative;
+}
+
+/* Top Accent Line */
+.ss-contact-strip-v2 .ss-strip-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #3f51b5, #00c6ff);
+  border-radius: 16px 16px 0 0;
+}
+
+/* Item */
+.ss-contact-strip-v2 .ss-strip-item {
+  flex: 1;
+}
+
+/* Inner Flex */
+.ss-contact-strip-v2 .ss-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* Icon Circle */
+.ss-contact-strip-v2 .ss-strip-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3f51b5, #5a6fd8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(63, 81, 181, 0.25);
+  transition: 0.3s ease;
+}
+
+.ss-contact-strip-v2 .ss-strip-icon img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+/* Hover animation */
+.ss-contact-strip-v2 .ss-strip-item:hover .ss-strip-icon {
+  transform: scale(1.1);
+}
+
+/* Title */
+.ss-contact-strip-v2 .ss-strip-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c7a96;
+  margin-bottom: 4px;
+}
+
+/* Phone */
+.ss-contact-strip-v2 .ss-strip-phone {
+  font-size: 19px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #3f51b5;
+  transition: 0.3s ease;
+}
+
+.ss-contact-strip-v2 .ss-strip-phone:hover {
+  color: #1f2a6c;
+}
+
+/* Divider */
+.ss-contact-strip-v2 .ss-strip-divider {
+  width: 1px;
+  height: 50px;
+  background: #e3e8f3;
+}
+
+
+
+/* =========================
+   MOBILE OPTIMIZED VERSION
+========================= */
+
+@media (max-width: 768px) {
+
+  .ss-contact-strip-v2 {
+    padding: 20px 15px;
+  }
+
+  .ss-contact-strip-v2 .ss-strip-container {
+    flex-direction: column;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    gap: 15px;
+  }
+
+  /* Each branch becomes full card */
+  .ss-contact-strip-v2 .ss-strip-item {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 10px 10px;
+    box-shadow: 0 6px 18px rgba(31, 45, 90, 0.08);
+  }
+
+  .ss-contact-strip-v2 .ss-strip-inner {
+    justify-content: flex-start;
+  }
+
+  /* Icon slightly bigger */
+  .ss-contact-strip-v2 .ss-strip-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Better text alignment */
+  .ss-contact-strip-v2 .ss-strip-title {
+    font-size: 13px;
+  }
+
+  .ss-contact-strip-v2 .ss-strip-phone {
+    font-size: 18px;
+  }
+
+  /* Remove divider */
+  .ss-contact-strip-v2 .ss-strip-divider {
+    display: none;
+  }
+
+  /* Remove top accent line on mobile container */
+  .ss-contact-strip-v2 .ss-strip-container::before {
+    display: none;
+  }
+}

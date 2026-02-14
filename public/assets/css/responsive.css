@@ -1171,6 +1171,7 @@
     }
 
     .subject-table-section thead th {
+        text-align: center;
 
         color: #222;
         border-bottom: none;

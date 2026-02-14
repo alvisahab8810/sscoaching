@@ -8,6 +8,7 @@ import Achievements from "@/components/home/Achievements";
 import BeastFeatures from "@/components/home/BeastFeatures";
 import ChipSection from "@/components/home/ChipSection";
 import CoachingStream from "@/components/home/CoachingStream";
+import ContactStripe from "@/components/home/ContactStripe";
 import CTA from "@/components/home/CTA";
 import CTA2 from "@/components/home/CTA2";
 import CTAA, { CTA1 } from "@/components/home/CTA2";
@@ -70,6 +71,8 @@ export default function Home() {
         <HeroMobile />
         <ChipSection />
         <MobileQuickInfo/>
+        <ContactStripe/>
+
         <StatsSectionMobile />
               <StatsSection />
         <StudentSuccess />
@@ -86,6 +89,7 @@ export default function Home() {
         <RecongnitionMobile />
 
         <LearnersNiosMobile />
+
 
         <GoogleReview />
         <StepProcess />

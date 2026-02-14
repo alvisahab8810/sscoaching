@@ -202,53 +202,53 @@ export default function SubjectTable() {
     {
       code: 225,
       name: "Painting",
-      url: "https://nios.ac.in/media/documents/sec225new/225EContent.pdf",
+      url: "/subject/secondary-course-material/painting225",
     },
 
     {
       code: 229,
       name: "Data Entry Operation",
-      url: "https://nios.ac.in/media/documents/sec229new/deo_229_content_complete1.pdf",
+      url: "/subject/secondary-course-material/deo229",
     },
 
     {
       code: 216,
       name: "Home Science",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/home-science-(216)-syllabus.aspx",
+      url: "/subject/secondary-course-material/homescience216",
     },
 
     {
       code: 211,
       name: "Mathematics",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/Mathematics-(211)-Syllabus.aspx",
+      url: "/subject/secondary-course-material/mathematics211",
     },
     {
       code: 212,
       name: "Science and Technology",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/Science-and-Technology-(212)-Syllabus.aspx",
+      url: "/subject/secondary-course-material/science212",
     },
 
     {
       code: 214,
       name: "Economics",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/economics-(214)-syllabus.aspx",
+      url: "/subject/secondary-course-material/economics214",
     },
 
     {
       code: 215,
       name: "Business Studies",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/business-studies-(215)-syllabus.aspx",
+      url: "/subject/secondary-course-material/business-studies215",
     },
 
     {
       code: 222,
       name: "Psychology",
-      url: "https://nios.ac.in/online-course-material/secondary-courses/psychology-(222)-syllabus.aspx",
+      url: "/subject/secondary-course-material/psychology222",
     },
     {
       code: 224,
       name: "Accountancy",
-      url: "https://nios.ac.in/media/documents/Seccour224New/224_Account_Hindi.pdf",
+      url: "/subject/secondary-course-material/accountancy224",
     },
   ];
 
@@ -326,11 +326,14 @@ export default function SubjectTable() {
           padding: 15px 10px;
           font-size: 16px;
           font-weight: 700;
+          text-align:center;
         }
 
         tbody td {
           padding: 10px;
           font-size: 15px;
+          text-align:center;
+
           color: #333;
           border-top: 1px solid #f1f1f1;
         }
