@@ -6,6 +6,10 @@ export default function SSContactStrip() {
     <section className="ss-contact-strip-v2">
       <div className="ss-strip-container">
 
+          <div className="ss-mobile-heading desktop-none">
+    Call Us Today
+  </div>
+
         
         <div className="ss-strip-item">
           <div className="ss-strip-inner">

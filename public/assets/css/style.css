@@ -5512,7 +5512,7 @@ svg.green-svg {
 .ss-contact-strip-v2 .ss-strip-title {
   font-size: 14px;
   font-weight: 500;
-  color: #6c7a96;
+  color: #111;
   margin-bottom: 4px;
 }
 
@@ -5542,62 +5542,84 @@ svg.green-svg {
    MOBILE OPTIMIZED VERSION
 ========================= */
 
+
+/* =========================
+   MOBILE SINGLE BOX DESIGN
+========================= */
+
 @media (max-width: 768px) {
 
   .ss-contact-strip-v2 {
     padding: 20px 15px;
+    margin-top: 10px;
   }
 
+  /* ONE SINGLE BOX */
   .ss-contact-strip-v2 .ss-strip-container {
     flex-direction: column;
-    padding: 0;
-    background: transparent;
-    box-shadow: none;
-    gap: 7px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 15px;
+    box-shadow: 0 12px 30px rgba(31, 45, 90, 0.08);
+    gap: 0px;
   }
 
-  /* Each branch becomes full card */
+  /* Heading */
+  .ss-contact-strip-v2 .ss-mobile-heading {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2a6c;
+    margin-bottom: 10px;
+  }
+
+  /* Remove individual card styling */
   .ss-contact-strip-v2 .ss-strip-item {
     width: 100%;
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 6px;
-    box-shadow: 0 6px 18px rgba(31, 45, 90, 0.08);
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
   }
 
-  .ss-contact-strip-v2 .ss-strip-inner {
-    justify-content: flex-start;
-    gap:8px;
-  }
-
-  /* Icon slightly bigger */
-  .ss-contact-strip-v2 .ss-strip-icon {
-    width: 30px;
-    height: 30px;
-  }
-
-  /* Better text alignment */
-  .ss-contact-strip-v2 .ss-strip-title {
-    font-size: 13px;
-    margin-bottom: 0;
-  }
-
-  .ss-contact-strip-v2 .ss-strip-phone {
-    font-size: 15px;
-    display: block;
-    margin-top:-2px;
-  }
-
-  .ss-contact-strip-v2{
-    margin-top: 10px;;
-  }
-
-  /* Remove divider */
   .ss-contact-strip-v2 .ss-strip-divider {
     display: none;
   }
 
-  /* Remove top accent line on mobile container */
+  /* Row Layout */
+  .ss-contact-strip-v2 .ss-strip-inner {
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eef1f6;
+  }
+
+  .ss-contact-strip-v2 .ss-strip-item:last-child .ss-strip-inner {
+    border-bottom: none;
+  }
+
+  /* KEEP SAME ICON STYLE */
+  .ss-contact-strip-v2 .ss-strip-icon {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+  }
+
+  /* Text */
+  .ss-contact-strip-v2 .ss-strip-title {
+    font-size: 13px;
+    margin-bottom: 2px;
+    color: #111;
+  }
+
+  .ss-contact-strip-v2 .ss-strip-phone {
+    font-size: 15px;
+    font-weight: 700;
+    color: #3f51b5;
+    margin-top: -2px;
+    display: block;
+  }
+
+  /* Remove desktop accent line */
   .ss-contact-strip-v2 .ss-strip-container::before {
     display: none;
   }
