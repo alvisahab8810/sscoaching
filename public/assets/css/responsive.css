@@ -3231,6 +3231,11 @@
     .phone-btn-mob{
     display: block!important;
 }
+
+.ss-contact-strip-v2 .ss-strip-icon img {
+    width: 12px;
+    height: 12px;
+}
 }
 
 

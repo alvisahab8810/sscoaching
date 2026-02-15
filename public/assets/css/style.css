@@ -5553,7 +5553,7 @@ svg.green-svg {
     padding: 0;
     background: transparent;
     box-shadow: none;
-    gap: 15px;
+    gap: 7px;
   }
 
   /* Each branch becomes full card */
@@ -5561,27 +5561,35 @@ svg.green-svg {
     width: 100%;
     background: #ffffff;
     border-radius: 14px;
-    padding: 10px 10px;
+    padding: 6px;
     box-shadow: 0 6px 18px rgba(31, 45, 90, 0.08);
   }
 
   .ss-contact-strip-v2 .ss-strip-inner {
     justify-content: flex-start;
+    gap:8px;
   }
 
   /* Icon slightly bigger */
   .ss-contact-strip-v2 .ss-strip-icon {
-    width: 42px;
-    height: 42px;
+    width: 30px;
+    height: 30px;
   }
 
   /* Better text alignment */
   .ss-contact-strip-v2 .ss-strip-title {
     font-size: 13px;
+    margin-bottom: 0;
   }
 
   .ss-contact-strip-v2 .ss-strip-phone {
-    font-size: 18px;
+    font-size: 15px;
+    display: block;
+    margin-top:-2px;
+  }
+
+  .ss-contact-strip-v2{
+    margin-top: 10px;;
   }
 
   /* Remove divider */
