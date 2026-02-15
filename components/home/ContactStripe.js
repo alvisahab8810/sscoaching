@@ -6,9 +6,8 @@ export default function SSContactStrip() {
     <section className="ss-contact-strip-v2">
       <div className="ss-strip-container">
 
-          <div className="ss-mobile-heading desktop-none">
-    Call Us Today
-  </div>
+
+        <div className="ss-mobile-heading desktop-none">Call Us Now!</div>
 
         
         <div className="ss-strip-item">
@@ -40,7 +39,7 @@ export default function SSContactStrip() {
 
         <div className="ss-strip-item">
           <div className="ss-strip-inner">
-            <a href="tel:09839065533">
+            <a href="tel:09792111121">
 
             <div className="ss-strip-icon">
               <img
@@ -63,8 +62,8 @@ export default function SSContactStrip() {
         <div className="ss-strip-item">
           <div className="ss-strip-inner">
 
-            <a href="tel:09839065533">
-
+            <a href="tel:09935035316">
+            
             <div className="ss-strip-icon">
               <img
                 src="/assets/images/contacts/call.svg"
