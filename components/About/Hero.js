@@ -23,10 +23,18 @@ export default function AboutUsHero() {
         </div>
 
         <div className="about-us-image">
-          <img
+          {/* <img
             src="/assets/images/about-us-hero.png"
             alt="Founder Director"
+          /> */}
+
+
+            <img
+            src="/assets/images/home/personal.png"
+            alt="Founder Director"
           />
+
+          
         </div>
 
 

@@ -75,7 +75,7 @@ export default function AdmissionInNiosStream2() {
             <div className="admission-table-body">
               <div className="admission-table-row">
                 <div className="admission-table-data">
-                  Failed Students Can Pass From NIOS 
+                  Failed Students Can Pass From NIOS Stream 2
                 </div>
                 <div className="admission-table-data">
                   <div className="admission-close-badge">

@@ -6,7 +6,7 @@ export default function CoachingStream() {
       <div className="container">
         <h2 className="coaching-title">
 
-          We Are the Best Nios Coaching in <span className="highlight">India</span>
+          We Are the Best NIOS Coaching in <span className="highlight">India</span>
         </h2>
         <div className="coaching-grid">
           <div className="coaching-card">

@@ -14,7 +14,7 @@ export default function NIOSInfo() {
       <div className="container">
         <div className="nios-content">
           <h2 className="nios-title">
-            <span className="highlight">NIOS 2025:</span> A Year of
+            <span className="highlight">NIOS 2026:</span> A Year of
             Determination, Dreams & Success at SS Coaching
           </h2>
 

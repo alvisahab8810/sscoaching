@@ -106,7 +106,7 @@ export default function SyllabusEnglishSeniorNIOS() {
               >
                 View Syllabus
               </a>
-              <a href="#" className="subject-btn">
+              <a href="/subject/curriculum-12th/curriculum-english" className="subject-btn">
                 View Curriculum
               </a>
             </div>

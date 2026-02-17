@@ -123,6 +123,15 @@ export default function Footer() {
             <div className="social-profiles">
               <h3 className="footer-section-title">Social Profiles</h3>
               <div className="social-icons">
+
+                <a href="https://www.instagram.com/sscoaching_lucknow/" className="social-icon">
+                  <img
+                    src="/assets/icons/footer/instagram.svg"
+                    alt="Instagram"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                </a>
+
                 <a href="https://www.facebook.com/SSCoachingLucknow" className="social-icon">
                   <img
                     src="/assets/icons/footer/facebook.svg"
@@ -130,20 +139,29 @@ export default function Footer() {
                     style={{ width: "24px", height: "24px" }}
                   />
                 </a>
-                <a href="https://x.com/SSCoachingTwit" className="social-icon">
+
+
+                <a href="https://www.youtube.com/channel/UC5lHqWVNh_xP0iVB7dsRgQw" className="social-icon">
+                  <img
+                    src="/assets/icons/footer/youtube.svg"
+                    alt="Youtube"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                </a>
+                {/* <a href="https://x.com/SSCoachingTwit" className="social-icon">
                   <img
                     src="/assets/icons/footer/twitter.svg"
                     alt="Twitter"
                     style={{ width: "24px", height: "24px" }}
                   />
-                </a>
-                <a href="#" className="social-icon">
+                </a> */}
+                {/* <a href="#" className="social-icon">
                   <img
                     src="/assets/icons/footer/linkedin.svg"
                     alt="LinkedIn"
                     style={{ width: "24px", height: "24px" }}
                   />
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

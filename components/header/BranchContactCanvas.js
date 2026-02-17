@@ -36,6 +36,18 @@ export default function BranchContactCanvas() {
                 />
                 09839065533
               </a>
+
+
+                <a href="tel:06387563947">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text">06387563947</div>
+
+                      
+                    </a>
             </div>
 
             <div className="branch-contact">
@@ -64,6 +76,16 @@ export default function BranchContactCanvas() {
                 />
                 09792111121
               </a>
+
+             <a href="tel:09956493857">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text">09956493857</div>
+
+                    </a>
             </div>
 
             <div className="branch-contact">
@@ -92,6 +114,17 @@ export default function BranchContactCanvas() {
                 />
                 09935035316
               </a>
+
+
+             <a href="tel:09236062837">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text">09236062837</div>
+
+                    </a>
             </div>
 
             <div className="branch-contact">

@@ -23,7 +23,7 @@ export default function QuickLinks() {
                </Link>
             </div>
             <div className="expand-item">
-             <Link href="https://sscoaching.in/hazratganj-branch-lucknow_1.xhtml">
+             <Link href="/gallery">
                <div className="expand-header branch1">
                 <div className="expand-text">Hazratganj Branch, Lucknow</div>
                 <div className="expand-icon">
@@ -87,7 +87,7 @@ export default function QuickLinks() {
             </div>
             <div className="expand-item">
 
-             <Link href="https://sscoaching.in/indiranagar-branch-lucknow_2.xhtml">
+             <Link href="/gallery">
               <div className="expand-header branch3">
                 <div className="expand-text">Indranagar Branch, Lucknow</div>
                 <div className="expand-icon">

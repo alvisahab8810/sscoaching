@@ -54,6 +54,41 @@ export default function AdmissionInNiosStream1() {
             </div>
           </div>
 
+
+
+            {/* <!-- Admission Table Section --> */}
+      <section className="admission-table-section">
+        <div className="container">
+          <div className="admission-table">
+            <div className="admission-table-header">
+              <div className="admission-table-header-row">
+                <div className="admission-table-cell">
+                  Block in NIOS Stream 1
+                </div>
+                <div className="admission-table-cell">Admission Date</div>
+                <div className="admission-table-cell">
+                  First Examination in 2026
+                </div>
+              </div>
+            </div>
+            <div className="admission-table-body">
+              <div className="admission-table-row">
+                <div className="admission-table-data">Block 2</div>
+                <div className="admission-table-data">
+                  <div className="admission-status-badge">
+                    <div className="admission-status-dot"></div>
+                    Admission Open
+                  </div>
+                </div>
+                <div className="admission-table-data">
+                  Examination Month Oct/Nov 2026
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
           {/* <!-- Content Row --> */}
           <div className="hero-stream1-content-row">
             <div className="hero-stream1-content-text-section">
@@ -263,38 +298,7 @@ export default function AdmissionInNiosStream1() {
         </div>
       </section>
 
-      {/* <!-- Admission Table Section --> */}
-      <section className="admission-table-section">
-        <div className="container">
-          <div className="admission-table">
-            <div className="admission-table-header">
-              <div className="admission-table-header-row">
-                <div className="admission-table-cell">
-                  Block in NIOS Stream 1
-                </div>
-                <div className="admission-table-cell">Admission Date</div>
-                <div className="admission-table-cell">
-                  First Examination in 2026
-                </div>
-              </div>
-            </div>
-            <div className="admission-table-body">
-              <div className="admission-table-row">
-                <div className="admission-table-data">Block 2</div>
-                <div className="admission-table-data">
-                  <div className="admission-status-badge">
-                    <div className="admission-status-dot"></div>
-                    Admission Open
-                  </div>
-                </div>
-                <div className="admission-table-data">
-                  Examination Month Oct/Nov 2026
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
       <div className="container">
         <CTA2 />

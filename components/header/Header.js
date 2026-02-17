@@ -447,7 +447,7 @@ export default function Header() {
                           : ""
                       }`}
                     >
-                      TMA Sr. Secodary 12th
+                      TMA Sr. Secondary 12th
                     </Link>
                   </div>
                 )}

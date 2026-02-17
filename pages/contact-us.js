@@ -48,13 +48,28 @@ export default function ContactUs() {
                       S.S. Coaching, IIIrd Floor, Shree Chamber, Naza Computer
                       Market, Near Basant Cinema, Hazratganj, Lucknow.
                     </div>
+                    <div className="d-flex gap-3">
+                      <div className="c-icons">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text"><a href="tel:09839065533">09839065533</a></div>
+
+                      
+                    </div>
+
                     <div className="c-icons">
                       <img
                         src="/assets/images/contacts/call.svg"
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text">09839065533</div>
+                      <div className="location-text"><a href="tel:06387563947">06387563947</a></div>
+
+                      
+                    </div>
                     </div>
 
                     {/* <div className="c-icons">
@@ -95,13 +110,30 @@ export default function ContactUs() {
                       3rd Floor, Upstair Rama Sarees, In Bhootnath Mkt,Indira
                       Nagar,Lucknow
                     </div>
+
+                    <div className="d-flex gap-3">
+
                     <div className="c-icons">
                       <img
                         src="/assets/images/contacts/call.svg"
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text">09792111121</div>
+                      <div className="location-text"><a href="tel:09792111121">09792111121</a></div>
+
+                    </div>
+
+
+                       <div className="c-icons">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text"><a href="tel:09956493857">09956493857</a></div>
+
+                    </div>
+
                     </div>
 
                     {/* <div className="c-icons">
@@ -142,13 +174,30 @@ export default function ContactUs() {
                       U.R.Plaza, Near Phoenix Mall, Beside Acumen Hotel (LDA),
                       Alambagh,Lucknow
                     </div>
+
+                    <div className="d-flex gap-3">
+
                     <div className="c-icons">
                       <img
                         src="/assets/images/contacts/call.svg"
                         alt="Phone icon"
                         className="contact-icon"
                       />
-                      <div className="location-text">09935035316</div>
+                      <div className="location-text"><a href="tel:09935035316">09935035316</a></div>
+
+                    </div>
+
+
+                        <div className="c-icons">
+                      <img
+                        src="/assets/images/contacts/call.svg"
+                        alt="Phone icon"
+                        className="contact-icon"
+                      />
+                      <div className="location-text"><a href="tel:09236062837">09236062837</a></div>
+
+                    </div>
+
                     </div>
 {/* 
                     <div className="c-icons">

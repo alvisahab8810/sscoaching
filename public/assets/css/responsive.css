@@ -432,9 +432,9 @@
     }
 
     .mob-canvas .social-icon {
-        width: 33px !important;
-        height: 33px !important;
-        padding: 8px !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 5px !important;
     }
 
     .nav-item {
@@ -2703,9 +2703,9 @@
     }
 
     .mob-canvas .social-icon {
-        width: 33px !important;
-        height: 33px !important;
-        padding: 8px !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 5px !important;
     }
 
     .hero-section {

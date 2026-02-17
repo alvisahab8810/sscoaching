@@ -37,7 +37,7 @@ export default function SeniosSecondary() {
               >
                 View Syllabus
               </a>
-              <a href="#" className="subject-btn">
+              <a href="/subject/curriculum-12th/curriculum-english" className="subject-btn">
                 View Curriculum
               </a>
             </div>
@@ -645,6 +645,37 @@ export default function SeniosSecondary() {
               </a>
               <a
                 href="/subject/curriculum-12th/curriculum-mass-communication"
+                className="subject-btn"
+              >
+                View Curriculum
+              </a>
+            </div>
+          </div>
+        </section>
+
+
+            <section className="subject-card">
+          <div className="subject-card-image">
+            <img src="/assets/images/syllabus/img1.png" alt="English subject" />
+          </div>
+
+          <div className="subject-card-content">
+            <h2 className="subject-card-title">
+              <a href="/subject/summary-12th/summary-data-entry"> Data Entry Operations (336) For Senior Secondary XIIth(12th)</a>
+            </h2>
+            <p className="subject-card-description">
+               Data entry is the transcription of data from one form into another. This course prepare students to accurately enter data, such as survey results or demographics, which can then be used to develop marketing, advertising and sales plans. After completion of training from SS Coaching, Students can use these skills to compile data, verify its accuracy and organize it.
+            </p>
+
+            <div className="subject-card-buttons">
+              <a
+                href="/subject/syllabus-class-12th/syllabus-data-entry-operations-senior-secondary-nios-336"
+                className="subject-btn"
+              >
+                View Syllabus
+              </a>
+              <a
+                href="/subject/curriculum-12th/curriculum-data-entry"
                 className="subject-btn"
               >
                 View Curriculum
