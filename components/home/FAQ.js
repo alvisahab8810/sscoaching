@@ -95,6 +95,8 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import DOMPurify from "dompurify";
+
 
 export default function FAQ({ limit, showViewMore = false }) {
   const [openIndex, setOpenIndex] = useState(0);
@@ -155,9 +157,20 @@ export default function FAQ({ limit, showViewMore = false }) {
                     </div>
                   </div>
 
-                  {openIndex === index && item.answer && (
+                  {/* {openIndex === index && item.answer && (
                     <div className="faq-answer mt-2">{item.answer}</div>
-                  )}
+                  )} */}
+
+
+                  {openIndex === index && item.answer && (
+  <div
+    className="faq-answer mt-2"
+    dangerouslySetInnerHTML={{
+      __html: DOMPurify.sanitize(item.answer),
+    }}
+  />
+)}
+
 
                   {openIndex === index && item.subText && (
                     <div className="faq-sub-item mt-2 d-flex align-items-center">

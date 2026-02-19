@@ -40,7 +40,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review1.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -68,7 +68,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review1.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -96,7 +96,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review2.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -126,7 +126,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review4.png"
                     alt="Ethan Clark"
                     className="reviewer-avatar"
                   />
@@ -151,7 +151,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review1.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -179,7 +179,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review5.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -207,7 +207,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review6.png"
                     alt="Chloe Patterson"
                     className="reviewer-avatar"
                   />
@@ -237,7 +237,7 @@ export default function GoogleReview() {
               <div className="review-card">
                 <div className="review-header">
                   <img
-                    src="/assets/images/g-reviews/user.svg"
+                    src="/assets/images/g-reviews/g-review7.png"
                     alt="Ethan Clark"
                     className="reviewer-avatar"
                   />
