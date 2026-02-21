@@ -69,6 +69,25 @@ export default function QuickLinks() {
           </div>
 
           <div className="expandable-list" style={{ width: "48%" }}>
+
+             <div className="expand-item">
+
+             <Link href="/nios-admission/admission-in-nios-stream-2">
+
+              <div className="expand-header branch3">
+                <div className="expand-text">NIOS Admission in Stream 2</div>
+                <div className="expand-icon">
+                  <img
+                    src="/assets/icons/link-arrow.svg"
+                    alt="Expand"
+                    style={{ width: "28px", height: "28px" }}
+                  />
+                </div>
+              </div>
+              </Link>
+            </div>
+
+
             <div className="expand-item">
 
              <Link href="/nios-admission/admission-in-nios-stream-3&4">
