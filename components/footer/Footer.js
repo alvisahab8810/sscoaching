@@ -79,7 +79,41 @@ export default function Footer() {
               </ul>
             </div>
 
+             <div className="footer-section">
+              <h3 className="footer-section-title">Important Links</h3>
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <li>
+                  <a href="/disclaimer" className="footer-link">
+                    Disclaimer
+                  </a>
+                </li>
+                <li>
+                  <a href="/privacy-policy" className="footer-link">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="/terms-&-conditions" className="footer-link">
+                    Terms & Conditions
+                  </a>
+                </li>
+            
+              </ul>
+            </div>
+
             <div className="footer-section">
+
+              <h3 className="footer-section-title">Other Pages</h3>
+
               <ul
                 style={{
                   listStyle: "none",
@@ -91,11 +125,7 @@ export default function Footer() {
                 }}
               >
 
-                 <li>
-                  <a href="/" className="footer-link">
-                    Home
-                  </a>
-                </li>
+           
                 <li>
                   <a href="/faq" className="footer-link">
                     FAQ
@@ -119,6 +149,9 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
+
+
+            
 
             <div className="social-profiles">
               <h3 className="footer-section-title">Social Profiles</h3>

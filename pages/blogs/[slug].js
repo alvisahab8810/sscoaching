@@ -171,15 +171,17 @@ export default function BlogDetail() {
                 />
               )}
 
+                  {/* Blog Title */}
+              <h1 className="mb-3">{blog.title}</h1>
+
               {/* Author & Date */}
               <p
                 className="text-muted mb-2 d-flex gap-3 align-items-center"
                 style={{ fontSize: "0.9rem" }}
               >
-                <span className="author-icons d-flex align-items-center gap-1">
-                  <FaUser /> {blog.authorName || "Admin"}
-                </span>
-                <span className="author-icons d-flex align-items-center gap-1">
+
+
+                   <span className="author-icons d-flex align-items-center gap-1">
                   <FaCalendarAlt />{" "}
                   {new Date(blog.publishDate).toLocaleDateString("en-US", {
                     day: "2-digit",
@@ -187,10 +189,13 @@ export default function BlogDetail() {
                     year: "numeric",
                   })}
                 </span>
+                <span className="author-icons d-flex align-items-center gap-1">
+                  <FaUser /> {blog.authorName || "Admin"}
+                </span>
+             
               </p>
 
-              {/* Blog Title */}
-              <h1 className="mb-3">{blog.title}</h1>
+          
 
               {/* Blog Content */}
               {/* <div

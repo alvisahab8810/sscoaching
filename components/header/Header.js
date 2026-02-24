@@ -474,6 +474,19 @@ export default function Header() {
                 Blogs
               </Link> */}
 
+
+              
+
+
+              
+             <a
+  href="/assets/images/others/prospectus.pdf"
+  download
+  className={`nav-item ${isActive("/contact-us") ? "active" : ""}`}
+>
+  Download Prospectus
+</a>
+
               <Link
                 href="/contact-us"
                 className={`nav-item ${isActive("/contact-us") ? "active" : ""}`}

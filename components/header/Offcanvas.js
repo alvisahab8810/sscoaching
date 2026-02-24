@@ -461,6 +461,17 @@ export default function Offcanvas() {
               </li>
 
               <li className="nav-item">
+
+                  
+             <a className="nav-link"
+  href="/assets/images/others/prospectus.pdf"
+  download
+>
+  Download Prospectus
+</a>
+</li>
+
+              <li className="nav-item">
                 <Link href="/contact-us" className="nav-link">
                   Contact Us
                 </Link>
