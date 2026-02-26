@@ -253,7 +253,7 @@ function MyApp({ Component, pageProps }) {
 
 
      {/* Meta Pixel Code */}
-      <Script
+      {/* <Script
         id="facebook-pixel"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
@@ -280,7 +280,7 @@ function MyApp({ Component, pageProps }) {
           style={{ display: "none" }}
           src="https://www.facebook.com/tr?id=25558322930503620&ev=PageView&noscript=1"
         />
-      </noscript>
+      </noscript> */}
 
     {/* ========================= */}
     {/* ✅ GTM Noscript */}
