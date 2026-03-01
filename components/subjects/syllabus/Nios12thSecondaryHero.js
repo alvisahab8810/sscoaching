@@ -13,7 +13,7 @@ export default function Hero() {
         <p className="nios-125h-senior-hero-subtitle">OUR NIOS COURSES - SENIOR SECONDARY COURSE (CLASS XII)</p>
       </div>
       
-      <img src="/assets/images/syllabus/subje-list-hero.png" alt="NIOS Senior Secondary Course Background" className="hero-image"/>
+      <img src="/assets/images/syllabus/subje-list-hero.webp" alt="NIOS Senior Secondary Course Background" className="hero-image"/>
       
       <div className="nios-125h-senior-content-section">
         <div>

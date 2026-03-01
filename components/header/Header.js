@@ -206,6 +206,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
 import { FaPhoneAlt } from "react-icons/fa";
+import { FiDownload } from "react-icons/fi";
 export default function Header() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
@@ -479,13 +480,7 @@ export default function Header() {
 
 
               
-             <a
-  href="/assets/images/others/prospectus.pdf"
-  download
-  className={`nav-item ${isActive("/contact-us") ? "active" : ""}`}
->
-  Download Prospectus
-</a>
+      
 
               <Link
                 href="/contact-us"
@@ -493,6 +488,18 @@ export default function Header() {
               >
                 Contact Us
               </Link>
+              
+
+              <a
+  href="/assets/images/others/prospectus.pdf"
+  download
+  className={`nav-item prospectus-download-btn ${
+    isActive("/contact-us") ? "active" : ""
+  }`}
+>
+  <FiDownload className="download-icon" />
+  Download Prospectus
+</a>
 
               <button
                 className="phone-btn"

@@ -14,6 +14,7 @@ import HeroStream1Mobile from "@/components/NiosAdmission/HeroStream1Mobile";
 import QueryForm from "@/components/home/QueryForm";
 import Head from "next/head";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import Stream1Faqs from "@/components/NiosAdmission/Stream1Faqs";
 
 export default function AdmissionInNiosStream1() {
   return (
@@ -104,11 +105,18 @@ export default function AdmissionInNiosStream1() {
 
 
                   <div className="about-left-bx desktop-none">
-              <img
+              {/* <img
                 src="/assets/images/nios-admission/stream1-about.png"
                 alt="Student studying"
                 class="hero-stream1-content-image"
-              />
+              /> */}
+
+              <img
+  src="/assets/images/nios-admission/stream1-about.png"
+  alt="Student applying for NIOS admission in India for NIOS admission 2026 including NIOS 10th admission and NIOS 12th admission"
+  title="NIOS Admission 2026 in India – Student Applying for NIOS 10th & 12th Admission"
+  className="hero-stream1-content-image"
+/>
             </div>
 
             <p className="hero-stream1-content-text desktop-none">
@@ -178,11 +186,18 @@ export default function AdmissionInNiosStream1() {
               </div>
             </div>
             <div className="about-left-bx mobile-none">
-              <img
+              {/* <img
                 src="/assets/images/nios-admission/stream1-about.png"
                 alt="Student studying"
                 class="hero-stream1-content-image"
-              />
+              /> */}
+
+              <img
+  src="/assets/images/nios-admission/stream1-about.png"
+  alt="Student applying for NIOS admission in India for NIOS admission 2026 including NIOS 10th admission and NIOS 12th admission"
+  title="NIOS Admission 2026 in India – Student Applying for NIOS 10th & 12th Admission"
+  className="hero-stream1-content-image"
+/>
             </div>
           </div>
         </div>
@@ -195,11 +210,18 @@ export default function AdmissionInNiosStream1() {
       <section className="info-section">
         <div className="container">
           <div className="info-content">
-            <img
+            {/* <img
               src="/assets/images/nios-admission/stream1-info.png"
               alt="Student portrait"
               className="info-image"
-            />
+            /> */}
+
+            <img
+  src="/assets/images/nios-admission/stream1-info.png"
+  alt="Student studying online for NIOS admission 2026"
+  title="NIOS Admission 2026 Student Registration"
+  className="info-image"
+/>
             <div className="info-text-group">
               <p className="info-text">
                 The NIOS is a great step in providing quality education.{" "}
@@ -393,11 +415,12 @@ export default function AdmissionInNiosStream1() {
             </div>
 
             <div className="process-images">
-              <img
-                src="/assets/images/home/steps-process/photo1.svg"
-                alt="Student studying"
-                className="process-image process-1"
-              />
+            <img
+  src="/assets/images/home/steps-process/photo1.svg"
+  alt="Students applying online for NIOS 10th admission 2026"
+  title="NIOS 10th Admission 2026 for Students"
+  className="process-image process-1"
+/>
 
               <div className="process-stat">
                 <div className="stat-avatars">
@@ -424,8 +447,10 @@ export default function AdmissionInNiosStream1() {
               </div>
 
               <img
+              
                 src="/assets/images/home/steps-process/photo.svg"
-                alt="Students in classroom"
+                  alt="Students applying online for NIOS 10th admission 2026"
+  title="NIOS 10th Admission 2026 for Students"
                 className="process-image process-2"
               />
             </div>
@@ -711,8 +736,9 @@ export default function AdmissionInNiosStream1() {
         </div>
       </div>
 
-              <FAQ limit={8} showViewMore={true} />
-     
+              {/* <FAQ limit={8} showViewMore={true} /> */}
+       <Stream1Faqs />
+           
 
       <Footer />
       <Popup/>

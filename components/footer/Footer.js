@@ -1,4 +1,5 @@
 import React from "react";
+import DMCABadge from "../home/DMCABadge";
 
 export default function Footer() {
   return (
@@ -200,8 +201,12 @@ export default function Footer() {
           </div>
         </div>
 
+      <DMCABadge />
+
+
         <div className="footer-divider"></div>
         <p className="footer-copyright">
+
           © 2025 SS Coaching. All rights reserved.
         </p>
       </div>

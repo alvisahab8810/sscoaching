@@ -17,7 +17,7 @@ export default function Hero() {
           </div>
 
           <img
-            src="/assets/images/syllabus/subject-list-10th.png"
+            src="/assets/images/syllabus/subject-list-10th.webp"
             alt="NIOS Senior Secondary Course Background"
             className="hero-image"
           />

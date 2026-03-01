@@ -5647,3 +5647,65 @@ svg.green-svg {
 
 
 }
+
+
+/* FAQ Answer Styling */
+.faq-answer p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.faq-answer ul {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.faq-answer ul li {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.faq-answer h5 {
+  font-size: 18px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .faq-answer p,
+  .faq-answer ul li {
+    font-size: 14px;
+  }
+
+  .stream-1-faq .faq-answer h5 {
+    font-size: 16px;
+  }
+
+  .faq-question-text {
+    font-size: 15px;
+  }
+}
+
+/* Prospectus Download Button */
+.prospectus-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: #0088ff;
+  color: #fff !important;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.prospectus-download-btn:hover {
+  background: #0b5ed7;
+  transform: translateY(-2px);
+}
+
+.prospectus-download-btn .download-icon {
+  font-size: 18px;
+}

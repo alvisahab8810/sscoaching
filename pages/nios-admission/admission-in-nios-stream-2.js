@@ -14,6 +14,8 @@ import Link from "next/link";
 import QueryForm from "@/components/home/QueryForm";
 import Head from "next/head";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import Stream1Faqs from "@/components/NiosAdmission/Stream1Faqs";
+import Stream2Faqs from "@/components/NiosAdmission/Stream2Faqs";
 
 export default function AdmissionInNiosStream2() {
   return (
@@ -362,7 +364,8 @@ export default function AdmissionInNiosStream2() {
       </section>
 
       {/* <FAQ /> */}
-      <FAQ limit={8} showViewMore={true} />
+      {/* <FAQ limit={8} showViewMore={true} /> */}
+      <Stream2Faqs/>
 
       <div className="container">
         <a href="tel:9935035316" className="cta-button cta-button1 mt-0">

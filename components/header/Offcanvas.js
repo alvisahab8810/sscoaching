@@ -202,7 +202,7 @@
 
 import React from "react";
 import Link from "next/link";
-
+import { FiDownload } from "react-icons/fi";  
 export default function Offcanvas() {
   return (
     <>
@@ -460,22 +460,26 @@ export default function Offcanvas() {
                 </Link>
               </li>
 
-              <li className="nav-item">
-
-                  
-             <a className="nav-link"
-  href="/assets/images/others/prospectus.pdf"
-  download
->
-  Download Prospectus
-</a>
-</li>
+            
 
               <li className="nav-item">
                 <Link href="/contact-us" className="nav-link">
                   Contact Us
                 </Link>
               </li>
+
+
+                <li className="nav-item border-0">
+
+                  
+             <a className="prospectus-download-btn"
+  href="/assets/images/others/prospectus.pdf"
+  download
+>
+  <FiDownload className="download-icon" />
+  Download Prospectus
+</a>
+</li>
             </ul>
           </div>
 

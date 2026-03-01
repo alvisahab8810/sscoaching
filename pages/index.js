@@ -13,6 +13,7 @@ import CTA from "@/components/home/CTA";
 import CTA2 from "@/components/home/CTA2";
 import CTAA, { CTA1 } from "@/components/home/CTA2";
 import CTA3 from "@/components/home/CTA3";
+import DMCABadge from "@/components/home/DMCABadge";
 import FAQ from "@/components/home/FAQ";
 import GoogleReview from "@/components/home/GoogleReview";
 import Hero from "@/components/home/Hero";

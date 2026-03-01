@@ -5,7 +5,7 @@ export default function Hero() {
     <div className='container'>
     <div className='syllabus-class-12th'>
         
-            <img src='/assets/images/syllabus/hero.png' alt='
+            <img src='/assets/images/syllabus/hero.webp' alt='
               syllabus 12th banner'></img>
         </div>
     </div>
