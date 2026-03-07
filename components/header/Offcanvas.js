@@ -469,7 +469,7 @@ export default function Offcanvas() {
               </li>
 
 
-                <li className="nav-item border-0">
+                {/* <li className="nav-item border-0">
 
                   
              <a className="prospectus-download-btn"
@@ -479,7 +479,7 @@ export default function Offcanvas() {
   <FiDownload className="download-icon" />
   Download Prospectus
 </a>
-</li>
+</li> */}
             </ul>
           </div>
 

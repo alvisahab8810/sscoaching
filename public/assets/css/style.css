@@ -6405,7 +6405,7 @@ img.location-pins {
 }
 .prospectus-area
  {
-    padding-top: 0px;
+    padding-top: 0px!important;
     padding-bottom: 30px;
 }
 
