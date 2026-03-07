@@ -42,6 +42,7 @@ export default function ContactUs() {
                 />
                 <div className="location-card">
                   <div className="location-details">
+                    <a href="/nios-coaching-hazratganj-lucknow">
                     <div className="location-title">
                       SS Coaching <br />
                       Hazratganj, Lucknow
@@ -50,6 +51,8 @@ export default function ContactUs() {
                       S.S. Coaching, IIIrd Floor, Shree Chamber, Naza Computer
                       Market, Near Basant Cinema, Hazratganj, Lucknow.
                     </div>
+
+                    </a>
                     <div className="d-flex gap-3">
                       <div className="c-icons">
                       <img
@@ -104,6 +107,8 @@ export default function ContactUs() {
                 />
                 <div className="location-card">
                   <div className="location-details">
+                    <a href="/nios-coaching-indiranagar-lucknow">
+
                     <div className="location-title">
                       SS Coaching <br />
                       Indira Nagar, Lucknow
@@ -112,6 +117,8 @@ export default function ContactUs() {
                       3rd Floor, Upstair Rama Sarees, In Bhootnath Mkt,Indira
                       Nagar,Lucknow
                     </div>
+
+                    </a>
 
                     <div className="d-flex gap-3">
 
@@ -168,6 +175,9 @@ export default function ContactUs() {
                 />
                 <div className="location-card">
                   <div className="location-details">
+
+                    <a href="/nios-coaching-alambagh-lucknow">
+
                     <div className="location-title">
                       SS Coaching <br />
                       Alambagh, Lucknow
@@ -176,6 +186,8 @@ export default function ContactUs() {
                       U.R.Plaza, Near Phoenix Mall, Beside Acumen Hotel (LDA),
                       Alambagh,Lucknow
                     </div>
+
+                    </a>
 
                     <div className="d-flex gap-3">
 

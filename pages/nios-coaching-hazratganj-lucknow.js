@@ -20,6 +20,7 @@ import Hero from "@/components/home/Hero";
 import HeroMobile from "@/components/home/HeroMobile";
 import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
+import { FaChalkboardTeacher, FaBookOpen, FaFileAlt, FaCalendarAlt, FaAward } from "react-icons/fa";
 
 
 
@@ -88,16 +89,56 @@ const streams = [
   { color: "orange", icon: "⚡", title: "NIOS Stream 3 & 4 — On-Demand (45 Days)", desc: "Pass in as little as 45 days through NIOS On-Demand Exam. Appear when ready — no waiting for March/October exam cycle.", pill: "Fastest Option", pillColor: "orange" },
   { color: "blue", icon: "📚", title: "Subject-Wise Improvement", desc: "Failed only specific subjects? Appear for only those, not the full exam. Save time, money, and years of your life.", pill: "Flexible", pillColor: "blue" },
   { color: "teal", icon: "🏆", title: "JEE / NEET / CA Aspirants", desc: "Zero mandatory attendance — perfect for competitive exam students. Pass your 12th board while focusing 100% on your entrance exam.", pill: "For Aspirants", pillColor: "teal" },
-  { color: "orange", icon: "♿", title: "Special Needs Support", desc: "NIOS provides special concessions for students with disabilities. We ensure a fully inclusive, supportive learning experience for everyone.", pill: "Inclusive", pillColor: "green" },
+  // { color: "orange", icon: "♿", title: "Special Needs Support", desc: "NIOS provides special concessions for students with disabilities. We ensure a fully inclusive, supportive learning experience for everyone.", pill: "Inclusive", pillColor: "green" },
 ];
 
+// const whys = [
+//   { icon: "👨‍🏫", color: "blue", title: "Experienced Professionals", desc: "NIOS-specialist faculty with years of experience — committed to making every concept simple and every student exam-ready." },
+//   { icon: "📖", color: "teal", title: "Best Study Materials", desc: "Exclusive notes, previous year question papers, and focused mock test series aligned with the latest NIOS syllabus." },
+//   { icon: "📝", color: "orange", title: "Smooth NIOS Admission", desc: "We handle the entire online admission process — form filling, document upload, subject selection — all under one roof." },
+//   { icon: "📅", color: "green", title: "Flexible & No Attendance", desc: "Study at your own pace with zero mandatory attendance — perfect for competitive exam aspirants and working students." },
+//   { icon: "📍", color: "purple", title: "Prime Lucknow Location", desc: "Centrally located in Hazratganj — 3 min from the metro station, accessible from every part of Lucknow." },
+//   { icon: "🏆", color: "red", title: "Trusted Since 2001", desc: "Over 23 years, 10,000+ students, 4.7★ Google rating — our legacy is the city's trust and our students' success." },
+// ];
+
+
 const whys = [
-  { icon: "👨‍🏫", color: "blue", title: "Experienced Professionals", desc: "NIOS-specialist faculty with years of experience — committed to making every concept simple and every student exam-ready." },
-  { icon: "📖", color: "teal", title: "Best Study Materials", desc: "Exclusive notes, previous year question papers, and focused mock test series aligned with the latest NIOS syllabus." },
-  { icon: "📝", color: "orange", title: "Smooth NIOS Admission", desc: "We handle the entire online admission process — form filling, document upload, subject selection — all under one roof." },
-  { icon: "📅", color: "green", title: "Flexible & No Attendance", desc: "Study at your own pace with zero mandatory attendance — perfect for competitive exam aspirants and working students." },
-  { icon: "📍", color: "purple", title: "Prime Lucknow Location", desc: "Centrally located in Hazratganj — 3 min from the metro station, accessible from every part of Lucknow." },
-  { icon: "🏆", color: "red", title: "Trusted Since 2001", desc: "Over 23 years, 10,000+ students, 4.7★ Google rating — our legacy is the city's trust and our students' success." },
+  {
+    icon: <FaChalkboardTeacher />,
+    color: "blue",
+    title: "Experienced Professionals",
+    desc: "NIOS-specialist faculty with years of experience — committed to making every concept simple and every student exam-ready."
+  },
+  {
+    icon: <FaBookOpen />,
+    color: "teal",
+    title: "Best Study Materials",
+    desc: "Exclusive notes, previous year question papers, and focused mock test series aligned with the latest NIOS syllabus."
+  },
+  {
+    icon: <FaFileAlt />,
+    color: "orange",
+    title: "Smooth NIOS Admission",
+    desc: "We handle the entire online admission process — form filling, document upload, subject selection — all under one roof."
+  },
+  {
+    icon: <FaCalendarAlt />,
+    color: "green",
+    title: "Flexible & No Attendance",
+    desc: "Study at your own pace with zero mandatory attendance — perfect for competitive exam aspirants and working students."
+  },
+  {
+    icon: <FaMapMarkerAlt />,
+    color: "purple",
+    title: "Prime Lucknow Location",
+    desc: "Centrally located in Hazratganj — 3 min from the metro station, accessible from every part of Lucknow."
+  },
+  {
+    icon: <FaAward />,
+    color: "red",
+    title: "Trusted Since 2001",
+    desc: "Over 23 years, 10,000+ students, 4.7★ Google rating — our legacy is the city's trust and our students' success."
+  }
 ];
 
 const results = [
@@ -239,7 +280,7 @@ export default function HazratganjPage() {
           <div className="hg-sh">
             {/* <div className="hg-stag">Our Pride</div> */}
             <h2 className="hg-stitle">Student <span>Success</span> Stories</h2>
-            <p className="hg-sdesc">Every topper at SS Coaching Hazratganj is proof that the right guidance changes everything. Meet our 2024 stars.</p>
+            <p className="hg-sdesc">Every topper at SS Coaching Hazratganj is proof that the right guidance changes everything. Meet our stars.</p>
           </div>
         <StudentSuccess />
           
@@ -309,7 +350,7 @@ export default function HazratganjPage() {
             <h2>Registration Open! <span>Limited Seats </span></h2>
             <p>Admissions for NIOS 2025–26 are open now at our Hazratganj centre. Don't wait — seats fill fast.</p>
             <div className="hg-reg-btns">
-              <a href="tel:+09839065533" className="hg-btn-yl">Enrol Now →</a>
+              <button className="hg-btn-yl cta-btn-2nd">Enrol Now </button>
               <a href="https://wa.me/09839065533" className="hg-btn-cl"><FaWhatsapp className="text-green-500 whatsppp-ico " /> WhatsApp Us</a>
             </div>
           </div>
@@ -339,7 +380,8 @@ export default function HazratganjPage() {
         </div>
       </section>
 
-      <section className="hg-section ">
+
+       <section className="hg-section desktop-none">
       <div className="hg-sec">
         <div className="hg-sh">
           <h2 className="hg-stitle">
@@ -369,11 +411,13 @@ export default function HazratganjPage() {
       </section>
 
 
+   
+
+
       {/* RESULTS */}
-      <section className="hg-section hg-bg-off" id="results">
+      {/* <section className="hg-section hg-bg-off" id="results">
         <div className="hg-sec">
           <div className="hg-sh">
-            {/* <div className="hg-stag">Batch 2024</div> */}
             <h2 className="hg-stitle">Successful Learners of <br/> <span>NIOS Board</span></h2>
             <p className="hg-sdesc">A glimpse of our 2024 toppers from SS Coaching Hazratganj.</p>
           </div>
@@ -393,29 +437,29 @@ export default function HazratganjPage() {
           </div>
          </div>
         </div>
-      </section>
+      </section> */}
 
       {/* REG BANNER GREEN */}
-      <div className="hg-reg hg-reg-green">
+      <div className="hg-reg ">
         <div className="hg-reg-in">
           <div className="hg-reg-l">
             <h2>NIOS 2026: <span>A Year of Determination, Dreams & Success</span></h2>
             <p>New batch starting soon at Hazratganj. Whether you're going for Stream 1, 2, 3, or 4 — there's a path here for you.</p>
            <div className="mobile-none">
               <div className="hg-reg-btns">
-              <a href="tel:+09839065533" className="hg-btn-yl"> Book Free Counselling →</a>
+              <button  className="hg-btn-yl cta-btn-2nd"> Book Free Counselling </button>
             </div>
            </div>
           </div>
           <div className="hg-reg-badges-col">
-            <div className="hg-reg-badge"><strong>NIOS STREAM 1</strong><span>Class 9th/11th Exam</span></div>
-            <div className="hg-reg-badge"><strong>NIOS STREAM 2</strong><span>Class 10th/12th Exam</span></div>
+            <div className="hg-reg-badge"><a href="/nios-admission/admission-in-nios-stream-1"><strong>NIOS STREAM 1</strong><span>Class 9th/11th Exam</span></a></div>
+            <div className="hg-reg-badge"><a href="/nios-admission/admission-in-nios-stream-2"><strong>NIOS STREAM 2</strong><span>Class 10th/12th Exam</span></a></div>
 
-            <div className="hg-reg-badge"><strong>STREAM 3 & 4</strong><span>On-Demand · 45 Days</span></div>
+            <div className="hg-reg-badge"><a href="/nios-admission/admission-in-nios-stream-3&4"><strong>STREAM 3 & 4</strong><span>On-Demand · 45 Days</span></a></div>
 
              <div className="desktop-none " style={{ width: "100%" }}>
               <div className="hg-reg-btns desktop-none">
-              <a href="tel:+09839065533" className="hg-btn-yl"> Book Free Counselling →</a>
+              <button  className="hg-btn-yl cta-btn-2nd"> Book Free Counselling </button>
             </div>
            </div>
           </div>
@@ -511,8 +555,8 @@ export default function HazratganjPage() {
       label: "Phone / WhatsApp",
       content: (
         <>
-          <a href="tel:+919935035316">+91 99350 35316</a>
-          <a href="tel:+916386570743">+91 63865 70743</a>
+          <a href="tel:+919935035316">+91 9935035316</a>
+          <a href="tel:+916386570743">+91 6386570743</a>
         </>
       ),
     },
@@ -561,8 +605,8 @@ export default function HazratganjPage() {
     <h3>Other Branches in Lucknow</h3>
     <p>SS Coaching is spread across the city — find a centre near you.</p>
     <div className="b-row">
-      <a href="#" className="bcard"><div><strong>Indiranagar Branch</strong><span>Sector 9, Indiranagar, Lucknow</span></div><span className="ba">→</span></a>
-      <a href="#" className="bcard"><div><strong>Alambagh Branch</strong><span>U.R. Plaza, Near Phoenix Mall, Alambagh</span></div><span className="ba">→</span></a>
+      <a href="/nios-coaching-indiraganar-lucknow" className="bcard"><div><strong>Indiranagar Branch</strong><span>Sector 9, Indiranagar, Lucknow</span></div><span className="ba">→</span></a>
+      <a href="/nios-coaching-alambagh-lucknow" className="bcard"><div><strong>Alambagh Branch</strong><span>U.R. Plaza, Near Phoenix Mall, Alambagh</span></div><span className="ba">→</span></a>
     </div>
   </div>
 </div>

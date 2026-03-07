@@ -204,8 +204,8 @@ export default function Hero() {
             <div className="hero-card">
               <div className="hero-left">
                 <h1>
-                  India’s Most
-                  <br /> Trusted NIOS <br /> Coaching
+                  Lucknow’s Best
+                  <br />  NIOS  Coaching
                 </h1>
                 <p>Helping students since 2001</p>
               </div>

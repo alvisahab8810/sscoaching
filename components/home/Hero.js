@@ -387,8 +387,13 @@ export default function Hero() {
           <SwiperSlide>
             <div className="hero-card">
               <div className="hero-left">
-                <h1>
+                {/* <h1>
                   India’s Most Trusted <br />
+                  <span>NIOS Coaching</span>
+                </h1> */}
+
+                 <h1>
+                  Lucknow’s Best <br />
                   <span>NIOS Coaching</span>
                 </h1>
                 <p>Helping students since 2001</p>
