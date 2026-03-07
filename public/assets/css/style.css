@@ -6635,6 +6635,10 @@ display:block;
 .hg-reg-in{
   gap: 10px!important;
 }
+
+.social-icons img{
+  max-width: unset!important;
+}
 }
 
 /* DESKTOP */

@@ -6,6 +6,8 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Popup from "@/components/home/Popup";
+import ContactStripe from "@/components/home/ContactStripe";
+
 import Image from "next/image";
 import { FaMapMarkerAlt, FaPhoneAlt, FaClock, FaBus, FaWhatsapp, FaEnvelope   } from "react-icons/fa";
 
@@ -266,6 +268,59 @@ export default function HazratganjPage() {
 
      <ChipSection />
             <MobileQuickInfo />
+                   
+
+                    <section className="ss-contact-strip-v2">
+      <div className="ss-strip-container">
+
+
+        <div className="ss-mobile-heading desktop-none">Call Us Now!</div>
+
+        
+        <div className="ss-strip-item">
+          <div className="ss-strip-inner">
+
+            <a href="tel:09839065533">
+            <div className="ss-strip-icon">
+              <img
+                src="/assets/images/contacts/call.svg"
+                alt="Call"
+              />
+            </div>
+
+            </a>
+            <div>
+              <div className="ss-strip-title">Hazratganj Lucknow</div>
+              <div className="d-flex gap-2">
+                <a href="tel:09839065533" className="ss-strip-phone">
+                09839065533
+              </a>
+     <a href="tel:06387563947" className="ss-strip-phone">
+                 06387563947
+              </a>
+              </div>
+
+             
+            </div>
+          </div>
+        </div>
+
+
+        
+
+
+
+        
+   
+
+  
+
+
+
+      </div>
+    </section>
+        
+            
 
                
        
@@ -605,7 +660,7 @@ export default function HazratganjPage() {
     <h3>Other Branches in Lucknow</h3>
     <p>SS Coaching is spread across the city — find a centre near you.</p>
     <div className="b-row">
-      <a href="/nios-coaching-indiraganar-lucknow" className="bcard"><div><strong>Indiranagar Branch</strong><span>Sector 9, Indiranagar, Lucknow</span></div><span className="ba">→</span></a>
+      <a href="/nios-coaching-indiranagar-lucknow" className="bcard"><div><strong>Indiranagar Branch</strong><span>Sector 9, Indiranagar, Lucknow</span></div><span className="ba">→</span></a>
       <a href="/nios-coaching-alambagh-lucknow" className="bcard"><div><strong>Alambagh Branch</strong><span>U.R. Plaza, Near Phoenix Mall, Alambagh</span></div><span className="ba">→</span></a>
     </div>
   </div>

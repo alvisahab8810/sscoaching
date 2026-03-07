@@ -168,6 +168,57 @@ export default function AlambaghPage() {
       <ChipSection />
       <MobileQuickInfo />
 
+
+        <section className="ss-contact-strip-v2">
+      <div className="ss-strip-container">
+
+
+        <div className="ss-mobile-heading desktop-none">Call Us Now!</div>
+
+        
+        <div className="ss-strip-item">
+          <div className="ss-strip-inner">
+
+            <a href="tel:09935035316">
+            <div className="ss-strip-icon">
+              <img
+                src="/assets/images/contacts/call.svg"
+                alt="Call"
+              />
+            </div>
+
+            </a>
+            <div>
+              <div className="ss-strip-title">Alambagh Lucknow</div>
+              <div className="d-flex gap-2">
+                <a href="tel:09935035316" className="ss-strip-phone">
+                09935035316
+              </a>
+     <a href="tel:09236062837" className="ss-strip-phone">
+                 09236062837
+              </a>
+              </div>
+
+             
+            </div>
+          </div>
+        </div>
+
+
+        
+
+
+
+        
+   
+
+  
+
+
+
+      </div>
+    </section>
+
       {/* STATS */}
       <StatsSectionMobile />
       <StatsSection />

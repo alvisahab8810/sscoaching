@@ -140,6 +140,56 @@ export default function IndiraganagarPage() {
       <ChipSection />
       <MobileQuickInfo />
 
+        <section className="ss-contact-strip-v2">
+      <div className="ss-strip-container">
+
+
+        <div className="ss-mobile-heading desktop-none">Call Us Now!</div>
+
+        
+        <div className="ss-strip-item">
+          <div className="ss-strip-inner">
+
+            <a href="tel:09792111121">
+            <div className="ss-strip-icon">
+              <img
+                src="/assets/images/contacts/call.svg"
+                alt="Call"
+              />
+            </div>
+
+            </a>
+            <div>
+              <div className="ss-strip-title">Indiranagar Lucknow</div>
+              <div className="d-flex gap-2">
+                <a href="tel:09792111121" className="ss-strip-phone">
+                09792111121
+              </a>
+     <a href="tel:09956493857" className="ss-strip-phone">
+                 09956493857
+              </a>
+              </div>
+
+             
+            </div>
+          </div>
+        </div>
+
+
+        
+
+
+
+        
+   
+
+  
+
+
+
+      </div>
+    </section>
+
       {/* STATS */}
       <StatsSectionMobile />
       <StatsSection />
