@@ -6,6 +6,8 @@ import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import CTA3 from "@/components/home/CTA3";
 import Popup from "@/components/home/Popup";
+import { FaMapMarkerAlt, FaPhoneAlt, FaClock, FaBus, FaWhatsapp, FaEnvelope   } from "react-icons/fa";
+
 
 import Head from "next/head";
 
@@ -347,6 +349,14 @@ export default function ContactUs() {
         {/* <Map /> */}
 
         <Footer />
+        <a
+  href="https://wa.link/8e6v33"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn-whatsapp-pulse"
+>
+  <FaWhatsapp />
+</a>
         <Popup/>
       </section>
     </>

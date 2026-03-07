@@ -152,7 +152,7 @@ export default function StudentSuccess() {
   return (
     <section className="students-section">
       <div className="container">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="hazratgn d-flex justify-content-between align-items-center mb-3">
           <h2 className="section-title">
             Student <span className="highlight">Success</span>
           </h2>

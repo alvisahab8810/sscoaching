@@ -94,6 +94,52 @@ export default function Home() {
 
         <GoogleReview />
         <StepProcess />
+        {/* PROSPECTUS BANNER */}
+        <section  className="prospectus-area">
+          <div className="hg-reg">
+  <div className="hg-reg-in">
+
+    <div className="hg-reg-l">
+      <h2>
+        Download Our <span>Prospectus</span>
+      </h2>
+
+      <p>
+        Get complete information about NIOS streams, admission process,
+        course details, fees structure, and success stories from SS Coaching.
+      </p>
+
+      <div className="hg-reg-btns">
+
+        <a
+          href="/assets/images/others/prospectus.pdf"
+          download
+          className="hg-btn-yl"
+        >
+          Download Prospectus →
+        </a>
+
+        <a
+          href="/assets/images/others/prospectus.pdf"
+          target="_blank"
+          className="hg-btn-cl"
+        >
+          View Online
+        </a>
+
+      </div>
+    </div>
+
+    <div className="hg-reg-badge">
+      <strong>FREE</strong>
+      <span>
+        Complete <br /> Admission Guide
+      </span>
+    </div>
+
+  </div>
+</div>
+        </section>
         <LearnersNios />
         <div className="container">
           <CTA />

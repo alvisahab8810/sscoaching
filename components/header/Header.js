@@ -490,7 +490,7 @@ export default function Header() {
               </Link>
               
 
-              <a
+              {/* <a
   href="/assets/images/others/prospectus.pdf"
   download
   className={`nav-item prospectus-download-btn ${
@@ -499,7 +499,7 @@ export default function Header() {
 >
   <FiDownload className="download-icon" />
   Download Prospectus
-</a>
+</a> */}
 
               <button
                 className="phone-btn"
