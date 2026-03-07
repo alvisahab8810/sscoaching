@@ -1,4 +1,3 @@
-
 import Footer from "@/components/footer/Footer";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import ContactsN from "@/components/header/BranchContactCanvas";
@@ -36,9 +35,11 @@ import StepProcess from "@/components/home/StepProcess";
 import StepProcessMobile from "@/components/home/StepsProcessMobile";
 // import StudentSuccess from "@/components/home/StudentSuccess";
 import dynamic from "next/dynamic";
-const StudentSuccess = dynamic(() => import("@/components/home/StudentSuccess"), { ssr: false });
+const StudentSuccess = dynamic(
+  () => import("@/components/home/StudentSuccess"),
+  { ssr: false },
+);
 const Popup = dynamic(() => import("@/components/home/Popup"), {
-  
   ssr: false,
 });
 import Head from "next/head";
@@ -66,19 +67,17 @@ export default function Home() {
       <section className="home-page-area">
         <Header />
         <Offcanvas />
-        <BranchContactCanvas/>
+        <BranchContactCanvas />
         {/* <NewsMobile/> */}
         <Hero />
         <HeroMobile />
         <ChipSection />
-        <MobileQuickInfo/>
-        <ContactStripe/>
+        <MobileQuickInfo />
+        <ContactStripe />
 
         <StatsSectionMobile />
-              <StatsSection />
+        <StatsSection />
         <StudentSuccess />
-  
-        
 
         <NewsMobile />
 
@@ -91,54 +90,50 @@ export default function Home() {
 
         <LearnersNiosMobile />
 
-
         <GoogleReview />
         <StepProcess />
         {/* PROSPECTUS BANNER */}
-        <section  className="prospectus-area">
+        <section className="prospectus-area">
           <div className="hg-reg">
-  <div className="hg-reg-in">
+            <div className="hg-reg-in">
+              <div className="hg-reg-l">
+                <h2>
+                  Download Our <span>Prospectus</span>
+                </h2>
 
-    <div className="hg-reg-l">
-      <h2>
-        Download Our <span>Prospectus</span>
-      </h2>
+                <p>
+                  Get complete information about NIOS streams, admission
+                  process, course details, fees structure, and success stories
+                  from SS Coaching.
+                </p>
 
-      <p>
-        Get complete information about NIOS streams, admission process,
-        course details, fees structure, and success stories from SS Coaching.
-      </p>
+                <div className="hg-reg-btns">
+                  <a
+                    href="/assets/images/others/prospectus.pdf"
+                    download
+                    className="hg-btn-yl"
+                  >
+                    Download Prospectus →
+                  </a>
 
-      <div className="hg-reg-btns">
+                  <a
+                    href="/assets/images/others/prospectus.pdf"
+                    target="_blank"
+                    className="hg-btn-cl"
+                  >
+                    View Online
+                  </a>
+                </div>
+              </div>
 
-        <a
-          href="/assets/images/others/prospectus.pdf"
-          download
-          className="hg-btn-yl"
-        >
-          Download Prospectus →
-        </a>
-
-        <a
-          href="/assets/images/others/prospectus.pdf"
-          target="_blank"
-          className="hg-btn-cl"
-        >
-          View Online
-        </a>
-
-      </div>
-    </div>
-
-    <div className="hg-reg-badge">
-      <strong>FREE</strong>
-      <span>
-        Complete <br /> Admission Guide
-      </span>
-    </div>
-
-  </div>
-</div>
+              <div className="hg-reg-badge">
+                <strong>FREE</strong>
+                <span>
+                  Complete <br /> Admission Guide
+                </span>
+              </div>
+            </div>
+          </div>
         </section>
         <LearnersNios />
         <div className="container">

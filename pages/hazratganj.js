@@ -9,15 +9,18 @@ import Popup from "@/components/home/Popup";
 import Image from "next/image";
 import { FaMapMarkerAlt, FaPhoneAlt, FaClock, FaBus, FaWhatsapp, FaEnvelope   } from "react-icons/fa";
 
-import QueryForm from "@/components/home/QueryForm";
 import { useState } from "react";
-import ChipSection from "@/components/home/ChipSection";
 import StatsSectionMobile from "@/components/home/StatsSectionMobile";
 import StatsSection from "@/components/home/StatsSection";
 import StudentSuccess from "@/components/home/StudentSuccess";
 import GoogleReview from "@/components/home/GoogleReview";
 import Offcanvas from "@/components/header/Offcanvas";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
+import Hero from "@/components/home/Hero";
+import HeroMobile from "@/components/home/HeroMobile";
+import ChipSection from "@/components/home/ChipSection";
+import MobileQuickInfo from "@/components/home/MobileQuickInfo";
+
 
 
   const faqs = [
@@ -80,7 +83,7 @@ const admitData = [
 
 
 const streams = [
-  { color: "blue", icon: "🎓", title: "NIOS Stream 1 — Fresh Start (Class 9/11 Failed)", desc: "Failed Class 9 or 11? Directly appear for Class 10 or 12 through NIOS. No repeating. No attendance needed. Start fresh today.", pill: "Most Popular", pillColor: "blue" },
+  { color: "blue", icon: "🎓", title: "NIOS Stream 1 — Fresh Start (Class 9/11 Failed)", desc: "Failed Class 9 or 11? Directly appear for Class 10 or 12 through NIOS. No repeating. No attendance needed. Start fresh today.", pill: "Saves Time", pillColor: "blue" },
   { color: "teal", icon: "🔁", title: "NIOS Stream 2 — Same Year Pass (Board Failed)", desc: "Failed CBSE, ICSE, or UP Board this year? Don't lose a year. NIOS Stream 2 lets you pass in the very same academic year.", pill: "Same Year Pass", pillColor: "teal" },
   { color: "orange", icon: "⚡", title: "NIOS Stream 3 & 4 — On-Demand (45 Days)", desc: "Pass in as little as 45 days through NIOS On-Demand Exam. Appear when ready — no waiting for March/October exam cycle.", pill: "Fastest Option", pillColor: "orange" },
   { color: "blue", icon: "📚", title: "Subject-Wise Improvement", desc: "Failed only specific subjects? Appear for only those, not the full exam. Save time, money, and years of your life.", pill: "Flexible", pillColor: "blue" },
@@ -117,6 +120,17 @@ export default function HazratganjPage() {
   setOpenFaq((prev) => (prev === i ? null : i));
 };
 
+
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const toggleItem = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+
+
+
+
   return (
     <div className="hg-page">
 
@@ -132,9 +146,12 @@ export default function HazratganjPage() {
 <Offcanvas />
         <BranchContactCanvas/>
 
-
+      <Hero />
+              <HeroMobile />
+      
+      
       {/* HERO */}
-        <section className="hg-hero">
+        {/* <section className="hg-hero">
       <div className="container">
 
         <div className="hg-hero-in">
@@ -173,10 +190,10 @@ export default function HazratganjPage() {
         </div>
       </div>
 
-      </section>
+      </section> */}
 
       {/* ADMIT STRIP */}
-    <div className="admit-strip-area">
+    {/* <div className="admit-strip-area">
        <div className="container">
 
       <div className="hg-admit-row">
@@ -203,7 +220,11 @@ export default function HazratganjPage() {
       ))}
      </div>
     </div>
-    </div>
+    </div> */}
+
+
+     <ChipSection />
+            <MobileQuickInfo />
 
                
        
@@ -216,7 +237,7 @@ export default function HazratganjPage() {
       <section className="hg-section " id="about">
         <div className="hg-sec ">
           <div className="hg-sh">
-            <div className="hg-stag">Our Pride</div>
+            {/* <div className="hg-stag">Our Pride</div> */}
             <h2 className="hg-stitle">Student <span>Success</span> Stories</h2>
             <p className="hg-sdesc">Every topper at SS Coaching Hazratganj is proof that the right guidance changes everything. Meet our 2024 stars.</p>
           </div>
@@ -234,7 +255,7 @@ export default function HazratganjPage() {
       <section className="hg-section" id="process">
         <div className="hg-sec">
           <div className="hg-sh">
-            <div className="hg-stag">Simple & Clear</div>
+            {/* <div className="hg-stag">Simple & Clear</div> */}
             <h2 className="hg-stitle">Our Simple <span>3-Step Process</span></h2>
             <p className="hg-sdesc">Getting your NIOS admission done at SS Coaching Hazratganj takes just 3 easy steps.</p>
           </div>
@@ -260,16 +281,18 @@ export default function HazratganjPage() {
       <section className="hg-section hg-bg-off" id="streams">
         <div className="hg-sec">
           <div className="hg-sh">
-            <div className="hg-stag">NIOS Admission Options</div>
-            <h2 className="hg-stitle">We Are the Best NIOS Coaching <span>in India</span></h2>
-            <p className="hg-sdesc">Six streams. One mission. We help every student find the right path forward.</p>
+            {/* <div className="hg-stag">NIOS Admission Options</div> */}
+            <h2 className="hg-stitle">We Are the Best NIOS Coaching <br/> <span>in Lucknow</span></h2>
+            {/* <p className="hg-sdesc">Six streams. One mission. We help every student find the right path forward.</p> */}
           </div>
           <div className="container">
             <div className="hg-str-grid">
             {streams.map(s => (
               <div key={s.title} className={`hg-strc hg-strc-${s.color}`}>
-                <div className={`hg-str-ico hg-str-ico-${s.color}`}>{s.icon}</div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className={`hg-str-ico hg-str-ico-${s.color}`}>{s.icon}</div>
                 <h3>{s.title}</h3>
+                </div>
                 <p>{s.desc}</p>
                 <span className={`hg-pill hg-pill-${s.pillColor}`}>{s.pill}</span>
               </div>
@@ -283,7 +306,7 @@ export default function HazratganjPage() {
       <div className="hg-reg">
         <div className="hg-reg-in">
           <div className="hg-reg-l">
-            <h2>Registration Open! <span>Limited Seats 🔥</span></h2>
+            <h2>Registration Open! <span>Limited Seats </span></h2>
             <p>Admissions for NIOS 2025–26 are open now at our Hazratganj centre. Don't wait — seats fill fast.</p>
             <div className="hg-reg-btns">
               <a href="tel:+09839065533" className="hg-btn-yl">Enrol Now →</a>
@@ -295,12 +318,12 @@ export default function HazratganjPage() {
       </div>
 
       {/* WHY US */}
-      <section className="hg-section">
+      <section className="hg-section mobile-none">
         <div className="hg-sec">
           <div className="hg-sh">
-            <div className="hg-stag">Why SS Coaching</div>
-            <h2 className="hg-stitle">The Best NIOS Coaching <span>in India</span></h2>
-            <p className="hg-sdesc">23 years of trust, real results, and genuine care for every student.</p>
+         
+            <h2 className="hg-stitle">The Best NIOS Coaching<br/> <span>in Lucknow</span></h2>
+            
           </div>
           <div className="container">
                 <div className="hg-why-grid">
@@ -316,12 +339,42 @@ export default function HazratganjPage() {
         </div>
       </section>
 
+      <section className="hg-section ">
+      <div className="hg-sec">
+        <div className="hg-sh">
+          <h2 className="hg-stitle">
+            The Best NIOS Coaching <br/> <span>in Lucknow</span>
+          </h2>
+        </div>
+
+        <div className="container">
+           <div className="hg-why-grid">
+  {whys.map((w, index) => (
+    <div key={w.title} className="hg-wc">
+
+      <div className="why-row " onClick={() => toggleItem(index)}>
+        <div className={`hg-wico hg-wico-${w.color}`}>{w.icon}</div>
+        <h4>{w.title}</h4>
+      </div>
+
+      <p className={`why-desc ${activeIndex === index ? "show-desc" : ""}`}>
+        {w.desc}
+      </p>
+
+    </div>
+  ))}
+</div>
+        </div>
+      </div>
+      </section>
+
+
       {/* RESULTS */}
       <section className="hg-section hg-bg-off" id="results">
         <div className="hg-sec">
           <div className="hg-sh">
-            <div className="hg-stag">Batch 2024</div>
-            <h2 className="hg-stitle">Successful Learners of <span>NIOS Board</span></h2>
+            {/* <div className="hg-stag">Batch 2024</div> */}
+            <h2 className="hg-stitle">Successful Learners of <br/> <span>NIOS Board</span></h2>
             <p className="hg-sdesc">A glimpse of our 2024 toppers from SS Coaching Hazratganj.</p>
           </div>
          <div className="container">
@@ -348,14 +401,23 @@ export default function HazratganjPage() {
           <div className="hg-reg-l">
             <h2>NIOS 2026: <span>A Year of Determination, Dreams & Success</span></h2>
             <p>New batch starting soon at Hazratganj. Whether you're going for Stream 1, 2, 3, or 4 — there's a path here for you.</p>
-            <div className="hg-reg-btns">
+           <div className="mobile-none">
+              <div className="hg-reg-btns">
               <a href="tel:+09839065533" className="hg-btn-yl"> Book Free Counselling →</a>
-              <a href="#streams" className="hg-btn-cl"> View All Streams</a>
             </div>
+           </div>
           </div>
           <div className="hg-reg-badges-col">
-            <div className="hg-reg-badge"><strong>NIOS STREAM 1</strong><span>Class 10/12 Exam</span></div>
+            <div className="hg-reg-badge"><strong>NIOS STREAM 1</strong><span>Class 9th/11th Exam</span></div>
+            <div className="hg-reg-badge"><strong>NIOS STREAM 2</strong><span>Class 10th/12th Exam</span></div>
+
             <div className="hg-reg-badge"><strong>STREAM 3 & 4</strong><span>On-Demand · 45 Days</span></div>
+
+             <div className="desktop-none " style={{ width: "100%" }}>
+              <div className="hg-reg-btns desktop-none">
+              <a href="tel:+09839065533" className="hg-btn-yl"> Book Free Counselling →</a>
+            </div>
+           </div>
           </div>
         </div>
       </div>
@@ -366,7 +428,7 @@ export default function HazratganjPage() {
       <div className="hg-sec">
 
         <div className="hg-sh">
-          <div className="hg-stag">FAQ</div>
+          {/* <div className="hg-stag">FAQ</div> */}
 
           <h2 className="hg-stitle">
             Frequently Asked <span>Questions</span>
