@@ -202,7 +202,7 @@ export default function ContactUs() {
                     </div>
 
 
-                        <div className="c-icons">
+                      <div className="c-icons">
                       <img
                         src="/assets/images/contacts/call.svg"
                         alt="Phone icon"
@@ -362,7 +362,7 @@ export default function ContactUs() {
 
         <Footer />
         <a
-  href="https://wa.link/8e6v33"
+  href="https://wa.link/vwvuqc"
   target="_blank"
   rel="noopener noreferrer"
   className="btn-whatsapp-pulse"
