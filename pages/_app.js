@@ -164,6 +164,7 @@ import Script from 'next/script';
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import AnnouncementBar from '@/components/home/AnnouncementBar';
+import Breadcrumb from '@/components/home/Breadcrumb';
 
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
@@ -185,8 +186,10 @@ function MyApp({ Component, pageProps }) {
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
   }, []);
 
-
   return (
+
+
+    
     <>
       <Head>
         {/* <!-- Google Search Console Verification --> */}
@@ -232,57 +235,9 @@ function MyApp({ Component, pageProps }) {
       `}
     </Script>
 
-    {/* ========================= */}
-    {/* ✅ Meta Pixel */}
-    {/* ========================= */}
-    {/* <Script id="meta-pixel" strategy="afterInteractive">
-      {`
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}
-        (window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
+   
 
-        fbq('init', '1032968578803017');
-        fbq('track', 'PageView');
-      `}
-    </Script> */}
-
-
-     {/* Meta Pixel Code */}
-      {/* <Script
-        id="facebook-pixel"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}
-            (window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '25558322930503620');
-            fbq('track', 'PageView');
-          `,
-        }}
-      />
-
-      <noscript>
-        <img
-          height="1"
-          width="1"
-          style={{ display: "none" }}
-          src="https://www.facebook.com/tr?id=25558322930503620&ev=PageView&noscript=1"
-        />
-      </noscript> */}
-
+     
     {/* ========================= */}
     {/* ✅ GTM Noscript */}
     {/* ========================= */}
@@ -295,14 +250,14 @@ function MyApp({ Component, pageProps }) {
       />
     </noscript>
 
-    {/* ========================= */}
-    {/* ✅ Your App Content */}
-    {/* ========================= */}
-
+  
       {/* ✅ Fonts applied globally without blocking */}
       <div className={`${beVietnam.className} ${outfit.className}`}>
+        
         <Component {...pageProps} />
-        <AnnouncementBar />
+         {!router.pathname.startsWith("/dashboard") && <AnnouncementBar />}
+
+       
       </div>
 
       <Toaster richColors position="top-right" />

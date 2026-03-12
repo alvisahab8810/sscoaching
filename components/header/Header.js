@@ -208,7 +208,9 @@ import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
 import { FaPhoneAlt } from "react-icons/fa";
 import { FiDownload } from "react-icons/fi";
 import GoogleTranslate from "../home/Googletranslate";
+import Breadcrumb from "../home/Breadcrumb";
 export default function Header() {
+  
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
 
@@ -220,61 +222,46 @@ export default function Header() {
   const isActive = (path) => pathname === path;
 
   return (
+    <>
     <section className="header-area">
       <div className="container">
         <header className="header">
           <div className="header-content">
+            <div className="d-flex gap-2">
+              <Link
+                className="hamburger desktop-none"
+                data-bs-toggle="offcanvas"
+                href="#offcanvasExample"
+                role="button"
+                aria-controls="offcanvasExample"
+              >
+                <img src="/assets/icons/burger.svg" alt="Burger Menu" />
+              </Link>
 
-              <div  className="d-flex gap-2">
-                 <Link
-              className="hamburger desktop-none"
-              data-bs-toggle="offcanvas"
-              href="#offcanvasExample"
-              role="button"
-              aria-controls="offcanvasExample"
-            >
-              <img src="/assets/icons/burger.svg" alt="Burger Menu" />
-            </Link>
+              <Link href="/">
+                <img
+                  src="/assets/images/logo.png"
+                  alt="SS Coaching Logo"
+                  className="logo"
+                />
+              </Link>
+            </div>
 
-
-               <Link href="/">
-              <img
-                src="/assets/images/logo.png"
-                alt="SS Coaching Logo"
-                className="logo"
-              />
-            </Link>
+            <div className="d-flex gap-3">
+              <div className="phone-btn-mob ">
+                <button
+                  className="phone-btn "
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#branchContactCanvas"
+                >
+                  <FaPhoneAlt />
+                </button>
               </div>
 
-         
-
-
-<div className="d-flex gap-3">
-     <div className="phone-btn-mob " >
-              <button
-                className="phone-btn "
-                data-bs-toggle="offcanvas"
-                data-bs-target="#branchContactCanvas"
-              >
-                <FaPhoneAlt />
-              </button>
-             
-
-</div>
-
- <div className="mob-translate">
+              <div className="mob-translate">
                 <GoogleTranslate />
               </div>
-</div>
-
-            
-
-
-        
-
-
-
-         
+            </div>
 
             <nav className="nav-menu mobile-none">
               {/* <Link
@@ -486,20 +473,12 @@ export default function Header() {
                 Blogs
               </Link> */}
 
-
-              
-
-
-              
-      
-
               <Link
                 href="/contact-us"
                 className={`nav-item ${isActive("/contact-us") ? "active" : ""}`}
               >
                 Contact Us
               </Link>
-              
 
               {/* <a
   href="/assets/images/others/prospectus.pdf"
@@ -520,14 +499,8 @@ export default function Header() {
                 <FaPhoneAlt />
               </button>
 
-
               <GoogleTranslate />
- 
             </nav>
-
-         
-
-           
           </div>
         </header>
       </div>
@@ -611,5 +584,13 @@ export default function Header() {
         }
       `}</style>
     </section>
+
+    {/* ── Breadcrumb ── */}
+    {pathname !== "/" && !pathname.startsWith("/dashboard") && (
+      <div className="container" style={{ padding: "10px 0 0" }}>
+        <Breadcrumb />
+      </div>
+    )}
+  </> 
   );
 }

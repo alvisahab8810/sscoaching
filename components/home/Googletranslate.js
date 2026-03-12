@@ -22,6 +22,29 @@ export default function GoogleTranslate() {
   const [current, setCurrent] = useState(LANGUAGES[0]);
   const dropdownRef           = useRef(null);
 
+  /* ── Aggressively remove Google's injected top bar ── */
+  useEffect(() => {
+    const removeBar = () => {
+      // Remove body top offset Google sets
+      document.body.style.top = "0px";
+
+      // Hide the banner iframe
+      const banner = document.querySelector(".goog-te-banner-frame");
+      if (banner) banner.style.display = "none";
+
+      // Remove any inline top style Google adds to body
+      if (document.body.getAttribute("style")?.includes("top:")) {
+        document.body.style.removeProperty("top");
+      }
+    };
+
+    // Watch for Google injecting the bar into DOM
+    const observer = new MutationObserver(removeBar);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
   /* ── Load Google Translate script (hidden) ── */
   useEffect(() => {
     if (document.getElementById("google-translate-script")) return;
@@ -153,12 +176,30 @@ export default function GoogleTranslate() {
       </div>
 
       <style jsx global>{`
-        /* ── Suppress Google's injected bar ── */
+        /* ── Kill Google's injected top bar completely ── */
         .goog-te-banner-frame,
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        body { top: 0 !important; }
-        .goog-logo-link { display: none !important; }
-        .goog-te-gadget span { display: none !important; }
+        .goog-te-banner-frame.skiptranslate,
+        .skiptranslate > iframe,
+        #goog-gt-tt,
+        .goog-te-balloon-frame {
+          display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+          width: 0 !important;
+        }
+
+        /* ── Prevent body shift ── */
+        body {
+          top: 0 !important;
+          position: static !important;
+        }
+
+        /* ── Hide Google branding ── */
+        .goog-logo-link,
+        .goog-te-gadget span,
+        .goog-te-gadget > div:last-child {
+          display: none !important;
+        }
 
         /* ── Wrapper ── */
         .gt-wrap {
