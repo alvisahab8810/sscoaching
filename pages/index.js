@@ -116,13 +116,23 @@ export default function Home() {
                     Download Prospectus →
                   </a>
 
-                  <a
+                  {/* <a
                     href="/assets/images/others/prospectus.pdf"
                     target="_blank"
                     className="hg-btn-cl"
                   >
                     View Online
+                  </a> */}
+
+
+                    <a
+                    href="/onlineforms"
+                    target="_blank"
+                    className="hg-btn-cl"
+                  >
+                    Apply Online
                   </a>
+                
                 </div>
               </div>
 

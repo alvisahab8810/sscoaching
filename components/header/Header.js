@@ -207,6 +207,7 @@ import { usePathname } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
 import { FaPhoneAlt } from "react-icons/fa";
 import { FiDownload } from "react-icons/fi";
+import GoogleTranslate from "../home/Googletranslate";
 export default function Header() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
@@ -245,7 +246,11 @@ export default function Header() {
             </Link>
               </div>
 
-            <div className="phone-btn-mob" >
+         
+
+
+<div className="d-flex gap-3">
+     <div className="phone-btn-mob " >
               <button
                 className="phone-btn "
                 data-bs-toggle="offcanvas"
@@ -253,8 +258,14 @@ export default function Header() {
               >
                 <FaPhoneAlt />
               </button>
+             
+
 </div>
 
+ <div className="mob-translate">
+                <GoogleTranslate />
+              </div>
+</div>
 
             
 
@@ -508,6 +519,10 @@ export default function Header() {
               >
                 <FaPhoneAlt />
               </button>
+
+
+              <GoogleTranslate />
+ 
             </nav>
 
          

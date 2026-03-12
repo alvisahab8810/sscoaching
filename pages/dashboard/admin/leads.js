@@ -224,8 +224,8 @@ export default function Leads() {
                       <th>Name</th>
                       <th>Email</th>
                       <th>Phone</th>
-                      <th>City</th>
-                      <th>Looking For</th>
+                      {/* <th>City</th> */}
+                      {/* <th>Looking For</th> */}
                       <th>Form</th>
                       <th>Date</th>
                       <th>Action</th>
@@ -239,8 +239,8 @@ export default function Leads() {
                         <td>{lead.fullName}</td>
                         <td>{lead.email}</td>
                         <td>{lead.phone}</td>
-                        <td>{lead.city}</td>
-                        <td>{lead.lookingFor}</td>
+                        {/* <td>{lead.city}</td> */}
+                        {/* <td>{lead.lookingFor}</td> */}
 
                         <td>
                           <span

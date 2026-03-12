@@ -28,8 +28,9 @@ export default function FAQSection() {
           <FAQ />
         </section>
 
-        <Footer />
       </section>
+        <Footer />
+
     </>
   );
 }

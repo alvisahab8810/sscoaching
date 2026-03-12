@@ -163,6 +163,7 @@ import Script from 'next/script';
 
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
+import AnnouncementBar from '@/components/home/AnnouncementBar';
 
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
@@ -301,12 +302,13 @@ function MyApp({ Component, pageProps }) {
       {/* ✅ Fonts applied globally without blocking */}
       <div className={`${beVietnam.className} ${outfit.className}`}>
         <Component {...pageProps} />
+        <AnnouncementBar />
       </div>
 
       <Toaster richColors position="top-right" />
   
     </>
-  );s
+  );
 }
 
 export default MyApp;

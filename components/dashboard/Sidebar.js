@@ -89,8 +89,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BsChevronDown, BsChevronUp, BsFolder, BsPlusCircle, BsListUl, BsPeople, BsGear } from "react-icons/bs";
+import { FiClipboard } from "react-icons/fi";
+import { FiBell } from "react-icons/fi";
 
+import { BsChevronDown, BsChevronUp, BsFolder, BsPlusCircle, BsListUl, BsPeople, BsGear, BsCollection    } from "react-icons/bs";
 export default function Sidebar() {
   const pathname = usePathname();
   const [blogOpen, setBlogOpen] = useState(false);
@@ -255,8 +257,44 @@ export default function Sidebar() {
           </Link>
         </li>
 
+
+          {/* <li style={styles.navItem}>
+          <Link href="/dashboard/admin/online-classes" style={styles.navLink()}>
+             <img src="/assets/icons/videocall.svg" style={{marginRight:"8px", width:"16px"}}></img> Online Classes
+          </Link>
+        </li> */}
+
+{/* 
+          <li style={styles.navItem}>
+
+            <Link href="/dashboard/admin/students" style={styles.navLink()}>
+              <BsPeople style={{marginRight:"8px"}} size={18} /> Students
+            </Link>
+         </li> */}
+
+
+         {/* <li style={styles.navItem}>
+  <Link href="/dashboard/admin/courses" style={styles.navLink()}>
+    <BsCollection style={{ marginRight: "8px" }} size={18} /> Courses
+  </Link>
+</li> */}
+
         
 
+   <li style={styles.navItem}>
+  <Link href="/dashboard/admin/admissions" style={styles.navLink()}>
+    <FiClipboard style={{ marginRight: "8px", fontSize: "16px" }} />
+    Applications
+  </Link>
+</li>
+
+
+<li style={styles.navItem}>
+  <Link href="/dashboard/admin/announcements" style={styles.navLink()}>
+    <FiBell style={{ marginRight: "8px", fontSize: "16px" }} />
+    Announcements
+  </Link>
+</li>
       </ul>
 
  
