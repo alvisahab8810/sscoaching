@@ -138,6 +138,10 @@ export default function Footer() {
                 <a href="/privacy-policy">Privacy Policy</a>
                 <span className="ss-footer-legal-sep">|</span>
                 <a href="/terms-&-conditions">Terms &amp; Conditions</a>
+                <span className="ss-footer-legal-sep">|</span>
+                <a href="/sitemap">Sitemap</a>
+
+
               </div>
             </div>
 
