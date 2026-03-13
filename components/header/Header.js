@@ -586,11 +586,11 @@ export default function Header() {
     </section>
 
     {/* ── Breadcrumb ── */}
-    {pathname !== "/" && !pathname.startsWith("/dashboard") && (
+    {/* {pathname !== "/" && !pathname.startsWith("/dashboard") && (
       <div className="container" style={{ padding: "10px 0 0" }}>
         <Breadcrumb />
       </div>
-    )}
+    )} */}
   </> 
   );
 }
