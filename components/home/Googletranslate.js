@@ -23,26 +23,23 @@ export default function GoogleTranslate() {
   const dropdownRef           = useRef(null);
 
   /* ── Aggressively remove Google's injected top bar ── */
+/* ── Remove Google's injected top bar (lightweight) ── */
   useEffect(() => {
     const removeBar = () => {
-      // Remove body top offset Google sets
       document.body.style.top = "0px";
-
-      // Hide the banner iframe
       const banner = document.querySelector(".goog-te-banner-frame");
       if (banner) banner.style.display = "none";
-
-      // Remove any inline top style Google adds to body
-      if (document.body.getAttribute("style")?.includes("top:")) {
-        document.body.style.removeProperty("top");
-      }
     };
 
-    // Watch for Google injecting the bar into DOM
-    const observer = new MutationObserver(removeBar);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    const t1 = setTimeout(removeBar, 1000);
+    const t2 = setTimeout(removeBar, 2500);
+    const t3 = setTimeout(removeBar, 5000);
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
 
   /* ── Load Google Translate script (hidden) ── */
