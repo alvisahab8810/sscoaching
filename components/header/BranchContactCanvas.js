@@ -1,4 +1,6 @@
 import React from "react";
+import { FaWhatsapp } from "react-icons/fa";
+
 
 export default function BranchContactCanvas() {
   return (
@@ -38,6 +40,8 @@ export default function BranchContactCanvas() {
               </a>
 
 
+
+
                 <a href="tel:06387563947">
                       <img
                         src="/assets/images/contacts/call.svg"
@@ -48,6 +52,16 @@ export default function BranchContactCanvas() {
 
                       
                     </a>
+
+                    
+                <div className="c-icons whatsapp-row mt-2">
+                                  <FaWhatsapp style={{ color: "#25D366", fontSize: "16px", flexShrink: 0 }} />
+                                  <div className="location-text">
+                                    <a href="https://wa.me/919839065533" target="_blank" rel="noopener noreferrer">
+                                      WhatsApp Us
+                                    </a>
+                                  </div>
+                                </div>
             </div>
 
             <div className="branch-contact">
@@ -86,6 +100,15 @@ export default function BranchContactCanvas() {
                       <div className="location-text">09956493857</div>
 
                     </a>
+
+                      <div className="c-icons whatsapp-row mt-2">
+                    <FaWhatsapp style={{ color: "#25D366", fontSize: "16px", flexShrink: 0 }} />
+                    <div className="location-text">
+                      <a href="https://wa.me/919792111121" target="_blank" rel="noopener noreferrer">
+                        WhatsApp Us
+                      </a>
+                    </div>
+                  </div>
             </div>
 
             <div className="branch-contact">
@@ -125,6 +148,15 @@ export default function BranchContactCanvas() {
                       <div className="location-text">09236062837</div>
 
                     </a>
+
+                      <div className="c-icons whatsapp-row mt-2">
+                    <FaWhatsapp style={{ color: "#25D366", fontSize: "16px", flexShrink: 0 }} />
+                    <div className="location-text">
+                      <a href="https://wa.me/919935035316" target="_blank" rel="noopener noreferrer">
+                        WhatsApp Us
+                      </a>
+                    </div>
+                  </div>
             </div>
 
             <div className="branch-contact">

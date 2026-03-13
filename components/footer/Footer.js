@@ -58,7 +58,7 @@ export default function Footer() {
               </p>
               <div className="ss-footer-est">
                 <span className="ss-footer-est-badge">Est. 2001</span>
-                <span className="ss-footer-est-text">20+ Years of Excellence</span>
+                <span className="ss-footer-est-text">25+ Years of Excellence</span>
               </div>
             </div>
 
