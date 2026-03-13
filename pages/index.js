@@ -104,7 +104,7 @@ export default function Home() {
                 <p>
                   Get complete information about NIOS streams, admission
                   process, course details, fees structure, and success stories
-                  from SS Coaching.
+                  from SS Coaching
                 </p>
 
                 <div className="hg-reg-btns">
