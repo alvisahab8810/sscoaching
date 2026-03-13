@@ -164,7 +164,6 @@ import Script from 'next/script';
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import AnnouncementBar from '@/components/home/AnnouncementBar';
-import Breadcrumb from '@/components/home/Breadcrumb';
 
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
@@ -182,9 +181,15 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
   // Bootstrap JS (client only)
+  // useEffect(() => {
+  //   import('bootstrap/dist/js/bootstrap.bundle.min.js');
+  // }, []);
+
+
   useEffect(() => {
-    import('bootstrap/dist/js/bootstrap.bundle.min.js');
-  }, []);
+  import('bootstrap/dist/js/bootstrap.bundle.min.js');
+  fetch("/api/faqs").catch(() => {}); // ← warm up DB
+}, []);
 
   return (
 

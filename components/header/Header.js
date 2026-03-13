@@ -259,7 +259,7 @@ export default function Header() {
               </div>
 
               <div className="mob-translate">
-                <GoogleTranslate />
+                {/* <GoogleTranslate /> */}
               </div>
             </div>
 
@@ -499,7 +499,7 @@ export default function Header() {
                 <FaPhoneAlt />
               </button>
 
-              <GoogleTranslate />
+              {/* <GoogleTranslate /> */}
             </nav>
           </div>
         </header>
