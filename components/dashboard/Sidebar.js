@@ -92,6 +92,8 @@ import { usePathname } from "next/navigation";
 import { FiClipboard } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 
+ 
+
 import { BsChevronDown, BsChevronUp, BsFolder, BsPlusCircle, BsListUl, BsPeople, BsGear, BsCollection    } from "react-icons/bs";
 export default function Sidebar() {
   const pathname = usePathname();
@@ -295,6 +297,18 @@ export default function Sidebar() {
     Announcements
   </Link>
 </li>
+<li style={styles.navItem}>
+
+<Link href="/dashboard/admin/invoices">Invoices</Link>
+</li>
+
+<li style={styles.navItem}>
+
+<Link href="/dashboard/admin/enrollments">
+   Enrollments
+</Link>
+</li>
+
       </ul>
 
  

@@ -11,6 +11,16 @@ const EnrollmentSchema = new mongoose.Schema({
   couponCode:{ type: String, default: "" },
   discount:  { type: Number, default: 0 },
   status:    { type: String, enum: ["active", "expired", "refunded"], default: "active" },
+
+
+  deliveryInfo: {
+  fullName: String, phone: String, email: String,
+  address: String, city: String, state: String,
+  pincode: String, notes: String,
+},
+type: { type: String, enum: ["paid", "cod", "free"], default: "free" },
+
+
 }, { timestamps: true });
 
 // one enrollment per student per course
