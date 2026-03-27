@@ -15,7 +15,7 @@ import Script from 'next/script';
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import AnnouncementBar from '@/components/home/AnnouncementBar';
-
+AnnouncementBar
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
   weight: ['100','200','300','400','500','600','700','800','900'],
