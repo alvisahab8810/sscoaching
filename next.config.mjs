@@ -7,14 +7,14 @@
 
 
 
-import path from 'path';
+import path from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 
   webpack: (config) => {
-    config.resolve.alias['@'] = path.resolve('./');
+    config.resolve.alias["@"] = path.resolve(__dirname);
     return config;
   },
 };
