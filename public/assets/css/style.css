@@ -3414,7 +3414,7 @@ button:focus,
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: center;
+  /* align-items: center; */
   width: 100%;
   padding-top: 50px;
 }
@@ -9172,3 +9172,1365 @@ display:block;
     .faq-question-text {
             white-space: break-spaces;
     }
+
+
+    .book-your-links{
+      list-style: none;
+      padding: 0;
+    }
+
+    .book-your-links li a{
+      text-decoration: underline;
+    }
+
+    h1.hg-intro-h1 {
+    /* padding-top: 30px; */
+}
+
+
+
+/* ==========================================================================
+   NEW SECTIONS — SS Coaching Hazratganj Page
+   Covers: Intro, Section 12, 13, 14, 15, 16 (About, Course, Choose, Admit, Gallery)
+   ========================================================================== */
+
+/* ─── SHARED BACKGROUND UTILITY ─── */
+.hg-bg-off {
+  background-color: #f8f9fb;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 1B — H1 INTRO (below hero banner)
+══════════════════════════════════════════════════════════════ */
+.hg-intro-section {
+  padding: 52px 0 36px;
+  background: #fff;
+}
+
+.hg-intro-h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.35;
+  margin-bottom: 20px;
+}
+
+.hg-intro-h1 .highlight {
+  color: #1b4dff; /* match your brand blue */
+}
+
+.hg-intro-text {
+  font-size: 15.5px;
+  color: #4a4a68;
+  line-height: 1.8;
+  margin-bottom: 14px;
+  max-width: 860px;
+}
+
+@media (max-width: 768px) {
+  .hg-intro-section {
+    padding: 32px 0 24px;
+  }
+  .hg-intro-h1 {
+    font-size: 20px;
+  }
+  .hg-intro-text {
+    font-size: 14.5px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 12 — ABOUT SS COACHING HAZRATGANJ
+   Layout: 2 stacked images LEFT  |  text content RIGHT
+══════════════════════════════════════════════════════════════ */
+.hg-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* image column */
+.hg-about-images {
+  width: 100%;
+}
+
+.hg-about-img-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.hg-about-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.09);
+  transition: transform 0.3s ease;
+}
+
+.hg-about-img:hover {
+  transform: scale(1.02);
+}
+
+/* content column */
+.hg-about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hg-about-sub {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1b4dff;
+  margin-bottom: 6px;
+}
+
+.hg-about-content p {
+  font-size: 15px;
+  color: #4a4a68;
+  line-height: 1.8;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .hg-about-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .hg-about-img-wrap {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hg-about-img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hg-about-img-wrap {
+    grid-template-columns: 1fr;
+  }
+  .hg-about-img {
+    height: 200px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 13 — NIOS COACHING FOR 10TH & 12TH
+   Layout: images LEFT (stacked vertically)  |  content RIGHT
+══════════════════════════════════════════════════════════════ */
+.hg-course-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* image column — stacked vertically */
+.hg-course-images {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hg-course-img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.09);
+  transition: transform 0.3s ease;
+}
+
+.hg-course-img:hover {
+  transform: scale(1.02);
+}
+
+/* content column */
+.hg-course-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hg-course-content p {
+  font-size: 15px;
+  color: #4a4a68;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* 10th / 12th highlight blocks */
+.hg-course-block {
+  background: #f0f4ff;
+  border-left: 4px solid #1b4dff;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+}
+
+.hg-course-block h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.hg-course-block p {
+  font-size: 14.5px;
+  color: #4a4a68;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* bullet list */
+.hg-course-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hg-course-list li {
+  font-size: 14.5px;
+  color: #1a1a2e;
+  font-weight: 600;
+  padding-left: 22px;
+  position: relative;
+}
+
+.hg-course-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #1b4dff;
+  font-size: 13px;
+}
+
+@media (max-width: 960px) {
+  .hg-course-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .hg-course-images {
+    flex-direction: row;
+  }
+  .hg-course-img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hg-course-images {
+    flex-direction: column;
+  }
+  .hg-course-img {
+    height: 200px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 14 — WHY STUDENTS CHOOSE US
+   Layout: image LEFT  |  content RIGHT
+══════════════════════════════════════════════════════════════ */
+.hg-choose-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.hg-choose-img-wrap {
+  width: 100%;
+}
+
+.hg-choose-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.10);
+}
+
+.hg-choose-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hg-choose-content p {
+  font-size: 15px;
+  color: #4a4a68;
+  line-height: 1.8;
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .hg-choose-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .hg-choose-img {
+    height: 260px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 15 — ADMISSION PROCESS (5-Step Infographic)
+══════════════════════════════════════════════════════════════ */
+.hg-admit-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* connecting vertical line */
+.hg-admit-steps::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #1b4dff 0%, #e0e7ff 100%);
+  z-index: 0;
+}
+
+.hg-admit-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 0 0 32px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hg-admit-step:last-child {
+  padding-bottom: 0;
+}
+
+/* circle number badge */
+.hg-admit-num {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #1b4dff;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(27, 77, 255, 0.30);
+  position: relative;
+  z-index: 2;
+}
+
+/* alternate colours for visual rhythm */
+.hg-admit-step:nth-child(2) .hg-admit-num { background: #0d9f8f; box-shadow: 0 4px 16px rgba(13,159,143,0.28); }
+.hg-admit-step:nth-child(3) .hg-admit-num { background: #f77f00; box-shadow: 0 4px 16px rgba(247,127,0,0.28); }
+.hg-admit-step:nth-child(4) .hg-admit-num { background: #7c3aed; box-shadow: 0 4px 16px rgba(124,58,237,0.28); }
+.hg-admit-step:nth-child(5) .hg-admit-num { background: #16a34a; box-shadow: 0 4px 16px rgba(22,163,74,0.28); }
+
+.hg-admit-body {
+  padding-top: 12px;
+}
+
+.hg-admit-body h4 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.hg-admit-body p {
+  font-size: 14.5px;
+  color: #4a4a68;
+  line-height: 1.75;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .hg-admit-steps::before {
+    left: 22px;
+  }
+  .hg-admit-num {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+  .hg-admit-step {
+    gap: 16px;
+  }
+  .hg-admit-body h4 {
+    font-size: 15px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 16 — GALLERY (4-image grid)
+══════════════════════════════════════════════════════════════ */
+.hg-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.hg-gallery-item {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+}
+
+.hg-gallery-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.hg-gallery-item:hover .hg-gallery-img {
+  transform: scale(1.06);
+}
+
+/* subtle overlay on hover */
+.hg-gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(27, 77, 255, 0.18) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.hg-gallery-item:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .hg-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hg-gallery-img {
+    height: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hg-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .hg-gallery-img {
+    height: 150px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ABOUT PAGE — INTRO SECTION (AboutUs.jsx - Section 1)
+══════════════════════════════════════════════════════════════ */
+.about-intro-section {
+  padding: 56px 0 40px;
+  background: #fff;
+}
+
+.about-intro-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.35;
+  margin-bottom: 22px;
+}
+
+.about-intro-title .highlight {
+  color: #1b4dff;
+}
+
+.about-intro-text {
+  font-size: 15.5px;
+  color: #4a4a68;
+  line-height: 1.85;
+  margin-bottom: 16px;
+  max-width: 900px;
+}
+
+@media (max-width: 768px) {
+  .about-intro-section {
+    padding: 36px 0 28px;
+  }
+  .about-intro-title {
+    font-size: 22px;
+  }
+  .about-intro-text {
+    font-size: 14.5px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MISSION LIST (AboutUs.jsx - Section 7)
+══════════════════════════════════════════════════════════════ */
+.nios-mission-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nios-mission-list li {
+  font-size: 15px;
+  color: #1a1a2e;
+  font-weight: 600;
+  padding-left: 28px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.nios-mission-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #1b4dff;
+  font-size: 14px;
+  top: 2px;
+}
+
+
+/* ==========================================================================
+   INDIRANAGAR PAGE — Additional / New Section CSS
+   All hg-about-*, hg-course-*, hg-choose-*, hg-admit-*, hg-gallery-*
+   classes are already covered in hazratganj-new-sections.css.
+   This file adds ONLY what is unique to the Indiranagar page.
+   ========================================================================== */
+
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 1B — INTRO HIGHLIGHTS & CTA BUTTONS
+   (used on Indiranagar; can be reused on other branch pages)
+══════════════════════════════════════════════════════════════ */
+
+.hg-intro-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hg-intro-highlights li {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  background: #f0f4ff;
+  border: 1px solid #d0daff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hg-intro-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.hg-intro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.hg-intro-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.hg-intro-btn-primary {
+  background: #1b4dff;
+  color: #fff;
+}
+
+.hg-intro-btn-primary:hover {
+  background: #1340e0;
+  color: #fff;
+}
+
+.hg-intro-btn-outline {
+  background: transparent;
+  color: #1b4dff;
+  border: 2px solid #1b4dff;
+}
+
+.hg-intro-btn-outline:hover {
+  background: #f0f4ff;
+  color: #1b4dff;
+}
+
+@media (max-width: 600px) {
+  .hg-intro-highlights {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hg-intro-ctas {
+    flex-direction: column;
+  }
+  .hg-intro-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 16 — WHO SHOULD JOIN  (3 cards)
+══════════════════════════════════════════════════════════════ */
+
+.hg-who-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.hg-who-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hg-who-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.11);
+}
+
+/* icon circle */
+.hg-who-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.hg-who-icon-blue   { background: #e8eeff; color: #1b4dff; }
+.hg-who-icon-teal   { background: #e6f9f7; color: #0d9f8f; }
+.hg-who-icon-orange { background: #fff3e6; color: #f77f00; }
+
+.hg-who-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.hg-who-card p {
+  font-size: 14.5px;
+  color: #4a4a68;
+  line-height: 1.75;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .hg-who-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .hg-who-card {
+    padding: 24px 18px;
+  }
+}
+
+
+.stream2-info .info-text-group{
+  gap: 0!important;;
+}
+
+
+/* ============================================================
+   SS COACHING — LUCKNOW PAGE STYLES
+   Add this to your global CSS or import as a module.
+   Builds on top of existing hg-page / hg-* classes.
+   ============================================================ */
+
+/* ── PAGE ROOT ── */
+.lko-page {
+  --lko-blue: #1a73e8;
+  --lko-teal: #00897b;
+  --lko-orange: #e65c00;
+  --lko-gold: #f5a623;
+  --lko-bg-off: #f7f9fc;
+  --lko-radius: 16px;
+  --lko-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --lko-shadow-hover: 0 8px 36px rgba(0, 0, 0, 0.14);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ─────────────────────────── INTRO ─────────────────────────── */
+.lko-intro {
+  background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 60%);
+  border-bottom: 1px solid #e3ecf7;
+}
+
+/* ─────────────────────────── ABOUT SECTION ─────────────────────────── */
+.lko-about-section {
+  background: #fff;
+}
+
+.lko-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.lko-about-images {
+  position: relative;
+}
+
+.lko-about-img-wrap {
+  /* used inside hg-about-grid for hazratganj, reuse here too */
+}
+
+.lko-about-img {
+  width: 100%;
+  border-radius: var(--lko-radius);
+  object-fit: cover;
+  box-shadow: var(--lko-shadow);
+}
+
+.lko-img-main {
+  width: 100%;
+  height: 260px;
+  margin-bottom: 12px;
+}
+
+.lko-img-secondary {
+  width: 65%;
+  height: 160px;
+  margin-left: auto;
+  display: block;
+  border: 4px solid #fff;
+  box-shadow: var(--lko-shadow);
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+}
+
+.lko-about-badge {
+  position: absolute;
+  bottom: -16px;
+  left: 16px;
+  background: var(--lko-blue);
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 16px rgba(26, 115, 232, 0.35);
+  text-align: center;
+  z-index: 3;
+}
+
+.lko-about-badge strong {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lko-about-badge span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.lko-about-content {
+  padding-left: 8px;
+}
+
+.lko-tag {
+  display: inline-block;
+  background: #e8f0fe;
+  color: var(--lko-blue);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.lko-about-content p {
+  color: #444;
+  line-height: 1.75;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.lko-about-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.lko-stat {
+  text-align: center;
+}
+
+.lko-stat strong {
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--lko-blue);
+  line-height: 1;
+}
+
+.lko-stat span {
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ─────────────────────────── SUCCESS TAG ─────────────────────────── */
+.lko-success-tag {
+  display: inline-block;
+  background: linear-gradient(90deg, #fff3e0, #ffe0b2);
+  color: #e65c00;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
+.lko-success-text {
+  max-width: 800px;
+  margin: 32px auto 0;
+  text-align: center;
+}
+
+.lko-success-text p {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+/* ─────────────────────────── COMPETITIVE SECTION ─────────────────────────── */
+.lko-comp-section {
+  background: var(--lko-bg-off);
+}
+
+.lko-comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.lko-comp-content p {
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.lko-comp-exams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.lko-exam-pill {
+  background: #fff;
+  border: 2px solid var(--lko-blue);
+  color: var(--lko-blue);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.lko-exam-pill:hover {
+  background: var(--lko-blue);
+  color: #fff;
+}
+
+.lko-comp-visual {
+  position: relative;
+}
+
+.lko-comp-img {
+  width: 100%;
+  border-radius: var(--lko-radius);
+  object-fit: cover;
+  height: 320px;
+  box-shadow: var(--lko-shadow);
+}
+
+.lko-comp-card {
+  position: absolute;
+  bottom: -18px;
+  left: 20px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 18px;
+  box-shadow: var(--lko-shadow-hover);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.lko-comp-card-ico {
+  font-size: 24px;
+}
+
+.lko-comp-card strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+}
+
+.lko-comp-card span {
+  font-size: 12px;
+  color: #777;
+}
+
+/* ─────────────────────────── STREAM CARDS ─────────────────────────── */
+.lko-stream-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.lko-stream-card {
+  border-radius: var(--lko-radius);
+  padding: 28px 24px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.lko-stream-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.lko-stream-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--lko-shadow-hover);
+}
+
+.lko-stream-blue {
+  background: #f0f6ff;
+  border-color: #cce0ff;
+}
+.lko-stream-blue::before { background: var(--lko-blue); }
+
+.lko-stream-teal {
+  background: #e8f8f5;
+  border-color: #b2dfdb;
+}
+.lko-stream-teal::before { background: var(--lko-teal); }
+
+.lko-stream-orange {
+  background: #fff3e0;
+  border-color: #ffe0b2;
+}
+.lko-stream-orange::before { background: var(--lko-orange); }
+
+.lko-str-icon {
+  font-size: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lko-str-icon-blue { background: #dbeafe; }
+.lko-str-icon-teal { background: #ccf2ec; }
+.lko-str-icon-orange { background: #ffe8cc; }
+
+.lko-str-sub {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #888;
+}
+
+.lko-stream-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 2px 0;
+}
+
+.lko-stream-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* ─────────────────────────── LEARNERS SECTION ─────────────────────────── */
+.lko-learners-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.lko-learners-content p {
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.lko-learner-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.lko-learner-tag {
+  background: #f0f6ff;
+  border: 1px solid #cce0ff;
+  color: var(--lko-blue);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+}
+
+.lko-learners-visual {
+  position: relative;
+}
+
+.lko-learners-img {
+  width: 100%;
+  border-radius: var(--lko-radius);
+  object-fit: cover;
+  height: 320px;
+  box-shadow: var(--lko-shadow);
+}
+
+.lko-success-tag-badge {
+  position: absolute;
+  bottom: -18px;
+  right: 16px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 18px;
+  box-shadow: var(--lko-shadow-hover);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 240px;
+}
+
+.lko-success-tag-ico {
+  font-size: 22px;
+}
+
+.lko-success-tag-badge strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.4;
+}
+
+/* ─────────────────────────── BRANCHES SECTION ─────────────────────────── */
+.lko-branches-section {
+  background: var(--lko-bg-off);
+}
+
+.lko-branch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.lko-branch-card {
+  background: #fff;
+  border-radius: var(--lko-radius);
+  padding: 28px 24px;
+  box-shadow: var(--lko-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.lko-branch-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 0 0 var(--lko-radius) var(--lko-radius);
+}
+
+.lko-branch-blue::after { background: var(--lko-blue); }
+.lko-branch-teal::after { background: var(--lko-teal); }
+.lko-branch-orange::after { background: var(--lko-orange); }
+
+.lko-branch-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--lko-shadow-hover);
+}
+
+.lko-branch-blue:hover { border-color: #cce0ff; }
+.lko-branch-teal:hover { border-color: #b2dfdb; }
+.lko-branch-orange:hover { border-color: #ffe0b2; }
+
+.lko-branch-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lko-branch-ico {
+  font-size: 26px;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lko-branch-ico-blue { background: #dbeafe; }
+.lko-branch-ico-teal { background: #ccf2ec; }
+.lko-branch-ico-orange { background: #ffe8cc; }
+
+.lko-branch-top h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.lko-branch-addr,
+.lko-branch-phone {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.lko-branch-pin {
+  margin-top: 3px;
+  flex-shrink: 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.lko-branch-addr p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.lko-branch-phone a {
+  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lko-branch-phone a:hover {
+  color: var(--lko-blue);
+}
+
+.lko-branch-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.lko-branch-btn-blue {
+  background: #e8f0fe;
+  color: var(--lko-blue);
+}
+.lko-branch-btn-blue:hover {
+  background: var(--lko-blue);
+  color: #fff;
+}
+
+.lko-branch-btn-teal {
+  background: #e0f2f1;
+  color: var(--lko-teal);
+}
+.lko-branch-btn-teal:hover {
+  background: var(--lko-teal);
+  color: #fff;
+}
+
+.lko-branch-btn-orange {
+  background: #fff3e0;
+  color: var(--lko-orange);
+}
+.lko-branch-btn-orange:hover {
+  background: var(--lko-orange);
+  color: #fff;
+}
+
+/* ─────────────────────────── OTHER BRANCHES FOOTER STRIP ─────────────────────────── */
+/* Extend the existing .ob / .b-row to handle 3 cards */
+.b-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.b-row .bcard {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ─────────────────────────── RESPONSIVE ─────────────────────────── */
+
+@media (max-width: 1024px) {
+  .lko-stream-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lko-branch-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .lko-about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .lko-img-secondary {
+    margin-top: 12px;
+    width: 100%;
+  }
+  .lko-about-badge {
+    position: static;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .lko-about-badge strong {
+    font-size: 20px;
+  }
+  .lko-about-stats {
+    justify-content: space-around;
+  }
+
+  .lko-comp-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .lko-comp-card {
+    position: static;
+    margin-top: 16px;
+    box-shadow: var(--lko-shadow);
+  }
+
+  .lko-stream-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .lko-learners-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .lko-success-tag-badge {
+    position: static;
+    margin-top: 16px;
+    max-width: 100%;
+  }
+
+  .lko-branch-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .lko-about-content {
+    padding-left: 0;
+  }
+
+  .lko-comp-img,
+  .lko-learners-img {
+    height: 220px;
+  }
+
+  .b-row {
+    flex-direction: column;
+  }
+}

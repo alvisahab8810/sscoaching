@@ -8,8 +8,12 @@ export default function HeroStream34() {
           <div className="hero-stream1-hero-content">
             <div className="hero-stream1-hero-text-group">
               <h1 className="hero-stream1-hero-title">
-                 NIOS Admission 2026 Updates<br/>
-                  On-Demand Examinations of NIOS Stream 3 & 4
+                 
+
+                  NIOS Registration – Complete Guide for<br/> NIOS Admission 2026
+
+
+
               </h1>
               <p className="hero-stream1-hero-subtitle">
                NIOS Admission 2026-27 Stream 3 & 4 For Save Time, Save Year and Pass Quickly<br/>

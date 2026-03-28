@@ -15,9 +15,26 @@ export default function CTA2() {
     style={{ display: "none" }}
   />
         <div className="cta-text">
-          <h2 className="cta-title">Registration open!<br />Limited seats</h2>
-          <p className="cta-subtitle">fill the form before its too late</p>
-          <a href="#" className="cta-btn">Click Here</a>
+          <h2 className="cta-title">Registration Open!<br />Limited Seats Available!</h2>
+          <p className="cta-subtitle">Join SS Coaching and start your journey toward success.
+</p>
+
+<ul className='book-your-links'>
+  <li>
+     <a href="#" className="cta-btn-2nd">
+
+    👉 Book your free counselling session today
+     </a>
+    </li>
+   
+<li>
+  <a href="#" className="cta-btn-2nd">
+ 👉 Get expert guidance for NIOS admission
+ </a>
+
+</li>
+</ul>
+          {/* <a href="#" className="cta-btn">Click Here</a> */}
         </div>
       </div>
 

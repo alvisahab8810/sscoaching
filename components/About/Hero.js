@@ -47,7 +47,14 @@ export default function AboutUsHero() {
 
       
           <p className="about-us-text">
-            Education is the might and potential of any boosting economy. The
+
+            Education is not just about marks—it is about confidence, direction, and building a strong future.<br/>
+I, Sarvesh Sonkar, Founder & Director of SS Coaching, started this institute with a vision to help students who feel stuck or left behind in their academic journey. Through our NIOS Coaching in Lucknow, we provide the right guidance and support so that every student can complete their education with confidence.<br/>
+I have seen many students lose hope after facing failure or academic challenges. But I strongly believe that one setback does not define your future. With the right support, discipline, and guidance, every student has the potential to succeed.<br/>
+At SS Coaching, we are committed to helping students restart their journey and achieve their goals—step by step.<br/>
+Your journey is not over. This is your new beginning.
+
+            {/* Education is the might and potential of any boosting economy. The
             education sector is booming and growing with the need of skilled
             manpower. India being a fully knowledge rich economy, will assuredly
             have an immense demand of highly proficient and skillful in 21st
@@ -65,7 +72,7 @@ export default function AboutUsHero() {
             who have a deep sentiment of accountability and morality and
             competence and engagement with the given tasks. The question then is
             not why you should join the S.S. Coaching, but what you are going to
-            lose if you are still wondering to decide.
+            lose if you are still wondering to decide. */}
           </p>
 
           <p className="about-us-signature">Sarvesh Sonkar . .</p>

@@ -10,9 +10,13 @@ export default function Hero() {
               <span className="nios-125h-senior-highlight">NIOS</span> Secondary
               Subject List
             </h1>
+
+            <h4>NIOS Subjects, Syllabus & Course Material Overview
+</h4>
             <p className="nios-125h-senior-hero-subtitle">
-              OUR SUBJECT LIST FOR NIOS SECONDARY (10th)-  Best NIOS Coaching In
-              Lucknow NIOS Subject List
+              At SS Coaching, we provide complete guidance for students enrolling in NIOS admission, helping them understand subjects, syllabus, and study materials.<br/>
+Whether you are planning for NIOS 10th or 12th admission, understanding the subject structure is the first step toward success.
+
             </p>
           </div>
 
@@ -28,20 +32,24 @@ export default function Hero() {
                NIOS SECONDARY COURSES
               </h2>
               <p className="nios-125h-senior-section-text">
-                This Course is equivalent to the Xth standard. You can choose subjects from the Scheme of Studies given in below Table. However, for your requirement of success., complete a minimum of five subjects with atleast one language or at most two languages, which is compulsory for certification.
-              </p>
+                For students enrolling in Secondary courses, it is important to understand the available subjects before making a decision.<br/>
+The subject structure is designed to build a strong academic foundation and help students continue their education smoothly.
+
+               </p>
             </div>
 
             <div>
               <h2 className="nios-125h-senior-section-title">SCHEME OF STUDIES</h2>
               <p className="nios-125h-senior-section-text">
-                 The Scheme of Studies for Secondary Courses is shown in below Table. For obtaining a pass certificate, you are required to pass in a minimum of five subjects Including one or maximum of two languages from Group 'A'and other three or four subjects from Group (B). However, you are free to take upto two additional subjects. Thus, in all you can choose maximum of seven subtects.
-              </p>
+                Students must pass a minimum of five subjects, including at least one language (maximum two languages).<br/>
+You can choose additional subjects based on your needs, making a total of up to seven subjects. This flexibility allows students to plan their studies effectively.
+
+               </p>
             </div>
           </div>
 
           <a href="tel:9792111121" className="cta-button-gallery cta-button1">
-            For Admission in NIOS and also for the good percentage in NIOS please contact SS Coaching at 9792111121
+           For NIOS admission and better preparation, contact SS Coaching at 9792111121
           </a>
         </div>
       </section>

@@ -8,7 +8,9 @@ export default function HeroStream2() {
           <div className="hero-stream1-hero-content">
             <div className="hero-stream1-hero-text-group">
               <h1 className="hero-stream1-hero-title">
-                NIOS Admission 2026 Updates | NIOS Stream 2 Exam Details <br/> | Get Updated for NIOS Admission Lucknow
+
+                NIOS Admission 2026 – Complete Guide for  <br/>10th & 12th Students
+
               </h1>
            
             </div>

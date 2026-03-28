@@ -8,8 +8,11 @@ export default function HeroStream1() {
           <div className="hero-stream1-hero-content">
             <div className="hero-stream1-hero-text-group">
               <h1 className="hero-stream1-hero-title">
-                NIOS Admission in Lucknow | NIOS Admission for Oct/Nov <br/>2026 Exam
-                Open For 10th And 12th Students
+                {/* NIOS Admission in Lucknow | NIOS Admission for Oct/Nov <br/>2026 Exam
+                Open For 10th And 12th Students */}
+
+                NIOS Admission in Lucknow – Complete Guide for  <br/> 10th & 12th Students
+
               </h1>
               <p className="hero-stream1-hero-subtitle">
                 NIOS Admission In Lucknow 2026-2027 Is Now Open For

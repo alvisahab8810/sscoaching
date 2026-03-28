@@ -11,7 +11,7 @@ export default function StatsSection() {
                 </div>
                 <div className="stat-content">
                 <h3>4.8</h3>
-                <p>Google reviews</p>
+                <p>Google Rating</p>
                 </div>
             </div>
             <div className="stat-item">
@@ -20,7 +20,7 @@ export default function StatsSection() {
                 </div>
                 <div className="stat-content">
                 <h3>100K+</h3>
-                <p>Students passed</p>
+                <p>Students Successfully Guided</p>
                 </div>
             </div>
             <div className="stat-item">
@@ -38,7 +38,7 @@ export default function StatsSection() {
                 </div>
                 <div className="stat-content">
                 <h3>03</h3>
-                <p>Branches</p>
+                <p>Branches in Lucknow</p>
                 </div>
             </div>
             </div>

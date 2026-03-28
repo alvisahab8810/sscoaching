@@ -96,11 +96,7 @@ export default function AdmissionInNiosStream1() {
 
 
                 <p className="hero-stream1-content-text desktop-none">
-                NIOS Admissions are Open for Stream 1 Block-2 Exams which are
-                going to held in Oct/Nov 2026 for those students who wants to
-                appear in NIOS Secondary Exam directly and also wants to appear
-                in NIOS Senior Secondary Exam directly i.e. NIOS 10th and 12th
-                exams by NIOS board.
+               Education is the foundation of a successful future, but not every student’s journey follows the same path. Many students face challenges such as financial constraints, personal issues, academic gaps, or failure in board exams. In such situations, NIOS admission in Lucknow offers a valuable second chance to continue education without pressure.
                 </p>
 
 
@@ -121,55 +117,34 @@ export default function AdmissionInNiosStream1() {
 
             <p className="hero-stream1-content-text desktop-none">
              
-                The final date to apply for Class 10th and class 12th NIOS
-                Admission 2026-27 without incurring a late fee will be updated
-                soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
-                the examination of National Institute of Open Schooling Board
-                (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
-                time and take the NIOS Admission in Lucknow at SS Coaching.
-                Seats are limited. Secure your future with NIOS admission in
-                Lucknow at SS Coaching.
+               The National Institute of Open Schooling (NIOS) is a government-recognized board that provides flexible learning options for students who cannot attend regular schools. It allows learners to complete their 10th and 12th education with freedom in choosing subjects, exam schedules, and study pace. This makes it an ideal choice for working students, dropouts, or those who want to improve their academic performance.
+
               </p>
 
 
 
 
               <p className="hero-stream1-content-text mobile-none">
-                NIOS Admissions are Open for Stream 1 Block-2 Exams which are
-                going to held in Oct/Nov 2026 for those students who wants to
-                appear in NIOS Secondary Exam directly and also wants to appear
-                in NIOS Senior Secondary Exam directly i.e. NIOS 10th and 12th
-                exams by NIOS board.
+                              Education is the foundation of a successful future, but not every student’s journey follows the same path. Many students face challenges such as financial constraints, personal issues, academic gaps, or failure in board exams. In such situations, NIOS admission in Lucknow offers a valuable second chance to continue education without pressure.
+
 
                 
                 <br />
                 <br />
-                The final date to apply for Class 10th and class 12th NIOS
-                Admission 2026-27 without incurring a late fee will be updated
-                soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
-                the examination of National Institute of Open Schooling Board
-                (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
-                time and take the NIOS Admission in Lucknow at SS Coaching.
-                Seats are limited. Secure your future with NIOS admission in
-                Lucknow at SS Coaching.
+               The National Institute of Open Schooling (NIOS) is a government-recognized board that provides flexible learning options for students who cannot attend regular schools. It allows learners to complete their 10th and 12th education with freedom in choosing subjects, exam schedules, and study pace. This makes it an ideal choice for working students, dropouts, or those who want to improve their academic performance.
+
               </p>
 
               <p className="hero-stream1-content-text mobile-none">
-                NIOS Admissions are Open for Stream 1 Block-2 Exams which are
-                going to held in Oct/Nov 2026 for those students who wants to
-                appear in NIOS Secondary Exam directly and also wants to appear
-                in NIOS Senior Secondary Exam directly i.e. NIOS 10th and 12th
-                exams by NIOS board.
+               One of the biggest advantages of NIOS is its student-friendly approach. There is no strict attendance requirement, and students can prepare for exams at their own convenience. Additionally, the certification provided by NIOS is valid for higher education and most government and private jobs, making it a reliable alternative to traditional schooling.
+
                 <br />
                 <br />
-                The final date to apply for Class 10th and class 12th NIOS
-                Admission 2026-27 without incurring a late fee will be updated
-                soon. SS Coaching, NIOS lucknow Centre, helps to prepare you for
-                the examination of National Institute of Open Schooling Board
-                (NIOS) in Stream 1 Block-2 2026. Hurry-Up to save your precious
-                time and take the NIOS Admission in Lucknow at SS Coaching.
-                Seats are limited. Secure your future with NIOS admission in
-                Lucknow at SS Coaching.
+                If you are looking for NIOS 10th 12th Admission in Lucknow, it is important to choose a trusted coaching institute that can guide you through the entire process. From filling out the application form to exam preparation, the right support system can make a big difference in your success.
+               <br />
+                <br />
+
+                In conclusion, NIOS provides a flexible, affordable, and recognized pathway for students to achieve their educational goals. It is a perfect solution for anyone looking to restart or continue their studies with confidence.
               </p>
               <div className="full-btn cta-btn-2nd">
                 <a href="#" className="contact-btn ">
@@ -223,31 +198,27 @@ export default function AdmissionInNiosStream1() {
   className="info-image"
 />
             <div className="info-text-group">
+
+               <h2 className="process-title">
+             NIOS 10th & 12th Admission in 
+
+                <span className="highlight"> Lucknow</span>
+              </h2>
               <p className="info-text">
-                The NIOS is a great step in providing quality education.{" "}
-                <span className="hightlight">
-                  The Govt. of India has vested authority{" "}
-                </span>{" "}
-                with National Institute of Open Schooling (NIOS) to conduct
-                Public Examinations and provide Secondary and Senior Secondary
-                level certificates, which are equivalent to the certificates
-                provided by any other Board. National Institute Of Open
-                Schooling (NIOS) is one of the three National Boards while the
-                other two are CBSE and ICSE. SS Coaching is the best Open
-                Schooling Lucknow platform to qualify NIOS Board in 2026, Get
-                NIOS Admission in Lucknow by SS Coaching and achieve what you
-                want.
+                Students who are unable to complete their regular schooling now have a great opportunity to continue their education through NIOS 10th & 12th Admission in Lucknow. The National Institute of Open Schooling offers a flexible learning system that allows students to choose subjects according to their needs and appear for exams at their convenience.
+ </p>
                 <br />
-                <br />
-                In Stream 1st (Block 2) of NIOS Board, Marksheet, Provisional
-                Certificate, Migration cum Transfer Certificate, and Passing
-                Certificate will be awarded of the year 2026 to successful
-                learners. Learners taking NIOS admission in lucknow through SS
-                Coaching NIOS lucknow centre, under Stream-1 will be attached to
-                the AI (Study Centre) adopted by them at the time of admission
-                and will be eligible for TOC as per conditions are given in NIOS
-                Prospectus.
-              </p>
+                <h5 className="text-dark pt-2">Courses Offered by NIOS</h5>
+              <b className="text-dark">Secondary Course (10th Class) :</b>
+ This course is equivalent to Class 10 and helps students develop a strong academic base for further studies or career opportunities.
+ 
+<br/>
+
+<b className="text-dark">Senior Secondary Course (12th Class)</b>
+ This course is equivalent to Class 12 and gives students the freedom to select subjects based on their career goals and interests.<br/><br/>
+ Both programs are ideal for school dropouts, students who have failed in board exams, working individuals, and those looking for a flexible education system. With proper support and guidance from a Best NIOS Admission Center in Lucknow, students can complete their studies confidently and move ahead toward a better future.
+
+
               <div className="full-btn cta-btn-2nd">
                 <a href="#" className="contact-btn">
                   Contact Us For help
@@ -330,12 +301,8 @@ export default function AdmissionInNiosStream1() {
             How to apply for <span className="highlight"> NIOS Admission?</span>
           </h2>
           <p className="nios-text">
-            The NIOS admission in Lucknow for class 10th (secondary) and class
-            12th (senior secondary) is Now Open for Stream-1 Block-2
-            examinations. All the students who wish to appear for the NIOS for
-            10th & 12th exams in the month of Oct/Nov 2026 Exams and want to
-            give their best in the exams can fill the NIOS Online Admission and
-            for any help regarding admission Contact SS.Coaching
+            TThe NIOS Board Admission Process in Lucknow is simple and student-friendly. However, many students prefer taking guidance from an experienced admission center to ensure everything is done correctly.
+
           </p>
         </div>
       </div>
@@ -346,69 +313,76 @@ export default function AdmissionInNiosStream1() {
             <div className="process-content">
               <h2 className="process-title">
                 Follow points below to apply for the admission for NIOS:-{" "}
-                <span className="highlight"> 3-Step Process</span>
+                <span className="highlight"> 5-Step Process</span>
               </h2>
               <div className="process-steps mobile-none">
-                <div className="process-step">
-                  <div className="step-content">
-                    <p>01- Visit the admission portal of SS Coaching</p>
-                  </div>
-                </div>
+               <div className="process-step">
+  <div className="step-content">
+    <p>01- Counseling & Course Selection – Connect with our experts to choose the right course, subjects, and exam options.</p>
+  </div>
+</div>
 
-                <div className="process-step">
-                  <div className="step-content">
-                    <p>02- Fill in all the details required</p>
-                  </div>
-                </div>
+<div className="process-step">
+  <div className="step-content">
+    <p>02- Document Verification – Submit and verify all required documents before starting your admission process.</p>
+  </div>
+</div>
 
-                <div className="process-step">
-                  <div className="step-content">
-                    <p>03- Upload all the supporting documents</p>
-                  </div>
-                </div>
+<div className="process-step">
+  <div className="step-content">
+    <p>03- Online Registration – We help you fill out your NIOS admission form correctly through the official portal.</p>
+  </div>
+</div>
 
-                <div className="process-step">
-                  <div className="step-content">
-                    <p>04- Save your form for future references</p>
-                  </div>
-                </div>
+<div className="process-step">
+  <div className="step-content">
+    <p>04- Fee Payment – Complete your admission by paying the required NIOS fee based on selected subjects.</p>
+  </div>
+</div>
 
-                <div className="process-step">
-                  <div className="step-content">
-                    <p>05- Click on the ‘Submit’ Button</p>
-                  </div>
-                </div>
+<div className="process-step">
+  <div className="step-content">
+    <p>05- Admission Confirmation – Get confirmation and start your preparation with complete guidance.</p>
+  </div>
+</div>
               </div>
 
               <div className="desktop-none">
               <div className="nios-steps-mobile ">
-                <div className="nios-step">
-                  <span class="nios-bullet"></span>
-                  <p className="nios-step-text">
-                    Visit the admission portal of SS Coaching 
-                    <span class="nios-link-icon">↗</span>
-                  </p>
-                </div>
+               <div className="nios-step">
+  <span className="nios-bullet"></span>
+  <p className="nios-step-text">
+    Counseling & Course Selection – Choose the right course with expert guidance
+  </p>
+</div>
 
-                <div className="nios-step">
-                  <span class="nios-bullet"></span>
-                  <p className="nios-step-text">Fill in all the details required</p>
-                </div>
+<div className="nios-step">
+  <span className="nios-bullet"></span>
+  <p className="nios-step-text">
+    Document Verification – Submit and verify required documents
+  </p>
+</div>
 
-                <div className="nios-step">
-                  <span class="nios-bullet"></span>
-                  <p className="nios-step-text">Upload all the supporting documents</p>
-                </div>
+<div className="nios-step">
+  <span className="nios-bullet"></span>
+  <p className="nios-step-text">
+    Online Registration – Fill admission form through NIOS portal
+  </p>
+</div>
 
-                <div className="nios-step">
-                  <span class="nios-bullet"></span>
-                  <p className="nios-step-text">Save your form for future references</p>
-                </div>
+<div className="nios-step">
+  <span className="nios-bullet"></span>
+  <p className="nios-step-text">
+    Fee Payment – Pay admission fees securely online
+  </p>
+</div>
 
-                <div className="nios-step">
-                  <span class="nios-bullet"></span>
-                  <p className="nios-step-text">Click on the ‘Submit’ Button</p>
-                </div>
+<div className="nios-step">
+  <span className="nios-bullet"></span>
+  <p className="nios-step-text">
+    Admission Confirmation – Start your studies with full support
+  </p>
+</div>
               </div>
               </div>
 
@@ -455,6 +429,10 @@ export default function AdmissionInNiosStream1() {
               />
             </div>
           </div>
+
+          <p className="process-subtitle text-center pt-5">
+  Follow the complete NIOS admission process in Lucknow with expert guidance from SS Coaching.
+</p>
         </div>
       </section>
 
@@ -517,16 +495,8 @@ export default function AdmissionInNiosStream1() {
               <span className="highlight">NIOS?</span>
             </h2>
             <p className="why-nios-text">
-              We have seen many students who are not good in many subjects. They
-              get poor marks or fail in their board exams and get easily
-              distracted in life. These students lose all hope in life in the
-              field of education. Here NIOS board came as blessings in life as
-              this NIOS gives any student a second chance to qualify their board
-              exams without wasting the whole year.
-              <br />
-              In the NIOS Board, you can appear for a few subjects in the first
-              half of the year and for the remaining subjects in the next half
-              of the session.
+              Enrolling in the National Institute of Open Schooling is a smart choice for students who need flexibility in their education. It allows you to complete your 10th or 12th without the pressure of regular school schedules. Students can choose subjects as per their interests and appear for exams at their convenience. NIOS is a government-recognized board, making its certification valid for higher education and jobs. For students looking for NIOS Admission in Lucknow, it provides a second chance to continue education smoothly and build a better future with confidence and success.
+
             </p>
           </div>
 
@@ -686,40 +656,34 @@ export default function AdmissionInNiosStream1() {
       <div className="container">
         <div className="why-nios-section">
           <h2 className="why-nios-title">
-            <span className="highlight">Why SS Coaching</span> for NIOS Exam?{" "}
+            <span className="highlight">
+              
+Why Choose the Best NIOS Admission Center in 
+
+              </span> Lucknow for Your Education?{" "}
           </h2>
           <p className="why-nios-text">
-            SS Coaching is the best NIOS coaching lucknow that will help failed
-            students to clear secondary and senior secondary exams. NIOS board
-            passed students can comfortably appear for the competitive exams
-            like IIT-JEE, AIEEE, PMT (NEET), CA, CS, ICWA, CLAT, and other more
-            professional completive exams. SS coaching will help you to pass
-            exams through the NIOS board which is equivalent to the other boards
-            like ICSE or CBSE. Don't waste you time on regreting and get NIOS
-            Admission in Lucknow with SS Coaching Now!!!
+            Choosing the right institute is one of the most important steps for students who want to continue their studies through open schooling. A Best NIOS Admission Center in Lucknow not only helps with admission but also provides complete academic support to ensure student success.
+
             <br />
             <br />
-            <b> Expert Faculty:</b> Our teachers know the NIOS syllabus and exam
-            patterns. They'll provide clear explanations, and regular
-            doubt-clearing sessions, and help you master the concepts for
-            optimal performance.
+            <b> Proper Admission Guidance:</b> 
+            A professional institute provides clear and accurate information about courses, eligibility criteria, and required documents. This helps students avoid confusion and complete their admission process without any mistakes.
+
+        
             <br />
             <br />
-            <b> Personalized Study Plans:</b> We understand that each student
-            has unique needs. Our team will work with you to create a study plan
-            tailored to your strengths, weaknesses, and learning pace,
-            maximizing your chances of success. <br />
+            <b> Expert Teachers:</b> Experienced and qualified teachers play a key role in a student’s learning journey. They simplify difficult concepts and provide personalized attention, making it easier for students to understand subjects effectively.<br />
             <br />
-            <b>Proven Results:</b> SS Coaching has a strong history of helping
-            students excel in their NIOS exams. Our alumni have secured
-            impressive scores and gained admission to reputable higher education
-            institutions. <br /> <br />
-            <b>Convenient Location:</b> Our coaching center is strategically
-            located in Alambagh, Hazratganj, Indira Nagar making it easily
-            accessible for students from all parts of the city.
+            <b>Complete Study Support:</b> 
+            A good NIOS center offers comprehensive study support, including updated study material, regular classes, doubt-solving sessions, and exam preparation guidance. This ensures that students are fully prepared for their exams.
+             <br /> <br />
+            <b>Easy Admission Process:</b> The NIOS Board Admission Process in Lucknow becomes smooth and hassle-free with the help of a trusted institute. From filling out the application form to submitting documents, everything is handled efficiently.
             <br /> <br />
-            SS Coaching is renowned for NIOS Admission in Lucknow providing
-            information about NIOS board{" "}
+            <b>Student-Friendly Environment:</b>
+            A supportive and motivating environment is essential for student success. Institutes provide personal attention, encouragement, and guidance, helping students stay focused and confident throughout their studies.<br/><br/>
+In conclusion, choosing a reliable institute for NIOS admission in Lucknow ensures that students receive the right guidance, quality education, and continuous support to achieve their academic goals successfully.
+
             <span>
               <a
                 className="link-here"

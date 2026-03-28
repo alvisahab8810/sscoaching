@@ -7,6 +7,7 @@ import CTA3 from "@/components/home/CTA3";
 import Popup from "@/components/home/Popup";
 import { FaWhatsapp } from "react-icons/fa";
 import Head from "next/head";
+import ContactFaqs from "@/components/contacts/ContactFaqs";
 
 export default function ContactUs() {
   return (
@@ -193,6 +194,10 @@ export default function ContactUs() {
             </div>
           </div>
         </section>
+
+
+      <ContactFaqs/>
+
 
         <div className="footer-park">
           <div className="container">

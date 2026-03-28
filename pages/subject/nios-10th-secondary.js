@@ -35,6 +35,85 @@ export default function SyllabusClass12th() {
         
         <Hero />
 
+
+    <section className="nios-12th-senior-hero-section">
+      <div className="container">
+
+        <div className="nios-125h-senior-text">
+          <h2 className="nios-125h-senior-hero-title">
+            Subject, Syllabus & Study Material Overview
+          </h2>
+
+          <p className="nios-125h-senior-hero-subtitle">
+            Understanding subjects, syllabus, and study materials is essential for success in NIOS.  <br/>
+            Explore the sections below to make informed decisions for your academic journey.
+          </p>
+        </div>
+
+        <div className="nios-125h-senior-content-section pt-0 pb-4">
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Subject List Class 10th
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              For students enrolling in Secondary courses, understanding available subjects is essential.  
+              Explore all subjects and choose the right combination based on your goals.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Subject List Class 12th
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              Subject selection plays a key role in career planning.  
+              NIOS offers flexibility to choose subjects based on interests and future goals.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Syllabus Class 10th
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              Understanding the syllabus helps students focus on important topics and prepare effectively for exams.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Syllabus Class 12th
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              A clear syllabus helps students stay on track and prepare confidently for their exams.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Secondary Course Material
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              Study material is essential for understanding concepts and scoring well.  
+              Access complete resources for 10th class preparation.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="nios-125h-senior-section-title">
+              Sr Secondary Course Material
+            </h3>
+            <p className="nios-125h-senior-section-text">
+              Proper study material improves understanding and exam performance for 12th students.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
         <SubjectScheme10th />
 
         <section className="notes-section">
@@ -54,6 +133,31 @@ export default function SyllabusClass12th() {
             </p>
           </div>
         </section>
+
+
+    <section className="nios-12th-senior-hero-section">
+      <div className="container">
+
+        <div className="nios-125h-senior-text">
+          <h2 className="nios-125h-senior-hero-title">
+            Start Your Learning Journey with SS Coaching
+          </h2>
+
+          <p className="nios-125h-senior-hero-subtitle">
+            At SS Coaching, we make your NIOS admission journey simple and structured.  
+            From subject selection to syllabus and study materials, we guide you at every step.
+            <br /><br />
+            Explore the sections above and take the next step toward completing your education with confidence.
+          </p>
+        </div>
+
+        <a href="tel:9792111121" className="cta-button-gallery cta-button1">
+          Call Now for NIOS Admission Guidance
+        </a>
+
+      </div>
+    </section>
+
 
         <div className="footer-park">
           <div className="container">
