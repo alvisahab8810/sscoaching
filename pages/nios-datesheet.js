@@ -7,7 +7,14 @@ import Head from "next/head";
 
 export default function NIOSDatesheet2026() {
   const handlePrint = () => {
-    window.print();
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = "/assets/nios-theory-examination-date-sheet.pdf";
+    document.body.appendChild(iframe);
+    iframe.onload = () => {
+      iframe.contentWindow.print();
+      setTimeout(() => document.body.removeChild(iframe), 1000);
+    };
   };
 
   return (
@@ -69,7 +76,7 @@ export default function NIOSDatesheet2026() {
             {/* ===== Download & Print Buttons ===== */}
             <div className=" no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
               <a
-                href="https://drive.google.com/file/d/1otZUcs3kUy6-4rp2mF4t2fuCXRYQmu5m/view?usp=sharing"
+                href="/assets/nios-theory-examination-date-sheet.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -149,7 +156,7 @@ export default function NIOSDatesheet2026() {
             {/* ===== Download & Print Buttons ===== */}
             <div className=" no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
               <a
-                href="https://drive.google.com/file/d/1otZUcs3kUy6-4rp2mF4t2fuCXRYQmu5m/view?usp=sharing"
+                href="/assets/nios-theory-examination-date-sheet.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -667,7 +674,7 @@ export default function NIOSDatesheet2026() {
             {/* ===== Bottom Download & Print Buttons ===== */}
             <div className="no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
               <a
-                href="https://drive.google.com/file/d/1otZUcs3kUy6-4rp2mF4t2fuCXRYQmu5m/view?usp=sharing"
+                href="/assets/nios-theory-examination-date-sheet.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

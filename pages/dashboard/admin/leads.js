@@ -222,10 +222,10 @@ export default function Leads() {
                     <tr>
                       <th>#</th>
                       <th>Name</th>
-                      <th>Email</th>
+                      {/* <th>Email</th> */}
                       <th>Phone</th>
-                      {/* <th>City</th> */}
-                      {/* <th>Looking For</th> */}
+                      <th>City</th>
+                      <th>Looking For</th>
                       <th>Form</th>
                       <th>Date</th>
                       <th>Action</th>
@@ -237,10 +237,10 @@ export default function Leads() {
                       <tr key={lead._id}>
                         <td>{(page - 1) * limit + i + 1}</td>
                         <td>{lead.fullName}</td>
-                        <td>{lead.email}</td>
+                        {/* <td>{lead.email}</td> */}
                         <td>{lead.phone}</td>
-                        {/* <td>{lead.city}</td> */}
-                        {/* <td>{lead.lookingFor}</td> */}
+                        <td>{lead.city}</td>
+                        <td>{lead.lookingFor}</td>
 
                         <td>
                           <span

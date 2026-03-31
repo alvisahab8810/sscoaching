@@ -8,10 +8,10 @@ export default function Popup() {
 
   const [form, setForm] = useState({
     fullName: "",
-    email: "",        // hidden for now
+    // email: "",        // hidden for now
     phone: "",
-    // lookingFor: "",   // hidden for now
-    // city: "",         // hidden for now
+    lookingFor: "",
+    city: "",
     formType: "popup"
   });
 
@@ -22,7 +22,7 @@ export default function Popup() {
   const handleClose = () => setShowPopup(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(true), 5000);
+    const timer = setTimeout(() => setShowPopup(true), 15000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -46,10 +46,10 @@ export default function Popup() {
     // email, lookingFor, city are commented out but kept in model for future
     const payload = {
       fullName: form.fullName,
-      email: form.email,          // sending empty string so model doesn't break
+      email: "",                  // hidden field, sending empty string
       phone: form.phone,
-      lookingFor: "",     // sending empty string so model doesn't break
-      city: "",           // sending empty string so model doesn't break
+      lookingFor: form.lookingFor,
+      city: form.city,
       formType: form.formType,
     };
 
@@ -66,10 +66,10 @@ export default function Popup() {
       setShowPopup(false);
       setForm({
         fullName: "",
-        email: "",
+        // email: "",
         phone: "",
-        // lookingFor: "",
-        // city: "",
+        lookingFor: "",
+        city: "",
         formType: "popup",
       });
     } else {
@@ -110,14 +110,14 @@ export default function Popup() {
                 />
 
                 {/* ❌ HIDDEN: Email — commented out, not removed */}
-                <input
+                {/* <input
                   type="email"
                   name="email"
                   placeholder="Email"
                   value={form.email}
                   onChange={handleChange}
                   required
-                />
+                /> */}
 
                 {/* ✅ VISIBLE: Phone */}
                 <input
@@ -129,25 +129,25 @@ export default function Popup() {
                   required
                 />
 
-                {/* ❌ HIDDEN: Looking For — commented out, not removed */}
-                {/* <input
+                {/* ✅ VISIBLE: Looking For */}
+                <input
                   type="text"
                   name="lookingFor"
                   placeholder="What are you looking for?"
                   value={form.lookingFor}
                   onChange={handleChange}
                   required
-                /> */}
+                />
 
-                {/* ❌ HIDDEN: City — commented out, not removed */}
-                {/* <input
+                {/* ✅ VISIBLE: City */}
+                <input
                   type="text"
                   name="city"
                   placeholder="City"
                   value={form.city}
                   onChange={handleChange}
                   required
-                /> */}
+                />
 
                 <button type="submit" disabled={loading}>
                   {loading ? "Submitting..." : "SUBMIT"}

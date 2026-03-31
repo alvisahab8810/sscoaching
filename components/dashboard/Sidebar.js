@@ -297,7 +297,9 @@ export default function Sidebar() {
     Announcements
   </Link>
 </li>
-<li style={styles.navItem}>
+
+
+{/* <li style={styles.navItem}>
 
 <Link href="/dashboard/admin/invoices">Invoices</Link>
 </li>
@@ -307,7 +309,7 @@ export default function Sidebar() {
 <Link href="/dashboard/admin/enrollments">
    Enrollments
 </Link>
-</li>
+</li> */}
 
       </ul>
 

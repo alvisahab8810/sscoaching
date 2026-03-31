@@ -22,7 +22,7 @@ import mongoose from "mongoose";
 const PopupFormSchema = new mongoose.Schema(
   {
     fullName:   { type: String, required: true },
-    email:      { type: String, required: true},   // hidden in form for now
+    email:      { type: String, required: false, default: "" },   // hidden in form for now
     phone:      { type: String, required: true },
     lookingFor: { type: String, required: false, default: "" },   // hidden in form for now
     city:       { type: String, required: false, default: "" },   // hidden in form for now
