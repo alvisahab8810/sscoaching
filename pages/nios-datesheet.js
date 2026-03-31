@@ -4,17 +4,27 @@ import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import FAQ from "@/components/home/FAQ";
 import Head from "next/head";
+import { useEffect, useRef } from "react";
 
 export default function NIOSDatesheet2026() {
-  const handlePrint = () => {
+  const pdfIframeRef = useRef(null);
+
+  useEffect(() => {
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
     iframe.src = "/assets/nios-theory-examination-date-sheet.pdf";
     document.body.appendChild(iframe);
-    iframe.onload = () => {
-      iframe.contentWindow.print();
-      setTimeout(() => document.body.removeChild(iframe), 1000);
+    pdfIframeRef.current = iframe;
+    return () => {
+      if (iframe.parentNode) document.body.removeChild(iframe);
     };
+  }, []);
+
+  const handlePrint = () => {
+    const iframe = pdfIframeRef.current;
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.print();
+    }
   };
 
   return (

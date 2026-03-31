@@ -87,7 +87,7 @@ export default function QueryForm() {
 
   const [form, setForm] = useState({
     fullName: "",
-    email: "",
+    // email: "",   // hidden for now
     phone: "",
     city: "",
     lookingFor: "",
@@ -102,9 +102,18 @@ export default function QueryForm() {
     e.preventDefault();
     setLoading(true);
 
+    const payload = {
+      fullName: form.fullName,
+      email: "",          // hidden field, sending empty string
+      phone: form.phone,
+      city: form.city,
+      lookingFor: form.lookingFor,
+      formType: form.formType,
+    };
+
     const response = await fetch("/api/popup", {
       method: "POST",
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
@@ -114,7 +123,7 @@ export default function QueryForm() {
       toast.success("Query submitted successfully!");
       setForm({
         fullName: "",
-        email: "",
+        // email: "",
         phone: "",
         city: "",
         lookingFor: "",
@@ -159,7 +168,8 @@ export default function QueryForm() {
             />
           </div>
 
-          <div className="mb-2">
+          {/* ❌ HIDDEN: Email — commented out, not removed */}
+          {/* <div className="mb-2">
             <input
               type="email"
               className="form-control custom-input"
@@ -169,7 +179,7 @@ export default function QueryForm() {
               onChange={handleChange}
               required
             />
-          </div>
+          </div> */}
 
           <div className="mb-2 input-group">
             <input
