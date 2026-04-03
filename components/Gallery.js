@@ -1,235 +1,237 @@
-// import React from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 
-// const Gallery = () => {
-//   const images = [
-//     // Box 1
-//     { src: "/assets/images/gallery/gallery1.png", alt: "Teacher at desk in S.S Coaching" },
-//     { src: "/assets/images/gallery/gallery4.png", alt: "Classroom view with students" },
-//     { src: "/assets/images/gallery/gallery5.png", alt: "Students attending a lecture" },
-//     { src: "/assets/images/gallery/gallery7.png", alt: "Group discussion at S.S Coaching" },
-
-//     // Box 2
-//     { src: "/assets/images/gallery/gallery2.png", alt: "Coaching office interior" },
-//     { src: "/assets/images/gallery/gallery3.png", alt: "Teachers and staff photo" },
-//     { src: "/assets/images/gallery/gallery9.png", alt: "Lecture in progress" },
-//     { src: "/assets/images/gallery/gallery8.png", alt: "Teacher at office desk" },
-//     { src: "/assets/images/gallery/gallery6.png", alt: "Students group photo" },
-//   ];
-
-//   return (
-//     <>
-//       <div className="gallery-main">
-//         {/* BOX 1 */}
-//         <div className="gallery-box box-1">
-//           <div className="top-full">
-//             <img src={images[0].src} alt={images[0].alt} />
-//           </div>
-
-//           <div className="bottom-grid">
-//             <div className="left-column">
-//               <div className="half"><img src={images[1].src} alt={images[1].alt} /></div>
-//               <div className="half"><img src={images[2].src} alt={images[2].alt} /></div>
-//             </div>
-//             <div className="right-column">
-//               <img src={images[3].src} alt={images[3].alt} />
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* BOX 2 */}
-//         <div className="gallery-box box-2">
-//           <div className="top-row">
-//             <img src={images[4].src} alt={images[4].alt} />
-//             <img src={images[5].src} alt={images[5].alt} />
-//           </div>
-//           <div className="middle-full">
-//             <img src={images[6].src} alt={images[6].alt} />
-//           </div>
-//           <div className="bottom-row">
-//             <img src={images[7].src} alt={images[7].alt} />
-//             <img src={images[8].src} alt={images[8].alt} />
-//           </div>
-//         </div>
-//       </div>
-
-//       <style jsx>{`
-//         .gallery-main {
-//           display: grid;
-//           grid-template-columns: 1fr 1fr;
-//           gap: 25px;
-//           max-width: 1200px;
-//           margin: 0 auto;
-//           padding: 20px;
-//         }
-
-//         .gallery-box {
-//           display: grid;
-//           gap: 16px;
-//         }
-
-//         img {
-//           width: 100%;
-//           height: 100%;
-//           object-fit: cover;
-//           border-radius: 12px;
-//           display: block;
-//         }
-
-//         /* --- BOX 1 --- */
-//         .box-1 .top-full {
-//           height: 280px;
-//           overflow: hidden;
-//         }
-
-//         .box-1 .bottom-grid {
-//           display: grid;
-//           grid-template-columns: 1fr 1fr;
-//           gap: 12px;
-//           height: 420px; /* ensures both columns equal */
-//         }
-
-//         .box-1 .left-column {
-//           display: grid;
-//           grid-template-rows: 1fr 1fr;
-//           gap: 12px;
-//           height: 100%;
-//         }
-
-//         .box-1 .left-column .half,
-//         .box-1 .right-column {
-//           overflow: hidden;
-//         }
-
-//         .box-1 .right-column img {
-//           height: 100%;
-//         }
-
-//         /* --- BOX 2 --- */
-//         .box-2 .top-row,
-//         .box-2 .bottom-row {
-//           display: grid;
-//           grid-template-columns: 1fr 1fr;
-//           gap: 12px;
-//           height: 280px;
-//           overflow: hidden;
-//         }
-
-//         .box-2 .middle-full {
-//           height: 420px;
-//           overflow: hidden;
-//         }
-
-//         /* --- RESPONSIVE --- */
-//         @media (max-width: 900px) {
-//           .gallery-main {
-//             grid-template-columns: 1fr;
-//           }
-
-//           .box-1 .top-full,
-//           .box-2 .middle-full {
-//             height: 220px;
-//           }
-
-//           .box-1 .bottom-grid,
-//           .box-2 .top-row,
-//           .box-2 .bottom-row {
-//             grid-template-columns: 1fr;
-//             height: auto;
-//           }
-//         }
-//       `}</style>
-//     </>
-//   );
-// };
-
-// export default Gallery;
-
-
-
-import React from 'react';
+const allImages = [
+  '/assets/images/gallery/gallery1.png',
+  '/assets/images/gallery/gallery4.png',
+  '/assets/images/gallery/gallery5.png',
+  '/assets/images/gallery/gallery7.png',
+  '/assets/images/gallery/gallery2.png',
+  '/assets/images/gallery/gallery3.png',
+  '/assets/images/gallery/gallery9.png',
+  '/assets/images/gallery/gallery6.png',
+  '/assets/images/gallery/gallery8.png',
+  '/assets/images/gallery/g1.png',
+  '/assets/images/gallery/g9.png',
+  '/assets/images/gallery/g3.png',
+  '/assets/images/gallery/g4.png',
+  '/assets/images/gallery/g5.png',
+  '/assets/images/gallery/g2.png',
+];
 
 export default function PhotoGallery() {
+  const [lightbox, setLightbox] = useState(null); // index into allImages
+
+  const openLightbox = useCallback((src) => {
+    const idx = allImages.indexOf(src);
+    setLightbox(idx !== -1 ? idx : 0);
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  const showPrev = useCallback((e) => {
+    e.stopPropagation();
+    setLightbox((i) => (i - 1 + allImages.length) % allImages.length);
+  }, []);
+
+  const showNext = useCallback((e) => {
+    e.stopPropagation();
+    setLightbox((i) => (i + 1) % allImages.length);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (lightbox === null) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') setLightbox((i) => (i - 1 + allImages.length) % allImages.length);
+      if (e.key === 'ArrowRight') setLightbox((i) => (i + 1) % allImages.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightbox, closeLightbox]);
+
+  // Lock body scroll when lightbox open
+  useEffect(() => {
+    document.body.style.overflow = lightbox !== null ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [lightbox]);
+
+  const imgProps = (src) => ({
+    src,
+    onClick: () => openLightbox(src),
+    style: { cursor: 'zoom-in' },
+  });
+
   return (
-    <div className="photo-gallery-container">
+    <>
+      <div className="photo-gallery-container">
 
-      <div className='gallery-row-area mb-5'>
-         <div className='gallery-first-row'>
+        <div className='gallery-row-area mb-5'>
+          <div className='gallery-first-row'>
             <div className='firs-g-img'>
-               <img src='/assets/images/gallery/gallery1.png'></img>
+              <img {...imgProps('/assets/images/gallery/gallery1.png')} />
             </div>
-
             <div className='gallery-items-row'>
-                <div>
-                  <img src='/assets/images/gallery/gallery4.png'></img>
-                   <img src='/assets/images/gallery/gallery5.png'></img>
-
-                </div>
-                <div>
-                  <img src='/assets/images/gallery/gallery7.png'></img>
-
-                </div>
-
+              <div>
+                <img {...imgProps('/assets/images/gallery/gallery4.png')} />
+                <img {...imgProps('/assets/images/gallery/gallery5.png')} />
+              </div>
+              <div>
+                <img {...imgProps('/assets/images/gallery/gallery7.png')} />
+              </div>
             </div>
-         </div>
-           <div className='gallery-2nd-row'>
-             <div className='second-g-img'>
-                 <img src='/assets/images/gallery/gallery2.png'></img>
-                   <img src='/assets/images/gallery/gallery3.png'></img>
-
-             </div>
-
-              <div className='second-large-img'>
-               <img src='/assets/images/gallery/gallery9.png'></img>
+          </div>
+          <div className='gallery-2nd-row'>
+            <div className='second-g-img'>
+              <img {...imgProps('/assets/images/gallery/gallery2.png')} />
+              <img {...imgProps('/assets/images/gallery/gallery3.png')} />
             </div>
+            <div className='second-large-img'>
+              <img {...imgProps('/assets/images/gallery/gallery9.png')} />
+            </div>
+            <div className='second-g-img'>
+              <img {...imgProps('/assets/images/gallery/gallery6.png')} />
+              <img {...imgProps('/assets/images/gallery/gallery8.png')} />
+            </div>
+          </div>
+        </div>
 
-             <div className='second-g-img'>
-                 <img src='/assets/images/gallery/gallery6.png'></img>
-                   <img src='/assets/images/gallery/gallery8.png'></img>
+        <div className='gallery-row-area'>
+          <div className='gallery-first-row'>
+            <div className='firs-g-img'>
+              <img {...imgProps('/assets/images/gallery/g1.png')} />
+            </div>
+            <div className='gallery-items-row'>
+              <div>
+                <img {...imgProps('/assets/images/gallery/g9.png')} />
+                <img {...imgProps('/assets/images/gallery/g3.png')} />
+              </div>
+              <div>
+                <img {...imgProps('/assets/images/gallery/g4.png')} />
+              </div>
+            </div>
+          </div>
+          <div className='gallery-2nd-row'>
+            <div className='second-g-img'>
+              <img {...imgProps('/assets/images/gallery/g5.png')} />
+              <img {...imgProps('/assets/images/gallery/g2.png')} />
+            </div>
+            <div className='second-g-img'></div>
+          </div>
+        </div>
 
-             </div>
-         </div>
       </div>
 
-          <div className='gallery-row-area'>
-         <div className='gallery-first-row'>
-            <div className='firs-g-img'>
-               <img src='/assets/images/gallery/g1.png'></img>
-            </div>
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div className="gallery-lightbox-overlay" onClick={closeLightbox}>
+          <button className="gallery-lb-close" onClick={closeLightbox} aria-label="Close">&#x2715;</button>
+          <button className="gallery-lb-arrow gallery-lb-prev" onClick={showPrev} aria-label="Previous">&#8249;</button>
+          <img
+            className="gallery-lb-img"
+            src={allImages[lightbox]}
+            alt="Gallery preview"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className="gallery-lb-arrow gallery-lb-next" onClick={showNext} aria-label="Next">&#8250;</button>
+          <div className="gallery-lb-counter">{lightbox + 1} / {allImages.length}</div>
+        </div>
+      )}
 
-            <div className='gallery-items-row'>
-                <div>
-                  <img src='/assets/images/gallery/g9.png'></img>
-                   <img src='/assets/images/gallery/g3.png'></img>
+      <style jsx global>{`
+        .gallery-lightbox-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          background: rgba(0, 0, 0, 0.92);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px;
+          animation: lb-fade 0.2s ease;
+        }
 
-                </div>
-                <div>
-                  <img src='/assets/images/gallery/g4.png'></img>
+        @keyframes lb-fade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
 
-                </div>
+        .gallery-lb-img {
+          max-width: 90vw;
+          max-height: 88vh;
+          object-fit: contain;
+          border-radius: 8px;
+          box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+          animation: lb-zoom 0.2s ease;
+          cursor: default;
+        }
 
-            </div>
-         </div>
-           <div className='gallery-2nd-row'>
-             <div className='second-g-img'>
-                 <img src='/assets/images/gallery/g5.png'></img>
-                   <img src='/assets/images/gallery/g2.png'></img>
+        @keyframes lb-zoom {
+          from { transform: scale(0.92); opacity: 0; }
+          to   { transform: scale(1);    opacity: 1; }
+        }
 
-             </div>
-{/* 
-              <div className='second-large-img'>
-               <img src='/assets/images/gallery/g7.png'></img>
-            </div> */}
+        .gallery-lb-close {
+          position: fixed;
+          top: 16px;
+          right: 20px;
+          background: rgba(255,255,255,0.15);
+          border: none;
+          color: #fff;
+          font-size: 26px;
+          line-height: 1;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s;
+          z-index: 10000;
+        }
+        .gallery-lb-close:hover { background: rgba(255,255,255,0.3); }
 
-             <div className='second-g-img'>
-                 {/* <img src='/assets/images/gallery/g8.png'></img> */}
-                   {/* <img src='/assets/images/gallery/g9.png'></img> */}
+        .gallery-lb-arrow {
+          position: fixed;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255,255,255,0.15);
+          border: none;
+          color: #fff;
+          font-size: 48px;
+          line-height: 1;
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s;
+          z-index: 10000;
+          user-select: none;
+        }
+        .gallery-lb-arrow:hover { background: rgba(255,255,255,0.3); }
+        .gallery-lb-prev { left: 12px; }
+        .gallery-lb-next { right: 12px; }
 
-             </div>
-         </div>
-      </div>
+        .gallery-lb-counter {
+          position: fixed;
+          bottom: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: rgba(255,255,255,0.7);
+          font-size: 14px;
+          letter-spacing: 1px;
+        }
 
-      
-
-     </div>
+        @media (max-width: 600px) {
+          .gallery-lb-arrow { width: 40px; height: 40px; font-size: 36px; }
+          .gallery-lb-prev { left: 4px; }
+          .gallery-lb-next { right: 4px; }
+          .gallery-lb-img { max-width: 96vw; max-height: 80vh; }
+        }
+      `}</style>
+    </>
   );
 }

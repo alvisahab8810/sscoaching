@@ -1898,14 +1898,15 @@ span.highlight {
 /* Card styling */
 .filtercards-card {
   flex: 1;
-  /* min-width: 300px; */
-  max-width: 33.33%;
+  min-width: 180px;
+  max-width: calc(33.33% - 11px);
   border-radius: 16px;
   padding: 20px 24px;
   position: relative;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: visible;
+  box-sizing: border-box;
 }
 
 .filtercards-card:hover {
@@ -2063,6 +2064,9 @@ span.highlight {
   gap: 26px;
   position: relative;
   justify-content: center;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .sample-badge {
@@ -2083,6 +2087,8 @@ span.highlight {
   text-align: center;
   padding: 0 10px;
   margin-top: 8px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .paper-details {
@@ -2097,6 +2103,9 @@ span.highlight {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .meta-item {
@@ -2311,7 +2320,9 @@ button:hover,
   }
 
   .sort-dropdown {
-    width: 22%;
+    width: auto;
+    min-width: 140px;
+    flex-shrink: 0;
   }
 
   .papers-grid {
@@ -2365,13 +2376,17 @@ button:hover,
 
 }
 
+@media (min-width: 900px) {
+  .papers-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
 @media (min-width: 1024px) {
 
-
-
-
   .papers-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .section-text {
@@ -2389,8 +2404,13 @@ button:hover,
     font-size: 36px;
   }
 
+}
 
-
+@media (min-width: 1280px) {
+  .papers-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
 }
 
 
