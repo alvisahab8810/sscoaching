@@ -30,6 +30,18 @@ export default function NIOSHallTicket2025() {
               NIOS Hall Ticket 2025 Sep/Oct Exams For Class 10th & 12th | NIOS Admit Card 2025 Direct Download Link!!!
             </h1>
 
+
+            
+          <div className="d-flex gap-2 top-row-tabs">
+              <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
+              Direct Link for NIOS Hall Ticket class 10th
+            </a>
+
+              <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
+              Direct Link for NIOS Hall Ticket class 12th
+            </a>
+          </div>
+
               <p>
                 The National Institute of Open Schooling (NIOS) Board of Education  have releaseed the NIOS Hall Ticket for the Sep/Oct 2025 Exams. Candidates preparing for the NIOS Class 10 and 12 theory exams can download NIOS Admit Cards for 2025 by accessing the official website below.
               </p>

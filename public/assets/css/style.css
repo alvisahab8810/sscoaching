@@ -10553,4 +10553,12 @@ display:block;
   .b-row {
     flex-direction: column;
   }
+
+    .top-row-tabs > a {
+        font-size: 12px !important;
+        margin: 8px 5px;
+        padding: 7px;
+    }
 }
+
+
