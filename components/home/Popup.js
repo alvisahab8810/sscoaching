@@ -89,64 +89,55 @@ export default function Popup() {
             <div className="form-container">
               <div className="form-header">
                 <div className="overlay">
-                  <h1>
-                    Registration open!
-                    <br /> Limited seats
-                  </h1>
-                  <p>Fill the form before it's too late</p>
+                  <p className="overlay-tag">Failed in 10th or 12th?</p>
+                  <h1>Turn your setback into a<br/>  comeback with SS Coaching.</h1>
+                  <p>Expert support, easy NIOS process &amp; full guidance.</p>
                 </div>
               </div>
 
               <form className="form-body" onSubmit={handleSubmit}>
 
                 {/* ✅ VISIBLE: Name */}
+                <label className="field-label">Full Name <span className="req">*</span></label>
                 <input
                   type="text"
                   name="fullName"
-                  placeholder="Full name"
+                  placeholder="Enter your full name"
                   value={form.fullName}
                   onChange={handleChange}
                   required
                 />
 
-                {/* ❌ HIDDEN: Email — commented out, not removed */}
-                {/* <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                /> */}
-
                 {/* ✅ VISIBLE: Phone */}
+                <label className="field-label">Phone Number <span className="req">*</span></label>
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Phone No."
+                  placeholder="Enter 10-digit mobile number"
                   value={form.phone}
                   onChange={handleChange}
                   required
                 />
 
                 {/* ✅ VISIBLE: Looking For */}
+                <label className="field-label">What are you looking for? <span className="req">*</span></label>
                 <input
                   type="text"
                   name="lookingFor"
-                  placeholder="What are you looking for?"
+                  placeholder="e.g. NIOS 10th, 12th Admission, TMA help..."
                   value={form.lookingFor}
                   onChange={handleChange}
                   required
                 />
 
                 {/* ✅ VISIBLE: City */}
+                <label className="field-label">City</label>
                 <input
                   type="text"
                   name="city"
-                  placeholder="City"
+                  placeholder="Your city"
                   value={form.city}
                   onChange={handleChange}
-                  required
                 />
 
                 <button type="submit" disabled={loading}>
@@ -239,7 +230,26 @@ export default function Popup() {
           display: flex;
           flex-direction: column;
           padding: 16px;
-          gap: 12px;
+          gap: 6px;
+        }
+
+        .field-label {
+          font-size: 12px;
+          font-weight: 600;
+          color: #444;
+          margin-bottom: 2px;
+          margin-top: 4px;
+        }
+
+        .req {
+          color: #e53e3e;
+        }
+
+        .overlay-tag {
+          font-size: 13px;
+          font-weight: 700;
+          margin: 0 0 6px;
+          opacity: 1;
         }
 
         input {
@@ -265,14 +275,14 @@ export default function Popup() {
         }
 
         .overlay h1 {
-          font-size: 22px;
+          font-size: 18px;
           font-weight: 700;
-          margin: 0 0 4px 0;
+          margin: 0 0 6px 0;
           line-height: 1.3;
         }
 
         .overlay p {
-          font-size: 14px;
+          font-size: 13px;
           opacity: 0.9;
           margin: 0;
         }

@@ -20,13 +20,13 @@ export default function Footer() {
               <a href="https://www.instagram.com/sscoaching_lucknow/" target="_blank" rel="noopener noreferrer" className="ss-social-btn" aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="https://www.facebook.com/SSCoachingLucknow" target="_blank" rel="noopener noreferrer" className="ss-social-btn" aria-label="Facebook">
+              <a href="https://hi-in.facebook.com/SSCoachingLucknow" target="_blank" rel="noopener noreferrer" className="ss-social-btn" aria-label="Facebook">
                 <FaFacebookF />
               </a>
-              <a href="https://www.youtube.com/channel/UC5lHqWVNh_xP0iVB7dsRgQw" target="_blank" rel="noopener noreferrer" className="ss-social-btn" aria-label="YouTube">
+              <a href="https://www.youtube.com/@SscoachingInlucknow" target="_blank" rel="noopener noreferrer" className="ss-social-btn" aria-label="YouTube">
                 <FaYoutube />
               </a>
-              <a href="https://wa.link/vwvuqc" target="_blank" rel="noopener noreferrer" className="ss-social-btn ss-social-btn--wa" aria-label="WhatsApp">
+              <a href="https://wa.me/919839065533" target="_blank" rel="noopener noreferrer" className="ss-social-btn ss-social-btn--wa" aria-label="WhatsApp">
                 <FaWhatsapp />
               </a>
             </div>
@@ -66,29 +66,24 @@ export default function Footer() {
             <div className="ss-footer-col">
               <h3 className="ss-footer-heading">Quick Links</h3>
               <ul className="ss-footer-list">
-                <li><a href="/nios-admission/admission-in-nios-stream-1">NIOS Admission</a></li>
                 <li><a href="/about-us">About Us</a></li>
-                <li><a href="/subject/nios-10th-secondary">Subject List</a></li>
-                <li><a href="/question-papers/paper-secondary-10th">Question Papers</a></li>
                 <li><a href="/faq">FAQ</a></li>
                 <li><a href="/blogs">Blogs</a></li>
-                <li><a href="/gallery">Gallery</a></li>
-                <li><a href="/contact-us">Contact Us</a></li>
+                <li><a href="/disclaimer">Disclaimer</a></li>
               </ul>
             </div>
 
-            {/* ── Col 3: NIOS Info Pages ── */}
+            {/* ── Col 3: Important Links ── */}
             <div className="ss-footer-col">
-              <h3 className="ss-footer-heading">NIOS Information</h3>
+              <h3 className="ss-footer-heading">Important Links</h3>
               <ul className="ss-footer-list">
-                <li><a href="/nios-results/nios-12th-result">NIOS 12th Result</a></li>
-                <li><a href="/nios-results/nios-10th-result">NIOS 10th Result</a></li>
+                <li><a href="/nios-admission">NIOS Admission</a></li>
+                <li><a href="/subject/subject-list">Subject List</a></li>
+                <li><a href="/question-papers">Question Papers</a></li>
+                <li><a href="/nios-results/">NIOS Results</a></li>
+                {/* <li><a href="/nios-results/nios-10th-result">NIOS 10th Result</a></li> */}
                 <li><a href="/nios-hall-ticket">NIOS Hall Ticket</a></li>
                 <li><a href="/nios-datesheet">NIOS Date Sheet</a></li>
-                <li><a href="/nios-admission/admission-in-nios-stream-1">NIOS Stream 1</a></li>
-                <li><a href="/nios-admission/admission-in-nios-stream-2">NIOS Stream 2</a></li>
-                <li><a href="/subject/nios-10th-secondary">NIOS Secondary Subjects</a></li>
-                <li><a href="/subject/nios-12th-senior-secondary">NIOS Sr. Secondary Subjects</a></li>
               </ul>
             </div>
 
@@ -101,8 +96,8 @@ export default function Footer() {
                   <FiMail className="ss-footer-contact-icon" />
                   <div>
                     <div className="ss-footer-contact-label">Grievance / Email</div>
-                    <a href="mailto:sscoachinglko@gmail.com" className="ss-footer-contact-value">
-                      sscoachinglko@gmail.com
+                    <a href="mailto:contact@sscoaching.in" className="ss-footer-contact-value">
+                      contact@sscoaching.in
                     </a>
                   </div>
                 </div>
@@ -487,7 +482,7 @@ export default function Footer() {
 //                   alt="Email Icon"
 //                   className="contact-icon"
 //                 />
-//                 <span className="contact-text"><a href="mailto:sscoachinglko@gmail.com">sscoachinglko@gmail.com</a></span>
+//                 <span className="contact-text"><a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a></span>
 //               </div>
 //               <div className="contact-item">
 //                 <img

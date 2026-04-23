@@ -63,7 +63,7 @@ export default function ContactUs() {
 
                   <div className="c-icons email-row">
                     <img src="/assets/images/contacts/email.svg" alt="Email" className="contact-icon" />
-                    <div className="location-text">sscoachinglko@gmail.com</div>
+                    <div className="location-text">contact@sscoaching.in</div>
                   </div>
                 </div>
               </div>
@@ -100,7 +100,7 @@ export default function ContactUs() {
 
                   <div className="c-icons email-row">
                     <img src="/assets/images/contacts/email.svg" alt="Email" className="contact-icon" />
-                    <div className="location-text">sscoachinglko@gmail.com</div>
+                    <div className="location-text">contact@sscoaching.in</div>
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function ContactUs() {
 
                   <div className="c-icons email-row">
                     <img src="/assets/images/contacts/email.svg" alt="Email" className="contact-icon" />
-                    <div className="location-text">sscoachinglko@gmail.com</div>
+                    <div className="location-text">contact@sscoaching.in</div>
                   </div>
                 </div>
               </div>
@@ -314,7 +314,7 @@ export default function ContactUs() {
 //                         className="contact-icon"
 //                       />
 //                       <div className="location-text">
-//                         sscoachinglko@gmail.com
+//                         contact@sscoaching.in
 //                       </div>
 //                     </div>
 //                   </div>
@@ -382,7 +382,7 @@ export default function ContactUs() {
 //                         className="contact-icon"
 //                       />
 //                       <div className="location-text">
-//                         sscoachinglko@gmail.com
+//                         contact@sscoaching.in
 //                       </div>
 //                     </div>
 //                   </div>
@@ -451,7 +451,7 @@ export default function ContactUs() {
 //                         className="contact-icon"
 //                       />
 //                       <div className="location-text">
-//                         sscoachinglko@gmail.com
+//                         contact@sscoaching.in
 //                       </div>
 //                     </div>
 //                   </div>

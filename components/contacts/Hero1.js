@@ -29,7 +29,7 @@ export default function Hero1() {
 
                     <div className="c-icons">
                      <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
-                      <div className="location-text">sscoachinglko@gmail.com</div>
+                      <div className="location-text">contact@sscoaching.in</div>
                    </div>
                 </div>
               </div>
@@ -52,7 +52,7 @@ export default function Hero1() {
 
                     <div className="c-icons">
                      <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
-                      <div className="location-text">sscoachinglko@gmail.com</div>
+                      <div className="location-text">contact@sscoaching.in</div>
                    </div>
                 </div>
               </div>
@@ -76,7 +76,7 @@ export default function Hero1() {
 
                     <div className="c-icons">
                      <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
-                      <div className="location-text">sscoachinglko@gmail.com</div>
+                      <div className="location-text">contact@sscoaching.in</div>
                    </div>
                 </div>
               </div>

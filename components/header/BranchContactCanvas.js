@@ -65,10 +65,10 @@ export default function BranchContactCanvas() {
             </div>
 
             <div className="branch-contact">
-              <a href="mailto:sscoachinglko@gmail.com">
+              <a href="mailto:contact@sscoaching.in">
                                 <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
 
-                sscoachinglko@gmail.com
+                contact@sscoaching.in
               </a>
             </div>
           </div>
@@ -112,10 +112,10 @@ export default function BranchContactCanvas() {
             </div>
 
             <div className="branch-contact">
-              <a href="mailto:sscoachinglko@gmail.com">
+              <a href="mailto:contact@sscoaching.in">
                                 <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
 
-                sscoachinglko@gmail.com
+                contact@sscoaching.in
               </a>
             </div>
           </div>
@@ -160,9 +160,9 @@ export default function BranchContactCanvas() {
             </div>
 
             <div className="branch-contact">
-              <a href="mailto:sscoachinglko@gmail.com">
+              <a href="mailto:contact@sscoaching.in">
                 <img src="/assets/images/contacts/email.svg" alt="Emali icon" className="contact-icon"/>
-                sscoachinglko@gmail.com
+                contact@sscoaching.in
               </a>
             </div>
           </div>
