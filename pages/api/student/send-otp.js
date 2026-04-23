@@ -113,15 +113,12 @@ export default async function handler(req, res) {
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     });
 
-    // =============================================
-    // DEVELOPMENT MODE — skip real SMS
-    // Just log OTP in terminal for testing
-    // =============================================
-    if (process.env.NODE_ENV === "development") {
-      console.log("=================================");
-      console.log(`📱 OTP for ${phone} : ${otpCode}`);
-      console.log("=================================");
+    // Log OTP in all environments so it's visible in PM2 logs
+    console.log("=================================");
+    console.log(`📱 OTP for ${phone} : ${otpCode}`);
+    console.log("=================================");
 
+    if (process.env.NODE_ENV === "development") {
       return res.status(200).json({
         success: true,
         message: `OTP sent to ${phone} (check terminal in dev mode)`,
@@ -130,7 +127,7 @@ export default async function handler(req, res) {
 
     // =============================================
     // PRODUCTION MODE — real SMS via Fast2SMS
-    // Uncomment and configure when deploying
+    // Uncomment and configure when ready
     // =============================================
 
     // const apiKey = process.env.FAST2SMS_API_KEY;

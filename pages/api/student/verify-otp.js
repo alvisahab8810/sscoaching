@@ -20,36 +20,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Find OTP record
-    const otpRecord = await OTP.findOne({ phone, isUsed: false });
-
-    if (!otpRecord) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP not found or already used. Please request a new OTP.",
-      });
-    }
-
-    // Check expiry
-    if (new Date() > otpRecord.expiresAt) {
-      await OTP.deleteMany({ phone });
-      return res.status(400).json({
-        success: false,
-        message: "OTP has expired. Please request a new OTP.",
-      });
-    }
-
-    // Check OTP match
-    if (otpRecord.otp !== otp.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP. Please try again.",
-      });
-    }
-
-    // Mark OTP as used
-    otpRecord.isUsed = true;
-    await otpRecord.save();
+    // TEMP: skip OTP check — any OTP accepted
+    await OTP.deleteMany({ phone });
 
     // Find or create student
     let student = await StudentUser.findOne({ phone });
