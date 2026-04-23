@@ -260,26 +260,26 @@ export default function Sidebar() {
         </li>
 
 
-          {/* <li style={styles.navItem}>
+          <li style={styles.navItem}>
           <Link href="/dashboard/admin/online-classes" style={styles.navLink()}>
              <img src="/assets/icons/videocall.svg" style={{marginRight:"8px", width:"16px"}}></img> Online Classes
           </Link>
-        </li> */}
+        </li>
 
-{/* 
+
           <li style={styles.navItem}>
 
             <Link href="/dashboard/admin/students" style={styles.navLink()}>
               <BsPeople style={{marginRight:"8px"}} size={18} /> Students
             </Link>
-         </li> */}
+         </li>
 
 
-         {/* <li style={styles.navItem}>
+         <li style={styles.navItem}>
   <Link href="/dashboard/admin/courses" style={styles.navLink()}>
     <BsCollection style={{ marginRight: "8px" }} size={18} /> Courses
   </Link>
-</li> */}
+</li>
 
         
 
@@ -299,7 +299,7 @@ export default function Sidebar() {
 </li>
 
 
-{/* <li style={styles.navItem}>
+<li style={styles.navItem}>
 
 <Link href="/dashboard/admin/invoices">Invoices</Link>
 </li>
@@ -309,7 +309,7 @@ export default function Sidebar() {
 <Link href="/dashboard/admin/enrollments">
    Enrollments
 </Link>
-</li> */}
+</li> 
 
       </ul>
 
