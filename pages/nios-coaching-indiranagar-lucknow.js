@@ -25,6 +25,9 @@ import Hero from "@/components/home/Hero";
 import HeroMobile from "@/components/home/HeroMobile";
 import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
+import BranchGallery from "@/components/BranchGallery";
+
+const indiraganagarImages = Array.from({ length: 22 }, (_, i) => `/assets/images/gallery/indiranagar/gallery${i + 1}.webp`);
 import {
   FaChalkboardTeacher,
   FaBookOpen,
@@ -617,45 +620,14 @@ export default function IndiraganagarPage() {
         </div>
       </section>
 
-      {/* ── SECTION 17–19: GALLERY + ADDRESS + MAP ── */}
-     <section className="hg-section hg-bg-off" id="gallery">
+      {/* ── SECTION 17: GALLERY ── */}
+      <section className="hg-section hg-bg-off" id="gallery">
         <div className="hg-sec">
           <div className="hg-sh">
-            <h2 className="hg-stitle">
-              Our <span>Gallery</span>
-            </h2>
+            <h2 className="hg-stitle">Our <span>Gallery</span></h2>
           </div>
           <div className="container">
-            <div className="hg-gallery-grid">
-              <div className="hg-gallery-item">
-                <img
-                  src="/assets/images/gallery/gallery5.png"
-                  alt="SS Coaching Hazratganj Classroom"
-                  className="hg-gallery-img"
-                />
-              </div>
-              <div className="hg-gallery-item">
-                <img
-                  src="/assets/images/gallery/gallery8.png"
-                  alt="Students at SS Coaching Hazratganj"
-                  className="hg-gallery-img"
-                />
-              </div>
-              <div className="hg-gallery-item">
-                <img
-                  src="/assets/images/gallery/gallery4.png"
-                  alt="Teaching session at SS Coaching Lucknow"
-                  className="hg-gallery-img"
-                />
-              </div>
-              <div className="hg-gallery-item">
-                <img
-                  src="/assets/images/gallery/gallery3.png"
-                  alt="Interior of SS Coaching Hazratganj"
-                  className="hg-gallery-img"
-                />
-              </div>
-            </div>
+            <BranchGallery images={indiraganagarImages} />
           </div>
         </div>
       </section>

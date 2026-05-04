@@ -380,6 +380,10 @@ export default function Hero() {
           }}
           modules={[Autoplay]}        // ✅ IMPORTANT
         >
+
+             <SwiperSlide>
+            <div className="hero-card2"></div>
+          </SwiperSlide>
           <SwiperSlide>
             <div className="hero-card1"></div>
           </SwiperSlide>

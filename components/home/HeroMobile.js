@@ -195,11 +195,20 @@ export default function Hero() {
         >
           {/* SINGLE SLIDE ONLY */}
 
+          
+          <SwiperSlide>
+            <div className="hero-card-mobile">
+              <img src="/assets/images/home/mobile-banner-new.webp"></img>
+            </div>
+          </SwiperSlide>
+
           <SwiperSlide>
             <div className="hero-card-mobile">
               <img src="/assets/images/home/mobile-banner.jpeg"></img>
             </div>
           </SwiperSlide>
+
+          
           <SwiperSlide>
             <div className="hero-card">
               <div className="hero-left">

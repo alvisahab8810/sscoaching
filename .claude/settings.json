@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Measure-Object)",
+      "Bash(Select-Object -ExpandProperty Count)"
+    ]
+  }
+}
