@@ -73,6 +73,8 @@ const tabImages = {
     '/assets/images/gallery/alambagh/gallery10.webp',
     '/assets/images/gallery/alambagh/gallery11.webp',
     '/assets/images/gallery/alambagh/gallery12.webp',
+    '/assets/images/gallery/alambagh/gallery13.webp',
+
 
     
   ],

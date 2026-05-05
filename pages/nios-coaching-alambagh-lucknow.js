@@ -27,7 +27,7 @@ import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
 import BranchGallery from "@/components/BranchGallery";
 
-const alambaghImages = Array.from({ length: 12 }, (_, i) => `/assets/images/gallery/alambagh/gallery${i + 1}.webp`);
+const alambaghImages = Array.from({ length: 13 }, (_, i) => `/assets/images/gallery/alambagh/gallery${i + 1}.webp`);
 import {
   FaChalkboardTeacher,
   FaBookOpen,
