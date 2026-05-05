@@ -36,11 +36,24 @@ const tabImages = {
     '/assets/images/gallery/hazratganj/gallery32.webp',
     '/assets/images/gallery/hazratganj/gallery33.webp',
     '/assets/images/gallery/hazratganj/gallery34.webp',
-    '/assets/images/gallery/hazratganj/gallery35.webp',
+    // '/assets/images/gallery/hazratganj/gallery35.webp',
     '/assets/images/gallery/hazratganj/gallery36.webp',
-    '/assets/images/gallery/hazratganj/gallery37.webp',
+    // '/assets/images/gallery/hazratganj/gallery37.webp',
     '/assets/images/gallery/hazratganj/gallery38.webp',
     '/assets/images/gallery/hazratganj/gallery39.webp',
+    '/assets/images/gallery/hazratganj/gallery40.webp', 
+    '/assets/images/gallery/hazratganj/gallery41.webp', 
+    '/assets/images/gallery/hazratganj/gallery42.webp', 
+    '/assets/images/gallery/hazratganj/gallery43.webp', 
+      '/assets/images/gallery/hazratganj/gallery44.webp',
+      '/assets/images/gallery/hazratganj/gallery45.webp', 
+      '/assets/images/gallery/hazratganj/gallery46.webp', 
+
+
+
+
+
+
     
 
 
@@ -86,26 +99,30 @@ const tabImages = {
     '/assets/images/gallery/indiranagar/gallery20.webp',
     '/assets/images/gallery/indiranagar/gallery21.webp',
     '/assets/images/gallery/indiranagar/gallery22.webp',
+    '/assets/images/gallery/indiranagar/gallery23.webp',
+    '/assets/images/gallery/indiranagar/gallery24.webp',
+
+
    
   ],
   events: [
     '/assets/images/gallery/events/gallery1.webp',
-    '/assets/images/gallery/events/gallery2.webp',
-    '/assets/images/gallery/events/gallery3.webp',
+    // '/assets/images/gallery/events/gallery2.webp',
+    // '/assets/images/gallery/events/gallery3.webp',
     '/assets/images/gallery/events/gallery4.webp',
-    '/assets/images/gallery/events/gallery5.webp',
-    '/assets/images/gallery/events/gallery6.webp',
+    // '/assets/images/gallery/events/gallery5.webp',
+    // '/assets/images/gallery/events/gallery6.webp',
     '/assets/images/gallery/events/gallery7.webp',
     '/assets/images/gallery/events/gallery8.webp',
     '/assets/images/gallery/events/gallery9.webp',
     '/assets/images/gallery/events/gallery10.webp',
-    '/assets/images/gallery/events/gallery11.webp',
+    // '/assets/images/gallery/events/gallery11.webp',
     '/assets/images/gallery/events/gallery12.webp',
     '/assets/images/gallery/events/gallery13.webp',
     '/assets/images/gallery/events/gallery14.webp',
-    '/assets/images/gallery/events/gallery15.webp',
-    '/assets/images/gallery/events/gallery16.webp',
-    '/assets/images/gallery/events/gallery17.webp',
+    // '/assets/images/gallery/events/gallery15.webp',
+    // '/assets/images/gallery/events/gallery16.webp',
+    // '/assets/images/gallery/events/gallery17.webp',
     '/assets/images/gallery/events/gallery18.webp',
     '/assets/images/gallery/events/gallery19.webp',
     '/assets/images/gallery/events/gallery20.webp',
@@ -175,7 +192,7 @@ const tabImages = {
     '/assets/images/gallery/events/gallery84.webp',
     '/assets/images/gallery/events/gallery85.webp',
     '/assets/images/gallery/events/gallery86.webp',
-    '/assets/images/gallery/events/gallery87.webp',
+    // '/assets/images/gallery/events/gallery87.webp',
     '/assets/images/gallery/events/gallery88.webp',
     '/assets/images/gallery/events/gallery89.webp',
     '/assets/images/gallery/events/gallery90.webp',
@@ -183,7 +200,7 @@ const tabImages = {
     '/assets/images/gallery/events/gallery92.webp',
     '/assets/images/gallery/events/gallery93.webp',
     '/assets/images/gallery/events/gallery94.webp',
-    '/assets/images/gallery/events/gallery95.webp',
+    // '/assets/images/gallery/events/gallery95.webp',
     '/assets/images/gallery/events/gallery96.webp',
     '/assets/images/gallery/events/gallery97.webp',
     '/assets/images/gallery/events/gallery98.webp',
@@ -267,7 +284,7 @@ const tabImages = {
     '/assets/images/gallery/events/gallery176.webp',
     '/assets/images/gallery/events/gallery177.webp',
     '/assets/images/gallery/events/gallery178.webp',
-    '/assets/images/gallery/events/gallery179.webp',
+    // '/assets/images/gallery/events/gallery179.webp',
     '/assets/images/gallery/events/gallery180.webp',
     '/assets/images/gallery/events/gallery181.webp',
     '/assets/images/gallery/events/gallery182.webp',
