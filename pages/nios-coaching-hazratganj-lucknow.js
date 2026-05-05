@@ -24,7 +24,7 @@ import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
 import BranchGallery from "@/components/BranchGallery";
 
-const hazratganjImages = Array.from({ length: 39 }, (_, i) => `/assets/images/gallery/hazratganj/gallery${i + 1}.webp`);
+const hazratganjImages = Array.from({ length: 45 }, (_, i) => `/assets/images/gallery/hazratganj/gallery${i + 1}.webp`);
 import {
   FaChalkboardTeacher,
   FaBookOpen,

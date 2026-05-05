@@ -27,7 +27,7 @@ import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
 import BranchGallery from "@/components/BranchGallery";
 
-const indiraganagarImages = Array.from({ length: 22 }, (_, i) => `/assets/images/gallery/indiranagar/gallery${i + 1}.webp`);
+const indiraganagarImages = Array.from({ length: 24 }, (_, i) => `/assets/images/gallery/indiranagar/gallery${i + 1}.webp`);
 import {
   FaChalkboardTeacher,
   FaBookOpen,
