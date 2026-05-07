@@ -64,6 +64,8 @@ const tabImages = {
 
 
   ],
+
+  
   alambagh: [
     '/assets/images/gallery/alambagh/gallery1.webp',
     '/assets/images/gallery/alambagh/gallery2.webp',
@@ -327,6 +329,22 @@ const TABS = [
   { key: 'events', label: 'Events' },
 ];
 
+const tabCTA = {
+  hazratganj: {
+    address: 'S.S. Coaching, IIIrd Floor, Shree Chamber, Naza Computer Market, Near Basant Cinema, Hazratganj, Lucknow. ',
+     phones: [{ label: '9839065533', href: 'tel:9839065533' },  { label: '06387563947', href: 'tel:06387563947' }],
+  },
+  alambagh: {
+    address: 'U.R. Plaza, Near Phoenix Mall, Beside Acumen Hotel (LDA), Alambagh, Lucknow. ',
+     phones: [{ label: '09935035316', href: 'tel:09935035316' },  { label: '09236062837', href: 'tel:09236062837' }],
+  },
+  indiranagar: {
+    address: '3rd Floor, Upstair Rama Sarees, In Bhootnath Market, Indira Nagar, Lucknow. ',
+     phones: [{ label: '09792111121', href: 'tel:09792111121' },  { label: '09956493857', href: 'tel:09956493857' }],
+  },
+  events: null,
+};
+
 export default function PhotoGallery() {
   const [activeTab, setActiveTab] = useState('hazratganj');
   const [lightbox, setLightbox] = useState(null); // { images: [], index: number }
@@ -409,6 +427,21 @@ export default function PhotoGallery() {
           </div>
         ))}
       </div>
+
+      {tabCTA[activeTab] && (
+        <div className="cta-button-gallery cta-button1">
+          <span>{tabCTA[activeTab].address}</span>
+          <span className="pg-cta-phones">
+            Mob No-{' '}
+            {tabCTA[activeTab].phones.map((p, i) => (
+              <span key={p.href}>
+                <a href={p.href}>{p.label}</a>
+                {i < tabCTA[activeTab].phones.length - 1 && ', '}
+              </span>
+            ))}
+          </span>
+        </div>
+      )}
 
       {lightbox && (
         <div className="pg-lb-overlay" onClick={closeLightbox}>
@@ -596,6 +629,17 @@ export default function PhotoGallery() {
           background: rgba(0,0,0,0.4);
           padding: 4px 14px;
           border-radius: 20px;
+        }
+
+        /* ── CTA phones ── */
+        .pg-cta-phones a {
+          color: inherit;
+          text-decoration: underline;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+        .pg-cta-phones a:hover {
+          color: #4441e5;
         }
 
         /* ── Responsive ── */

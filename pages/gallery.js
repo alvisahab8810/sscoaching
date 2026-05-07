@@ -42,13 +42,7 @@ export default function Galleryy() {
               <section className="gallery-section-area">
                 <Gallery />
               </section>
-              <a
-                href="tel:9839065533"
-                className="cta-button-gallery cta-button1"
-              >
-                S.S. Coaching, IIIrd Floor, Shree Chamber, Naza Computer Market,
-                Near Basant Cinema, Hazratganj, Lucknow. Mob No-9839065533
-              </a>
+              
             </div>
           </section>
 
