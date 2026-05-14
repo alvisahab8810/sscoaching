@@ -16,7 +16,7 @@ export default function SyllabusClass12th() {
 
        <Head>
         <title>
-           NIOS Subject List class 12th Senior Secondary 2025-2026
+           NIOS 12th Subject List 2026 – Senior Secondary Subjects
         </title>
         <meta
           name="description"

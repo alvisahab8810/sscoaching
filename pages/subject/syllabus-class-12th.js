@@ -16,7 +16,7 @@ export default function SyllabusClass12th() {
     <>
       <Head>
         <title>
-           NIOS Subject details, syllabus and curriculum for 12th Senior Secondary 2025
+           NIOS 12th Syllabus 2026 – Complete Curriculum Guide
         </title>
         <meta name="description" content="SS Coaching provides the overview of the class 12th syllabus, curriculum and summary for the NIOS Board for senior secondary class. National Institute of Open Schooling (NIOS) Board have all main subject like English, Mathematics, Hindi, etc. SS Coaching provides you detailed syllabus along with the curriculum of each subject. You can also get an overview of the subject in this section." />
         <meta name="keywords" content="NIOS syllabus for 12th, NIOS 12th syllabus, NIOS senior secondary 12th syllabus, National institute of open schooling syllabus Lucknow , Senior secondary NIOS syllabus, NIOS Subject, nios subject list, nios 12th subject list, nios subject list class 12, nios syllabus 2025, nios 12th syllabus 2025, NIOS senior secondary 12th syllabus 2025,NIOS Syllabus 12th 2025, NIOS New Syllabus 2025, NIOS Syllabus 12th 2025," />

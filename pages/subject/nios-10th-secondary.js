@@ -15,7 +15,7 @@ export default function SyllabusClass12th() {
   return (
     <>
       <Head>
-        <title>NIOS Subject List Class 10th Secondary 2022-2023</title>
+        <title>NIOS 10th Secondary Course 2026 – Subjects & Admission Guide</title>
         <meta
           name="description"
           content="Secondary Course is equivalent to the X th standard. You can choose subjects from the Scheme of Studies, complete a minimum of five subjects with atleast one language or at most two languages, which is compulsory for certification."
