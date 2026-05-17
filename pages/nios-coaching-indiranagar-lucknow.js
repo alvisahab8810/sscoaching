@@ -380,12 +380,12 @@ export default function IndiraganagarPage() {
               <div className="hg-about-images">
                 <div className="hg-about-img-wrap">
                   <img
-                    src="/assets/images/gallery/gallery2.png"
+                    src="/assets/images/gallery/indiranagar/gallery1.webp"
                     alt="SS Coaching Indiranagar Classroom"
                     className="hg-about-img"
                   />
                   <img
-                    src="/assets/images/gallery/gallery5.png"
+                    src="/assets/images/gallery/indiranagar/gallery2.webp"
                     alt="Teacher teaching students at SS Coaching Indiranagar"
                     className="hg-about-img"
                   />
@@ -429,7 +429,7 @@ export default function IndiraganagarPage() {
               {/* Motivational image */}
               <div className="hg-choose-img-wrap">
                 <img
-                  src="/assets/images/gallery/gallery8.png"
+                  src="/assets/images/gallery/indiranagar/gallery3.webp"
                   alt="Students at SS Coaching Indra Nagar Lucknow"
                   className="hg-choose-img"
                 />
@@ -469,13 +469,13 @@ export default function IndiraganagarPage() {
               {/* Two images stacked */}
               <div className="hg-course-images">
                 <img
-                  src="/assets/images/gallery/gallery4.png"
+                  src="/assets/images/gallery/indiranagar/gallery4.webp"
                   alt="Students studying NIOS at SS Coaching Indiranagar"
                   className="hg-course-img"
                 />
                 <img
-                  src="/assets/images/gallery/gallery8.png"
-                  alt="NIOS study books and material"
+                  src="/assets/images/gallery/indiranagar/gallery5.webp"
+                  alt="NIOS study material at SS Coaching Indiranagar"
                   className="hg-course-img"
                 />
               </div>

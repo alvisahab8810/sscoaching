@@ -495,12 +495,12 @@ export default function HazratganjPage() {
               <div className="hg-about-images">
                 <div className="hg-about-img-wrap">
                   <img
-                    src="/assets/images/gallery/gallery2.png"
+                    src="/assets/images/gallery/hazratganj/gallery1.webp"
                     alt="SS Coaching Hazratganj Classroom"
                     className="hg-about-img"
                   />
                   <img
-                    src="/assets/images/gallery/gallery5.png"
+                    src="/assets/images/gallery/hazratganj/gallery2.webp"
                     alt="Teacher teaching students at SS Coaching Hazratganj"
                     className="hg-about-img"
                   />
@@ -547,13 +547,13 @@ export default function HazratganjPage() {
               {/* Two images */}
               <div className="hg-course-images">
                 <img
-                  src="/assets/images/gallery/gallery8.png"
+                  src="/assets/images/gallery/hazratganj/gallery3.webp"
                   alt="Students studying NIOS at SS Coaching Hazratganj"
                   className="hg-course-img"
                 />
                 <img
-                  src="/assets/images/gallery/gallery4.png"
-                  alt="NIOS study material and books"
+                  src="/assets/images/gallery/hazratganj/gallery4.webp"
+                  alt="NIOS study material at SS Coaching Hazratganj"
                   className="hg-course-img"
                 />
               </div>
@@ -610,7 +610,7 @@ export default function HazratganjPage() {
               {/* Motivational image */}
               <div className="hg-choose-img-wrap">
                 <img
-                  src="/assets/images/gallery/gallery3.png"
+                  src="/assets/images/gallery/hazratganj/gallery5.webp"
                   alt="Students motivated at SS Coaching Hazratganj Lucknow"
                   className="hg-choose-img"
                 />
