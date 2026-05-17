@@ -1,48 +1,58 @@
-import Footer from "@/components/footer/Footer";
-import BranchContactCanvas from "@/components/header/BranchContactCanvas";
-import ContactsN from "@/components/header/BranchContactCanvas";
+import dynamic from "next/dynamic";
+import Head from "next/head";
+
+// Above-fold: static imports for fast LCP
 import Header from "@/components/header/Header";
+import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Offcanvas from "@/components/header/Offcanvas";
-import Achievements from "@/components/home/Achievements";
-import BeastFeatures from "@/components/home/BeastFeatures";
-import ChipSection from "@/components/home/ChipSection";
-import CoachingStream from "@/components/home/CoachingStream";
-import ContactStripe from "@/components/home/ContactStripe";
-import CTA from "@/components/home/CTA";
-import CTA2 from "@/components/home/CTA2";
-import CTAA, { CTA1 } from "@/components/home/CTA2";
-import CTA3 from "@/components/home/CTA3";
-import DMCABadge from "@/components/home/DMCABadge";
-import FAQ from "@/components/home/FAQ";
-import GoogleReview from "@/components/home/GoogleReview";
 import Hero from "@/components/home/Hero";
 import HeroMobile from "@/components/home/HeroMobile";
-import LearnersNios from "@/components/home/LearnersNios";
-import LearnersNiosMobile from "@/components/home/LearnersNiosMobile";
+import ChipSection from "@/components/home/ChipSection";
 import MobileQuickInfo from "@/components/home/MobileQuickInfo";
-import News from "@/components/home/News";
-import NewsMobile from "@/components/home/NewsMobile";
-import NIOSInfo from "@/components/home/NIOSInfo";
-// import Popup from "@/components/home/Popup";
+import ContactStripe from "@/components/home/ContactStripe";
 
-import QueryForm from "@/components/home/QueryForm";
-import QuickLinks from "@/components/home/QuickLinks";
-import RecongnitionMobile from "@/components/home/RecognitionMobile";
-import Recongnition from "@/components/home/Recongnition";
-import StatsSection from "@/components/home/StatsSection";
-import StatsSectionMobile from "@/components/home/StatsSectionMobile";
-import StepProcess from "@/components/home/StepProcess";
-import StepProcessMobile from "@/components/home/StepsProcessMobile";
-// import StudentSuccess from "@/components/home/StudentSuccess";
-import dynamic from "next/dynamic";
+// Below-fold interactive / Swiper / video components — skip SSR to unblock main thread
 const StudentSuccess = dynamic(
   () => import("@/components/home/StudentSuccess"),
   { ssr: false },
 );
-const Popup = dynamic(() => import("@/components/home/Popup"), {
+const Popup = dynamic(() => import("@/components/home/Popup"), { ssr: false });
+const QueryForm = dynamic(() => import("@/components/home/QueryForm"), {
   ssr: false,
 });
-import Head from "next/head";
+const Achievements = dynamic(() => import("@/components/home/Achievements"), {
+  ssr: false,
+});
+
+// Below-fold content components — code-split but keep SSR for SEO
+const StatsSectionMobile = dynamic(
+  () => import("@/components/home/StatsSectionMobile"),
+);
+const StatsSection = dynamic(() => import("@/components/home/StatsSection"));
+const NewsMobile = dynamic(() => import("@/components/home/NewsMobile"));
+const StepProcessMobile = dynamic(
+  () => import("@/components/home/StepsProcessMobile"),
+);
+const News = dynamic(() => import("@/components/home/News"));
+const RecongnitionMobile = dynamic(
+  () => import("@/components/home/RecognitionMobile"),
+);
+const GoogleReview = dynamic(() => import("@/components/home/GoogleReview"));
+const StepProcess = dynamic(() => import("@/components/home/StepProcess"));
+const LearnersNiosMobile = dynamic(
+  () => import("@/components/home/LearnersNiosMobile"),
+);
+const LearnersNios = dynamic(() => import("@/components/home/LearnersNios"));
+const CTA = dynamic(() => import("@/components/home/CTA"));
+const CoachingStream = dynamic(() => import("@/components/home/CoachingStream"));
+const Recongnition = dynamic(() => import("@/components/home/Recongnition"));
+const CTA2 = dynamic(() => import("@/components/home/CTA2"));
+const NIOSInfo = dynamic(() => import("@/components/home/NIOSInfo"));
+const BeastFeatures = dynamic(() => import("@/components/home/BeastFeatures"));
+const CTA3 = dynamic(() => import("@/components/home/CTA3"));
+const QuickLinks = dynamic(() => import("@/components/home/QuickLinks"));
+const FAQ = dynamic(() => import("@/components/home/FAQ"));
+const Footer = dynamic(() => import("@/components/footer/Footer"));
 
 export default function Home() {
   return (
@@ -69,7 +79,6 @@ export default function Home() {
         <Header />
         <Offcanvas />
         <BranchContactCanvas />
-        {/* <NewsMobile/> */}
         <Hero />
         <HeroMobile />
         <ChipSection />
@@ -117,23 +126,13 @@ export default function Home() {
                     Download Prospectus →
                   </a>
 
-                  {/* <a
-                    href="/assets/images/others/prospectus.pdf"
-                    target="_blank"
-                    className="hg-btn-cl"
-                  >
-                    View Online
-                  </a> */}
-
-
-                    <a
+                  <a
                     href="/onlineforms"
                     target="_blank"
                     className="hg-btn-cl"
                   >
                     Apply Online
                   </a>
-                
                 </div>
               </div>
 
@@ -167,7 +166,6 @@ export default function Home() {
         </div>
 
         <QuickLinks />
-        {/* <FAQ />  */}
 
         <FAQ limit={8} showViewMore={true} />
 
