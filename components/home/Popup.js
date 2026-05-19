@@ -38,42 +38,94 @@ export default function Popup() {
     };
   }, []);
 
+  const fireConversionEvents = () => {
+    try {
+      // ── GTM dataLayer push (primary) ──────────────────────────────
+      // GTM picks this up and fires all configured conversion tags
+      // (Google Ads, Meta Pixel, etc.) set up in the GTM container.
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "popup_form_submit",
+          form_type: "popup",
+          page_url: window.location.href,
+        });
+      }
+
+      // ── Google Analytics 4 ────────────────────────────────────────
+      if (window.gtag) {
+        window.gtag("event", "generate_lead", {
+          event_category: "Popup Form",
+          event_label: "Popup Lead Submission",
+        });
+
+        // Google Ads — fire conversion for every ad account.
+        // Add /CONVERSION_LABEL after the account ID in GTM for
+        // specific conversion actions if needed.
+        const adAccounts = [
+          "AW-11087287759",
+          "AW-11159082776",
+          "AW-16913091466",
+          "AW-17044419719",
+          "AW-17094613051",
+        ];
+        adAccounts.forEach((id) => {
+          window.gtag("event", "conversion", { send_to: id });
+        });
+      }
+
+      // ── Meta Pixel (if loaded via GTM or script tag) ──────────────
+      if (window.fbq) {
+        window.fbq("track", "Lead", {
+          content_name: "Popup Form",
+          content_category: "NIOS Admission",
+        });
+      }
+    } catch (trackingErr) {
+      // Never let a tracking error break the UX
+      console.warn("Conversion tracking error:", trackingErr);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Send only the visible fields + formType
-    // email, lookingFor, city are commented out but kept in model for future
     const payload = {
       fullName: form.fullName,
-      email: "",                  // hidden field, sending empty string
+      email: "",
       phone: form.phone,
       lookingFor: form.lookingFor,
       city: form.city,
       formType: form.formType,
     };
 
-    const response = await fetch("/api/popup", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    setLoading(false);
-
-    if (data.success) {
-      toast.success("Form Submitted Successfully!");
-      setShowPopup(false);
-      setForm({
-        fullName: "",
-        // email: "",
-        phone: "",
-        lookingFor: "",
-        city: "",
-        formType: "popup",
+    try {
+      const response = await fetch("/api/popup", {
+        method: "POST",
+        body: JSON.stringify(payload),
       });
-    } else {
-      toast.error("Submission Failed!");
+
+      const data = await response.json();
+
+      if (data.success) {
+        fireConversionEvents();
+        toast.success("Form Submitted Successfully!");
+        setShowPopup(false);
+        setForm({
+          fullName: "",
+          phone: "",
+          lookingFor: "",
+          city: "",
+          formType: "popup",
+        });
+      } else {
+        toast.error("Submission Failed!");
+      }
+    } catch (err) {
+      console.error("Popup form submission error:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
