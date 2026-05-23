@@ -31,53 +31,74 @@ export default function LearnersNios() {
             {/* Leanrers 1 */}
             <SwiperSlide>
               <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img1.png" alt="Learners NIOS Board"></img>
+                <img src="/assets/images/home/learners-nios/img1.png" 
+                alt=" Successful NIOS learners achieving recognition at SS Coaching Lucknow"
+                title="Our Achievers | SS Coaching Lucknow "></img>
               </div>
             </SwiperSlide>
 
              <SwiperSlide>
               <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img2.png" alt="Learners NIOS Board"></img>
+                <img src="/assets/images/home/learners-nios/img2.png" 
+                alt="Award-winning students and achievers from SS Coaching Lucknow"
+                title="Celebrating Student Success at SS Coaching Lucknow"></img>
+              </div>
+            </SwiperSlide>
+            
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img3.png" 
+                alt="Successful NIOS learners achieving recognition at SS Coaching Lucknow "
+                title="Successful Learners of NIOS Board at SS Coaching Lucknow"></img>
+              </div>
+            </SwiperSlide>
+
+
+            <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img1.png" 
+                alt=" Successful NIOS learners achieving recognition at SS Coaching Lucknow"
+                title="Our Achievers | SS Coaching Lucknow "></img>
               </div>
             </SwiperSlide>
 
              <SwiperSlide>
               <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img3.png" alt="Learners NIOS Board"></img>
+                <img src="/assets/images/home/learners-nios/img2.png" 
+                alt="Award-winning students and achievers from SS Coaching Lucknow"
+                title="Celebrating Student Success at SS Coaching Lucknow"></img>
+              </div>
+            </SwiperSlide>
+            
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img3.png" 
+                alt="Successful NIOS learners achieving recognition at SS Coaching Lucknow "
+                title="Successful Learners of NIOS Board at SS Coaching Lucknow"></img>
               </div>
             </SwiperSlide>
 
-
-             <SwiperSlide>
+              <SwiperSlide>
               <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img1.png" alt="Learners NIOS Board"></img>
-              </div>
-            </SwiperSlide>
-
-
-             <SwiperSlide>
-              <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img2.png" alt="Learners NIOS Board"></img>
-              </div>
-            </SwiperSlide>
-
-
-             <SwiperSlide>
-              <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img3.png" alt="Learners NIOS Board"></img>
-              </div>
-            </SwiperSlide>
-
-
-             <SwiperSlide>
-              <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img2.png" alt="Learners NIOS Board"></img>
+                <img src="/assets/images/home/learners-nios/img1.png" 
+                alt=" Successful NIOS learners achieving recognition at SS Coaching Lucknow"
+                title="Our Achievers | SS Coaching Lucknow "></img>
               </div>
             </SwiperSlide>
 
              <SwiperSlide>
               <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img3.png" alt="Learners NIOS Board"></img>
+                <img src="/assets/images/home/learners-nios/img2.png" 
+                alt="Award-winning students and achievers from SS Coaching Lucknow"
+                title="Celebrating Student Success at SS Coaching Lucknow"></img>
+              </div>
+            </SwiperSlide>
+            
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img3.png" 
+                alt="Successful NIOS learners achieving recognition at SS Coaching Lucknow "
+                title="Successful Learners of NIOS Board at SS Coaching Lucknow"></img>
               </div>
             </SwiperSlide>
 

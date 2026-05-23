@@ -57,6 +57,13 @@ export default function AdmissionInNiosStream1() {
 
 
 
+          <div className="stream-crosslink mb-3 mt-4" style={{textAlign:'center'}}>
+            <span className="text-muted me-2" style={{fontSize:'14px'}}>Failed in 10th or 12th board exam?</span>
+            <Link href="/nios-admission/admission-in-nios-stream-2" style={{background:'#4441e5',color:'#fff',borderRadius:'6px',padding:'6px 16px',fontWeight:600,textDecoration:'none',display:'inline-block',fontSize:'14px'}}>
+              NIOS Admission Stream 2
+            </Link>
+          </div>
+
             {/* <!-- Admission Table Section --> */}
       <section className="admission-table-section">
         <div className="container">
@@ -147,7 +154,7 @@ export default function AdmissionInNiosStream1() {
                 In conclusion, NIOS provides a flexible, affordable, and recognized pathway for students to achieve their educational goals. It is a perfect solution for anyone looking to restart or continue their studies with confidence.
               </p>
               <div className="full-btn cta-btn-2nd">
-                <a href="#" className="contact-btn ">
+                <a href="/contact-us" className="contact-btn ">
                   Contact Us For help
                 </a>
                 <div className="contact-btn1">
@@ -205,7 +212,7 @@ export default function AdmissionInNiosStream1() {
                 <span className="highlight"> Lucknow</span>
               </h2>
               <p className="info-text">
-                Students who are unable to complete their regular schooling now have a great opportunity to continue their education through NIOS 10th & 12th Admission in Lucknow. The National Institute of Open Schooling offers a flexible learning system that allows students to choose subjects according to their needs and appear for exams at their convenience.
+                Students who are unable to complete their regular schooling now have a great opportunity to continue their education through NIOS 10th & 12th Admission in Lucknow. The National Institute of Open Schooling offers a flexible learning system that allows students to choose subjects according to their needs and appear for exams at their convenience. For complete details, see our guide on <Link href="/faq/marks-distribution-in-nios" className="link-here">NIOS marks distribution and exam pattern</Link>.
  </p>
                 <br />
                 <h5 className="text-dark pt-2">Courses Offered by NIOS</h5>
@@ -220,7 +227,7 @@ export default function AdmissionInNiosStream1() {
 
 
               <div className="full-btn cta-btn-2nd">
-                <a href="#" className="contact-btn">
+                <a href="/contact-us" className="contact-btn">
                   Contact Us For help
                 </a>
                 <div className="contact-btn1">
@@ -574,7 +581,7 @@ export default function AdmissionInNiosStream1() {
                 </Link>
               </div>
               <div className="expand-item">
-                <Link href="/nios-admission/admission-in-nios-stream-1">
+                <Link href="/nios-admission/admission-in-nios-stream-2">
                 <div className="expand-header branch1">
                   <div className="expand-text">NIOS Admission for Stream 2</div>
                   <div className="expand-icon">
@@ -602,7 +609,7 @@ export default function AdmissionInNiosStream1() {
 
             <div className="expandable-list" style={{ width: "48%" }}>
               <div className="expand-item">
-                <Link href="/subject/nios-10th-secondary">
+                <Link href="/subject/subject-list">
 
                 <div className="expand-header stream34">
                   <div className="expand-text">

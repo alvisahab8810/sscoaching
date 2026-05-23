@@ -48,7 +48,8 @@ export default function StepProcess() {
           <div className="process-images">
             <img
               src="/assets/images/home/steps-process/photo1.svg"
-              alt="Student studying"
+              alt="NIOS admission guidance and learning process for students at SS Coaching"
+              title="Start Your NIOS Journey with SS Coaching Lucknow"
               className="process-image process-1"
               
             />
@@ -81,7 +82,8 @@ export default function StepProcess() {
 
             <img
               src="/assets/images/home/steps-process/photo.svg"
-              alt="Students in classroom"
+              alt="NIOS admission guidance and learning process for students at SS Coaching"
+              title="Start Your NIOS Journey with SS Coaching Lucknow"
               className="process-image process-2"
             
             />

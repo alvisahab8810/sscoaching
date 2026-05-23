@@ -105,9 +105,9 @@ export default function AdmissionInNiosStream3() {
                 {/* Mobile image */}
                 <div className="about-left-bx desktop-none">
                   <img
-                    src="/assets/images/nios-admission/stream1-about.png"
-                    alt="Student applying for NIOS Registration 2026 Stream 3 and 4 for 10th and 12th"
-                    title="NIOS Registration 2026 Stream 3 & 4 – Pass 10th & 12th in 45 Days"
+                    src="/assets/images/nios-admission/stream3&4.webp"
+                    alt="A smiling young woman with long dark hair, wearing a denim jacket and carrying a backpack and tablet in a school hallway."
+                    title="Female Student Holding Tablet in Hallway"
                     className="hero-stream1-content-image"
                   />
                 </div>
@@ -178,9 +178,9 @@ export default function AdmissionInNiosStream3() {
               {/* Desktop image */}
               <div className="about-left-bx mobile-none">
                 <img
-                  src="/assets/images/nios-admission/stream1-about.png"
-                  alt="Student applying for NIOS Registration 2026 Stream 3 and 4 for 10th and 12th"
-                  title="NIOS Registration 2026 Stream 3 & 4 – Pass 10th & 12th in 45 Days"
+                  src="/assets/images/nios-admission/stream3&4.webp"
+                   alt="A smiling young woman with long dark hair, wearing a denim jacket and carrying a backpack and tablet in a school hallway."
+                    title="Female Student Holding Tablet in Hallway"
                   className="hero-stream1-content-image"
                 />
               </div>
@@ -195,9 +195,9 @@ export default function AdmissionInNiosStream3() {
           <div className="container">
             <div className="info-content">
               <img
-                src="/assets/images/nios-admission/stream1-info.png"
-                alt="Student studying for NIOS Registration 2026 Stream 3 and 4"
-                title="NIOS Registration 2026 Stream 3 & 4 Student Enrollment"
+                src="/assets/images/nios-admission/stream3&4-info.webp"
+                alt="A smiling young girl with long dark hair, wearing a blue plaid shirt and backpack, holding colorful books."
+                title="Young Female Student Carrying Books"
                 className="info-image"
               />
               <div className="info-text-group">

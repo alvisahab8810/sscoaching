@@ -22,7 +22,8 @@ Whether you are planning for NIOS 10th or 12th admission, understanding the subj
 
           <img
             src="/assets/images/syllabus/subject-list-10th.webp"
-            alt="NIOS Senior Secondary Course Background"
+            title ="nios-study-material-banner"
+            alt="Student studying with laptop and notebook in library for NIOS course preparation"
             className="hero-image"
           />
 

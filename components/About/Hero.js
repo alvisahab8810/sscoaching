@@ -31,7 +31,8 @@ export default function AboutUsHero() {
 
             <img
             src="/assets/images/home/personal.png"
-            alt="Founder Director"
+            alt="Founder and Director of SS Coaching guiding students in Lucknow classroom"
+            title="Founder and Director of SS Coaching Lucknow"
           />
 
           

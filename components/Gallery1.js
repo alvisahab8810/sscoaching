@@ -322,6 +322,57 @@ const tabImages = {
   ],
 };
 
+const indiranagaMeta = [
+  { title: "nios-coaching-classroom-session-in-lucknow",           alt: "Students attending interactive NIOS coaching class with teacher explaining concepts in classroom." },
+  { title: "expert-faculty-teaching-nios-students",                alt: "Teacher guiding NIOS students during classroom session at coaching institute." },
+  { title: "nios-students-attending-classroom-lecture",            alt: "Group of students learning in NIOS coaching classroom with notebooks and study material." },
+  { title: "smart-board-teaching-for-nios-coaching",              alt: "Faculty teaching mathematics on digital smart board in NIOS coaching class." },
+  { title: "nios-coaching-office-entrance",                        alt: "Glass door entrance with NIOS branding at coaching institute office." },
+  { title: "personalized-guidance-for-nios-students",             alt: "Teacher helping students individually during NIOS coaching session." },
+  { title: "student-counselling-session-at-nios-coaching",        alt: "Students discussing academic plans with mentor in coaching institute office." },
+  { title: "director-cabin-at-nios-coaching-institute",           alt: "Coaching institute director sitting in modern office cabin at SS Coaching." },
+  { title: "founder-office-at-ss-coaching-lucknow",               alt: "Coaching institute founder seated in professional office setup with awards and decor." },
+  { title: "nios-admission-assistance-desk",                       alt: "Staff member assisting student with NIOS admission and counselling process." },
+  { title: "student-verification-and-counselling-process",        alt: "Counsellor interacting with student for NIOS course guidance and admission support." },
+  { title: "ss-coaching-reception-and-counselling-area",          alt: "Reception and counselling area of SS Coaching with NIOS admission banner display." },
+  { title: "student-counselling-session-at-ss-coaching",          alt: "Students and parents sitting in counselling lounge at SS Coaching for NIOS admission guidance." },
+  { title: "one-on-one-academic-counselling-for-nios-students",   alt: "Counsellor discussing admission and course details with student and parent at coaching institute." },
+  { title: "nios-admission-office-at-ss-coaching",                alt: "Modern counselling office setup with staff assisting students for NIOS admissions and queries." },
+  { title: "experienced-counsellors-at-ss-coaching-lucknow",      alt: "Two female counsellors sitting at office desk for NIOS student support and guidance." },
+  { title: "student-registration-and-documentation-support",      alt: "Staff helping students complete NIOS admission paperwork and documentation process." },
+  { title: "parent-and-student-counselling-meeting",              alt: "Counselling session with students and parents discussing NIOS courses and future planning." },
+  { title: "personalized-career-guidance-for-nios-students",      alt: "Mentors providing educational counselling and admission assistance to students in office cabin." },
+  { title: "academic-guidance-session-at-nios-coaching",          alt: "Student interacting with counsellor during NIOS admission and academic consultation session." },
+];
+
+const eventsMeta = [
+  { title: "nios-orientation-programme-event",               alt: "Speaker standing beside NIOS orientation programme banner for school principals and counsellors." },
+  { title: "conference-hall-setup-for-nios-seminar",         alt: "Elegant conference hall prepared for NIOS orientation and educational seminar event." },
+  { title: "banquet-arrangement-for-educational-event",      alt: "Dining and buffet setup arranged for NIOS orientation programme guests and attendees." },
+  { title: "guests-at-nios-orientation-programme",           alt: "Group of guests posing together during NIOS educational orientation event." },
+  { title: "welcome-bouquet-arrangement-for-event-guests",   alt: "Decorative flower bouquets placed on table for guest welcome at NIOS seminar." },
+  { title: "event-stage-decoration-for-nios-seminar",        alt: "Floral decoration and event backdrop setup for NIOS orientation programme stage." },
+  { title: "chief-guest-at-nios-educational-event",          alt: "Guest speaker standing on stage during NIOS orientation and counselling programme." },
+  { title: "organizers-attending-nios-orientation-programme",alt: "Event organizers seated together during NIOS educational seminar and orientation event." },
+  { title: "seminar-speaker-addressing-audience",            alt: "Speaker delivering presentation at NIOS orientation programme for school representatives." },
+  { title: "gift-bags-prepared-for-event-participants",      alt: "Red welcome gift bags arranged for guests attending NIOS orientation programme." },
+  { title: "discussion-session-at-educational-seminar",      alt: "Organizers discussing arrangements and educational topics during NIOS orientation event." },
+  { title: "networking-at-nios-orientation-event",           alt: "Guests interacting and networking during NIOS educational orientation programme." },
+  { title: "traditional-welcome-at-nios-orientation-event",  alt: "Event volunteers welcoming guest with tilak and flower petals at NIOS orientation programme." },
+  { title: "organizers-and-guests-at-educational-seminar",   alt: "Group photo of organizers and guests during NIOS orientation and counselling event." },
+  { title: "nios-ss-coaching-welcome-kit-bag",               alt: "Customized NIOS SS Coaching welcome bag arranged for seminar participants and guests." },
+  { title: "orientation-programme-banner-for-nios-event",    alt: "Guest standing beside official NIOS orientation programme banner for school counsellors and principals." },
+  { title: "educational-seminar-welcome-display",            alt: "Event guest posing near NIOS orientation seminar banner at educational programme venue." },
+  { title: "guest-registration-desk-at-nios-event",          alt: "Attendees completing registration process at NIOS orientation programme reception desk." },
+  { title: "welcome-gift-bags-for-event-attendees",          alt: "Multiple NIOS SS Coaching gift bags arranged for seminar guests and participants." },
+  { title: "registration-and-entry-process-at-seminar",      alt: "Participants signing registration forms during NIOS orientation and counselling programme." },
+];
+
+const tabImageMeta = {
+  indiranagar: indiranagaMeta,
+  events: eventsMeta,
+};
+
 const TABS = [
   { key: 'hazratganj', label: 'Hazratganj' },
   { key: 'alambagh', label: 'Alambagh' },
@@ -409,13 +460,15 @@ export default function PhotoGallery() {
       </div>
 
       <div className="pg-grid">
-        {images.map((src, i) => (
+        {images.map((src, i) => {
+          const meta = tabImageMeta[activeTab]?.[i];
+          return (
           <div
             key={src}
             className="pg-grid-item"
             onClick={() => openLightbox(images, i)}
           >
-            <img src={src} alt={`Gallery image ${i + 1}`} />
+            <img src={src} alt={meta?.alt || `Gallery image ${i + 1}`} title={meta?.title || undefined} />
             <div className="pg-overlay">
               <svg className="pg-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="7" />
@@ -425,7 +478,8 @@ export default function PhotoGallery() {
               </svg>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {tabCTA[activeTab] && (
@@ -450,7 +504,7 @@ export default function PhotoGallery() {
           <img
             className="pg-lb-img"
             src={lightbox.images[lightbox.index]}
-            alt="Gallery preview"
+            alt={tabImageMeta[activeTab]?.[lightbox.index]?.alt || "Gallery preview"}
             onClick={(e) => e.stopPropagation()}
           />
           <button className="pg-lb-arrow pg-lb-next" onClick={showNext} aria-label="Next">&#8250;</button>

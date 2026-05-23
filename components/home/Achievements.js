@@ -320,6 +320,11 @@ const videoSources = [
   { src: "/assets/instagram/video6.mp4", poster: "/assets/instagram/posters/video6.webp" },
   { src: "/assets/instagram/video7.mp4", poster: "/assets/instagram/posters/video7.webp" },
   { src: "/assets/instagram/video8.mp4", poster: "/assets/instagram/posters/video8.webp" },
+  { src: "/assets/instagram/video9.mp4", poster: "/assets/instagram/posters/video9.webp" },
+  { src: "/assets/instagram/video10.mp4", poster: "/assets/instagram/posters/video10.webp" },
+  { src: "/assets/instagram/video11.mp4", poster: "/assets/instagram/posters/video11.webp" },
+  { src: "/assets/instagram/video12.mp4", poster: "/assets/instagram/posters/video12.webp" },
+
 ];
 
 export default function Instagram() {

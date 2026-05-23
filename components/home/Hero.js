@@ -382,10 +382,18 @@ export default function Hero() {
         >
 
              <SwiperSlide>
-            <div className="hero-card2"></div>
+           <div
+  className="hero-card2"
+  title="NIOS Experts Committed to Student Success | SS Coaching Lucknow"
+  aria-label="SS Coaching faculty team offering expert support for NIOS students in Lucknow"
+></div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="hero-card1"></div>
+              <div
+    className="hero-card1"
+    title="A Moment of Honour and Recognition in Lucknow"
+    aria-label="Honouring education excellence with chief guest Dr Jawaid Alam Khan in Lucknow"
+  ></div>
           </SwiperSlide>
           {/* SINGLE SLIDE ONLY */}
           <SwiperSlide>
@@ -406,7 +414,8 @@ export default function Hero() {
               <div className="hero-right">
                 <img
                   src="/assets/images/home/personal.png"
-                  alt="NIOS Coaching"
+                   alt="SS Coaching providing NIOS education support in Lucknow since 2001"
+                  title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
                   priority
                 />
               </div>
@@ -430,7 +439,8 @@ export default function Hero() {
               <div className="hero-right">
                 <img
                   src="/assets/images/home/personal.png"
-                  alt="NIOS Coaching"
+                   alt="SS Coaching providing NIOS education support in Lucknow since 2001"
+                   title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
                   priority
                 />
               </div>

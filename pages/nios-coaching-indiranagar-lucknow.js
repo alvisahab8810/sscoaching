@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Popup from "@/components/home/Popup";
 import Image from "next/image";
+import Head from "next/head";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -102,6 +103,28 @@ export default function IndiraganagarPage() {
 
   return (
     <div className="hg-page">
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              "name": "SS Coaching — Indra Nagar",
+              "url": "https://sscoaching.in/nios-coaching-indiranagar-lucknow",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Infront Babian Restaurant, S97, 3rd Floor Lekhraj Palace, above Rama Sarees, Bhoothnath Market, Indira Nagar, Lucknow",
+                "addressLocality": "Indira Nagar",
+                "addressRegion": "Uttar Pradesh",
+                "postalCode": "226016",
+                "addressCountry": "IN"
+              },
+              "telephone": "9792111121"
+            })
+          }}
+        />
+      </Head>
 
       {/* ── TOPBAR ── */}
       <div className="hg-topbar">
@@ -143,7 +166,7 @@ export default function IndiraganagarPage() {
           <p className="hg-intro-text">
             The National Institute of Open Schooling (NIOS) offers a reliable alternative to
             complete 10th or 12th. SS Coaching provides trusted guidance, helping students with
-            NIOS admission in Lucknow, exam preparation, and complete academic support.
+            <a href="/nios-admission">NIOS admission in Lucknow</a>, exam preparation, and complete academic support.
           </p>
 
           {/* Highlights */}

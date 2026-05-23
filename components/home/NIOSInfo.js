@@ -62,9 +62,10 @@ export default function NIOSInfo() {
           <div className="admission-card">
            
 
-            <img
+           <img
               src="/assets/images/home/stream1.png"
-              alt="NIOS Stream 1 Block 1"
+              title="Our Successful NIOS Students 2026 | SS Coaching"
+              alt="Admission 2026 for NIOS streams at SS Coaching Lucknow"
               className="admission-image"
             />
             <div className="admission-content">
@@ -85,7 +86,8 @@ export default function NIOSInfo() {
 
             <img
               src="/assets/images/home/stream2.png"
-              alt="NIOS Stream 3 & 4"
+              alt="SS Coaching NIOS successful 10th & 12th students"
+              title="Success Stories of NIOS Students at SS Coaching "
               className="admission-image"
             />
             <div className="admission-content">

@@ -198,13 +198,19 @@ export default function Hero() {
           
           <SwiperSlide>
             <div className="hero-card-mobile">
-              <img src="/assets/images/home/mobile-banner-new.webp"></img>
+              <img src="/assets/images/home/mobile-banner-new.webp" 
+              alt="SS Coaching faculty team offering expert support for NIOS students in Lucknow"
+              title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
+              ></img>
             </div>
           </SwiperSlide>
 
           <SwiperSlide>
             <div className="hero-card-mobile">
-              <img src="/assets/images/home/mobile-banner.jpeg"></img>
+              <img src="/assets/images/home/mobile-banner.jpeg" 
+                title="A Moment of Honour and Recognition in Lucknow"
+                alt="Honouring education excellence with chief guest Dr Jawaid Alam Khan in Lucknow"
+              ></img>
             </div>
           </SwiperSlide>
 
@@ -222,7 +228,8 @@ export default function Hero() {
               <div className="hero-right">
                 <img
                   src="/assets/images/home/mobile-hero.png"
-                  alt="NIOS Coaching"
+                  alt="SS Coaching providing NIOS education support in Lucknow since 2001"
+                  title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
                   priority
                 />
               </div>

@@ -104,9 +104,10 @@ export default function AdmissionInNiosStream2() {
                 {/* Mobile image */}
                 <div className="about-left-bx desktop-none">
                   <img
-                    src="/assets/images/nios-admission/stream1-about.png"
-                    alt="Student applying for NIOS Admission 2026 Stream 2 for failed 10th and 12th students"
-                    title="NIOS Admission 2026 Stream 2 – Second Chance for Failed Students"
+                    src="/assets/images/nios-admission/stream2-about.webp"
+                     alt="Smiling Indian college girl with books and backpack on a modern campus outdoors.
+"
+                  title="nios-admission-in-stream-2"
                     className="hero-stream1-content-image"
                   />
                 </div>
@@ -161,7 +162,7 @@ export default function AdmissionInNiosStream2() {
                 </p>
 
                 <div className="full-btn cta-btn-2nd">
-                  <a href="#" className="contact-btn">
+                  <a href="/contact-us" className="contact-btn">
                     Contact Us For help
                   </a>
                   <div className="contact-btn1">
@@ -178,9 +179,10 @@ export default function AdmissionInNiosStream2() {
               {/* Desktop image */}
               <div className="about-left-bx mobile-none">
                 <img
-                  src="/assets/images/nios-admission/stream1-about.png"
-                  alt="Student applying for NIOS Admission 2026 Stream 2 for failed 10th and 12th students"
-                  title="NIOS Admission 2026 Stream 2 – Second Chance for Failed Students"
+                  src="/assets/images/nios-admission/stream2-about.webp"
+                  alt="Smiling Indian college girl with books and backpack on a modern campus outdoors.
+"
+                  title="nios-admission-in-stream-2"
                   className="hero-stream1-content-image"
                 />
               </div>
@@ -195,9 +197,9 @@ export default function AdmissionInNiosStream2() {
           <div className="container">
             <div className="info-content">
               <img
-                src="/assets/images/nios-admission/stream1-info.png"
-                alt="Student studying online for NIOS Admission 2026 Stream 2"
-                title="NIOS Admission 2026 Stream 2 Student Registration"
+                src="/assets/images/nios-admission/stream2-info.webp"
+                alt="Smiling woman with long dark hair, holding a laptop in front of a white background."
+                title="indian-female-student-holding-laptop"
                 className="info-image"
               />
               <div className="info-text-group">
@@ -249,7 +251,7 @@ export default function AdmissionInNiosStream2() {
                   combinations that align with individual career goals and
                   future plans.
                 <div className="full-btn cta-btn-2nd">
-                  <a href="#" className="contact-btn">
+                  <a href="/contact-us" className="contact-btn">
                     Contact Us For help
                   </a>
                   <div className="contact-btn1">
@@ -288,7 +290,7 @@ export default function AdmissionInNiosStream2() {
             </h2>
             <p className="nios-text">
 
-              Applying for NIOS Admission 2026 is a simple online process. Visit the official website of National Institute of Open Schooling and select your course (10th or 12th). Fill out the application form with correct details, upload required documents, and pay the admission fee online. After submission, you will receive a confirmation receipt. Once approved, you can download your ID card and begin your studies easily. <br/><br/>
+              Applying for NIOS Admission 2026 is a simple online process. Visit the official website of National Institute of Open Schooling and select your course (10th or 12th). Fill out the application form with correct details, upload required documents, and pay the admission fee online. Before applying, check the <Link href="/nios-datesheet" className="link-here">NIOS April 2026 exam datesheat</Link> to plan your preparation timeline. After submission, you will receive a confirmation receipt. Once approved, you can download your ID card and begin your studies easily. <br/><br/>
               The NIOS online admission 2026 is simple and student-friendly.
               However, many students prefer taking guidance from an experienced
               admission center to ensure everything is done correctly.
@@ -513,7 +515,7 @@ export default function AdmissionInNiosStream2() {
                 across India, making it valid for higher studies and jobs. With
                 multiple exam opportunities and an easy learning system, NIOS is
                 perfect for dropouts, working students, and those looking for a
-                second chance to complete their education.
+                second chance to complete their education. Read our detailed <Link href="/faq/advice-for-failed-students-cbse-icse-up-board" className="link-here">Advice for students who failed CBSE or UP Board</Link> to understand your options.
               </p>
             </div>
 
@@ -594,10 +596,10 @@ export default function AdmissionInNiosStream2() {
                   </Link>
                 </div>
                 <div className="expand-item">
-                  <Link href="/nios-admission/admission-in-nios-stream-2">
+                  <Link href="/nios-admission/admission-in-nios-stream-1">
                     <div className="expand-header branch1">
                       <div className="expand-text">
-                        NIOS Admission for Stream 2
+                        NIOS Admission Stream 1
                       </div>
                       <div className="expand-icon">
                         <img

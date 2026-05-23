@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Popup from "@/components/home/Popup";
 import Image from "next/image";
+import Head from "next/head";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -102,6 +103,28 @@ export default function AlambaghPage() {
 
   return (
     <div className="hg-page">
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              "name": "SS Coaching — Alambagh",
+              "url": "https://sscoaching.in/nios-coaching-alambagh-lucknow",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "U.R Plaza, near Phoenix Mall, beside Acumen Hotel, Sector B, Bargawan, Alambagh, Lucknow",
+                "addressLocality": "Alambagh",
+                "addressRegion": "Uttar Pradesh",
+                "postalCode": "226005",
+                "addressCountry": "IN"
+              },
+              "telephone": "9935035316"
+            })
+          }}
+        />
+      </Head>
 
       {/* ── TOPBAR ── */}
       <div className="hg-topbar">
@@ -442,9 +465,9 @@ export default function AlambaghPage() {
                   SS Coaching provides a supportive environment with experienced teachers and
                   structured learning designed specifically for NIOS students.
                 </p>
-                <p>
+                <p className="hg-intro-text">
                   Students get clear explanations, preparation strategies, and complete support
-                  for NIOS admission in Lucknow — from counselling to their final exam.
+                  for <a href="/nios-admission">NIOS admission in Lucknow</a> — from counselling to their final exam.
                 </p>
                 <p>
                   The institute also maintains a disciplined and focused environment to help

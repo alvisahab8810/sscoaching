@@ -9264,7 +9264,7 @@ display:block;
   color: #4a4a68;
   line-height: 1.8;
   margin-bottom: 14px;
-  max-width: 860px;
+  max-width: 850px;
 }
 
 @media (max-width: 768px) {
@@ -10582,3 +10582,26 @@ display:block;
 }
 
 
+
+
+.about-us-area .process-section {
+    padding-top: 50px;
+}
+
+.about-us-area .stats-section {
+    padding-top: 70px;
+}
+
+.info-section .info-text-group{
+  gap:0;
+}
+
+
+
+.hg-intro-text a{
+  color: #1a56c4;
+}
+
+.text-brand{
+  color: #4441e5;
+}

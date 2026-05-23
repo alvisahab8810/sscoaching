@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import Popup from "@/components/home/Popup";
 import Image from "next/image";
+import Head from "next/head";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -189,6 +190,28 @@ export default function HazratganjPage() {
 
   return (
     <div className="hg-page">
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              "name": "SS Coaching — Hazratganj",
+              "url": "https://sscoaching.in/nios-coaching-hazratganj-lucknow",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "3rd Floor, Shri Chamber, Naza Computer Market, near Basant Cinema, Sushanpura, Nagar Nigam Market, Hazratganj, Lucknow",
+                "addressLocality": "Hazratganj",
+                "addressRegion": "Uttar Pradesh",
+                "postalCode": "226001",
+                "addressCountry": "IN"
+              },
+              "telephone": "9839065533"
+            })
+          }}
+        />
+      </Head>
 
       {/* ── TOPBAR ── */}
       <div className="hg-topbar">
@@ -236,7 +259,7 @@ export default function HazratganjPage() {
           </p>
           <p className="hg-intro-text">
             SS Coaching provides complete support including academic guidance, exam preparation,
-            and assistance with the NIOS admission in Lucknow process.
+            and assistance with the <a href="/nios-admission">NIOS admission in Lucknow</a> process.
           </p>
         </div>
       </section>

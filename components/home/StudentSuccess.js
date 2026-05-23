@@ -116,6 +116,24 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import { Autoplay, FreeMode } from "swiper/modules";
 
+const imagesMeta = [
+  { title: "NIOS Student Success Through SS Coaching Lucknow",       alt: "Student passing NIOS exams successfully through SS Coaching Lucknow" },
+  { title: "Outstanding NIOS Results at SS Coaching",                alt: "NIOS student achieving excellent marks with SS Coaching support" },
+  { title: "Student Achievement Celebrated at SS Coaching",          alt: "Successful student from SS Coaching Lucknow NIOS classes" },
+  { title: "Bright Academic Future with SS Coaching",                alt: "NIOS student success story from SS Coaching Lucknow" },
+  { title: "NIOS Exam Success Story from SS Coaching",               alt: "Student scoring high marks in NIOS exams through SS Coaching" },
+  { title: "SS Coaching Students Achieving Excellence",              alt: "Academic success achieved with SS Coaching NIOS guidance" },
+  { title: "Top Performance in NIOS Exams",                         alt: "Top-performing NIOS student from SS Coaching Lucknow" },
+  { title: "Successful Journey with SS Coaching Lucknow",            alt: "Student achieving academic goals through SS Coaching" },
+  { title: "Academic Success Powered by SS Coaching",                alt: "Successful NIOS exam result with SS Coaching support" },
+  { title: "Proud NIOS Achiever from SS Coaching",                   alt: "NIOS Class 12 student succeeding at SS Coaching Lucknow" },
+  { title: "Student Excellence in NIOS Class 12 Exams",             alt: "Student achievement in NIOS Class 12 exams at SS Coaching" },
+  { title: "SS Coaching Creating Student Success Stories",           alt: "NIOS coaching success story from SS Coaching Lucknow" },
+  { title: "Successful Results with Expert NIOS Coaching",           alt: "Student celebrating success in NIOS exams through SS Coaching" },
+  { title: "NIOS Learning Success at SS Coaching",                   alt: "High-scoring student from SS Coaching Lucknow NIOS batch" },
+  { title: "Student Growth and Achievement at SS Coaching",          alt: "Successful academic journey with SS Coaching NIOS classes" },
+];
+
 export default function StudentSuccess() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -191,7 +209,9 @@ export default function StudentSuccess() {
             1240: { slidesPerView: 7 },
           }}
         >
-          {students.map((student) => (
+          {students.map((student, index) => {
+            const meta = imagesMeta[index] || { title: student.name, alt: student.name };
+            return (
             <SwiperSlide key={student._id}>
               <div
                 className="student-card"
@@ -199,7 +219,8 @@ export default function StudentSuccess() {
               >
                 <img
                   src={student.image || "/assets/images/default-student.png"}
-                  alt={student.name}
+                  alt={meta.alt}
+                  title={meta.title}
                   loading="lazy"
                   width="170"
                   height="200"
@@ -216,7 +237,8 @@ export default function StudentSuccess() {
                 </div>
               </div>
             </SwiperSlide>
-          ))}
+            );
+          })}
         </Swiper>
       </div>
     </section>

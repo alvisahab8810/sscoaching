@@ -5,8 +5,9 @@ export default function Hero10th() {
     <div className='container'>
     <div className='syllabus-class-12th'>
         
-            <img src='/assets/images/syllabus/hero1.webp' alt='
-              syllabus 12th banner'></img>
+            <img src='/assets/images/syllabus/syllabus-10th.webp'
+            title='College-campus-banner'
+            alt='Smiling Indian college boy holding books with blurred outdoor campus background'></img>
         </div>
     </div>
   )
