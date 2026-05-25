@@ -8,13 +8,12 @@ import nodemailer from "nodemailer";
 function createTransporter() {
   return nodemailer.createTransport({
     host: "smtp.hostinger.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
       user: "info@viralon.in",
       pass: process.env.EMAIL_PASS,
     },
-    tls: { rejectUnauthorized: false },
   });
 }
 
@@ -77,8 +76,9 @@ export default async function handler(req, res) {
       html: buildOTPEmail(otp),
     });
   } catch (err) {
-    console.error("OTP email failed:", err);
-    return res.status(500).json({ message: "Failed to send OTP. Please try again." });
+    console.error("OTP email failed:", err.message, err.code);
+    const detail = process.env.NODE_ENV !== "production" ? ` (${err.message})` : "";
+    return res.status(500).json({ message: `Failed to send OTP. Please try again.${detail}` });
   }
 
   // Issue a short-lived pending token (10 min) — no dashboard access, only for OTP step
