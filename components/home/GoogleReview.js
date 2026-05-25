@@ -36,7 +36,7 @@ export default function GoogleReview() {
           >
 
             {/* Review 1 */}
-            <SwiperSlide>
+            {/* <SwiperSlide>
               <div className="review-card">
                 <div className="review-header">
                   <img
@@ -61,7 +61,7 @@ export default function GoogleReview() {
                   I wanted to get 12th passed with nios same year and ss coaching guided me perfectly the teachers are patientbamd the process was smooth .
                 </p>
               </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
 
             {/* Review 2 */}
             <SwiperSlide>
@@ -175,7 +175,7 @@ export default function GoogleReview() {
             </SwiperSlide>
 
             {/* Review 2 */}
-            <SwiperSlide>
+            {/* <SwiperSlide>
               <div className="review-card">
                 <div className="review-header">
                   <img
@@ -200,7 +200,7 @@ export default function GoogleReview() {
                    I was struggling after falling my board exams, but SS coaching’s support and excellent coaching at their Nios centre in Hazratganj.
                 </p>
               </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
 
             {/* Review 3 */}
             <SwiperSlide>
