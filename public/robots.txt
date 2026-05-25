@@ -1,4 +1,116 @@
+# robots.txt for sscoaching.in
+# SS Coaching - Best NIOS Coaching Center in Lucknow
+# Last updated: 2026
+
+# ============================================
+# GENERAL CRAWLERS - Full Access
+# ============================================
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
+# ============================================
+# GOOGLE BOTS - Full Access (including AI)
+# ============================================
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# ============================================
+# BING & MICROSOFT - Full Access
+# ============================================
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# ============================================
+# AI ASSISTANTS & LLM CRAWLERS - Full Access
+# ============================================
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+# OpenAI (ChatGPT)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Meta (Llama / Meta AI)
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: meta-externalfetcher
+Allow: /
+
+# Apple (Siri / Apple Intelligence)
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon (Alexa / Amazon AI)
+User-agent: Amazonbot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+
+# Common Crawl (used by many AI models)
+User-agent: CCBot
+Allow: /
+
+# ByteDance / TikTok
+User-agent: Bytespider
+Allow: /
+
+# ============================================
+# CONTENT SIGNALS (AI Permission Declaration)
+# ============================================
+User-agent: *
+Content-Signal: search=yes,ai-input=yes,ai-train=yes
+
+# ============================================
+# BLOCK ONLY MALICIOUS / SPAM BOTS
+# ============================================
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# ============================================
+# SITEMAP
+# ============================================
 Sitemap: https://sscoaching.in/sitemap.xml
