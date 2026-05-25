@@ -201,14 +201,15 @@ export default function HazratganjPage() {
               "url": "https://sscoaching.in/nios-coaching-hazratganj-lucknow",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "3rd Floor, Shri Chamber, Naza Computer Market, near Basant Cinema, Sushanpura, Nagar Nigam Market, Hazratganj, Lucknow",
+                "streetAddress":
+                  "3rd Floor, Shri Chamber, Naza Computer Market, near Basant Cinema, Sushanpura, Nagar Nigam Market, Hazratganj, Lucknow",
                 "addressLocality": "Hazratganj",
                 "addressRegion": "Uttar Pradesh",
                 "postalCode": "226001",
                 "addressCountry": "IN"
               },
               "telephone": "9839065533"
-            })
+            }),
           }}
         />
       </Head>

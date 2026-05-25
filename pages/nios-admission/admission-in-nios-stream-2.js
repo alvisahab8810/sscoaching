@@ -161,7 +161,7 @@ export default function AdmissionInNiosStream2() {
                   smart and practical choice.
                 </p>
 
-                <div className="full-btn cta-btn-2nd">
+                <div className="full-btn">
                   <a href="/contact-us" className="contact-btn">
                     Contact Us For help
                   </a>
@@ -250,7 +250,7 @@ export default function AdmissionInNiosStream2() {
                   and Science. NIOS offers the freedom to choose subject
                   combinations that align with individual career goals and
                   future plans.
-                <div className="full-btn cta-btn-2nd">
+                <div className="full-btn ">
                   <a href="/contact-us" className="contact-btn">
                     Contact Us For help
                   </a>
@@ -290,7 +290,7 @@ export default function AdmissionInNiosStream2() {
             </h2>
             <p className="nios-text">
 
-              Applying for NIOS Admission 2026 is a simple online process. Visit the official website of National Institute of Open Schooling and select your course (10th or 12th). Fill out the application form with correct details, upload required documents, and pay the admission fee online. Before applying, check the <Link href="/nios-datesheet" className="link-here">NIOS April 2026 exam datesheat</Link> to plan your preparation timeline. After submission, you will receive a confirmation receipt. Once approved, you can download your ID card and begin your studies easily. <br/><br/>
+              Applying for NIOS Admission 2026 is a simple online process. Visit the official website of National Institute of Open Schooling and select your course (10th or 12th). Fill out the application form with correct details, upload required documents, and pay the admission fee online. Before applying, check the <Link href="/nios-datesheet" className="link-here">NIOS April 2026 exam datesheet</Link> to plan your preparation timeline. After submission, you will receive a confirmation receipt. Once approved, you can download your ID card and begin your studies easily. <br/><br/>
               The NIOS online admission 2026 is simple and student-friendly.
               However, many students prefer taking guidance from an experienced
               admission center to ensure everything is done correctly.
@@ -871,7 +871,7 @@ export default function AdmissionInNiosStream2() {
 //               Center in Lucknow, Call Now at 9935035316, 9839065533.
 //             </p>
 
-//             <div className="full-btn cta-btn-2nd mt-0 desktop-none">
+//             <div className="full-btn  mt-0 desktop-none">
 //               <a href="#" className="contact-btn ">
 //                 Contact Us For help
 //               </a>

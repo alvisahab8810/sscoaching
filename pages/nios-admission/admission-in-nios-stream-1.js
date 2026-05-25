@@ -153,7 +153,7 @@ export default function AdmissionInNiosStream1() {
 
                 In conclusion, NIOS provides a flexible, affordable, and recognized pathway for students to achieve their educational goals. It is a perfect solution for anyone looking to restart or continue their studies with confidence.
               </p>
-              <div className="full-btn cta-btn-2nd">
+              <div className="full-btn ">
                 <a href="/contact-us" className="contact-btn ">
                   Contact Us For help
                 </a>
@@ -226,7 +226,7 @@ export default function AdmissionInNiosStream1() {
  Both programs are ideal for school dropouts, students who have failed in board exams, working individuals, and those looking for a flexible education system. With proper support and guidance from a Best NIOS Admission Center in Lucknow, students can complete their studies confidently and move ahead toward a better future.
 
 
-              <div className="full-btn cta-btn-2nd">
+              <div className="full-btn ">
                 <a href="/contact-us" className="contact-btn">
                   Contact Us For help
                 </a>

@@ -104,7 +104,7 @@ export default function AlambaghPage() {
   return (
     <div className="hg-page">
       <Head>
-        <script
+         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -114,14 +114,15 @@ export default function AlambaghPage() {
               "url": "https://sscoaching.in/nios-coaching-alambagh-lucknow",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "U.R Plaza, near Phoenix Mall, beside Acumen Hotel, Sector B, Bargawan, Alambagh, Lucknow",
+                "streetAddress":
+                  "U.R Plaza, near Phoenix Mall, beside Acumen Hotel, Sector B, Bargawan, Alambagh, Lucknow",
                 "addressLocality": "Alambagh",
                 "addressRegion": "Uttar Pradesh",
                 "postalCode": "226005",
                 "addressCountry": "IN"
               },
               "telephone": "9935035316"
-            })
+            }),
           }}
         />
       </Head>

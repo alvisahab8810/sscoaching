@@ -114,14 +114,15 @@ export default function IndiraganagarPage() {
               "url": "https://sscoaching.in/nios-coaching-indiranagar-lucknow",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Infront Babian Restaurant, S97, 3rd Floor Lekhraj Palace, above Rama Sarees, Bhoothnath Market, Indira Nagar, Lucknow",
+                "streetAddress":
+                  "Infront Babian Restaurant, S97, 3rd Floor Lekhraj Palace, above Rama Sarees, Bhoothnath Market, Indira Nagar, Lucknow",
                 "addressLocality": "Indira Nagar",
                 "addressRegion": "Uttar Pradesh",
                 "postalCode": "226016",
                 "addressCountry": "IN"
               },
               "telephone": "9792111121"
-            })
+            }),
           }}
         />
       </Head>
