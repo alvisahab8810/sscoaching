@@ -209,6 +209,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FiDownload } from "react-icons/fi";
 import GoogleTranslate from "../home/Googletranslate";
 import Breadcrumb from "../home/Breadcrumb";
+import ResultsAnnouncementStrip from "../home/ResultsAnnouncementStrip";
 export default function Header() {
   
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -584,6 +585,9 @@ export default function Header() {
         }
       `}</style>
     </section>
+
+    {/* ── Results Announcement Strip ── */}
+    {!pathname.startsWith("/dashboard") && <ResultsAnnouncementStrip />}
 
     {/* ── Breadcrumb ── */}
     {pathname !== "/" && !pathname.startsWith("/dashboard") && (
