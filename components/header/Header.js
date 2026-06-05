@@ -453,6 +453,39 @@ export default function Header() {
                 )}
               </div>
 
+              {/* NIOS Results Dropdown */}
+              <div
+                className="nav-item dropdown"
+                onMouseEnter={() => toggleDropdown("niosresults")}
+                onMouseLeave={() => toggleDropdown(null)}
+              >
+                <span className="dropdown-toggle">
+                  NIOS Results <FiChevronDown className="arrow-icon" />
+                </span>
+                {openDropdown === "niosresults" && (
+                  <div className="dropdown-menu">
+                    <Link
+                      href="/nios-results"
+                      className={`mb-2 ${isActive("/nios-results") ? "active" : ""}`}
+                    >
+                      NIOS Results 2026
+                    </Link>
+                    <Link
+                      href="/nios-class-12th-result"
+                      className={`mb-2 ${isActive("/nios-class-12th-result") ? "active" : ""}`}
+                    >
+                      NIOS Class 12th Result 2026
+                    </Link>
+                    <Link
+                      href="/nios-class-10th-result"
+                      className={`mb-2 ${isActive("/nios-class-10th-result") ? "active" : ""}`}
+                    >
+                      NIOS Class 10th Result 2026
+                    </Link>
+                  </div>
+                )}
+              </div>
+
               <Link
                 href="/faq"
                 className={`nav-item ${isActive("/faq") ? "active" : ""}`}

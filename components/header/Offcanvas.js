@@ -439,6 +439,50 @@ export default function Offcanvas() {
                     </div>
                   </div>
                 </li>
+
+                {/* NIOS Results Accordion */}
+                <li className="nav-item mob-dropdown">
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="headingResults">
+                      <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseResults"
+                        aria-expanded="false"
+                        aria-controls="collapseResults"
+                      >
+                        NIOS Results
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseResults"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="headingResults"
+                      data-bs-parent="#mobileAccordion"
+                    >
+                      <div className="accordion-body">
+                        <ul className="list-unstyled">
+                          <li>
+                            <Link href="/nios-results" className="mb-2">
+                              NIOS Results 2026
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/nios-class-12th-result" className="mb-2">
+                              NIOS Class 12th Result 2026
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/nios-class-10th-result" className="mb-2">
+                              NIOS Class 10th Result 2026
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
               </div>
 
               {/* Other Static Links */}
