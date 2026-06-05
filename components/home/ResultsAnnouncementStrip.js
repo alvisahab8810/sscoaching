@@ -17,21 +17,21 @@ export default function ResultsAnnouncementStrip() {
           {/* LIVE badge */}
           <span className="ras-badge">
             <span className="ras-pulse" aria-hidden="true" />
-            LIVE
+            OUT NOW
           </span>
 
           {/* Desktop text */}
           <p className="ras-text">
             <span className="ras-star" aria-hidden="true">★</span>
-            &nbsp;NIOS&nbsp;<strong>Senior Secondary (Class 12th) Results</strong>&nbsp;Coming Soon
-            &nbsp;— Keep your Enrolment Number ready!&nbsp;
+            &nbsp;NIOS&nbsp;<strong>Senior Secondary (Class 12th) Results are Out Now!</strong>
+            &nbsp;— Check your result instantly with your Enrolment Number.&nbsp;
             <span className="ras-star" aria-hidden="true">★</span>
           </p>
 
           {/* Mobile marquee */}
           <div className="ras-marquee-wrap" aria-hidden="true">
             <span className="ras-marquee">
-              ★&nbsp; NIOS Senior Secondary (Class&nbsp;12th) Results Coming Soon — Keep your Enrolment Number ready! &nbsp;&nbsp;&nbsp;★&nbsp; NIOS Senior Secondary (Class&nbsp;12th) Results Coming Soon — Keep your Enrolment Number ready! &nbsp;&nbsp;&nbsp;
+              ★&nbsp; NIOS Senior Secondary (Class&nbsp;12th) Results are Out Now! — Check your result with your Enrolment Number. &nbsp;&nbsp;&nbsp;★&nbsp; NIOS Senior Secondary (Class&nbsp;12th) Results are Out Now! — Check your result with your Enrolment Number. &nbsp;&nbsp;&nbsp;
             </span>
           </div>
 
