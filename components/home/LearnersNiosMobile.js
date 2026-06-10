@@ -58,25 +58,45 @@ export default function LearnersNiosMobile() {
 
              <SwiperSlide>
               <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img4.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img5.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img6.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img7.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img8.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             {/* Leanrers 2 Duplicate */}
+            <SwiperSlide>
+              <div className="learners-nios">
                 <img src="/assets/images/home/learners-nios/img1.png" alt="Learners NIOS Board"></img>
               </div>
             </SwiperSlide>
 
-
-             <SwiperSlide>
-              <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img2.png" alt="Learners NIOS Board"></img>
-              </div>
-            </SwiperSlide>
-
-
-             <SwiperSlide>
-              <div className="learners-nios">
-                <img src="/assets/images/home/learners-nios/img3.png" alt="Learners NIOS Board"></img>
-              </div>
-            </SwiperSlide>
-
-
              <SwiperSlide>
               <div className="learners-nios">
                 <img src="/assets/images/home/learners-nios/img2.png" alt="Learners NIOS Board"></img>
@@ -86,6 +106,40 @@ export default function LearnersNiosMobile() {
              <SwiperSlide>
               <div className="learners-nios">
                 <img src="/assets/images/home/learners-nios/img3.png" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img4.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img5.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img6.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img7.webp" alt="Learners NIOS Board"></img>
+              </div>
+            </SwiperSlide>
+
+             <SwiperSlide>
+              <div className="learners-nios">
+                <img src="/assets/images/home/learners-nios/img8.webp" alt="Learners NIOS Board"></img>
               </div>
             </SwiperSlide>
 

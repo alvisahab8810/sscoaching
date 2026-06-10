@@ -470,7 +470,7 @@ img {
 
 .process-container {
   display: flex;
-  gap: 80px;
+  gap: 48px;
   /* align-items: center; */
 }
 
@@ -479,53 +479,55 @@ img {
 }
 
 .process-title {
-  font-size: 34px;
+  font-size: 28px;
   font-family: 'Poppins', Arial, sans-serif;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .process-steps {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 12px;
 }
 
 .process-step {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
 }
 
 .step-number {
-  font-size: 72px;
+  font-size: 52px;
   color: #0066ff26;
   line-height: 1;
   font-weight: bolder;
+  min-width: 56px;
 }
 
 .step-content {
   background-color: #ffffff;
   border: 1px solid #edeef0;
-  border-radius: 20px;
-  padding: 22px 40px;
+  border-radius: 16px;
+  padding: 14px 22px;
   box-shadow: 6px 5px 15px #002b6b19;
   flex: 1;
 }
 
 .process-container .step-content h3 {
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 17px;
+  font-weight: 600;
   color: #293347;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .step-content p {
-  font-size: 14px;
+  font-size: 13px;
   font-family: 'Manrope', Arial, sans-serif;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 19px;
   color: #293347;
+  margin-bottom: 0;
 }
   .review-text {
     font-size: 16px;
@@ -980,13 +982,13 @@ img {
 }
 
 .admission-title {
-  font-size: 22px;
-  font-family: 'Poppins', Arial, sans-serif;
-  font-weight: 600;
-  color: #41be90;
-  line-height: 40px;
-  position: relative;
-  z-index: 1;
+    font-size: 19px;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: 600;
+    color: #41be90;
+    line-height: 24px;
+    position: relative;
+    z-index: 1;
 }
 
 .admission-bg {
@@ -1014,6 +1016,14 @@ img {
 .best-title .highlight {
   color: #4441e5;
   font-weight: 600;
+}
+
+.best-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  max-width: 620px;
+  margin: -18px auto 36px;
+  line-height: 1.7;
 }
 
 .features-grid {
@@ -1190,6 +1200,36 @@ img {
 .faq-title .highlight {
   color: #4441e5;
   font-weight: 600;
+}
+
+.faq-subtitle {
+  font-size: 15px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 32px;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.view-more-btn {
+  display: inline-block;
+  background: #4441e5;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  transition: background 0.2s;
+}
+
+.view-more-btn:hover {
+  background: #3330c2;
+  color: #fff;
+  text-decoration: none;
 }
 
 .faq-list {
@@ -1506,11 +1546,11 @@ button:focus,
 
  
   .step-content h3 {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .step-content p {
-    font-size: 16px;
+    font-size: 13px;
     margin-bottom: 0;
   }
 
@@ -1662,11 +1702,11 @@ button:focus,
  
 
   .step-number {
-    font-size: 108px;
+    font-size: 60px;
   }
 
   .step-content h3 {
-    font-size: 24px;
+    font-size: 18px;
     font-family: SF Pro Display !important;
   }
 
@@ -10604,4 +10644,15 @@ display:block;
 
 .text-brand{
   color: #4441e5;
+}
+
+
+.nios-results-main-page .table-wrapper th {
+  color:#111;
+}
+
+.learners-nios img {
+    height: 227px;
+    object-fit: cover;
+    border-radius: 10px;
 }

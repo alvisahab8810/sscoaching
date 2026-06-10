@@ -32,6 +32,8 @@ const LABEL_MAP = {
   "nios-results":                "NIOS Results",
   "nios-12th-result":            "NIOS 12th Result",
   "nios-10th-result":            "NIOS 10th Result",
+  "nios-class-10th-result":      "Nios Class 10th Result",
+  "nios-class-12th-result":      "Nios Class 12th Result",
 
   // ── Question Papers ──
   "question-papers":             "Question Papers",
@@ -198,6 +200,12 @@ const LABEL_MAP = {
   "physical-education373":        "Physical Education (373)",
 };
 
+// Slugs that need a virtual parent crumb injected before them
+const PARENT_MAP = {
+  "nios-class-10th-result": { label: "NIOS Results", href: "/nios-results" },
+  "nios-class-12th-result": { label: "NIOS Results", href: "/nios-results" },
+};
+
 // Fallback: auto-format unknown slugs — strips numbers at end
 // e.g. "some-slug-123" → "Some Slug"
 function formatLabel(slug) {
@@ -225,13 +233,20 @@ export default function Breadcrumb({ customPaths }) {
   // Don't show on homepage
   if (segments.length === 0) return null;
 
-  const crumbs = customPaths || [
-    { label: "Home", href: "/" },
-    ...segments.map((seg, i) => ({
-      label: getLabel(decodeURIComponent(seg)),
-      href: "/" + segments.slice(0, i + 1).join("/"),
-    })),
-  ];
+  const crumbs = customPaths || (() => {
+    const result = [{ label: "Home", href: "/" }];
+    segments.forEach((seg, i) => {
+      const parent = PARENT_MAP[seg];
+      if (parent && !result.find(c => c.href === parent.href)) {
+        result.push(parent);
+      }
+      result.push({
+        label: getLabel(decodeURIComponent(seg)),
+        href: "/" + segments.slice(0, i + 1).join("/"),
+      });
+    });
+    return result;
+  })();
 
   // JSON-LD for Google Search breadcrumb display
   const jsonLd = {

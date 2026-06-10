@@ -9,13 +9,13 @@ export default function CTA() {
       <div className="cta-content">
         <div className="cta-text">
           <h2 className="cta-title">
-            Registration open!
+            Failed in 10th or 12th? 
             <br />
-            Limited seats
+            Pass in Just 45 Days.
           </h2>
-          <p className="cta-subtitle">fill the form before its too late</p>
+          <p className="cta-subtitle">Special admission program with limited seats available. </p>
           <Link href="#" className="cta-btn">
-            Click Here
+            Apply Now
           </Link>
         </div>
       </div>

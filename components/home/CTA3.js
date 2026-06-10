@@ -14,9 +14,11 @@ export default function CTA3() {
     style={{ display: "none" }}
   />
         <div className="cta-text">
-          <h2 className="cta-title">Registration open!<br />Limited seats</h2>
-          <p className="cta-subtitle">fill the form before its too late</p>
-          <a href="#" className="cta-btn">Click Here</a>
+          <h2 className="cta-title">NIOS Stream 2 Block 2 <br />Admission Open </h2>
+          <p className="cta-subtitle">
+            Get expert coaching, counselling, and admission support.
+         </p>
+          <a href="#" className="cta-btn">Apply Now</a>
         </div>
       </div>
     </section>
