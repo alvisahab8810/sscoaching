@@ -528,6 +528,50 @@ const QuestionPapers = () => {
     { id: 224005, code: "224", subject: "Accountancy", title: "224 - Accountancy (April 2023)", session: "April 2023", sample: false, file: "/papers/224-accountancy-apr-2023.pdf" },
     { id: 224006, code: "224", subject: "Accountancy", title: "224 - Accountancy (October 2022)", session: "October 2022", sample: false, file: "/papers/224-accountancy-oct-2022.pdf" },
     { id: 224007, code: "224", subject: "Accountancy", title: "224 - Accountancy (April 2022)", session: "April 2022", sample: false, file: "/papers/224-accountancy-apr-2022.pdf" },
+
+    // ── April 2026 Papers ──────────────────────────────────────────────────
+    // 201 - Hindi
+    { id: 2260101, code: "201", subject: "Hindi", title: "201 - Hindi (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/201-hindi-apr-2026.pdf" },
+    // 202 - English
+    { id: 2260201, code: "202", subject: "English", title: "202 - English (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/202-english-apr-2026.pdf" },
+    { id: 2260202, code: "202", subject: "English", title: "202 - English Set B (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/202-english-set-b-apr-2026.pdf" },
+    // 211 - Maths
+    { id: 2262111, code: "211", subject: "Maths", title: "211 - Maths (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/211-maths-apr-2026.pdf" },
+    { id: 2262112, code: "211", subject: "Maths", title: "211 - Maths Set B (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/211-maths-set-b-apr-2026.pdf" },
+    // 212 - Science & Technology
+    { id: 2262121, code: "212", subject: "Science", title: "212 - Science & Technology (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/212-science-technology-apr-2026.pdf" },
+    // 213 - Social Science
+    { id: 2262131, code: "213", subject: "Social Science", title: "213 - Social Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/213-social-science-apr-2026.pdf" },
+    // 225 - Painting
+    { id: 2262251, code: "225", subject: "Painting", title: "225 - Painting (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/225-painting-apr-2026.pdf" },
+    { id: 2262252, code: "225", subject: "Painting", title: "225 - Painting Set B (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/225-painting-set-b-apr-2026.pdf" },
+    // 229 - Data Entry
+    { id: 2262291, code: "229", subject: "Data Entry Operation", title: "229 - Data Entry Operation (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/229-data-entry-apr-2026.pdf" },
+    { id: 2262292, code: "229", subject: "Data Entry Operation", title: "229 - Data Entry Operations (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/229-data-entry-operations-apr-2026.pdf" },
+    // 301 - Hindi (Sr. Secondary)
+    { id: 2263011, code: "301", subject: "Hindi", title: "301 - Hindi (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/301-hindi-apr-2026.pdf" },
+    // 302 - English (Sr. Secondary)
+    { id: 2263021, code: "302", subject: "English", title: "302 - English (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/302-english-apr-2026.pdf" },
+    // 312 - Physics
+    { id: 2263121, code: "312", subject: "Physics", title: "312 - Physics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/312-physics-apr-2026.pdf" },
+    // 318 - Economics
+    { id: 2263181, code: "318", subject: "Economics", title: "318 - Economics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/318-economics-apr-2026.pdf" },
+    // 319 - Business Studies
+    { id: 2263191, code: "319", subject: "Business Studies", title: "319 - Business Studies (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/319-business-studies-apr-2026.pdf" },
+    // 320 - Accountancy
+    { id: 2263201, code: "320", subject: "Accountancy", title: "320 - Accountancy (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/320-accountancy-apr-2026.pdf" },
+    // 330 - Computer Science
+    { id: 2263301, code: "330", subject: "Computer Science", title: "330 - Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/330-computer-science-apr-2026.pdf" },
+    // 332 - Painting
+    { id: 2263321, code: "332", subject: "Painting", title: "332 - Painting (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/332-painting-apr-2026.pdf" },
+    // 336 - Data Entry
+    { id: 2263361, code: "336", subject: "Data Entry Operation", title: "336 - Data Entry (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/336-data-entry-apr-2026.pdf" },
+    // 373 - Physical Education
+    { id: 2263731, code: "373", subject: "Physical Education", title: "373 - Physical Education Set A (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/373-physical-education-set-a-apr-2026.pdf" },
+    // Biology
+    { id: 2269001, code: "", subject: "Biology", title: "Biology (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/biology-apr-2026.pdf" },
+    // Computer Science (unlabelled)
+    { id: 2269002, code: "", subject: "Computer Science", title: "Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/computer-science-apr-2026.pdf" },
   ];
 
   // 🧠 Filters + Sorting
@@ -572,6 +616,7 @@ const QuestionPapers = () => {
   }, [filters]);
 
   const sessions = [
+    "April 2026",
     "April 2025",
     "October 2024",
     "April 2024",
@@ -597,6 +642,10 @@ const QuestionPapers = () => {
     "Painting",
     "Data Entry Operation",
     "Accountancy",
+    "Biology",
+    "Physics",
+    "Computer Science",
+    "Physical Education",
   ];
 
   return (
