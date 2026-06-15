@@ -70,6 +70,7 @@ export default function NIOSResult2026() {
         <meta name="description" content="NIOS Result 2026 has been declared for Class 10 & Class 12. Check your Secondary and Senior Secondary results at results.nios.ac.in. SS Coaching provides free guidance on marksheet download, passing criteria, improvement exams & college admissions. Trusted since 2001." />
         <meta name="keywords" content="nios result 2026, nios result 2026 class 10, nios result 2026 class 12, results.nios.ac.in, nios secondary result 2026, nios senior secondary result 2026, nios marksheet download 2026, nios result date 2026, nios enrollment number result, nios results, nios on demand result, nios 10th result, nios 12th result, NIOS Result 2026 Class 10, NIOS Result 2026 Class 12, nios result check, nios board result, nios exam result 2026, nios marksheet, nios passing certificate, nios improvement exam 2026" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href="https://sscoaching.in/nios-results/" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>

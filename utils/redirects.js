@@ -300,4 +300,5 @@ export const redirectsMap = {
 "/history315_3325.html": "/subject/syllabus-class-12th/syllabus-history-senior-secondary-nios-315",
 "/Nios_nios-provides-opportunity-to-students-to-continue-education-that-stopped-for-various-reasons_14.html": "/blogs/nios_nios-provides-opportunity-to-students-to-continue-education-that-stopped-for-various-reasons_14.html",
 "/Geography(316)_3327.html": "/subject/syllabus-class-12th/syllabus-geography-senior-secondary-316",
+  "/nios-results/nios-12th-result": "/nios-results",
 };
