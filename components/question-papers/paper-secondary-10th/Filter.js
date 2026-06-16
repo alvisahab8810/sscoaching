@@ -374,7 +374,7 @@ const QuestionPapers = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [filters, setFilters] = useState({
     paperType: "All",
-    session: "",
+    session: "April 2026",
     subject: "",
     search: "",
     sort: "",
@@ -867,7 +867,7 @@ const QuestionPapers = () => {
 
         <a href="#" className="cta-button">
           You can download Secondary Class 10th previous year’s NIOS question
-          papers and NIOS Sample Paper 2025 from SS Coaching website
+          papers and NIOS Sample Paper 2026 from SS Coaching website
           exclusively.
         </a>
       </div>

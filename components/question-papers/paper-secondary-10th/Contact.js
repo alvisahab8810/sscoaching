@@ -8,10 +8,10 @@ export default function Contact() {
         <p className="section-text">
           The National Institute of Open Schooling (NIOS) offers students the
           opportunity to review NIOS Secondary 10th Previous Year Question
-          Papers and NIOS 10th Secondary Sample Papers 2025. These resources
+          Papers and NIOS 10th Secondary Sample Papers 2026. These resources
           help students familiarize themselves with the exam format and improve
           their scores. Interested students can access all NIOS Question Paper
-          Class 10 and NIOS Sample Paper 2025 on the
+          Class 10 and NIOS Sample Paper 2026 on the
           <span>
             SS Coaching website for better results in NIOS Board Secondary
             Exams. This is a valuable learning opportunity, as we provide all
@@ -28,10 +28,10 @@ export default function Contact() {
 
              The National Institute of Open Schooling (NIOS) offers students the
           opportunity to review NIOS Secondary 10th Previous Year Question
-          Papers and NIOS 10th Secondary Sample Papers 2025. These resources
+          Papers and NIOS 10th Secondary Sample Papers 2026. These resources
           help students familiarize themselves with the exam format and improve
           their scores. Interested students can access all NIOS Question Paper
-          Class 10 and NIOS Sample Paper 2025 on the
+          Class 10 and NIOS Sample Paper 2026 on the
           <span>
             SS Coaching website for better results in NIOS Board Secondary
             Exams. This is a valuable learning opportunity, as we provide all
