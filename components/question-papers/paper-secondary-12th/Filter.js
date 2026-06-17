@@ -8,7 +8,7 @@ const QuestionPapers12 = () => {
     session: "",
     subject: "",
     search: "",
-    sort: "",
+    sort: "newest",
   });
 
   const handleToggle = (name) => setOpenMenu(openMenu === name ? null : name);
@@ -205,8 +205,25 @@ const QuestionPapers12 = () => {
     { id: 335006, code: "335", subject: "Mass Communication", title: "335 - Mass Communication (October 2022)", session: "October 2022", sample: false, file: "/papers/12th/335-mass-comm-oct-2022.pdf" },
     { id: 335007, code: "335", subject: "Mass Communication", title: "335 - Mass Communication (April 2022)", session: "April 2022", sample: false, file: "/papers/12th/335-mass-comm-apr-2022.pdf" },
 
-
+    // ── April 2026 Papers ──────────────────────────────────────────────────
+    { id: 3012601, code: "301", subject: "Hindi", title: "301 - Hindi (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/301-hindi-apr-2026.pdf" },
+    { id: 3022601, code: "302", subject: "English", title: "302 - English (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/302-english-apr-2026.pdf" },
+    { id: 3122601, code: "312", subject: "Physics", title: "312 - Physics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/312-physics-apr-2026.pdf" },
+    { id: 3142601, code: "314", subject: "Biology", title: "314 - Biology (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/314-biology-apr-2026.pdf" },
+    { id: 3182601, code: "318", subject: "Economics", title: "318 - Economics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/318-economics-apr-2026.pdf" },
+    { id: 3192601, code: "319", subject: "Business Studies", title: "319 - Business Studies (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/319-business-studies-apr-2026.pdf" },
+    { id: 3202601, code: "320", subject: "Accountancy", title: "320 - Accountancy (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/320-accountancy-apr-2026.pdf" },
+    { id: 3302601, code: "330", subject: "Computer Science", title: "330 - Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/330-computer-science-apr-2026.pdf" },
+    { id: 3322601, code: "332", subject: "Painting", title: "332 - Painting (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/332-painting-apr-2026.pdf" },
+    { id: 3362601, code: "336", subject: "Data Entry Operation", title: "336 - Data Entry Operation (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/336-data-entry-apr-2026.pdf" },
+    { id: 3732601, code: "373", subject: "Physical Education", title: "373 - Physical Education Set A (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/373-physical-education-set-a-apr-2026.pdf" },
   ];
+
+  const sessionToDate = (session) => {
+    const monthMap = { April: 4, October: 10 };
+    const [month, year] = session.split(" ");
+    return (parseInt(year) || 0) * 100 + (monthMap[month] || 0);
+  };
 
   // FILTER + SORT
   const filteredPapers = useMemo(() => {
@@ -237,9 +254,9 @@ const QuestionPapers12 = () => {
     }
 
     if (filters.sort === "newest") {
-      filtered.sort((a, b) => b.session.localeCompare(a.session));
+      filtered.sort((a, b) => sessionToDate(b.session) - sessionToDate(a.session));
     } else if (filters.sort === "oldest") {
-      filtered.sort((a, b) => a.session.localeCompare(b.session));
+      filtered.sort((a, b) => sessionToDate(a.session) - sessionToDate(b.session));
     } else if (filters.sort === "subject") {
       filtered.sort((a, b) => a.subject.localeCompare(b.subject));
     }
@@ -249,10 +266,10 @@ const QuestionPapers12 = () => {
 
   // DROPDOWN VALUES
   const sessions = [
+    "April 2026",
     "April 2025",
     "October 2024",
     "April 2024",
-    "Sample 2024",
     "April 2023",
     "October 2022",
     "April 2022",
@@ -279,6 +296,7 @@ const QuestionPapers12 = () => {
     "Painting",
     "Data Entry Operation",
     "Mass Communication",
+    "Physical Education",
   ];
 
   return (
@@ -319,9 +337,6 @@ const QuestionPapers12 = () => {
                     <li onClick={() => handleSelect("paperType", "All")}>
                       All Papers
                     </li>
-                    <li onClick={() => handleSelect("paperType", "Sample")}>
-                      Sample Papers
-                    </li>
                   </ul>
                 </div>
               )}
@@ -355,6 +370,7 @@ const QuestionPapers12 = () => {
               {openMenu === "latest" && (
                 <div className="filtercards-dropdown">
                   <ul>
+                    <li onClick={() => handleSelect("session", "")}>All Sessions</li>
                     {sessions.map((s) => (
                       <li key={s} onClick={() => handleSelect("session", s)}>
                         {s}
@@ -393,6 +409,7 @@ const QuestionPapers12 = () => {
               {openMenu === "subjects" && (
                 <div className="filtercards-dropdown">
                   <ul>
+                    <li onClick={() => handleSelect("subject", "")}>All Subjects</li>
                     {subjects.map((sub) => (
                       <li key={sub} onClick={() => handleSelect("subject", sub)}>
                         {sub}
@@ -507,7 +524,7 @@ const QuestionPapers12 = () => {
         </section>
 
         <a href="#" className="cta-button">
-          Download Class 12th NIOS Question Papers & Sample Papers 2025 from our website.
+          Download Class 12th NIOS Question Papers & Sample Papers 2026 from our website.
         </a>
       </div>
     </section>

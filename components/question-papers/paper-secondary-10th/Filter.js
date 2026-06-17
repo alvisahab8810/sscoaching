@@ -374,10 +374,10 @@ const QuestionPapers = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [filters, setFilters] = useState({
     paperType: "All",
-    session: "April 2026",
+    session: "",
     subject: "",
     search: "",
-    sort: "",
+    sort: "newest",
   });
 
   const handleToggle = (name) => setOpenMenu(openMenu === name ? null : name);
@@ -548,31 +548,13 @@ const QuestionPapers = () => {
     // 229 - Data Entry
     { id: 2262291, code: "229", subject: "Data Entry Operation", title: "229 - Data Entry Operation (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/229-data-entry-apr-2026.pdf" },
     { id: 2262292, code: "229", subject: "Data Entry Operation", title: "229 - Data Entry Operations (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/229-data-entry-operations-apr-2026.pdf" },
-    // 301 - Hindi (Sr. Secondary)
-    { id: 2263011, code: "301", subject: "Hindi", title: "301 - Hindi (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/301-hindi-apr-2026.pdf" },
-    // 302 - English (Sr. Secondary)
-    { id: 2263021, code: "302", subject: "English", title: "302 - English (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/302-english-apr-2026.pdf" },
-    // 312 - Physics
-    { id: 2263121, code: "312", subject: "Physics", title: "312 - Physics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/312-physics-apr-2026.pdf" },
-    // 318 - Economics
-    { id: 2263181, code: "318", subject: "Economics", title: "318 - Economics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/318-economics-apr-2026.pdf" },
-    // 319 - Business Studies
-    { id: 2263191, code: "319", subject: "Business Studies", title: "319 - Business Studies (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/319-business-studies-apr-2026.pdf" },
-    // 320 - Accountancy
-    { id: 2263201, code: "320", subject: "Accountancy", title: "320 - Accountancy (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/320-accountancy-apr-2026.pdf" },
-    // 330 - Computer Science
-    { id: 2263301, code: "330", subject: "Computer Science", title: "330 - Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/330-computer-science-apr-2026.pdf" },
-    // 332 - Painting
-    { id: 2263321, code: "332", subject: "Painting", title: "332 - Painting (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/332-painting-apr-2026.pdf" },
-    // 336 - Data Entry
-    { id: 2263361, code: "336", subject: "Data Entry Operation", title: "336 - Data Entry (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/336-data-entry-apr-2026.pdf" },
-    // 373 - Physical Education
-    { id: 2263731, code: "373", subject: "Physical Education", title: "373 - Physical Education Set A (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/373-physical-education-set-a-apr-2026.pdf" },
-    // Biology
-    { id: 2269001, code: "", subject: "Biology", title: "Biology (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/biology-apr-2026.pdf" },
-    // Computer Science (unlabelled)
-    { id: 2269002, code: "", subject: "Computer Science", title: "Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/computer-science-apr-2026.pdf" },
   ];
+
+  const sessionToDate = (session) => {
+    const monthMap = { April: 4, October: 10 };
+    const [month, year] = session.split(" ");
+    return (parseInt(year) || 0) * 100 + (monthMap[month] || 0);
+  };
 
   // 🧠 Filters + Sorting
   const filteredPapers = useMemo(() => {
@@ -604,10 +586,9 @@ const QuestionPapers = () => {
     }
 
     if (filters.sort === "newest") {
-      // Simple string sort works for our labels
-      filtered.sort((a, b) => b.session.localeCompare(a.session));
+      filtered.sort((a, b) => sessionToDate(b.session) - sessionToDate(a.session));
     } else if (filters.sort === "oldest") {
-      filtered.sort((a, b) => a.session.localeCompare(b.session));
+      filtered.sort((a, b) => sessionToDate(a.session) - sessionToDate(b.session));
     } else if (filters.sort === "subject") {
       filtered.sort((a, b) => a.subject.localeCompare(b.subject));
     }
@@ -620,7 +601,6 @@ const QuestionPapers = () => {
     "April 2025",
     "October 2024",
     "April 2024",
-    "Sample 2024",
     "April 2023",
     "October 2022",
     "April 2022",
@@ -642,10 +622,6 @@ const QuestionPapers = () => {
     "Painting",
     "Data Entry Operation",
     "Accountancy",
-    "Biology",
-    "Physics",
-    "Computer Science",
-    "Physical Education",
   ];
 
   return (
@@ -685,9 +661,6 @@ const QuestionPapers = () => {
                     <li onClick={() => handleSelect("paperType", "All")}>
                       All Papers
                     </li>
-                    <li onClick={() => handleSelect("paperType", "Sample")}>
-                      Sample Papers
-                    </li>
                   </ul>
                 </div>
               )}
@@ -721,6 +694,7 @@ const QuestionPapers = () => {
               {openMenu === "latest" && (
                 <div className="filtercards-dropdown">
                   <ul>
+                    <li onClick={() => handleSelect("session", "")}>All Sessions</li>
                     {sessions.map((s) => (
                       <li key={s} onClick={() => handleSelect("session", s)}>
                         {s}
@@ -759,6 +733,7 @@ const QuestionPapers = () => {
               {openMenu === "subjects" && (
                 <div className="filtercards-dropdown">
                   <ul>
+                    <li onClick={() => handleSelect("subject", "")}>All Subjects</li>
                     {subjects.map((sub) => (
                       <li
                         key={sub}
