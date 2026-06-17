@@ -31,6 +31,14 @@ const subjectIcons = {
 };
 const getSubjectColor = (s) => subjectColors[s] || "#6c47d4";
 
+const getSubjectThumbClass = (s = "") => {
+  const l = s.toLowerCase();
+  if (l.includes("math")) return "sdc-thumb-mat";
+  if (l.includes("sci") || l.includes("phys") || l.includes("chem") || l.includes("bio")) return "sdc-thumb-sci";
+  if (l.includes("social") || l.includes("hist") || l.includes("geo")) return "sdc-thumb-soc";
+  return "sdc-thumb-eng";
+};
+
 const NOTE_ICONS  = { pdf:"📄", doc:"📝", ppt:"📊", link:"🔗", other:"📁" };
 const NOTE_LABELS = { pdf:"PDF", doc:"Word Doc", ppt:"PPT", link:"Link", other:"File" };
 
@@ -155,133 +163,176 @@ export default function StudentDashboard() {
   return (
     <>
       <Head><title>Dashboard — SS Coaching</title></Head>
-      <div className="sd-wrapper">
+      <div className="sd-page">
 
-        {/* ── SIDEBAR ── */}
-        <div className={`sd-sidebar ${sidebarOpen ? "sd-sidebar-open" : ""}`}>
-          <div className="sl-logo">
-            <div className="sl-logo-icon">SS</div>
-            <div>
-              <div className="sl-logo-name">SS Coaching</div>
-              <div className="sl-logo-tag">Rise From Failure • Estd. 2001</div>
-            </div>
-          </div>
-
-          <div className="sd-student-info">
-            <div className="sd-student-avatar">
-              {student.name ? student.name.charAt(0).toUpperCase() : "S"}
-            </div>
-            <div>
-              <div className="sd-student-name">{student.name || "Student"}</div>
-              <div className="sd-student-class">{student.className || ""}</div>
-            </div>
-          </div>
-
-          <nav className="sd-nav">
-            {[
-              { key:"dashboard", icon:<MdDashboard className="sd-nav-icon"/>,     label:"Dashboard" },
-              { key:"courses",   icon:<BsCollection className="sd-nav-icon"/>,    label:"Courses",        badge: enrolledCourses.length || 0 },
-              { key:"invoices",  icon:<MdReceipt className="sd-nav-icon"/>,       label:"My Invoices" },
-              { key:"live",      icon:<MdLiveTv className="sd-nav-icon"/>,        label:"Live Classes",   badge: liveClasses.length || 0 },
-              { key:"upcoming",  icon:<MdCalendarToday className="sd-nav-icon"/>, label:"Upcoming Classes" },
-              { key:"completed", icon:<MdCheckCircle className="sd-nav-icon"/>,   label:"Completed Classes" },
-              { key:"profile",   icon:<MdPerson className="sd-nav-icon"/>,        label:"My Profile" },
-            ].map((item) => (
-              <button
-                key={item.key}
-                className={`sd-nav-item ${activeMenu === item.key ? "sd-nav-active" : ""}`}
-                onClick={() => navigate(item.key)}
-              >
-                {item.icon} {item.label}
-                {item.badge > 0 && <span className="sd-nav-badge">{item.badge}</span>}
-              </button>
-            ))}
-          </nav>
-
-          <button className="sd-logout-btn" onClick={handleLogout}>
-            <MdLogout size={16} /> Logout
-          </button>
-        </div>
-
-        {sidebarOpen && <div className="sd-overlay" onClick={() => setSidebarOpen(false)} />}
-
-        {/* ── MAIN ── */}
-        <div className="sd-main">
-          <div className="sd-topbar">
-            <button className="sd-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <MdMenu size={24} />
+        {/* ── TOP NAVBAR ── */}
+        <nav className="sd-navbar">
+          <div className="sd-nav-left">
+            <button className="sd-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              <span/><span/><span/>
             </button>
-            <div className="sd-topbar-title">
-              {activeMenu === "dashboard" && "Dashboard"}
-              {activeMenu === "courses"   && <span><BsCollection size={18} style={{marginRight:6}}/> Courses</span>}
-              {activeMenu === "invoices"  && <span><MdReceipt size={20} style={{marginRight:6}}/> My Invoices</span>}
-              {activeMenu === "live"      && <span className="sd-topbar-live"><MdLiveTv size={20}/> Live Classes</span>}
-              {activeMenu === "upcoming"  && <span className="sd-topbar-upcoming"><MdCalendarToday size={18}/> Upcoming Classes</span>}
-              {activeMenu === "completed" && <span className="sd-topbar-completed"><MdCheckCircle size={18}/> Completed Classes</span>}
-              {activeMenu === "profile"   && <span><MdPerson size={20}/> My Profile</span>}
-            </div>
-            <div className="sd-topbar-right">
-              <button className="sd-cart-btn" onClick={() => setCartOpen(true)}>
-                <MdShoppingCart size={22}/>
-                {cart.length > 0 && <span className="sd-cart-count">{cart.length}</span>}
-              </button>
-              <div className="sd-topbar-avatar" onClick={() => navigate("profile")} style={{cursor:"pointer"}} title="My Profile">
-                {student.name ? student.name.charAt(0).toUpperCase() : "S"}
+            <div className="sd-brand" onClick={() => navigate("dashboard")}>
+              <div className="sd-brand-logo">SS</div>
+              <div className="sd-brand-text">
+                <b>COACHING</b>
+                <small>RISE FROM FAILURE</small>
+                <span className="sd-brand-est">Estd. 2001</span>
               </div>
             </div>
           </div>
+          <div className="sd-navbar-right">
+            <div className="sd-user-pill">
+              <div className="sd-user-pill-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              <span>{student.name || "Student"}</span>
+            </div>
+            <button className="sd-navbar-cart" onClick={() => setCartOpen(true)}>
+              <MdShoppingCart size={20}/>
+              {cart.length > 0 && <span className="sd-navbar-cart-count">{cart.length}</span>}
+            </button>
+          </div>
+        </nav>
 
-          <div className="sd-content">
+        {/* ── LAYOUT (white sidebar + main) ── */}
+        <div className="sd-layout">
+
+          {/* ── WHITE SIDEBAR ── */}
+          <aside className={`sd-white-sidebar ${sidebarOpen ? "sd-sidebar-open" : ""}`}>
+            <div className="sd-profile-chip">
+              <div className="sd-profile-chip-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              <span>{student.name || "Student"}</span>
+            </div>
+            <ul className="sd-nav-menu">
+              {[
+                { key:"dashboard", Icon:MdDashboard,     label:"Dashboard" },
+                { key:"courses",   Icon:BsCollection,    label:"Courses",          badge: enrolledCourses.length || 0 },
+                { key:"invoices",  Icon:MdReceipt,       label:"My Invoices" },
+                { key:"live",      Icon:MdLiveTv,        label:"Live Classes",     badge: liveClasses.length || 0 },
+                { key:"upcoming",  Icon:MdCalendarToday, label:"Upcoming Classes" },
+                { key:"completed", Icon:MdCheckCircle,   label:"Completed Classes" },
+                { key:"profile",   Icon:MdPerson,        label:"My Profile" },
+              ].map(({ key, Icon, label, badge }) => (
+                <li key={key}>
+                  <button
+                    className={`sd-nav-link ${activeMenu === key ? "sd-nav-link-active" : ""}`}
+                    onClick={() => navigate(key)}
+                  >
+                    <Icon size={20}/> {label}
+                    {badge > 0 && <span className="sd-nav-link-badge">{badge}</span>}
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button className="sd-nav-link sd-nav-link-logout" onClick={handleLogout}>
+                  <MdLogout size={20}/> Logout
+                </button>
+              </li>
+            </ul>
+          </aside>
+
+          {/* ── MAIN CONTENT ── */}
+          <div className="sd-main">
+            <div className="sd-content">
 
             {/* DASHBOARD HOME */}
             {activeMenu === "dashboard" && (
               <div>
-                <div className="sd-welcome-banner">
-                  <div>
-                    <div className="sd-welcome-text">Welcome back, <strong>{student.name || "Student"}!</strong></div>
-                    <div className="sd-welcome-sub">{student.className && `${student.className} • `}Ready to learn today?</div>
-                  </div>
-                  <div className="sd-welcome-icon-wrap">
-                    <FaGraduationCap size={52} color="rgba(255,255,255,0.15)"/>
-                  </div>
+                {/* Free demo banner */}
+                <div className="sdd-demo-banner">
+                  Enroll for a <b>FREE DEMO CLASS</b> Now
                 </div>
-                <div className="sd-stats-row">
-                  <div className="sd-stat-card sd-stat-live">
-                    <MdLiveTv size={28} className="sd-stat-svg"/>
-                    <div className="sd-stat-num">{liveClasses.length}</div>
-                    <div className="sd-stat-label">Live Now</div>
-                  </div>
-                  <div className="sd-stat-card sd-stat-upcoming">
-                    <MdCalendarToday size={28} className="sd-stat-svg"/>
-                    <div className="sd-stat-num">{upcomingClasses.length}</div>
-                    <div className="sd-stat-label">Upcoming</div>
-                  </div>
-                  <div className="sd-stat-card sd-stat-completed">
-                    <MdCheckCircle size={28} className="sd-stat-svg"/>
-                    <div className="sd-stat-num">{completedClasses.length}</div>
-                    <div className="sd-stat-label">Completed</div>
-                  </div>
-                  <div className="sd-stat-card sd-stat-total" onClick={() => navigate("courses")} style={{cursor:"pointer"}}>
-                    <BsCollection size={26} className="sd-stat-svg"/>
-                    <div className="sd-stat-num">{enrolledCourses.length}</div>
-                    <div className="sd-stat-label">My Courses</div>
+
+                {/* Hero */}
+                <div className="sdd-hero">
+                  <div className="sdd-hero-bg"/>
+                  <div className="sdd-hero-content">
+                    <h1>Welcome,<br/>{student.name || "Student"}!</h1>
+                    {student.className && <p>{student.className.toUpperCase()} · NIOS</p>}
+                    <button className="sdd-hero-enroll" onClick={() => navigate("courses")}>
+                      Explore Courses
+                    </button>
                   </div>
                 </div>
 
-                {enrolledCourses.length > 0 && (
-                  <div className="sd-section">
-                    <div className="sd-section-header" style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                      <span><BsCollection size={16} style={{color:"#6c47d4",marginRight:6}}/>My Courses</span>
-                      <button className="sdc-see-all-btn" onClick={() => navigate("courses")}>See all →</button>
-                    </div>
-                    <div className="sdc-enrolled-strip-scroll">
-                      {enrolledCourses.slice(0,4).map((course) => (
-                        <EnrolledCourseCard key={course._id} course={course} onOpen={() => { setActiveCourse(course._id); navigate("courses"); }}/>
-                      ))}
+                <div className="sdd-dots">
+                  <i/><i className="on"/><i/><i/>
+                </div>
+
+                <h2 className="sdd-title-c">NIOS Experts Determined For Your Success</h2>
+                <p className="sdd-sub-c">Don't Just Take Our Word For It. Delve Into Classes And Witness The Excellence For Yourself</p>
+
+                {/* Stats grid */}
+                <div className="sdd-stats">
+                  <div className="sdd-stat" onClick={() => navigate("live")}>
+                    <div className="sdd-stat-ic"><MdLiveTv size={24}/></div>
+                    <div>
+                      <div className="sdd-stat-num">{liveClasses.length}</div>
+                      <div className="sdd-stat-lbl">Live Now</div>
                     </div>
                   </div>
+                  <div className="sdd-stat" onClick={() => navigate("upcoming")}>
+                    <div className="sdd-stat-ic"><MdCalendarToday size={24}/></div>
+                    <div>
+                      <div className="sdd-stat-num">{upcomingClasses.length}</div>
+                      <div className="sdd-stat-lbl">Upcoming</div>
+                    </div>
+                  </div>
+                  <div className="sdd-stat" onClick={() => navigate("completed")}>
+                    <div className="sdd-stat-ic"><MdCheckCircle size={24}/></div>
+                    <div>
+                      <div className="sdd-stat-num">{completedClasses.length}</div>
+                      <div className="sdd-stat-lbl">Completed</div>
+                    </div>
+                  </div>
+                  <div className="sdd-stat" onClick={() => navigate("courses")}>
+                    <div className="sdd-stat-ic"><BsCollection size={22}/></div>
+                    <div>
+                      <div className="sdd-stat-num">{enrolledCourses.length}</div>
+                      <div className="sdd-stat-lbl">My Courses</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Continue Watching */}
+                {enrolledCourses.length > 0 && (
+                  <>
+                    <h2 className="sdd-sec-h">Continue Watching</h2>
+                    <div className="sdd-cw-grid">
+                      {enrolledCourses.slice(0,4).map((course) => {
+                        const totalLessons = course.chapters?.reduce((a,c) => a + (c.lessons?.length || 0), 0) || 0;
+                        const subjectColor = getSubjectColor(course.subject);
+                        return (
+                          <div
+                            key={course._id}
+                            className="sdd-cw-card"
+                            onClick={() => { setActiveCourse(course._id); navigate("courses"); }}
+                          >
+                            <div
+                              className="sdd-cw-thumb"
+                              style={{
+                                background: course.featureImage
+                                  ? `url(${course.featureImage}) center/cover no-repeat`
+                                  : `linear-gradient(135deg,${subjectColor}33,${subjectColor}88)`,
+                              }}
+                            >
+                              {course.batch && <span className="sdd-cw-badge">{course.batch}</span>}
+                              <div className="sdd-cw-title-overlay">{course.title}</div>
+                            </div>
+                            <div className="sdd-cw-meta">
+                              📚 {course.chapters?.length || 0} Ch &nbsp;·&nbsp; 🎬 {totalLessons} Lessons
+                              {course.subject && (
+                                <span className="sdd-tag" style={{background:`${subjectColor}22`,color:subjectColor}}>
+                                  {course.subject.toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
                 )}
 
+                {/* Live right now */}
                 {liveClasses.length > 0 && (
                   <div className="sd-section">
                     <div className="sd-section-header"><span className="sd-live-pulse"></span> Live Right Now</div>
@@ -293,9 +344,10 @@ export default function StudentDashboard() {
                   </div>
                 )}
 
+                {/* Upcoming */}
                 {upcomingClasses.length > 0 && (
                   <div className="sd-section">
-                    <div className="sd-section-header"><MdCalendarToday size={18} style={{color:"#6c47d4"}}/> Upcoming Classes</div>
+                    <div className="sd-section-header"><MdCalendarToday size={18} style={{color:"#4F2E97"}}/> Upcoming Classes</div>
                     <div className="sd-cards-grid">
                       {upcomingClasses.slice(0,4).map((cls) => (
                         <ClassCard key={cls._id} cls={cls} formatDate={formatDate} formatTime={formatTime} getYoutubeId={getYoutubeId}/>
@@ -392,9 +444,11 @@ export default function StudentDashboard() {
               <ProfileSection student={student} setStudent={setStudent}/>
             )}
 
+            </div>
           </div>
         </div>
 
+        {sidebarOpen && <div className="sd-overlay" onClick={() => setSidebarOpen(false)} />}
         {cartOpen && <div className="sd-overlay sdc-overlay-top" onClick={() => setCartOpen(false)}/>}
         <CartDrawer
           open={cartOpen}
@@ -732,9 +786,29 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
 
   return (
     <div>
-      {enrolled.length > 0 && (
+      {/* Explore Subjects */}
+      {subjects.length > 0 && (
+        <>
+          <h2 className="sdc-explore-title">Explore Subjects</h2>
+          <div className="sdc-subjects">
+            {subjects.slice(0,4).map((s) => (
+              <div
+                key={s}
+                className={`sdc-subj ${subject === s ? "sdc-subj-active" : ""}`}
+                onClick={() => setSubject(subject === s ? "" : s)}
+              >
+                <b>{s}</b>
+                <small>{courses.filter((c) => c.subject === s).length}+ Courses</small>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Continue Learning strip */}
+      {enrolled.length > 0 && filter !== "enrolled" && (
         <div className="sdc-enrolled-strip">
-          <div className="sdc-strip-title"><BsCartCheck size={17} style={{color:"#6c47d4",marginRight:7}}/> Continue Learning</div>
+          <div className="sdc-strip-title"><BsCartCheck size={17} style={{color:"#4F2E97",marginRight:7}}/> Continue Learning</div>
           <div className="sdc-enrolled-strip-scroll">
             {enrolled.map((c) => (
               <EnrolledCourseCard key={c._id} course={c} onOpen={() => onOpenCourse(c._id)}/>
@@ -742,23 +816,28 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
           </div>
         </div>
       )}
-      <div className="sdc-filters">
-        <div className="sdc-search-wrap">
+
+      <h2 className="sdc-cfy">Courses For You</h2>
+
+      {/* Search + filter chips */}
+      <div className="sdc-searchbar">
+        <div className="sdc-search-wrap" style={{flex:1,minWidth:240}}>
           <MdSearch size={18} className="sdc-search-icon"/>
-          <input className="sdc-search" placeholder="Search courses..." value={search} onChange={(e) => setSearch(e.target.value)}/>
+          <input className="sdc-search" placeholder="Search your course here...." value={search} onChange={(e) => setSearch(e.target.value)}/>
         </div>
-        <div className="sdc-filter-row">
-          {[{val:"all",label:"All Courses"},{val:"free",label:"Free"},{val:"paid",label:"Paid"},{val:"enrolled",label:"My Courses"}].map((f) => (
-            <button key={f.val} className={`sdc-filter-btn ${filter===f.val?"sdc-filter-active":""}`} onClick={() => setFilter(f.val)}>{f.label}</button>
+        <div className="sdc-filter-row" style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+          {[{val:"all",label:"All courses"},{val:"free",label:"Free"},{val:"paid",label:"Paid"},{val:"enrolled",label:"My Courses"}].map((f) => (
+            <button key={f.val} className={`sdc-chip ${filter===f.val?"sdc-chip-active":""}`} onClick={() => setFilter(f.val)}>{f.label}</button>
           ))}
           {subjects.length > 1 && (
             <select className="sdc-subject-select" value={subject} onChange={(e) => setSubject(e.target.value)}>
-              <option value="">All Subjects</option>
+              <option value="">All Subjects ⌄</option>
               {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           )}
         </div>
       </div>
+
       {filtered.length === 0 ? (
         <div className="sd-empty">
           <BsCollection size={48} className="sd-empty-svg"/>
@@ -799,40 +878,44 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen }) {
     setEnrolling(false);
   };
 
+  const thumbClass = getSubjectThumbClass(course.subject);
+  const hasImg = !!course.featureImage;
+
   return (
-    <div className={`sdc-card ${course.isEnrolled?"sdc-card-enrolled":""}`}>
-      <div className="sdc-card-thumb" style={{
-        background: course.featureImage
-          ? `url(${course.featureImage}) center/cover no-repeat`
-          : `linear-gradient(135deg,${getSubjectColor(course.subject)}22,${getSubjectColor(course.subject)}66)`,
-      }}>
-        {!course.featureImage && <span className="sdc-thumb-icon">{subjectIcons[course.subject]||"📚"}</span>}
-        <span className={`sdc-price-badge ${course.isFree?"sdc-badge-free":"sdc-badge-paid"}`}>
-          {course.isFree?"FREE":<><FaRupeeSign size={10}/>{course.price}</>}
-        </span>
-        {course.isEnrolled && <span className="sdc-enrolled-badge"><MdCheck size={11}/> Enrolled</span>}
+    <div className="sdc-card" onClick={course.isEnrolled ? onOpen : undefined} style={course.isEnrolled ? {cursor:"pointer"} : {}}>
+      {/* Thumb */}
+      <div
+        className={`sdc-card-thumb ${hasImg ? "sdc-thumb-has-img" : thumbClass}`}
+        style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}}
+      >
+        {course.batch && <span className="sdc-batch-badge">{course.batch}</span>}
+        <span className="sdc-fav-btn">♡</span>
+        <h3 className="sdc-thumb-title">{course.title}</h3>
       </div>
+
+      {/* Body */}
       <div className="sdc-card-body">
-        <div className="sdc-card-subject" style={{color:getSubjectColor(course.subject)}}>
-          {subjectIcons[course.subject]||"📚"} {course.subject} • {course.batch}
-        </div>
-        <div className="sdc-card-title">{course.title}</div>
-        {course.description && <div className="sdc-card-desc">{course.description.slice(0,80)}...</div>}
         <div className="sdc-card-meta">
-          <span><MdFolder size={12}/> {course.chapters?.length||0} Chapters</span>
-          <span><MdVideoLibrary size={12}/> {totalLessons} Lessons</span>
+          📁 {course.chapters?.length||0} Chapters &nbsp;·&nbsp; 📹 {totalLessons} Lessons
+          {course.subject && (
+            <span className="sdc-tag" style={{background:`${getSubjectColor(course.subject)}22`,color:getSubjectColor(course.subject),fontSize:10,fontWeight:700,padding:"3px 7px",borderRadius:5}}>
+              {course.subject.toUpperCase()}
+            </span>
+          )}
+          {course.batch && <span className="sdc-tag-cls-pill">{course.batch.toUpperCase()}</span>}
         </div>
+        <div className="sdc-cc-name">{course.title}</div>
         {course.isEnrolled ? (
-          <button className="sdc-btn sdc-btn-start" onClick={onOpen}><MdPlayCircle size={16}/> Continue Learning</button>
+          <button className="sdc-btn sdc-btn-start" onClick={(e) => { e.stopPropagation(); onOpen(); }}><MdPlayCircle size={16}/> Continue Learning</button>
         ) : course.isFree ? (
-          <button className="sdc-btn sdc-btn-free" onClick={handleFreeEnroll} disabled={enrolling}>
+          <button className="sdc-btn sdc-btn-free" onClick={(e) => { e.stopPropagation(); handleFreeEnroll(); }} disabled={enrolling}>
             {enrolling?"Enrolling...":<><MdCheck size={15}/> Enroll Free</>}
           </button>
         ) : inCart ? (
-          <button className="sdc-btn sdc-btn-incart"><BsCartCheck size={15}/> In Cart</button>
+          <button className="sdc-btn sdc-btn-incart" onClick={(e) => e.stopPropagation()}><BsCartCheck size={15}/> In Cart</button>
         ) : (
-          <button className="sdc-btn sdc-btn-buy" onClick={() => addToCart(course)}>
-            <MdShoppingCart size={15}/> Add to Cart &nbsp;•&nbsp; <FaRupeeSign size={11}/>{course.price}
+          <button className="sdc-btn sdc-btn-buy" onClick={(e) => { e.stopPropagation(); addToCart(course); }}>
+            🛒 Add To Cart &nbsp;₹ {course.price}
           </button>
         )}
       </div>

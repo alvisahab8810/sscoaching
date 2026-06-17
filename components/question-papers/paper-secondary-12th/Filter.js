@@ -216,7 +216,9 @@ const QuestionPapers12 = () => {
     { id: 3302601, code: "330", subject: "Computer Science", title: "330 - Computer Science (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/330-computer-science-apr-2026.pdf" },
     { id: 3322601, code: "332", subject: "Painting", title: "332 - Painting (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/332-painting-apr-2026.pdf" },
     { id: 3362601, code: "336", subject: "Data Entry Operation", title: "336 - Data Entry Operation (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/336-data-entry-apr-2026.pdf" },
-    { id: 3732601, code: "373", subject: "Physical Education", title: "373 - Physical Education Set A (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/373-physical-education-set-a-apr-2026.pdf" },
+    { id: 3732601, code: "373", subject: "Physical Education", title: "373 - Physical Education (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/373-physical-education-set-a-apr-2026.pdf" },
+    { id: 3732602, code: "311", subject: "Mathematics", title: "311 - Mathematics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/311-mathematics-apr-2026.pdf" },
+
   ];
 
   const sessionToDate = (session) => {
