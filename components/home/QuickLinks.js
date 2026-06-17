@@ -23,7 +23,7 @@ export default function QuickLinks() {
                </Link>
             </div>
             <div className="expand-item">
-             <Link href="/gallery">
+             <Link href="/nios-coaching-hazratganj-lucknow">
                <div className="expand-header branch1">
                 <div className="expand-text">Hazratganj Branch, Lucknow</div>
                 <div className="expand-icon">
@@ -37,7 +37,7 @@ export default function QuickLinks() {
               </Link>
             </div>
             <div className="expand-item">
-             <Link href="https://sscoaching.in/photo/alambagh/2">
+             <Link href="/nios-coaching-alambagh-lucknow">
 
               <div className="expand-header branch2">
                 <div className="expand-text">Alambagh Branch, Lucknow</div>
@@ -106,7 +106,7 @@ export default function QuickLinks() {
             </div>
             <div className="expand-item">
 
-             <Link href="/gallery">
+             <Link href="/nios-coaching-indiranagar-lucknow">
               <div className="expand-header branch3">
                 <div className="expand-text">Indranagar Branch, Lucknow</div>
                 <div className="expand-icon">
