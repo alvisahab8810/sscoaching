@@ -1,60 +1,7 @@
-// import dbConnect from "@/lib/dbConnect";
-// import StudentSuccess from "@/models/home/StudentSuccess";
-
-// export default async function handler(req, res) {
-//   await dbConnect();
-
-//   const { id } = req.query;
-
-//   // ✅ UPDATE
-//   if (req.method === "PUT") {
-//     try {
-//       const updated = await StudentSuccess.findByIdAndUpdate(
-//         id,
-//         req.body,
-//         { new: true }
-//       );
-
-//       return res.status(200).json({
-//         success: true,
-//         data: updated,
-//       });
-//     } catch (error) {
-//       return res.status(400).json({
-//         success: false,
-//         message: error.message,
-//       });
-//     }
-//   }
-
-//   // ✅ DELETE
-//   if (req.method === "DELETE") {
-//     try {
-//       await StudentSuccess.findByIdAndDelete(id);
-
-//       return res.status(200).json({
-//         success: true,
-//         message: "Deleted successfully",
-//       });
-//     } catch (error) {
-//       return res.status(500).json({
-//         success: false,
-//         message: error.message,
-//       });
-//     }
-//   }
-
-//   res.status(405).json({
-//     success: false,
-//     message: "Method not allowed",
-//   });
-// }
-
-
-
 import dbConnect from "@/lib/dbConnect";
 import StudentSuccess from "@/models/home/StudentSuccess";
 import { uploadStudentImage } from "@/lib/uploadStudentImage";
+import { logActivity } from "@/lib/logActivity";
 
 export const config = {
   api: { bodyParser: false },
@@ -72,6 +19,8 @@ export default async function handler(req, res) {
       }
 
       try {
+        const before = await StudentSuccess.findById(id).lean();
+
         const updateData = {
           name: req.body.name,
           rollNo: req.body.rollNo,
@@ -85,21 +34,19 @@ export default async function handler(req, res) {
           updateData.image = `/uploads/students/${req.file.filename}`;
         }
 
-        const updated = await StudentSuccess.findByIdAndUpdate(
-          id,
-          updateData,
-          { new: true }
-        );
+        const updated = await StudentSuccess.findByIdAndUpdate(id, updateData, { new: true });
 
-        return res.status(200).json({
-          success: true,
-          data: updated,
+        await logActivity(req, {
+          feature: "student-success", action: "update",
+          entityId: id, entityType: "StudentSuccess",
+          description: `Updated student success: ${updated?.name}`,
+          before: before ? { name: before.name, score: before.score, year: before.year } : null,
+          after: { name: updated?.name, score: updated?.score, year: updated?.year },
         });
+
+        return res.status(200).json({ success: true, data: updated });
       } catch (error) {
-        return res.status(400).json({
-          success: false,
-          message: error.message,
-        });
+        return res.status(400).json({ success: false, message: error.message });
       }
     });
     return;
@@ -108,16 +55,19 @@ export default async function handler(req, res) {
   /* ===================== DELETE ===================== */
   if (req.method === "DELETE") {
     try {
+      const before = await StudentSuccess.findById(id).lean();
       await StudentSuccess.findByIdAndDelete(id);
-      return res.status(200).json({
-        success: true,
-        message: "Deleted successfully",
+
+      await logActivity(req, {
+        feature: "student-success", action: "delete",
+        entityId: id, entityType: "StudentSuccess",
+        description: `Deleted student success: ${before?.name}`,
+        before: before ? { name: before.name, score: before.score, year: before.year } : null,
       });
+
+      return res.status(200).json({ success: true, message: "Deleted successfully" });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
+      return res.status(500).json({ success: false, message: error.message });
     }
   }
 

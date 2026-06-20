@@ -64,16 +64,17 @@ export default async function handler(req, res) {
     { expiresIn: "8h" }
   );
 
-  res.setHeader(
-    "Set-Cookie",
-    cookie.serialize("admin_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 8 * 60 * 60, // 8 hours in seconds
-      path: "/",
-    })
-  );
+  const cookieOpts = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  };
+
+  res.setHeader("Set-Cookie", [
+    cookie.serialize("admin_token", token, { ...cookieOpts, maxAge: 8 * 60 * 60 }),
+    cookie.serialize("subadmin_token", "", { ...cookieOpts, maxAge: 0 }),
+  ]);
 
   res.status(200).json({ success: true });
 }

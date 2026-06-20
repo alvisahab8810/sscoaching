@@ -110,6 +110,7 @@ import Blog from "@/models/Blog";
 import { IncomingForm } from "formidable";
 import fs from "fs";
 import path from "path";
+import { logActivity } from "@/lib/logActivity";
 
 // Disable Next.js body parser for formidable
 export const config = {
@@ -200,8 +201,14 @@ if (coverFile) {
       publishDate: fields.publishDate?.[0] || existingBlog.publishDate,
     };
 
-    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedData, {
-      new: true,
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedData, { new: true });
+
+    await logActivity(req, {
+      feature: "blogs", action: "update",
+      entityId: id, entityType: "Blog",
+      description: `Updated blog: "${updatedData.title}"`,
+      before: { title: existingBlog.title, status: existingBlog.status, category: existingBlog.category },
+      after: { title: updatedData.title, status: updatedData.status, category: updatedData.category },
     });
 
     return res

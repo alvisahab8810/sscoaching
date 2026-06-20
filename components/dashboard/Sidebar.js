@@ -1,140 +1,71 @@
-
-// "use client";
-// import React from "react";
-// import Link from "next/link";
-
-// export default function Sidebar() {
-//   return (
-//     <div
-//       className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-//       style={{ width: "250px" }}
-//     >
-//       <Link
-//         href="/dashboard"
-//         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none bg-white p-1  rounded-2"
-//       >
-//         {/* <span className="fs-4 fw-bold">Admin Panel</span> */}
-//        <img src="/assets/images/logo.png" alt="SS Coaching Logo" className="jsx-b937f6ceae75188c logo" />
-//       </Link>
-//       <hr />
-//       <ul className="nav nav-pills flex-column mb-auto">
-//         <li className="nav-item">
-//           <Link href="/dashboard" className="nav-link active text-white">
-//             <i className="bi bi-speedometer2 me-2"></i> Dashboard
-//           </Link>
-//         </li>
-//         <li>
-//           <Link href="/dashboard/admin/blogs/create" className="nav-link text-white">
-//             <i className="bi bi-journal-text me-2"></i> Blogs
-//           </Link>
-//         </li>
-//         <li>
-//           <Link href="#" className="nav-link text-white">
-//             <i className="bi bi-people me-2"></i> Users
-//           </Link>
-//         </li>
-//         <li>
-//           <Link href="#" className="nav-link text-white">
-//             <i className="bi bi-gear me-2"></i> Settings
-//           </Link>
-//         </li>
-//       </ul>
-//       <hr />
-//       <div className="dropdown">
-//         <a
-//           href="#"
-//           className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-//           id="dropdownUser1"
-//           data-bs-toggle="dropdown"
-//           aria-expanded="false"
-//         >
-//           <img
-//             src="https://via.placeholder.com/32"
-//             alt=""
-//             width="32"
-//             height="32"
-//             className="rounded-circle me-2"
-//           />
-//           <strong>Admin</strong>
-//         </a>
-//         <ul
-//           className="dropdown-menu dropdown-menu-dark text-small shadow"
-//           aria-labelledby="dropdownUser1"
-//         >
-//           <li>
-//             <Link className="dropdown-item" href="/dashboard/profile">
-//               Profile
-//             </Link>
-//           </li>
-//           <li>
-//             <hr className="dropdown-divider" />
-//           </li>
-//           <li>
-//             <a className="dropdown-item" href="#">
-//               Sign out
-//             </a>
-//           </li>
-//         </ul>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiClipboard } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
+import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
+import { MdHistory } from "react-icons/md";
 
- 
+const FEATURE_PATHS = {
+  blogs: "/dashboard/admin/blogs",
+  faqs: "/dashboard/admin/faqs",
+  leads: "/dashboard/admin/leads",
+  "student-success": "/dashboard/admin/student-success",
+  "online-classes": "/dashboard/admin/online-classes",
+  students: "/dashboard/admin/students",
+  courses: "/dashboard/admin/courses",
+  admissions: "/dashboard/admin/admissions",
+  announcements: "/dashboard/admin/announcements",
+  invoices: "/dashboard/admin/invoices",
+  enrollments: "/dashboard/admin/enrollments",
+};
 
-import { BsChevronDown, BsChevronUp, BsFolder, BsPlusCircle, BsListUl, BsPeople, BsGear, BsCollection    } from "react-icons/bs";
 export default function Sidebar() {
   const pathname = usePathname();
   const [blogOpen, setBlogOpen] = useState(false);
+  const [session, setSession] = useState(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/me")
+      .then(r => r.json())
+      .then(data => {
+        if (data.role) setSession(data);
+      })
+      .catch(() => {})
+      .finally(() => setSessionLoaded(true));
+  }, []);
+
+  const isSuperAdmin = session?.role === "super";
+  const isSubAdmin = session?.role === "sub";
+  const permissions = session?.permissions || [];
+
+  const canSee = (feature) => {
+    if (isSuperAdmin) return true;
+    if (isSubAdmin) return permissions.includes(feature);
+    return false;
+  };
 
   const styles = {
     sidebar: {
+      position: "fixed",
+      left: 0,
+      top: 0,
       width: "16%",
-      minHeight: "100vh",
+      height: "100vh",
       backgroundColor: "#1B1B46",
       color: "#fff",
       padding: "1rem",
       display: "flex",
       flexDirection: "column",
+      overflowY: "auto",
+      overflowX: "hidden",
+      zIndex: 200,
     },
-    logoLink: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
-    },
-    logo: {
-      width: "80%",
-      height: "auto",
-      background: "white",
-      borderRadius: "5px",
-      padding: "10px"
-    },
-    divider: {
-      borderColor: "#2a2a3d",
-      margin: "0.5rem 0",
-    },
-    navList: {
-      flexGrow: 1,
-      listStyle: "none",
-      paddingLeft: 0,
-      margin: 0,
-    },
-    navItem: {
-      marginBottom: "0.9rem",
-    },
+    divider: { borderColor: "#2a2a3d", margin: "0.5rem 0" },
+    navList: { flexGrow: 1, listStyle: "none", paddingLeft: 0, margin: 0 },
+    navItem: { marginBottom: "0.9rem" },
     navLink: (active = false) => ({
       color: active ? "#fff" : "#cfcfd1",
       display: "flex",
@@ -145,20 +76,14 @@ export default function Sidebar() {
       fontWeight: 500,
       backgroundColor: active ? "#5641CE" : "transparent",
       transition: "all 0.3s",
+      textDecoration: "none",
     }),
-    navLinkHover: {
-      backgroundColor: "#343454",
-      color: "#fff",
-    },
-    icon: {
-      marginRight: "0.5rem",
-    },
     subMenu: {
       marginTop: "0.3rem",
       marginLeft: "35px",
       paddingLeft: "0.5rem",
       animation: "slideDown 0.3s ease-out",
-      listStyle: "none"
+      listStyle: "none",
     },
     subLink: (active = false) => ({
       display: "flex",
@@ -169,21 +94,19 @@ export default function Sidebar() {
       fontSize: "0.9rem",
       textDecoration: "none",
     }),
-    userDropdown: {
-      marginTop: "auto",
-    },
-    userLink: {
-      display: "flex",
-      alignItems: "center",
-      gap: "0.5rem",
-      color: "#cfcfd1",
-      textDecoration: "none",
-    },
     arrow: {
       transition: "transform 0.3s",
       transform: blogOpen ? "rotate(180deg)" : "rotate(0deg)",
     },
-
+    sectionLabel: {
+      fontSize: "0.65rem",
+      fontWeight: 700,
+      color: "#4a4a6a",
+      textTransform: "uppercase",
+      letterSpacing: "0.08em",
+      padding: "0.5rem 0.8rem 0.3rem",
+      marginBottom: "0.2rem",
+    },
     keyframes: `
       @keyframes slideDown {
         from { opacity: 0; transform: translateY(-5px); }
@@ -192,130 +115,169 @@ export default function Sidebar() {
     `,
   };
 
-  return (
+  if (!sessionLoaded) {
+    return <div style={styles.sidebar} />;
+  }
 
-    <div className="dashboard-sidebar0-area " style={styles.sidebar}>
+  return (
+    <div className="dashboard-sidebar0-area" style={styles.sidebar}>
       <style>{styles.keyframes}</style>
-    
       <hr style={styles.divider} />
 
       <ul style={styles.navList}>
+
+        {/* Dashboard — always visible */}
         <li style={styles.navItem}>
           <Link href="/dashboard" style={styles.navLink(pathname === "/dashboard")}>
-             <img className="dashboard-icon" src="/assets/icons/dashboard.svg"/>  Dashboard
+            <img className="dashboard-icon" src="/assets/icons/dashboard.svg" alt="" /> Dashboard
           </Link>
         </li>
 
-        {/* Blogs Collapse */}
-        <li style={styles.navItem}>
-          <div
-            className="blogs-collapse"
-            onClick={() => setBlogOpen(!blogOpen)}
-            style={styles.navLink()}
-          >
-            <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <img src="/assets/icons/blog.svg"></img> Blogs
-            </span>
-            <BsChevronDown style={styles.arrow} />
-          </div>
-
-          {blogOpen && (
-            <ul style={styles.subMenu}>
-              <li>
-                <Link
-                  href="/dashboard/admin/blogs"
-                  style={styles.subLink(pathname === "/dashboard/admin/blogs")}
-                >
-                  <BsListUl style={styles.icon} /> All Blogs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/dashboard/admin/blogs/create"
-                  style={styles.subLink(pathname === "/dashboard/admin/blogs/create")}
-                >
-                  <BsPlusCircle style={styles.icon} /> Add New Blog
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-
-        <li style={styles.navItem}>
-          <Link href="/dashboard/admin/faqs" style={styles.navLink()}>
-             <img src="/assets/icons/faq.svg" style={{marginRight:"8px"}}></img> FAQs
-          </Link>
-        </li>
-
-         <li style={styles.navItem}>
-          <Link href="/dashboard/admin/leads" style={styles.navLink()}>
-             <img src="/assets/icons/faq.svg" style={{marginRight:"8px"}}></img> Leads
-          </Link>
-        </li>
-
-
-        <li style={styles.navItem}>
-          <Link href="/dashboard/admin/student-success" style={styles.navLink()}>
-             <img src="/assets/icons/students.svg" style={{marginRight:"8px"}}></img> Students Success
-          </Link>
-        </li>
-
-
+        {/* Blogs — super admin or sub-admin with blogs permission */}
+        {canSee("blogs") && (
           <li style={styles.navItem}>
-          <Link href="/dashboard/admin/online-classes" style={styles.navLink()}>
-             <img src="/assets/icons/videocall.svg" style={{marginRight:"8px", width:"16px"}}></img> Online Classes
-          </Link>
-        </li>
+            <div className="blogs-collapse" onClick={() => setBlogOpen(!blogOpen)} style={styles.navLink()}>
+              <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <img src="/assets/icons/blog.svg" alt="" /> Blogs
+              </span>
+              <BsChevronDown style={styles.arrow} />
+            </div>
+            {blogOpen && (
+              <ul style={styles.subMenu}>
+                <li>
+                  <Link href="/dashboard/admin/blogs" style={styles.subLink(pathname === "/dashboard/admin/blogs")}>
+                    <BsListUl /> All Blogs
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dashboard/admin/blogs/create" style={styles.subLink(pathname === "/dashboard/admin/blogs/create")}>
+                    <BsPlusCircle /> Add New Blog
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
+        )}
 
-
+        {canSee("faqs") && (
           <li style={styles.navItem}>
-
-            <Link href="/dashboard/admin/students" style={styles.navLink()}>
-              <BsPeople style={{marginRight:"8px"}} size={18} /> Students
+            <Link href="/dashboard/admin/faqs" style={styles.navLink(pathname?.startsWith("/dashboard/admin/faqs"))}>
+              <img src="/assets/icons/faq.svg" style={{ marginRight: "8px" }} alt="" /> FAQs
             </Link>
-         </li>
+          </li>
+        )}
 
+        {canSee("leads") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/leads" style={styles.navLink(pathname?.startsWith("/dashboard/admin/leads"))}>
+              <img src="/assets/icons/faq.svg" style={{ marginRight: "8px" }} alt="" /> Leads
+            </Link>
+          </li>
+        )}
 
-         <li style={styles.navItem}>
-  <Link href="/dashboard/admin/courses" style={styles.navLink()}>
-    <BsCollection style={{ marginRight: "8px" }} size={18} /> Courses
-  </Link>
-</li>
+        {canSee("student-success") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/student-success" style={styles.navLink(pathname?.startsWith("/dashboard/admin/student-success"))}>
+              <img src="/assets/icons/students.svg" style={{ marginRight: "8px" }} alt="" /> Students Success
+            </Link>
+          </li>
+        )}
 
-        
+        {canSee("online-classes") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/online-classes" style={styles.navLink(pathname?.startsWith("/dashboard/admin/online-classes"))}>
+              <img src="/assets/icons/videocall.svg" style={{ marginRight: "8px", width: "16px" }} alt="" /> Online Classes
+            </Link>
+          </li>
+        )}
 
-   <li style={styles.navItem}>
-  <Link href="/dashboard/admin/admissions" style={styles.navLink()}>
-    <FiClipboard style={{ marginRight: "8px", fontSize: "16px" }} />
-    Applications
-  </Link>
-</li>
+        {canSee("students") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/students" style={styles.navLink(pathname?.startsWith("/dashboard/admin/students"))}>
+              <BsPeople style={{ marginRight: "8px" }} size={18} /> Students
+            </Link>
+          </li>
+        )}
 
+        {canSee("courses") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/courses" style={styles.navLink(pathname?.startsWith("/dashboard/admin/courses"))}>
+              <BsCollection style={{ marginRight: "8px" }} size={18} /> Courses
+            </Link>
+          </li>
+        )}
 
-<li style={styles.navItem}>
-  <Link href="/dashboard/admin/announcements" style={styles.navLink()}>
-    <FiBell style={{ marginRight: "8px", fontSize: "16px" }} />
-    Announcements
-  </Link>
-</li>
+        {canSee("admissions") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/admissions" style={styles.navLink(pathname?.startsWith("/dashboard/admin/admissions"))}>
+              <FiClipboard style={{ marginRight: "8px", fontSize: "16px" }} /> Applications
+            </Link>
+          </li>
+        )}
 
+        {canSee("announcements") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/announcements" style={styles.navLink(pathname?.startsWith("/dashboard/admin/announcements"))}>
+              <FiBell style={{ marginRight: "8px", fontSize: "16px" }} /> Announcements
+            </Link>
+          </li>
+        )}
 
-<li style={styles.navItem}>
+        {canSee("invoices") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/invoices" style={styles.navLink(pathname?.startsWith("/dashboard/admin/invoices"))}>
+              <span style={{ marginRight: "8px", fontSize: "15px" }}>🧾</span> Invoices
+            </Link>
+          </li>
+        )}
 
-<Link href="/dashboard/admin/invoices">Invoices</Link>
-</li>
+        {canSee("enrollments") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/enrollments" style={styles.navLink(pathname?.startsWith("/dashboard/admin/enrollments"))}>
+              <span style={{ marginRight: "8px", fontSize: "15px" }}>📋</span> Enrollments
+            </Link>
+          </li>
+        )}
 
-<li style={styles.navItem}>
+        {/* Super Admin Only Section */}
+        {isSuperAdmin && (
+          <>
+            <li style={{ margin: "1rem 0 0.2rem" }}>
+              <div style={styles.sectionLabel}>Super Admin</div>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/sub-admins" style={styles.navLink(pathname?.startsWith("/dashboard/admin/sub-admins"))}>
+                <BsShieldLock style={{ marginRight: "8px" }} size={16} /> Sub-Admins
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/activity-logs" style={styles.navLink(pathname?.startsWith("/dashboard/admin/activity-logs"))}>
+                <MdHistory style={{ marginRight: "8px" }} size={16} /> Activity Logs
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/live-monitor" style={styles.navLink(pathname?.startsWith("/dashboard/admin/live-monitor"))}>
+                <span style={{ marginRight: "8px", fontSize: "15px" }}>📡</span> Live Monitor
+              </Link>
+            </li>
+          </>
+        )}
 
-<Link href="/dashboard/admin/enrollments">
-   Enrollments
-</Link>
-</li> 
+        {/* Sub-Admin logout option */}
+        {isSubAdmin && (
+          <li style={{ marginTop: "auto", paddingTop: "1rem" }}>
+            <button
+              onClick={async () => {
+                await fetch("/api/subadmin/logout", { method: "POST" });
+                window.location.href = "/dashboard/subadmin/login";
+              }}
+              style={{ ...styles.navLink(), width: "100%", border: "none", cursor: "pointer", background: "rgba(239,68,68,0.1)", color: "#fca5a5" }}>
+              <span style={{ marginRight: "8px" }}>🔓</span> Logout
+            </button>
+          </li>
+        )}
 
       </ul>
-
- 
     </div>
-
   );
 }

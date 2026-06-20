@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { redirectsMap } from "./utils/redirects";
 
 const LOGIN_PAGE = "/dashboard/admin/login";
+const EXCLUDED_PATHS = ["/dashboard/admin/login", "/dashboard/subadmin/login"];
 
 export function middleware(request) {
   const pathname = request.nextUrl.pathname;
 
-  // Protect all /dashboard/* routes except the login page itself
-  if (pathname.startsWith("/dashboard") && !pathname.startsWith(LOGIN_PAGE)) {
-    const token = request.cookies.get("admin_token");
-    if (!token) {
+  // Protect all /dashboard/* routes except login pages
+  if (pathname.startsWith("/dashboard") && !EXCLUDED_PATHS.some(p => pathname.startsWith(p))) {
+    const adminToken = request.cookies.get("admin_token");
+    const subAdminToken = request.cookies.get("subadmin_token");
+    if (!adminToken && !subAdminToken) {
       return NextResponse.redirect(new URL(LOGIN_PAGE, request.url));
     }
   }

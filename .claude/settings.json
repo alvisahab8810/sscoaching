@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(Measure-Object)",
-      "Bash(Select-Object -ExpandProperty Count)"
+      "Bash(Select-Object -ExpandProperty Count)",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\public\\\\assets\\\\css\\\\online-classes.css\"; $lines = Get-Content $file; $total = $lines.Count; Write-Host \"Total lines: $total\"; $lines[\\($total-35\\)..\\($total-1\\)])",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\pages\\\\student\\\\dashboard\\\\index.js\"; $lines = Get-Content $file; $total = $lines.Count; Write-Host \"Total lines: $total\"; $lines[\\($total-80\\)..\\($total-1\\)] | ForEach-Object -Begin {$i=$total-79} -Process { \"$i`t$_\"; $i++ })",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\pages\\\\student\\\\dashboard\\\\index.js\"; $lines = Get-Content $file; $total = $lines.Count; for \\($i = $total-120; $i -lt $total-1; $i++\\) { if \\($lines[$i] -match \"sd-main|sd-layout|sd-page|sd-content|</>|</div>\"\\) { Write-Host \"$\\($i+1\\)`t$\\($lines[$i]\\)\" } })",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\\\\public\\\\assets\\\\css\\\\online-classes.css\"; $lines = Get-Content $file; $total = $lines.Count; Write-Host \"Total lines: $total\"; $lines[\\($total-5\\)..\\($total-1\\)])",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\\\\public\\\\assets\\\\css\\\\online-classes.css\"; $lines = Get-Content $file; $total = $lines.Count; $lines[\\($total-80\\)..\\($total-1\\)])",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\\\\public\\\\assets\\\\css\\\\online-classes.css\"; $lines = Get-Content $file; $total = $lines.Count; Write-Host \"Total lines: $total\")",
+      "PowerShell($file = \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\\\\public\\\\assets\\\\css\\\\online-classes.css\"; $lines = Get-Content $file; $total = $lines.Count; $lines[\\($total-10\\)..\\($total-1\\)])",
+      "Bash(git -C \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\" diff HEAD --stat)",
+      "Bash(git -C \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\" diff HEAD -- pages/student/dashboard/index.js)",
+      "Bash(git -C \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\" diff HEAD -- public/assets/css/online-classes.css)",
+      "Bash(git -C \"d:\\\\sscoaching\" apply --index)",
+      "Bash(git -C \"d:\\\\sscoaching\" apply --reject)"
     ]
   }
 }

@@ -59,6 +59,7 @@
 import dbConnect from "@/lib/dbConnect";
 import StudentSuccess from "@/models/home/StudentSuccess";
 import { uploadStudentImage } from "@/lib/uploadStudentImage";
+import { logActivity } from "@/lib/logActivity";
 
 export const config = {
   api: { bodyParser: false },
@@ -191,6 +192,13 @@ if (req.method === "GET") {
             ? `/uploads/students/${req.file.filename}`
             : "",
           isActive: true,
+        });
+
+        await logActivity(req, {
+          feature: "student-success", action: "create",
+          entityId: student._id, entityType: "StudentSuccess",
+          description: `Added student success: ${student.name} (Score: ${student.score})`,
+          after: { name: student.name, rollNo: student.rollNo, score: student.score, year: student.year },
         });
 
         return res.status(201).json({

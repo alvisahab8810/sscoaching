@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import Faq from "@/models/Faq";
+import { logActivity } from "@/lib/logActivity";
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -16,6 +17,14 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const faq = await Faq.create(req.body);
+
+      await logActivity(req, {
+        feature: "faqs", action: "create",
+        entityId: faq._id, entityType: "Faq",
+        description: `Created FAQ: "${faq.question?.slice(0, 60)}"`,
+        after: { question: faq.question, status: faq.status },
+      });
+
       return res.status(201).json({ success: true, data: faq });
     } catch (error) {
       return res.status(400).json({ success: false, message: error.message });

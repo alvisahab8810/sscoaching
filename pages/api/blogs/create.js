@@ -77,6 +77,7 @@ import Blog from "@/models/Blog";
 import { IncomingForm } from "formidable";
 import fs from "fs";
 import path from "path";
+import { logActivity } from "@/lib/logActivity";
 
 // Disable bodyParser for formidable
 export const config = {
@@ -143,7 +144,13 @@ export default async function handler(req, res) {
 
     const newBlog = await Blog.create(blogData);
 
-    // ✅ Send response only once
+    await logActivity(req, {
+      feature: "blogs", action: "create",
+      entityId: newBlog._id, entityType: "Blog",
+      description: `Created blog: "${blogData.title}"`,
+      after: { title: blogData.title, category: blogData.category, status: blogData.status },
+    });
+
     return res.status(200).json({
       success: true,
       message: "Blog saved successfully",

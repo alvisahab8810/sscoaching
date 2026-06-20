@@ -5,13 +5,15 @@ import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
 import jwt from "jsonwebtoken";
+import { logActivity } from "@/lib/logActivity";
 
 function verifyAdmin(req) {
   try {
-    const token = req.cookies?.admin_token;
-    if (!token) return false;
-    jwt.verify(token, process.env.JWT_SECRET);
-    return true;
+    const adminToken = req.cookies?.admin_token;
+    if (adminToken) { jwt.verify(adminToken, process.env.JWT_SECRET); return true; }
+    const subToken = req.cookies?.subadmin_token;
+    if (subToken) { const d = jwt.verify(subToken, process.env.JWT_SECRET); return d.role === "subadmin"; }
+    return false;
   } catch { return false; }
 }
 
@@ -83,6 +85,14 @@ export default async function handler(req, res) {
         featureImage: featureImage || "",
         chapters: [],
       });
+
+      await logActivity(req, {
+        feature: "courses", action: "create",
+        entityId: course._id, entityType: "Course",
+        description: `Created course: "${title}"`,
+        after: { title, subject, batch, status: status || "draft" },
+      });
+
       return res.status(201).json({ success: true, course });
     } catch (err) {
       return res.status(500).json({ error: "Failed to create course" });

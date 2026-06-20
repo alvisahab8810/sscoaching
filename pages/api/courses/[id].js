@@ -3,13 +3,15 @@ import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
 import jwt from "jsonwebtoken";
+import { logActivity } from "@/lib/logActivity";
 
 function verifyAdmin(req) {
   try {
-    const token = req.cookies?.admin_token;
-    if (!token) return false;
-    jwt.verify(token, process.env.JWT_SECRET);
-    return true;
+    const adminToken = req.cookies?.admin_token;
+    if (adminToken) { jwt.verify(adminToken, process.env.JWT_SECRET); return true; }
+    const subToken = req.cookies?.subadmin_token;
+    if (subToken) { const d = jwt.verify(subToken, process.env.JWT_SECRET); return d.role === "subadmin"; }
+    return false;
   } catch { return false; }
 }
 
@@ -63,6 +65,7 @@ export default async function handler(req, res) {
 
       if (action === "info" || !action) {
         const { title, description, subject, batch, price, isFree, status, featureImage } = req.body;
+        const before = { title: course.title, subject: course.subject, status: course.status };
         if (title)       course.title       = title;
         if (description !== undefined) course.description = description;
         if (subject)     course.subject     = subject;
@@ -74,12 +77,15 @@ export default async function handler(req, res) {
           course.price  = isFree ? 0 : Number(price) || course.price;
         } else if (price !== undefined) { course.price = Number(price) || 0; }
         await course.save();
+        await logActivity(req, { feature: "courses", action: "update", entityId: id, entityType: "Course", description: `Updated course: "${course.title}"`, before, after: { title: course.title, subject: course.subject, status: course.status } });
         return res.status(200).json({ success: true, course });
       }
 
       if (action === "toggle-status") {
+        const prevStatus = course.status;
         course.status = course.status === "published" ? "draft" : "published";
         await course.save();
+        await logActivity(req, { feature: "courses", action: "update", entityId: id, entityType: "Course", description: `Toggled course status: "${course.title}" → ${course.status}`, before: { status: prevStatus }, after: { status: course.status } });
         return res.status(200).json({ success: true, course });
       }
 
@@ -158,7 +164,9 @@ export default async function handler(req, res) {
 
   if (req.method === "DELETE") {
     try {
+      const before = await Course.findById(id).lean();
       await Course.findByIdAndDelete(id);
+      await logActivity(req, { feature: "courses", action: "delete", entityId: id, entityType: "Course", description: `Deleted course: "${before?.title}"`, before: before ? { title: before.title, subject: before.subject, status: before.status } : null });
       return res.status(200).json({ success: true, message: "Course deleted" });
     } catch { return res.status(500).json({ error: "Failed to delete course" }); }
   }

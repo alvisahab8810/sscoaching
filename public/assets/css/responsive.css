@@ -3040,6 +3040,10 @@
         display: none !important;
     }
 
+    .dashboard-sidebar0-area ~ .flex-grow-1 {
+        margin-left: 0 !important;
+    }
+
     .dashboard-navbar .navbar {
         padding-left: 0 !important;
         padding-right: 0 !important;

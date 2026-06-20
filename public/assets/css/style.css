@@ -4627,6 +4627,23 @@ svg.green-svg {
   margin-right: 8px;
 }
 
+/* Dashboard layout — fixed sidebar, content pushed right */
+.dashboard-sidebar0-area ~ .flex-grow-1 {
+  margin-left: 16%;
+}
+
+/* Thin styled scrollbar inside sidebar */
+.dashboard-sidebar0-area::-webkit-scrollbar {
+  width: 4px;
+}
+.dashboard-sidebar0-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dashboard-sidebar0-area::-webkit-scrollbar-thumb {
+  background: #3a3a5c;
+  border-radius: 4px;
+}
+
 #userDropdown {
   background: #007bff33;
   border-radius: 50px;
