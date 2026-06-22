@@ -1,212 +1,99 @@
-import React, { useState, useEffect, useRef } from "react";
-import { MdLiveTv, MdMenuBook, MdEmojiEvents } from "react-icons/md";
+import React, { useState } from "react";
+import { MdLiveTv, MdMenuBook, MdEmojiEvents, MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Link from "next/link";
 
 export default function StudentLogin() {
   const router = useRouter();
+  const [mode, setMode] = useState("login"); // "login" | "register"
 
-  // screen: "phone" | "otp" | "profile"
-  const [screen, setScreen] = useState("phone");
+  // login fields
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
-  // phone screen
-  const [phone, setPhone] = useState("");
-  const [phoneLoading, setPhoneLoading] = useState(false);
-  const [phoneError, setPhoneError] = useState("");
+  // register fields
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regPhone, setRegPhone] = useState("");
+  const [regClass, setRegClass] = useState("");
+  const [regLoading, setRegLoading] = useState(false);
+  const [regError, setRegError] = useState("");
 
-  // otp screen
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [otpLoading, setOtpLoading] = useState(false);
-  const [otpError, setOtpError] = useState("");
-  const [timer, setTimer] = useState(30);
-  const [canResend, setCanResend] = useState(false);
-  const otpRefs = useRef([]);
-
-  // profile screen
-  const [name, setName] = useState("");
-  const [className, setClassName] = useState("");
-  const [batch, setBatch] = useState("");
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [profileError, setProfileError] = useState("");
-
-  // token stored after OTP verify
-  const [token, setToken] = useState("");
-
-  /* ================= TIMER ================= */
-  useEffect(() => {
-    if (screen === "otp") {
-      setTimer(30);
-      setCanResend(false);
-      const interval = setInterval(() => {
-        setTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setCanResend(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [screen]);
-
-  /* ================= SEND OTP ================= */
-  const handleSendOtp = async (e) => {
+  /* ── LOGIN ── */
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setPhoneError("");
-
-    if (!/^\d{10}$/.test(phone)) {
-      setPhoneError("Please enter a valid 10-digit phone number");
-      return;
-    }
-
-    setPhoneLoading(true);
+    setLoginError("");
+    setLoginLoading(true);
     try {
-      const res = await fetch("/api/student/send-otp", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ email: loginEmail.trim(), password: loginPassword }),
       });
       const data = await res.json();
       if (data.success) {
-        setScreen("otp");
-      } else {
-        setPhoneError(data.message || "Failed to send OTP");
-      }
-    } catch (err) {
-      setPhoneError("Server error. Please try again.");
-    }
-    setPhoneLoading(false);
-  };
-
-  /* ================= OTP INPUT HANDLING ================= */
-  const handleOtpChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = value.slice(-1);
-    setOtp(newOtp);
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handleOtpPaste = (e) => {
-    const pasted = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, 6);
-    if (pasted.length === 6) {
-      setOtp(pasted.split(""));
-      otpRefs.current[5]?.focus();
-    }
-  };
-
-  /* ================= VERIFY OTP ================= */
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setOtpError("");
-
-    const otpString = otp.join("");
-    if (otpString.length !== 6) {
-      setOtpError("Please enter the complete 6-digit OTP");
-      return;
-    }
-
-    setOtpLoading(true);
-    try {
-      const res = await fetch("/api/student/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, otp: otpString }),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setToken(data.token);
-        // Save token to localStorage
         localStorage.setItem("studentToken", data.token);
-        localStorage.setItem("studentInfo", JSON.stringify(data.student));
-
-        if (data.isNewUser || !data.isProfileComplete) {
-          setScreen("profile");
-        } else {
-          router.push("/student/dashboard");
-        }
-      } else {
-        setOtpError(data.message || "Invalid OTP");
-      }
-    } catch (err) {
-      setOtpError("Server error. Please try again.");
-    }
-    setOtpLoading(false);
-  };
-
-  /* ================= RESEND OTP ================= */
-  const handleResend = async () => {
-    setOtp(["", "", "", "", "", ""]);
-    setOtpError("");
-    setCanResend(false);
-
-    try {
-      await fetch("/api/student/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
-      });
-      setTimer(30);
-      const interval = setInterval(() => {
-        setTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setCanResend(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } catch (err) {}
-  };
-
-  /* ================= COMPLETE PROFILE ================= */
-  const handleCompleteProfile = async (e) => {
-    e.preventDefault();
-    setProfileError("");
-
-    if (!name.trim() || !className) {
-      setProfileError("Please fill your name and class");
-      return;
-    }
-
-    setProfileLoading(true);
-    try {
-      const res = await fetch("/api/student/complete-profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name, className, batch }),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        localStorage.setItem("studentInfo", JSON.stringify(data.student));
+        localStorage.setItem("studentInfo", JSON.stringify({
+          id: data.user._id,
+          name: data.user.name,
+          phone: data.user.phone,
+          className: data.user.class,
+          email: data.user.email,
+          avatar: data.user.avatar,
+        }));
         router.push("/student/dashboard");
       } else {
-        setProfileError(data.message || "Failed to save profile");
+        setLoginError(data.message || "Invalid email or password");
       }
-    } catch (err) {
-      setProfileError("Server error. Please try again.");
+    } catch {
+      setLoginError("Server error. Please try again.");
     }
-    setProfileLoading(false);
+    setLoginLoading(false);
+  };
+
+  /* ── REGISTER ── */
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setRegError("");
+    if (regPassword.length < 6) {
+      setRegError("Password must be at least 6 characters");
+      return;
+    }
+    setRegLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: regName.trim(),
+          email: regEmail.trim(),
+          password: regPassword,
+          phone: regPhone.trim(),
+          class: regClass,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem("studentToken", data.token);
+        localStorage.setItem("studentInfo", JSON.stringify({
+          id: data.user._id,
+          name: data.user.name,
+          phone: data.user.phone,
+          className: data.user.class,
+          email: data.user.email,
+          avatar: data.user.avatar,
+        }));
+        router.push("/student/dashboard");
+      } else {
+        setRegError(data.message || "Registration failed");
+      }
+    } catch {
+      setRegError("Server error. Please try again.");
+    }
+    setRegLoading(false);
   };
 
   return (
@@ -220,202 +107,192 @@ export default function StudentLogin() {
       </Head>
 
       <div className="sl-wrapper">
-        {/* LEFT SIDE — Branding */}
+        {/* LEFT — Branding */}
         <div className="sl-left">
           <div className="sl-left-content">
-            
-              <div className="sl-logo">
-                <div className="sl-logo-icon">SS</div>
-                <div>
-                  <div className="sl-logo-name">SS Coaching</div>
-                  <div className="sl-logo-tag">
-                    Rise From Failure • Estd. 2001
-                  </div>
-                </div>
+            <div className="sl-logo">
+              <div className="sl-logo-icon">SS</div>
+              <div>
+                <div className="sl-logo-name">SS Coaching</div>
+                <div className="sl-logo-tag">Rise From Failure • Estd. 2001</div>
               </div>
+            </div>
 
             <h1 className="sl-left-heading">
-              Learn from the
-              <br />
-              <span className="sl-left-highlight">Best Teachers</span>
-              <br />
+              Learn from the<br />
+              <span className="sl-left-highlight">Best Teachers</span><br />
               Anytime, Anywhere
             </h1>
 
             <p className="sl-left-desc">
-              Join thousands of students attending live classes, watching
-              recordings and achieving their dreams.
+              Join thousands of students attending live classes, watching recordings and achieving their dreams.
             </p>
 
-           <div className="sl-features">
-  <div className="sl-feature-item">
-    <span className="sl-feature-icon"><MdLiveTv size={18} /></span>
-    <span>Live streaming classes</span>
-  </div>
-  <div className="sl-feature-item">
-    <span className="sl-feature-icon"><MdMenuBook size={18} /></span>
-    <span>All subjects covered</span>
-  </div>
-  <div className="sl-feature-item">
-    <span className="sl-feature-icon"><MdEmojiEvents size={18} /></span>
-    <span>Proven results</span>
-  </div>
-</div>
+            <div className="sl-features">
+              <div className="sl-feature-item">
+                <span className="sl-feature-icon"><MdLiveTv size={18} /></span>
+                <span>Live streaming classes</span>
+              </div>
+              <div className="sl-feature-item">
+                <span className="sl-feature-icon"><MdMenuBook size={18} /></span>
+                <span>All subjects covered</span>
+              </div>
+              <div className="sl-feature-item">
+                <span className="sl-feature-icon"><MdEmojiEvents size={18} /></span>
+                <span>Proven results</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* RIGHT SIDE — Auth Forms */}
+        {/* RIGHT — Forms */}
         <div className="sl-right">
           <div className="sl-form-box">
-            {/* ===== SCREEN 1: PHONE ===== */}
-            {screen === "phone" && (
-              <div className="sl-screen">
-                <div className="sl-screen-icon">📱</div>
-                <h2 className="sl-screen-title">Welcome Back!</h2>
-                <p className="sl-screen-desc">
-                  Enter your mobile number to receive an OTP
-                </p>
+            {/* Tab toggle */}
+            <div className="sl-tabs">
+              <button
+                className={`sl-tab ${mode === "login" ? "sl-tab-active" : ""}`}
+                onClick={() => { setMode("login"); setLoginError(""); setRegError(""); }}
+              >
+                Login
+              </button>
+              <button
+                className={`sl-tab ${mode === "register" ? "sl-tab-active" : ""}`}
+                onClick={() => { setMode("register"); setLoginError(""); setRegError(""); }}
+              >
+                Register
+              </button>
+            </div>
 
-                <form onSubmit={handleSendOtp}>
+            {/* ── LOGIN FORM ── */}
+            {mode === "login" && (
+              <div className="sl-screen">
+                <div className="sl-screen-icon">👋</div>
+                <h2 className="sl-screen-title">Welcome Back!</h2>
+                <p className="sl-screen-desc">Login to access your courses</p>
+
+                <form onSubmit={handleLogin}>
                   <div className="sl-field">
-                    <label className="sl-label">Mobile Number</label>
-                    <div className="sl-phone-wrap">
-                      <span className="sl-phone-code">+91</span>
+                    <label className="sl-label">Email Address</label>
+                    <div className="sl-input-wrap">
+                      <MdEmail className="sl-input-icon" size={18} />
                       <input
-                        type="tel"
-                        className="sl-input sl-phone-input"
-                        placeholder="Enter 10-digit number"
-                        value={phone}
-                        onChange={(e) =>
-                          setPhone(
-                            e.target.value.replace(/\D/g, "").slice(0, 10),
-                          )
-                        }
-                        maxLength={10}
+                        type="email"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="you@email.com"
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
                         required
                         autoFocus
                       />
                     </div>
-                    {phoneError && <div className="sl-error">{phoneError}</div>}
                   </div>
 
-                  <button
-                    type="submit"
-                    className="sl-btn-primary"
-                    disabled={phoneLoading}
-                  >
-                    {phoneLoading ? (
-                      <span className="sl-spinner"></span>
-                    ) : (
-                      "Send OTP →"
-                    )}
+                  <div className="sl-field">
+                    <label className="sl-label">Password</label>
+                    <div className="sl-input-wrap">
+                      <MdLock className="sl-input-icon" size={18} />
+                      <input
+                        type="password"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="Enter your password"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {loginError && <div className="sl-error">{loginError}</div>}
+
+                  <button type="submit" className="sl-btn-primary" disabled={loginLoading}>
+                    {loginLoading ? <span className="sl-spinner"></span> : "Login →"}
                   </button>
                 </form>
 
                 <p className="sl-bottom-note">
-                  New student? Just enter your number — we'll set up your
-                  account automatically.
+                  New student?{" "}
+                  <button className="sl-change-btn" onClick={() => setMode("register")}>
+                    Create account
+                  </button>
                 </p>
               </div>
             )}
 
-            {/* ===== SCREEN 2: OTP ===== */}
-            {screen === "otp" && (
+            {/* ── REGISTER FORM ── */}
+            {mode === "register" && (
               <div className="sl-screen">
-                <div className="sl-screen-icon">🔐</div>
-                <h2 className="sl-screen-title">Enter OTP</h2>
-                <p className="sl-screen-desc">
-                  We sent a 6-digit OTP to <strong>+91 {phone}</strong>{" "}
-                  <button
-                    className="sl-change-btn"
-                    onClick={() => {
-                      setScreen("phone");
-                      setOtp(["", "", "", "", "", ""]);
-                    }}
-                  >
-                    Change
-                  </button>
-                </p>
+                <div className="sl-screen-icon">🎓</div>
+                <h2 className="sl-screen-title">Create Account</h2>
+                <p className="sl-screen-desc">Join SS Coaching today</p>
 
-                <form onSubmit={handleVerifyOtp}>
-                  <div className="sl-otp-row" onPaste={handleOtpPaste}>
-                    {otp.map((digit, i) => (
+                <form onSubmit={handleRegister}>
+                  <div className="sl-field">
+                    <label className="sl-label">Full Name <span className="sl-req">*</span></label>
+                    <div className="sl-input-wrap">
+                      <MdPerson className="sl-input-icon" size={18} />
                       <input
-                        key={i}
-                        ref={(el) => (otpRefs.current[i] = el)}
-                        type="tel"
-                        className={`sl-otp-box ${digit ? "sl-otp-filled" : ""}`}
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpChange(i, e.target.value)}
-                        onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                        autoFocus={i === 0}
+                        type="text"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="e.g. Rahul Sharma"
+                        value={regName}
+                        onChange={(e) => setRegName(e.target.value)}
+                        required
+                        autoFocus
                       />
-                    ))}
-                  </div>
-
-                  {otpError && <div className="sl-error">{otpError}</div>}
-
-                  <button
-                    type="submit"
-                    className="sl-btn-primary"
-                    disabled={otpLoading}
-                  >
-                    {otpLoading ? (
-                      <span className="sl-spinner"></span>
-                    ) : (
-                      "Verify OTP ✓"
-                    )}
-                  </button>
-                </form>
-
-                <div className="sl-resend-row">
-                  {canResend ? (
-                    <button className="sl-resend-btn" onClick={handleResend}>
-                      Resend OTP
-                    </button>
-                  ) : (
-                    <span className="sl-timer">
-                      Resend OTP in <strong>{timer}s</strong>
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* ===== SCREEN 3: COMPLETE PROFILE ===== */}
-            {screen === "profile" && (
-              <div className="sl-screen">
-                <div className="sl-screen-icon">👋</div>
-                <h2 className="sl-screen-title">Almost There!</h2>
-                <p className="sl-screen-desc">
-                  Tell us a bit about yourself to get started
-                </p>
-
-                <form onSubmit={handleCompleteProfile}>
-                  <div className="sl-field">
-                    <label className="sl-label">
-                      Your Full Name <span className="sl-req">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="sl-input"
-                      placeholder="e.g. Rahul Sharma"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      autoFocus
-                    />
+                    </div>
                   </div>
 
                   <div className="sl-field">
-                    <label className="sl-label">
-                      Your Class <span className="sl-req">*</span>
-                    </label>
+                    <label className="sl-label">Email Address <span className="sl-req">*</span></label>
+                    <div className="sl-input-wrap">
+                      <MdEmail className="sl-input-icon" size={18} />
+                      <input
+                        type="email"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="you@email.com"
+                        value={regEmail}
+                        onChange={(e) => setRegEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sl-field">
+                    <label className="sl-label">Password <span className="sl-req">*</span></label>
+                    <div className="sl-input-wrap">
+                      <MdLock className="sl-input-icon" size={18} />
+                      <input
+                        type="password"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="Min. 6 characters"
+                        value={regPassword}
+                        onChange={(e) => setRegPassword(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sl-field">
+                    <label className="sl-label">Phone (Optional)</label>
+                    <div className="sl-input-wrap">
+                      <MdPhone className="sl-input-icon" size={18} />
+                      <input
+                        type="tel"
+                        className="sl-input sl-input-icon-pad"
+                        placeholder="10-digit mobile number"
+                        value={regPhone}
+                        onChange={(e) => setRegPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sl-field">
+                    <label className="sl-label">Your Class <span className="sl-req">*</span></label>
                     <select
                       className="sl-input sl-select"
-                      value={className}
-                      onChange={(e) => setClassName(e.target.value)}
+                      value={regClass}
+                      onChange={(e) => setRegClass(e.target.value)}
                       required
                     >
                       <option value="">Select your class</option>
@@ -429,38 +306,62 @@ export default function StudentLogin() {
                     </select>
                   </div>
 
-                  <div className="sl-field">
-                    <label className="sl-label">Batch (Optional)</label>
-                    <input
-                      type="text"
-                      className="sl-input"
-                      placeholder="e.g. Morning Batch / Evening Batch"
-                      value={batch}
-                      onChange={(e) => setBatch(e.target.value)}
-                    />
-                  </div>
+                  {regError && <div className="sl-error">{regError}</div>}
 
-                  {profileError && (
-                    <div className="sl-error">{profileError}</div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="sl-btn-primary"
-                    disabled={profileLoading}
-                  >
-                    {profileLoading ? (
-                      <span className="sl-spinner"></span>
-                    ) : (
-                      "Go to Dashboard 🚀"
-                    )}
+                  <button type="submit" className="sl-btn-primary" disabled={regLoading}>
+                    {regLoading ? <span className="sl-spinner"></span> : "Create Account 🚀"}
                   </button>
                 </form>
+
+                <p className="sl-bottom-note">
+                  Already have an account?{" "}
+                  <button className="sl-change-btn" onClick={() => setMode("login")}>
+                    Login here
+                  </button>
+                </p>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        .sl-tabs {
+          display: flex;
+          border-bottom: 2px solid #f0f0f0;
+          margin-bottom: 24px;
+        }
+        .sl-tab {
+          flex: 1;
+          padding: 12px;
+          border: none;
+          background: none;
+          font-size: 15px;
+          font-weight: 600;
+          color: #9ca3af;
+          cursor: pointer;
+          font-family: 'Outfit', sans-serif;
+          transition: color 0.2s;
+        }
+        .sl-tab-active {
+          color: #6c47d4;
+          border-bottom: 2px solid #6c47d4;
+          margin-bottom: -2px;
+        }
+        .sl-input-wrap {
+          position: relative;
+        }
+        .sl-input-icon {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #9ca3af;
+        }
+        .sl-input-icon-pad {
+          padding-left: 38px !important;
+        }
+      `}</style>
     </>
   );
 }
