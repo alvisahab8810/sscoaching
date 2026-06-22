@@ -1,10 +1,55 @@
 // pages/api/enrollments/index.js
 import dbConnect from "@/lib/dbConnect";
 import Enrollment from "@/models/EnrollmentModel";
-import StudentUser from "@/models/StudentUser";   // ← correct model name
+import StudentUser from "@/models/StudentUser";
+import Course from "@/models/CourseModel";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+
+function getStudent(req) {
+  try {
+    const token = (req.headers.authorization || "").replace("Bearer ", "");
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch { return null; }
+}
 
 export default async function handler(req, res) {
+  await dbConnect();
+
+  /* ── POST /api/enrollments — student enrolls in a course (mobile app) ── */
+  if (req.method === "POST") {
+    const student = getStudent(req);
+    if (!student) return res.status(401).json({ success: false, error: "Please login to continue" });
+
+    const { courseId } = req.body;
+    if (!courseId) return res.status(400).json({ success: false, error: "Course ID required" });
+
+    try {
+      const course = await Course.findById(courseId);
+      if (!course || course.status !== "published")
+        return res.status(404).json({ success: false, error: "Course not found" });
+
+      const existing = await Enrollment.findOne({ student: student.id, course: courseId });
+      if (existing) return res.status(400).json({ success: false, error: "Already enrolled in this course" });
+
+      if (course.isFree) {
+        const enrollment = await Enrollment.create({ student: student.id, course: courseId, type: "free" });
+        await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
+        return res.status(200).json({ success: true, message: "Enrolled successfully!", type: "free", data: enrollment });
+      }
+
+      return res.status(200).json({
+        success: true,
+        type: "paid",
+        originalPrice: course.price,
+        finalPrice: course.price,
+        courseName: course.title,
+      });
+    } catch (err) {
+      return res.status(500).json({ success: false, error: err.message || "Server error" });
+    }
+  }
+
   if (req.method !== "GET")
     return res.status(405).json({ error: "Method not allowed" });
 

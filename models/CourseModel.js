@@ -11,7 +11,7 @@ const LessonSchema = new mongoose.Schema({
   title:       { type: String, required: true },
   youtubeLink: { type: String, default: "" },
   videoUrl:    { type: String, default: "" },
-  videoType:   { type: String, enum: ["youtube", "custom", "none"], default: "youtube" },
+  videoType:   { type: String, enum: ["youtube", "custom", "none", "bunny"], default: "youtube" },
   duration:    { type: String, default: "" },
   notes:       [LessonNoteSchema],
 }, { _id: true });

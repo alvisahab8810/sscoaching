@@ -10,9 +10,29 @@ const StudentUserSchema = new mongoose.Schema(
 
     phone: {
       type: String,
-      required: [true, "Phone number is required"],
       unique: true,
+      sparse: true,
       trim: true,
+      default: "",
+    },
+
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      sparse: true,
+      default: "",
+    },
+
+    password: {
+      type: String,
+      select: false,
+    },
+
+    avatar: {
+      type: String,
+      default: "",
     },
 
     className: {

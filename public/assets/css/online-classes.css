@@ -6596,6 +6596,69 @@
 }
 .cr-video-url-hint strong { color: #6c47d4; }
 
+/* ── Bunny Stream upload UI ── */
+.cr-bunny-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cr-bunny-pick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 2px dashed #6c47d4;
+  background: #faf5ff;
+  color: #6c47d4;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  transition: all 0.15s;
+  width: 100%;
+}
+.cr-bunny-pick-btn:hover:not(:disabled) { background: #ede9fe; border-style: solid; }
+.cr-bunny-pick-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+.cr-progress-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+.cr-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6c47d4, #a78bfa);
+  transition: width 0.3s ease;
+}
+.cr-bunny-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  font-size: 13px;
+  font-weight: 600;
+  color: #166534;
+}
+.cr-bunny-success span { flex: 1; }
+.cr-bunny-change-btn {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6c47d4;
+  background: none;
+  border: 1px solid #6c47d4;
+  border-radius: 6px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+}
+.cr-bunny-change-btn:hover { background: #faf5ff; }
+
 /* ── Lesson item wrapper (allows notes to sit under) ── */
 .cr-lesson-item-wrap {
   border-bottom: 1px solid #f0f0f8;
@@ -9089,4 +9152,49 @@
   font-family: 'Inter', sans-serif !important;
 }
 .cdp-coupon-btn:hover { background: #702DFF; color: #fff; }
+
+/* ════════════════════════════════════════
+   BUNNY SECURE VIDEO PLAYER
+════════════════════════════════════════ */
+.bvp-wrap {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Disable text/element selection inside player */
+.bvp-wrap * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Floating student watermark */
+.bvp-watermark {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.38);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  white-space: nowrap;
+  font-family: "Outfit", sans-serif;
+  transition: opacity 0.5s ease;
+}
+.bvp-wm-show { opacity: 1; }
+.bvp-wm-hide { opacity: 0; }
+
+/* Transparent guard layer — sits above video, below controls.
+   Blocks right-click menu on the video surface. */
+.bvp-guard {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: transparent;
+}
 .cdp-coupon-msg { display: block; margin-top: 10px; font-size: 13px; color: #059669; font-weight: 600; font-family: 'Inter', sans-serif !important; }

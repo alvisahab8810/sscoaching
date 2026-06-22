@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -376,7 +376,7 @@ export default function StudentDashboard() {
                                   </span>
                                   <span className="sdc-meta-item">
                                     <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                                    {totalLessons} Lessons
+                                    {totalLessons} Topics
                                   </span>
                                 </div>
                                 <div className="sdc-meta-right">
@@ -1052,7 +1052,7 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
             </span>
             <span className="sdc-meta-item">
               <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-              {totalLessons} Lessons
+              {totalLessons} Topics
             </span>
           </div>
           <div className="sdc-meta-right">
@@ -1166,7 +1166,7 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
           <div className="cdp-details-box">
             <h2>Course Details</h2>
             <div className="cdp-details-row">
-              <div className="cdp-detail-item"><small>Topics covered</small><b>{totalLessons} Lessons</b></div>
+              <div className="cdp-detail-item"><small>Topics covered</small><b>{totalLessons} Topics</b></div>
               <div className="cdp-detail-item"><small>BATCH FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
               <div className="cdp-detail-item"><small>Duration</small><b>{course.duration||"Self-paced"}</b></div>
             </div>
@@ -1196,7 +1196,7 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
               <span className="cdp-content-meta-dot">·</span>
               <span className="sdc-meta-item">
                 <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                {totalLessons} Lessons
+                {totalLessons} Topics
               </span>
             </div>
             {course.chapters?.map((ch,ci) => (
@@ -1245,7 +1245,7 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
                 </span>
                 <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
                   <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                  {totalLessons} Lessons
+                  {totalLessons} Topics
                 </span>
               </div>
               <div className="cdp-meta-right-g">
@@ -1283,6 +1283,234 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   BUNNY HLS PLAYER — secured
+════════════════════════════════════════ */
+const WATERMARK_POSITIONS = [
+  { top:"15%",  left:"8%"  },
+  { top:"72%",  left:"58%" },
+  { top:"38%",  left:"32%" },
+  { top:"82%",  left:"12%" },
+  { top:"22%",  left:"62%" },
+  { top:"55%",  left:"5%"  },
+  { top:"10%",  left:"45%" },
+];
+
+function BunnyPlayer({ src }) {
+  const videoRef    = useRef(null);
+  const hlsRef      = useRef(null);
+  const hlsAuthRef  = useRef(null); // { token, expires } for signing segment requests
+  const [signedSrc, setSignedSrc]   = useState(null);
+  const [hlsError,  setHlsError]    = useState(null);
+  const [wmText,    setWmText]      = useState("");
+  const [wmPos,     setWmPos]       = useState(WATERMARK_POSITIONS[0]);
+  const [wmVisible, setWmVisible]   = useState(true);
+
+  /* ── 1. Fetch server-signed expiring URL ── */
+  useEffect(() => {
+    if (!src) return;
+    fetch("/api/bunny/signed-url", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ videoUrl: src }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        console.log("[BunnyPlayer] signed URL:", d.url);
+        console.log("[BunnyPlayer] token auth:", d.token ? "YES (token present)" : "NO token");
+        setSignedSrc(d.url || src);
+        if (d.token) hlsAuthRef.current = { token: d.token, expires: d.expires };
+      })
+      .catch((err) => {
+        console.error("[BunnyPlayer] signed-url API error:", err);
+        setSignedSrc(src);
+      });
+  }, [src]);
+
+  /* ── 2. Load student watermark text from localStorage ── */
+  useEffect(() => {
+    try {
+      const info = JSON.parse(localStorage.getItem("studentInfo") || "{}");
+      const parts = [info.name, info.phone ? `+91 ${info.phone}` : ""].filter(Boolean);
+      setWmText(parts.join("  •  ") || "SS Coaching");
+    } catch { setWmText("SS Coaching"); }
+  }, []);
+
+  /* ── 3. Slowly drift watermark position ── */
+  useEffect(() => {
+    if (!wmText) return;
+    let idx = 0;
+    const t = setInterval(() => {
+      idx = (idx + 1) % WATERMARK_POSITIONS.length;
+      setWmVisible(false);
+      setTimeout(() => {
+        setWmPos(WATERMARK_POSITIONS[idx]);
+        setWmVisible(true);
+      }, 600);
+    }, 6000);
+    return () => clearInterval(t);
+  }, [wmText]);
+
+  /* ── 4. Block keyboard shortcuts + blackout on capture attempt ── */
+  useEffect(() => {
+    const blackout = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.style.visibility = "hidden";
+      navigator.clipboard?.writeText("").catch(() => {});
+      toast.error("Recording / screenshots are not allowed", { duration: 3000 });
+      setTimeout(() => { if (videoRef.current) videoRef.current.style.visibility = "visible"; }, 1200);
+    };
+
+    const onKey = (e) => {
+      const k = e.key?.toLowerCase() ?? "";
+      // PrintScreen / Snipping Tool
+      if (e.key === "PrintScreen") { blackout(); e.preventDefault(); return; }
+      // Ctrl+Shift+R (some recording apps), Ctrl+Shift+S (Windows snip)
+      if (e.ctrlKey && e.shiftKey && ["r","s"].includes(k)) { blackout(); e.preventDefault(); return; }
+      // Dev-tools / save / print shortcuts
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(k)) ||
+        (e.ctrlKey && ["s","u","p","a"].includes(k))
+      ) { e.preventDefault(); }
+    };
+
+    // Pause + blackout when window loses focus (user Alt-Tabs to recording app)
+    const onBlur = () => {
+      const v = videoRef.current;
+      if (v && !v.paused) {
+        v.style.visibility = "hidden";
+        setTimeout(() => { if (videoRef.current) videoRef.current.style.visibility = "visible"; }, 800);
+      }
+    };
+
+    document.addEventListener("keydown", onKey, { capture: true });
+    window.addEventListener("blur", onBlur);
+    return () => {
+      document.removeEventListener("keydown", onKey, { capture: true });
+      window.removeEventListener("blur", onBlur);
+    };
+  }, []);
+
+  /* ── 5. HLS setup (runs only after signed URL is ready) ── */
+  useEffect(() => {
+    if (!signedSrc) return;
+    let cancelled = false;
+
+    const destroyHls = () => {
+      if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+    };
+
+    const setup = () => {
+      const video = videoRef.current;
+      if (!video || cancelled) return;
+
+      destroyHls();
+
+      // Only use native HLS on real Safari (iOS/macOS); Chrome falsely reports canPlayType
+      const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
+      const isSafari = /Safari/i.test(ua) && !/Chrome|CriOS|FxiOS|EdgA|Android/i.test(ua);
+      if (isSafari && video.canPlayType("application/vnd.apple.mpegurl")) {
+        console.log("[BunnyPlayer] Safari native HLS path");
+        video.src = signedSrc;
+        video.load();
+        video.play().catch(() => {});
+        return;
+      }
+
+      // hls.js path — Chrome, Firefox, Edge, etc.
+      import("hls.js").then(({ default: Hls }) => {
+        if (cancelled || !videoRef.current) return; // unmounted or effect re-ran
+        if (!Hls.isSupported()) {
+          setHlsError("HLS is not supported in this browser");
+          return;
+        }
+        console.log("[BunnyPlayer] hls.js path, loading:", signedSrc);
+        const hls = new Hls({ enableWorker: true, startLevel: -1 });
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.error("[BunnyPlayer] HLS error:", data.type, data.details,
+            "HTTP:", data.response?.code, "URL:", data.url);
+          if (data.fatal) setHlsError(`${data.details} (HTTP ${data.response?.code ?? "?"})`);
+        });
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log("[BunnyPlayer] manifest parsed — playing");
+          videoRef.current?.play().catch(() => {});
+        });
+        hls.loadSource(signedSrc);
+        hls.attachMedia(videoRef.current);
+        hlsRef.current = hls;
+      }).catch((err) => {
+        console.error("[BunnyPlayer] failed to import hls.js:", err);
+        setHlsError("Failed to load video player");
+      });
+    };
+
+    // videoRef.current is populated once the <video> element mounts.
+    // On the very first render it should already be set; use rAF as a safety net.
+    if (videoRef.current) {
+      setup();
+    } else {
+      const raf = requestAnimationFrame(() => { setup(); });
+      return () => {
+        cancelled = true;
+        cancelAnimationFrame(raf);
+        destroyHls();
+      };
+    }
+
+    return () => {
+      cancelled = true;
+      destroyHls();
+    };
+  }, [signedSrc]);
+
+  const blockContext = (e) => e.preventDefault();
+
+  return (
+    <div className="bvp-wrap" onContextMenu={blockContext}>
+      {hlsError && (
+        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column",
+          alignItems:"center", justifyContent:"center", background:"#111", color:"#fff",
+          zIndex:10, gap:8, padding:20, textAlign:"center" }}>
+          <span style={{fontSize:32}}>⚠️</span>
+          <strong>Video failed to load</strong>
+          <span style={{fontSize:12, color:"#aaa"}}>{hlsError}</span>
+          <button onClick={()=>window.location.reload()}
+            style={{marginTop:8,padding:"6px 16px",background:"#6c47d4",color:"#fff",
+              border:"none",borderRadius:6,cursor:"pointer"}}>Retry</button>
+        </div>
+      )}
+      {/* actual video */}
+      <video
+        ref={videoRef}
+        controls
+        autoPlay
+        playsInline
+        className="scp-iframe"
+        style={{ background:"#000", width:"100%", height:"100%", display:"block" }}
+        controlsList="nodownload noremoteplayback"
+        disablePictureInPicture
+        onContextMenu={blockContext}
+      />
+
+      {/* floating watermark */}
+      {wmText && (
+        <div
+          className={`bvp-watermark ${wmVisible ? "bvp-wm-show" : "bvp-wm-hide"}`}
+          style={{ top: wmPos.top, left: wmPos.left }}
+          aria-hidden="true"
+        >
+          {wmText}
+        </div>
+      )}
+
+      {/* transparent interaction guard — blocks right-click on overlapping UI */}
+      <div className="bvp-guard" onContextMenu={blockContext} aria-hidden="true"/>
     </div>
   );
 }
@@ -1326,7 +1554,10 @@ function CoursePlayer({ courseId, onBack }) {
     return null;
   };
 
-  const lessonHasVideo   = (l) => !l ? false : (l.videoType==="youtube"&&l.youtubeLink)||(l.videoType==="custom"&&l.videoUrl);
+  const lessonHasVideo   = (l) => !l ? false :
+    (l.videoType==="youtube" && l.youtubeLink) ||
+    (l.videoType==="custom"  && l.videoUrl)    ||
+    (l.videoType==="bunny"   && l.videoUrl);
   const lessonHasNotes   = (l) => l?.notes?.length > 0;
   const lessonAccessible = (l) => lessonHasVideo(l) || lessonHasNotes(l);
 
@@ -1353,7 +1584,7 @@ function CoursePlayer({ courseId, onBack }) {
             <span style={{color:getSubjectColor(course.subject)}}>{subjectIcons[course.subject]||"📚"} {course.subject}</span>
             <span>•</span><span>{course.batch}</span>
             <span>•</span><span>{course.chapters?.length||0} Chapters</span>
-            <span>•</span><span>{totalLessons} Lessons</span>
+            <span>•</span><span>{totalLessons} Topics</span>
           </div>
         </div>
       </div>
@@ -1379,6 +1610,14 @@ function CoursePlayer({ courseId, onBack }) {
               <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
             </>
           )}
+          {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
+            <>
+              <div className="scp-video-wrap">
+                <BunnyPlayer src={lesson.videoUrl}/>
+              </div>
+              <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+            </>
+          )}
           {lesson && !lessonHasVideo(lesson) && lessonHasNotes(lesson) && (
             <>
               <div className="scp-notes-only-header">
@@ -1393,7 +1632,7 @@ function CoursePlayer({ courseId, onBack }) {
             <div className="scp-locked"><MdOndemandVideo size={48}/><div>No content available yet</div></div>
           )}
           {!lesson && (
-            <div className="scp-no-lesson"><MdOndemandVideo size={64}/><div>Select a lesson to start</div></div>
+            <div className="scp-no-lesson"><MdOndemandVideo size={64}/><div>Select a topic to start</div></div>
           )}
         </div>
         <div className="scp-sidebar">
@@ -1409,13 +1648,13 @@ function CoursePlayer({ courseId, onBack }) {
                     <span className="scp-chapter-title">{chapter.title}</span>
                   </div>
                   <div className="scp-chapter-right">
-                    <span className="scp-chapter-count">{chapter.lessons.length} lessons</span>
+                    <span className="scp-chapter-count">{chapter.lessons.length} topics</span>
                     {isOpen?<MdExpandLess size={18}/>:<MdExpandMore size={18}/>}
                   </div>
                 </button>
                 {isOpen && (
                   <div className="scp-lessons">
-                    {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No lessons yet</div>}
+                    {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No topics yet</div>}
                     {chapter.lessons.map((les, li) => {
                       const isActive = activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
                       const canOpen  = lessonAccessible(les);
@@ -1753,7 +1992,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
                         <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
                         {c.chapters?.length||0} Chapters &nbsp;
                         <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                        {totalLessons} Lessons
+                        {totalLessons} Topics
                       </div>
                       <div style={{display:"flex",gap:5,flexWrap:"wrap",marginTop:4}}>
                         {c.subject && <span className="sdc-tag" style={{background:`${sc}22`,color:sc}}>{c.subject.toUpperCase()}</span>}
@@ -1873,7 +2112,7 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
         </span>
         <span className="sdc-meta-item">
           <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-          {cls.chapters?.reduce((a,c)=>a+c.lessons.length,0)||0} Lessons
+          {cls.chapters?.reduce((a,c)=>a+c.lessons.length,0)||0} Topics
         </span>
       </div>
       <div className="sdc-meta-right">
@@ -2630,7 +2869,7 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
 //             <span style={{ color: getSubjectColor(course.subject) }}>{subjectIcons[course.subject] || "📚"} {course.subject}</span>
 //             <span>•</span><span>{course.batch}</span>
 //             <span>•</span><span>{course.chapters?.length || 0} Chapters</span>
-//             <span>•</span><span>{totalLessons} Lessons</span>
+//             <span>•</span><span>{totalLessons} Topics</span>
 //           </div>
 //         </div>
 //       </div>
@@ -2714,7 +2953,7 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
 //                     <span className="scp-chapter-title">{chapter.title}</span>
 //                   </div>
 //                   <div className="scp-chapter-right">
-//                     <span className="scp-chapter-count">{chapter.lessons.length} lessons</span>
+//                     <span className="scp-chapter-count">{chapter.lessons.length} topics</span>
 //                     {isOpen ? <MdExpandLess size={18} /> : <MdExpandMore size={18} />}
 //                   </div>
 //                 </button>

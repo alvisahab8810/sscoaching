@@ -110,7 +110,7 @@ export default async function handler(req, res) {
         const vType = videoType || (youtubeLink ? "youtube" : videoUrl ? "custom" : "none");
         if (vType === "youtube" && !youtubeLink)
           return res.status(400).json({ error: "YouTube link required" });
-        if (vType === "custom" && !videoUrl)
+        if ((vType === "custom" || vType === "bunny") && !videoUrl)
           return res.status(400).json({ error: "Video URL required" });
         const chapter = course.chapters.id(chapterId);
         if (!chapter) return res.status(404).json({ error: "Chapter not found" });

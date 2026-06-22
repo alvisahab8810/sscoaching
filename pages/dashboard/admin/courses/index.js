@@ -466,7 +466,7 @@
 //                             <div className="cr-card-desc">{(course.description||"No description").slice(0,72)}...</div>
 //                             <div className="cr-card-meta">
 //                               <span className="cr-meta-tag"><MdFolder size={13}/> {course.chapters?.length||0} Chapters</span>
-//                               <span className="cr-meta-tag"><MdVideoLibrary size={13}/> {totalLessons(course)} Lessons</span>
+//                               <span className="cr-meta-tag"><MdVideoLibrary size={13}/> {totalLessons(course)} Topics</span>
 //                               <span className="cr-meta-tag"><MdPeople size={13}/> {course.enrolledCount||0} Enrolled</span>
 //                             </div>
 //                             <div className="cr-card-actions">
@@ -668,7 +668,7 @@
 //                               <div>
 //                                 <div className="cr-chapter-name">{chapter.title}</div>
 //                                 <div className="cr-chapter-count">
-//                                   <MdVideoLibrary size={11}/> {chapter.lessons.length} lessons
+//                                   <MdVideoLibrary size={11}/> {chapter.lessons.length} topics
 //                                 </div>
 //                               </div>
 //                             </div>
@@ -706,7 +706,7 @@
 //                               {showLessonForm===chapter._id ? (
 //                                 <div className="cr-lesson-form">
 //                                   <div className="cr-lesson-form-title">
-//                                     <MdVideoLibrary size={15} color="#6c47d4"/> Add New Lesson
+//                                     <MdVideoLibrary size={15} color="#6c47d4"/> Add New Topic
 //                                   </div>
 //                                   <input className="cr-input" placeholder="Lesson title"
 //                                     value={lessonForm.title}
@@ -1004,6 +1004,9 @@ export default function AdminCoursesPage({ admin }) {
   // Note form — keyed by lessonId
   const [showNoteForm, setShowNoteForm]       = useState(null); // lessonId
   const [noteForm, setNoteForm]               = useState(EMPTY_NOTE);
+  const [uploading, setUploading]             = useState(false);
+  const [uploadProgress, setUploadProgress]   = useState(0);
+  const videoFileRef                          = useRef(null);
 
   const [form, setForm]           = useState(EMPTY_FORM);
   const [isEditing, setIsEditing] = useState(false);
@@ -1155,12 +1158,15 @@ export default function AdminCoursesPage({ admin }) {
 
   /* ── Add lesson — now with videoType ── */
   const handleAddLesson = async (chapterId) => {
-    if (!lessonForm.title.trim()) { toast.error("Lesson title required"); return; }
+    if (!lessonForm.title.trim()) { toast.error("Topic title required"); return; }
     if (lessonForm.videoType==="youtube" && !lessonForm.youtubeLink.trim()) {
       toast.error("YouTube link required"); return;
     }
     if (lessonForm.videoType==="custom" && !lessonForm.videoUrl.trim()) {
       toast.error("Video URL required"); return;
+    }
+    if (lessonForm.videoType==="bunny" && !lessonForm.videoUrl.trim()) {
+      toast.error("Please upload a video first"); return;
     }
     setSaving(true);
     try {
@@ -1173,14 +1179,79 @@ export default function AdminCoursesPage({ admin }) {
         setSelectedCourse(data.course);
         setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
         setLessonForm(EMPTY_LESSON); setShowLessonForm(null);
-        toast.success("Lesson added!");
+        toast.success("Topic added!");
       } else { toast.error(data.error||"Failed"); }
     } catch { toast.error("Network error"); }
     finally { setSaving(false); }
   };
 
+  /* ── Upload video directly to Bunny Stream via TUS (resumable, no size limit) ── */
+  const handleBunnyUpload = async (file) => {
+    if (!file) return;
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      // Step 1: create video entry + get TUS auth signature from server
+      const createRes  = await fetch("/api/bunny/create-video", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ title: lessonForm.title?.trim() || file.name }),
+      });
+      const createData = await createRes.json();
+      if (!createData.videoId) {
+        toast.error(createData.error || "Failed to create video on Bunny");
+        setUploading(false);
+        return;
+      }
+
+      const { videoId, cdnUrl, tusSignature, tusExpiry, libraryId } = createData;
+
+      // Step 2: load tus-js-client only in browser and upload directly to Bunny
+      const tus = await import("tus-js-client");
+
+      await new Promise((resolve, reject) => {
+        const upload = new tus.Upload(file, {
+          endpoint:    "https://video.bunnycdn.com/tusupload",
+          retryDelays: [0, 3000, 5000, 10000, 20000, 30000],
+          headers: {
+            AuthorizationSignature: tusSignature,
+            AuthorizationExpire:    String(tusExpiry),
+            VideoId:                videoId,
+            LibraryId:              String(libraryId),
+          },
+          metadata: {
+            filetype: file.type,
+            title:    lessonForm.title?.trim() || file.name,
+          },
+          onError:    (err) => reject(err),
+          onProgress: (uploaded, total) => {
+            setUploadProgress(Math.round((uploaded / total) * 100));
+          },
+          onSuccess:  resolve,
+        });
+
+        // Resume a previous incomplete upload if one exists
+        upload.findPreviousUploads().then((prev) => {
+          if (prev.length) upload.resumeFromPreviousUpload(prev[0]);
+          upload.start();
+        });
+      });
+
+      setLessonForm(prev => ({ ...prev, videoUrl: cdnUrl, videoType: "bunny" }));
+      toast.success("Video uploaded! Bunny is now encoding it.");
+    } catch (err) {
+      console.error("TUS upload error:", err);
+      toast.error(err?.message || "Upload failed — check your internet and try again");
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+      if (videoFileRef.current) videoFileRef.current.value = "";
+    }
+  };
+
   const handleDeleteLesson = async (chapterId, lessonId) => {
-    if (!confirm("Delete this lesson?")) return;
+    if (!confirm("Delete this topic?")) return;
     try {
       const res  = await fetch(`/api/courses/${selectedCourse._id}?action=delete-lesson`, {
         method:"PUT", headers:{"Content-Type":"application/json"},
@@ -1190,7 +1261,7 @@ export default function AdminCoursesPage({ admin }) {
       if (data.success) {
         setSelectedCourse(data.course);
         setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
-        toast.success("Lesson deleted");
+        toast.success("Topic deleted");
       }
     } catch { toast.error("Network error"); }
   };
@@ -1341,7 +1412,7 @@ export default function AdminCoursesPage({ admin }) {
                             <div className="cr-card-desc">{(course.description||"No description").slice(0,72)}...</div>
                             <div className="cr-card-meta">
                               <span className="cr-meta-tag"><MdFolder size={13}/> {course.chapters?.length||0} Chapters</span>
-                              <span className="cr-meta-tag"><MdVideoLibrary size={13}/> {totalLessons(course)} Lessons</span>
+                              <span className="cr-meta-tag"><MdVideoLibrary size={13}/> {totalLessons(course)} Topics</span>
                               <span className="cr-meta-tag"><MdPeople size={13}/> {course.enrolledCount||0} Enrolled</span>
                             </div>
                             <div className="cr-card-actions">
@@ -1442,7 +1513,7 @@ export default function AdminCoursesPage({ admin }) {
                         <div className="cr-info-stats">
                           {[
                             {Icon:MdFolder,       label:"Chapters", val:selectedCourse.chapters?.length||0},
-                            {Icon:MdVideoLibrary, label:"Lessons",  val:totalLessons(selectedCourse)},
+                            {Icon:MdVideoLibrary, label:"Topics",   val:totalLessons(selectedCourse)},
                             {Icon:MdPeople,       label:"Enrolled", val:selectedCourse.enrolledCount||0},
                           ].map(m=>(
                             <div key={m.label} className="cr-info-stat">
@@ -1520,7 +1591,7 @@ export default function AdminCoursesPage({ admin }) {
                               <div>
                                 <div className="cr-chapter-name">{chapter.title}</div>
                                 <div className="cr-chapter-count">
-                                  <MdVideoLibrary size={11}/> {chapter.lessons.length} lessons
+                                  <MdVideoLibrary size={11}/> {chapter.lessons.length} topics
                                 </div>
                               </div>
                             </div>
@@ -1645,11 +1716,11 @@ export default function AdminCoursesPage({ admin }) {
                               {showLessonForm===chapter._id ? (
                                 <div className="cr-lesson-form">
                                   <div className="cr-lesson-form-title">
-                                    <MdVideoLibrary size={15} color="#6c47d4"/> Add New Lesson
+                                    <MdVideoLibrary size={15} color="#6c47d4"/> Add New Topic
                                   </div>
 
                                   {/* Lesson title */}
-                                  <input className="cr-input" placeholder="Lesson title"
+                                  <input className="cr-input" placeholder="Topic title"
                                     value={lessonForm.title}
                                     onChange={e=>setLessonForm({...lessonForm,title:e.target.value})} autoFocus/>
 
@@ -1661,6 +1732,13 @@ export default function AdminCoursesPage({ admin }) {
                                       onClick={()=>setLessonForm({...lessonForm,videoType:"youtube",videoUrl:""})}
                                     >
                                       <FaYoutube size={14} color={lessonForm.videoType==="youtube"?"#fff":"#ef4444"}/> YouTube
+                                    </button>
+                                    <button
+                                      className={`cr-video-type-btn ${lessonForm.videoType==="bunny"?"cr-video-type-active":""}`}
+                                      onClick={()=>setLessonForm({...lessonForm,videoType:"bunny",youtubeLink:"",videoUrl:""})}
+                                      disabled={uploading}
+                                    >
+                                      <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/> Upload
                                     </button>
                                     <button
                                       className={`cr-video-type-btn ${lessonForm.videoType==="custom"?"cr-video-type-active":""}`}
@@ -1684,16 +1762,57 @@ export default function AdminCoursesPage({ admin }) {
                                       onChange={e=>setLessonForm({...lessonForm,youtubeLink:e.target.value})}/>
                                   )}
 
+                                  {/* Bunny Stream upload */}
+                                  {lessonForm.videoType==="bunny" && (
+                                    <div className="cr-bunny-upload">
+                                      <input
+                                        ref={videoFileRef}
+                                        type="file"
+                                        accept="video/*"
+                                        style={{display:"none"}}
+                                        onChange={e=>e.target.files[0] && handleBunnyUpload(e.target.files[0])}
+                                      />
+                                      {lessonForm.videoUrl ? (
+                                        <div className="cr-bunny-success">
+                                          <MdCheckCircle size={16} color="#10b981"/>
+                                          <span>Video uploaded to Bunny Stream</span>
+                                          <button className="cr-bunny-change-btn"
+                                            onClick={()=>setLessonForm(prev=>({...prev,videoUrl:""}))}>
+                                            Change
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <>
+                                          <button
+                                            className="cr-bunny-pick-btn"
+                                            onClick={()=>videoFileRef.current?.click()}
+                                            disabled={uploading}
+                                          >
+                                            <MdCloudUpload size={18}/>
+                                            {uploading ? `Uploading... ${uploadProgress}%` : "Choose Video File"}
+                                          </button>
+                                          {uploading && (
+                                            <div className="cr-progress-bar">
+                                              <div className="cr-progress-fill" style={{width:`${uploadProgress}%`}}/>
+                                            </div>
+                                          )}
+                                          <div className="cr-video-url-hint">
+                                            💡 Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
+                                  )}
+
                                   {/* Custom video URL */}
                                   {lessonForm.videoType==="custom" && (
                                     <>
                                       <input className="cr-input"
-                                        placeholder="Video URL (Cloudinary, Vimeo, Drive, S3...)"
+                                        placeholder="Video URL (Vimeo, Drive, S3...)"
                                         value={lessonForm.videoUrl}
                                         onChange={e=>setLessonForm({...lessonForm,videoUrl:e.target.value})}/>
                                       <div className="cr-video-url-hint">
-                                        💡 Upload video to <strong>Cloudinary</strong> or <strong>Google Drive</strong>
-                                        (Share → Anyone with link) and paste the direct URL here.
+                                        💡 Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
                                       </div>
                                     </>
                                   )}
@@ -1706,7 +1825,7 @@ export default function AdminCoursesPage({ admin }) {
                                   <div className="cr-lesson-form-btns">
                                     <button className="cr-primary-btn" style={{flex:1,justifyContent:"center"}}
                                       onClick={()=>handleAddLesson(chapter._id)} disabled={saving}>
-                                      <MdCheckCircle size={15}/> {saving?"Adding...":"Add Lesson"}
+                                      <MdCheckCircle size={15}/> {saving?"Adding...":"Add Topic"}
                                     </button>
                                     <button className="cr-cancel-btn"
                                       onClick={()=>{setShowLessonForm(null);setLessonForm(EMPTY_LESSON);}}>
@@ -1716,7 +1835,7 @@ export default function AdminCoursesPage({ admin }) {
                                 </div>
                               ) : (
                                 <button className="cr-add-lesson-btn" onClick={()=>setShowLessonForm(chapter._id)}>
-                                  <MdAdd size={16}/> Add Lesson
+                                  <MdAdd size={16}/> Add Topic
                                 </button>
                               )}
                             </div>
