@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
 
     if (!student.isActive)
-      return res.status(403).json({ success: false, message: "Account is disabled. Contact support." });
+      return res.status(403).json({ success: false, message: "Account disabled. Contact support." });
 
     const token = jwt.sign(
       { id: student._id, phone: student.phone, role: "student" },
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         email: student.email,
         phone: student.phone,
         class: student.className,
-        avatar: student.avatar,
+        avatar: student.avatar || "",
       },
     });
   } catch (err) {

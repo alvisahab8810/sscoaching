@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
     const { currentPassword, newPassword } = req.body;
     if (!currentPassword || !newPassword)
-      return res.status(400).json({ success: false, message: "Both current and new password required" });
+      return res.status(400).json({ success: false, message: "Both passwords required" });
 
     const student = await StudentUser.findById(id).select("+password");
     if (!student)

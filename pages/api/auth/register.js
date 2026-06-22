@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         email: student.email,
         phone: student.phone,
         class: student.className,
-        avatar: student.avatar,
+        avatar: student.avatar || "",
       },
     });
   } catch (err) {

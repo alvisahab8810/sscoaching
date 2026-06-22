@@ -14,10 +14,7 @@ export default async function handler(req, res) {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
 
     const enrollments = await Enrollment.find({ student: id })
-      .populate({
-        path: "course",
-        select: "title subject thumbnail price batch chapters isFree status",
-      })
+      .populate({ path: "course", select: "title subject thumbnail price batch chapters isFree status" })
       .sort({ createdAt: -1 })
       .lean();
 
