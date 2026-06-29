@@ -37,7 +37,11 @@ export default async function handler(req, res) {
 
   await dbConnect();
 
-  const enrolled = await Enrollment.findOne({ student: studentId, course: courseId, status: "active" }).lean();
+  const enrolled = await Enrollment.findOne({
+    student: studentId,
+    course: courseId,
+    $or: [{ status: "active" }, { status: { $exists: false } }],
+  }).lean();
   if (!enrolled) return res.status(403).send("Not enrolled in this course");
 
   const course = await Course.findById(courseId).lean();
