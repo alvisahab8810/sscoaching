@@ -3240,6 +3240,30 @@ button:focus,
   overflow: visible !important;
 }
 
+/* 5b. Quill-generated content: prevent overflow from long words / &nbsp; spans */
+.blog-details-page .left-col .content {
+  overflow-x: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.blog-details-page .left-col .content p,
+.blog-details-page .left-col .content span,
+.blog-details-page .left-col .content li,
+.blog-details-page .left-col .content h1,
+.blog-details-page .left-col .content h2,
+.blog-details-page .left-col .content h3 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.blog-details-page .left-col .content img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
 /* 6. On mobile, disable sticky */
 @media (max-width: 991px) {
   .blog-details-page .row.main-layout {
