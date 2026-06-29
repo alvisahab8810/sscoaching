@@ -15,6 +15,7 @@ import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -34,10 +35,13 @@ export default function Blogs() {
     if (data.success) {
       setBlogs(data.data);
       setTotalPages(data.pagination.totalPages);
+      setError("");
     } else {
+      setError(data.message || "Failed to fetch blogs");
       toast.error(data.message || "Failed to fetch blogs");
     }
   } catch (err) {
+    setError("Could not connect to server. Please try again.");
     toast.error("Server error while fetching blogs");
   } finally {
     setLoading(false); // ✅ STOP loading
@@ -113,8 +117,10 @@ const getPaginationNumbers = () => {
         {/* <h2 className="mb-4">Our Blogs</h2> */}
         {loading ? (
           <p>Loading blogs...</p>
+        ) : error ? (
+          <div className="alert alert-danger">{error}</div>
         ) : blogs.length === 0 ? (
-          <p>No blogs found.</p>
+          <p>No blogs published yet.</p>
         ) : (
           <div className="row">
             <div className="col-md-8">
@@ -156,13 +162,10 @@ const getPaginationNumbers = () => {
 
                           {/* Short description / truncated content */}
                           <p className="card-text flex-grow-1 mb-0">
-                            {blog.shortDescription
-                              ? blog.shortDescription.length > 120
-                                ? blog.shortDescription.slice(0, 120) + "..."
-                                : blog.shortDescription
-                              : blog.content.length > 120
-                              ? blog.content.slice(0, 120) + "..."
-                              : blog.content}
+                            {(() => {
+                              const text = blog.shortDescription || blog.content || "";
+                              return text.length > 120 ? text.slice(0, 120) + "..." : text;
+                            })()}
                           </p>
 
                           {/* <Link

@@ -16,7 +16,7 @@ export default function FaqManager() {
   const [faqsPerPage] = useState(6); // You can change to 5, 10, etc.
 
   const [faqs, setFaqs] = useState([]);
-  const [form, setForm] = useState({ question: "", answer: "", category: "" });
+  const [form, setForm] = useState({ question: "", answer: "", category: "", pageUrl: "" });
   const [editing, setEditing] = useState(null);
 
   const fetchFaqs = async () => {
@@ -43,7 +43,7 @@ export default function FaqManager() {
 
     if (data.success) {
       toast.success(editing ? "FAQ updated" : "FAQ added");
-      setForm({ question: "", answer: "", category: "" });
+      setForm({ question: "", answer: "", category: "", pageUrl: "" });
       setEditing(null);
       fetchFaqs();
     } else {
@@ -155,6 +155,21 @@ export default function FaqManager() {
                     required
                   ></textarea>
                 </div>
+                <div className="col-md-12">
+                  <label className="form-label fw-semibold">
+                    Dedicated Page URL{" "}
+                    <span className="text-muted fw-normal">(optional — e.g. /faq/what-is-nios)</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="/faq/your-page-slug"
+                    value={form.pageUrl}
+                    onChange={(e) =>
+                      setForm({ ...form, pageUrl: e.target.value })
+                    }
+                  />
+                </div>
               </div>
               <div className="mt-3 d-flex">
                 <button
@@ -169,7 +184,7 @@ export default function FaqManager() {
                     type="button"
                     className="btn btn-secondary brand-cancel"
                     onClick={() => {
-                      setForm({ question: "", answer: "", category: "" });
+                      setForm({ question: "", answer: "", category: "", pageUrl: "" });
                       setEditing(null);
                     }}
                   >

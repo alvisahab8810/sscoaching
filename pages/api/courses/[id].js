@@ -31,8 +31,12 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const course = await Course.findById(id).lean();
-      if (!course) return res.status(404).json({ error: "Course not found" });
+      const courseRaw = await Course.findById(id).lean();
+      if (!courseRaw) return res.status(404).json({ error: "Course not found" });
+      const SUBJECT_IMAGES = { hindi:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80", physics:"https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=600&q=80", chemistry:"https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80", mathematics:"https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80", maths:"https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80", english:"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80", biology:"https://images.unsplash.com/photo-1530026405186-ed1f139313f0?w=600&q=80", default:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80" };
+      const _img = courseRaw.featureImage;
+      const _fallback = SUBJECT_IMAGES[(courseRaw.subject||"").toLowerCase()] || SUBJECT_IMAGES.default;
+      const course = { ...courseRaw, featureImage: (_img && !_img.startsWith("data:")) ? _img : _fallback };
       if (verifyAdmin(req)) return res.status(200).json({ success: true, course });
       const studentId = getStudentId(req);
       let isEnrolled = false;
@@ -151,6 +155,38 @@ export default async function handler(req, res) {
         const lesson = chapter.lessons.id(lessonId);
         if (!lesson) return res.status(404).json({ error: "Lesson not found" });
         lesson.notes = lesson.notes.filter(n => n._id.toString() !== noteId);
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
+      // Materials: add file to books/tma/assignments/samplePapers/notes
+      if (action === "add-material") {
+        const { section, title, fileUrl } = req.body;
+        const validSections = ["books", "tma", "assignments", "samplePapers", "notes"];
+        if (!validSections.includes(section)) return res.status(400).json({ error: "Invalid section" });
+        if (!title || !fileUrl) return res.status(400).json({ error: "title and fileUrl required" });
+        if (!course.materials) course.materials = {};
+        if (!course.materials[section]) course.materials[section] = [];
+        course.materials[section].push({ title, fileUrl });
+        course.markModified("materials");
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
+      if (action === "delete-material") {
+        const { section, materialId } = req.body;
+        if (!course.materials?.[section]) return res.status(400).json({ error: "Section not found" });
+        course.materials[section] = course.materials[section].filter(m => m._id.toString() !== materialId);
+        course.markModified("materials");
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
+      // Bundle: update includedCourses list
+      if (action === "update-bundle") {
+        const { bundledSubjects, includedCourses } = req.body;
+        if (bundledSubjects) course.bundledSubjects = bundledSubjects;
+        if (includedCourses) course.includedCourses = includedCourses;
         await course.save();
         return res.status(200).json({ success: true, course });
       }

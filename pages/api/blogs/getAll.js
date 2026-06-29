@@ -92,38 +92,53 @@ import dbConnect from "@/lib/dbConnect";
 import Blog from "@/models/Blog";
 
 export default async function handler(req, res) {
-  await dbConnect();
+  try {
+    await dbConnect();
+  } catch (err) {
+    console.error("DB connect failed:", err.message);
+    return res.status(500).json({ success: false, message: "Database connection failed. Please try again." });
+  }
 
-  const { id, search, category, status, author, page = 1, limit = 10 } = req.query;
+  const {
+    id,
+    search   = "",
+    category = "",
+    status   = "",
+    author   = "",
+    page     = "1",
+    limit    = "10",
+  } = req.query;
+
+  const pageNum  = Math.max(1, parseInt(page)  || 1);
+  const limitNum = Math.max(1, parseInt(limit) || 10);
 
   try {
     if (id) {
-      // Fetch a single blog by ID
       const blog = await Blog.findById(id);
       if (!blog) return res.status(404).json({ success: false, message: "Blog not found" });
       return res.status(200).json({ success: true, blog });
     }
 
-    // Existing filter logic for all blogs
     const filter = {};
-    if (search) filter.title = { $regex: search, $options: "i" };
-    if (category) filter.category = category;
-    if (status) filter.status = status;
-    if (author) filter.authorName = author;
+    if (search)   filter.title      = { $regex: search, $options: "i" };
+    if (category) filter.category   = category;
+    if (status)   filter.status     = status;
+    if (author)   filter.authorName = author;
 
     const total = await Blog.countDocuments(filter);
     const blogs = await Blog.find(filter)
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit))
+      .select('-content') // content mein base64 images hain — list view mein nahi chahiye
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
       .sort({ publishDate: -1 });
 
     res.status(200).json({
       success: true,
       data: blogs,
-      pagination: { total, totalPages: Math.ceil(total / limit) },
+      pagination: { total, page: pageNum, totalPages: Math.ceil(total / limitNum) },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("getAll blogs error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error", detail: error.message });
   }
 }

@@ -5749,6 +5749,18 @@ svg.green-svg {
 
 }
 
+.faq-read-more {
+  color: #e53935 !important;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.faq-read-more:hover {
+  text-decoration: underline;
+  color: #c62828 !important;
+}
+
 
 /* FAQ Answer Styling */
 .faq-answer p {

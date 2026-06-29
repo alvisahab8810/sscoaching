@@ -52,6 +52,16 @@ const StudentUserSchema = new mongoose.Schema(
       default: false,
     },
 
+    wishlist: {
+      type: [String],
+      default: [],
+    },
+
+    cart: {
+      type: [String],
+      default: [],
+    },
+
     isActive: {
       type: Boolean,
       default: true,

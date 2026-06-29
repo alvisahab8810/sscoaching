@@ -6,6 +6,7 @@ const FaqSchema = new mongoose.Schema(
     answer: { type: String, required: true },
     category: { type: String, default: "General" },
     status: { type: String, enum: ["published", "draft"], default: "published" },
+    pageUrl: { type: String, default: "" },
   },
   { timestamps: true }
 );

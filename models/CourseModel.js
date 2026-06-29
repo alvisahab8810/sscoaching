@@ -1,5 +1,9 @@
-// models/CourseModel.js — REPLACE your existing file
 import mongoose from "mongoose";
+
+const FileSchema = new mongoose.Schema({
+  title:   { type: String, required: true },
+  fileUrl: { type: String, required: true },
+}, { _id: true });
 
 const LessonNoteSchema = new mongoose.Schema({
   title:   { type: String, required: true },
@@ -22,50 +26,37 @@ const ChapterSchema = new mongoose.Schema({
   lessons: [LessonSchema],
 }, { _id: true });
 
+// Materials section — PDFs for books, TMA, assignments, notes, sample papers
+const MaterialsSchema = new mongoose.Schema({
+  books:        { type: [FileSchema], default: [] },
+  tma:          { type: [FileSchema], default: [] },
+  assignments:  { type: [FileSchema], default: [] },
+  samplePapers: { type: [FileSchema], default: [] },
+  notes:        { type: [FileSchema], default: [] },
+}, { _id: false });
+
 const CourseSchema = new mongoose.Schema({
+  // "subject" = single-subject course (existing), "bundle" = multi-subject package
+  courseType:   { type: String, enum: ["subject", "bundle"], default: "subject" },
+
   title:        { type: String, required: true },
   description:  { type: String, default: "" },
-  subject:      { type: String, required: true },
+  subject:      { type: String, default: "" },   // for subject type
   batch:        { type: String, required: true },
   price:        { type: Number, default: 0 },
   isFree:       { type: Boolean, default: false },
   status:       { type: String, enum: ["draft", "published"], default: "draft" },
   featureImage: { type: String, default: "" },
   enrolledCount:{ type: Number, default: 0 },
+
+  // Subject course fields
   chapters:     [ChapterSchema],
+  materials:    { type: MaterialsSchema, default: () => ({}) },
+
+  // Bundle-only fields
+  bundledSubjects:  { type: [String], default: [] },   // e.g. ["Hindi","English","Maths"]
+  includedCourses:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }], default: [] },
+
 }, { timestamps: true });
 
 export default mongoose.models.Course || mongoose.model("Course", CourseSchema);
-
-
-
-
-
-// import mongoose from "mongoose";
-
-// const LessonSchema = new mongoose.Schema({
-//   title:       { type: String, required: true },
-//   youtubeLink: { type: String, required: true },
-//   duration:    { type: String, default: "" },
-// }, { _id: true });
-
-// const ChapterSchema = new mongoose.Schema({
-//   title:   { type: String, required: true },
-//   order:   { type: Number, default: 0 },
-//   lessons: [LessonSchema],
-// }, { _id: true });
-
-// const CourseSchema = new mongoose.Schema({
-//   title:        { type: String, required: true },
-//   description:  { type: String, default: "" },
-//   subject:      { type: String, required: true },
-//   batch:        { type: String, required: true },
-//   price:        { type: Number, default: 0 },
-//   isFree:       { type: Boolean, default: false },
-//   status:       { type: String, enum: ["draft", "published"], default: "draft" },
-//   featureImage: { type: String, default: "" },
-//   enrolledCount:{ type: Number, default: 0 },
-//   chapters:     [ChapterSchema],
-// }, { timestamps: true });
-
-// export default mongoose.models.Course || mongoose.model("Course", CourseSchema);

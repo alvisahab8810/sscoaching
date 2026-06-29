@@ -5,12 +5,15 @@ import Head from "next/head";
 import {
   MdDashboard, MdLiveTv, MdCalendarToday, MdCheckCircle,
   MdLogout, MdMenu, MdPlayCircle, MdPauseCircle, MdNotifications,
+  MdVolumeUp, MdVolumeOff, MdFullscreen, MdFullscreenExit,
   MdSchool, MdAccessTime, MdDateRange, MdTimelapse, MdVideoLibrary,
   MdSignalCellularAlt, MdPerson, MdEdit, MdSave, MdClose, MdPhone,
   MdShoppingCart, MdDelete, MdLocalOffer, MdLock, MdCheck, MdSearch,
   MdFolder, MdArrowBack, MdExpandMore, MdExpandLess, MdOndemandVideo,
   MdAttachFile, MdArrowForward, MdReceipt, MdDownload, MdOpenInNew,
   MdPayment, MdFavorite, MdFavoriteBorder,
+  MdMenuBook, MdAssignment, MdArticle, MdStickyNote2, MdInventory2,
+  MdViewList, MdChevronRight,
 } from "react-icons/md";
 import {
   FaGraduationCap, FaRupeeSign,
@@ -70,24 +73,29 @@ export default function StudentDashboard() {
   const [activeMenu, setActiveMenu]     = useState("dashboard");
   const [heroSlide, setHeroSlide]       = useState(0);
   const [sidebarOpen, setSidebarOpen]   = useState(false);
-  const [cart, setCart]                 = useState([]);
+  const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen]         = useState(false);
   const [activeCourse, setActiveCourse]   = useState(null);
   const [detailCourseId, setDetailCourseId] = useState(null);
-  const [wishlist, setWishlist] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try { return JSON.parse(localStorage.getItem("studentWishlist") || "[]"); } catch { return []; }
-  });
+  const [wishlist, setWishlist] = useState([]);
 
-  const toggleWishlist = (courseId) => {
-    setWishlist((prev) => {
-      const already = prev.includes(courseId);
-      const next = already ? prev.filter((id) => id !== courseId) : [...prev, courseId];
-      localStorage.setItem("studentWishlist", JSON.stringify(next));
-      if (already) toast.info("Removed from wishlist", { icon: "💔" });
-      else toast.success("Added to wishlist!", { icon: "❤️" });
-      return next;
-    });
+  const toggleWishlist = async (courseId) => {
+    const token = localStorage.getItem("studentToken");
+    if (!token) return;
+    const already = wishlist.includes(courseId);
+    // Optimistic update
+    setWishlist(prev => already ? prev.filter(id => id !== courseId) : [...prev, courseId]);
+    if (already) toast.info("Removed from wishlist", { icon: "💔" });
+    else toast.success("Added to wishlist!", { icon: "❤️" });
+    try {
+      await fetch("/api/student/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ courseId }),
+      });
+    } catch {
+      setWishlist(prev => already ? [...prev, courseId] : prev.filter(id => id !== courseId));
+    }
   };
 
   /* ── Auth + init ── */
@@ -98,14 +106,27 @@ export default function StudentDashboard() {
     setStudent(JSON.parse(info));
     fetchClasses(token);
     fetchCourses(token);
+    // Load wishlist + cart from DB
+    const headers = { Authorization: `Bearer ${token}` };
+    fetch("/api/student/wishlist", { headers })
+      .then(r => r.json()).then(d => { if (d.success) setWishlist(d.wishlist || []); }).catch(() => {});
+    fetch("/api/student/cart", { headers })
+      .then(r => r.json()).then(d => {
+        if (d.success) {
+          // cart IDs — will be matched against courses once courses load
+          localStorage.setItem("ss_cart_ids", JSON.stringify(d.cart || []));
+        }
+      }).catch(() => {});
   }, []);
 
-  /* ── Restore active tab from URL on load / refresh ── */
+  /* ── Restore active tab + course from URL on load / refresh ── */
   useEffect(() => {
     if (!router.isReady) return;
-    const tab = router.query.tab;
+    const { tab, courseId, detailId } = router.query;
     if (tab) setActiveMenu(tab);
-  }, [router.isReady, router.query.tab]);
+    if (courseId) setActiveCourse(courseId);
+    if (detailId) setDetailCourseId(detailId);
+  }, [router.isReady, router.query.tab, router.query.courseId, router.query.detailId]);
 
   const fetchClasses = async (token) => {
     try {
@@ -125,7 +146,17 @@ export default function StudentDashboard() {
     try {
       const res  = await fetch("/api/courses", { headers:{ Authorization:`Bearer ${token}` } });
       const data = await res.json();
-      if (data.success) setCourses(data.courses);
+      if (data.success) {
+        setCourses(data.courses);
+        // Reconcile cart: match saved cart IDs with fetched courses
+        try {
+          const cartIds = JSON.parse(localStorage.getItem("ss_cart_ids") || "[]");
+          if (cartIds.length > 0) {
+            const matched = data.courses.filter(c => cartIds.includes(c._id));
+            setCart(matched);
+          }
+        } catch {}
+      }
     } catch {}
   };
 
@@ -171,17 +202,43 @@ export default function StudentDashboard() {
     return () => clearInterval(t);
   }, [activeMenu]);
 
-  const addToCart = (course) => {
+  const addToCart = async (course) => {
     if (cart.find((c) => c._id === course._id)) { setCartOpen(true); return; }
-    setCart((prev) => [...prev, course]);
+    // Optimistic update
+    const next = [...cart, course];
+    setCart(next);
+    localStorage.setItem("ss_cart_ids", JSON.stringify(next.map(c => c._id)));
     setCartOpen(true);
+    const token = localStorage.getItem("studentToken");
+    try {
+      await fetch("/api/student/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ courseId: course._id }),
+      });
+    } catch {}
   };
-  const removeFromCart  = (id) => setCart((prev) => prev.filter((c) => c._id !== id));
+
+  const removeFromCart = async (id) => {
+    const next = cart.filter((c) => c._id !== id);
+    setCart(next);
+    localStorage.setItem("ss_cart_ids", JSON.stringify(next.map(c => c._id)));
+    const token = localStorage.getItem("studentToken");
+    try {
+      await fetch("/api/student/cart", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ courseId: id }),
+      });
+    } catch {}
+  };
   const enrolledCourses = courses.filter((c) => c.isEnrolled);
   const navigate = (menu) => {
     setActiveMenu(menu);
     setSidebarOpen(false);
-    router.replace(`/student/dashboard?tab=${menu}`, undefined, { shallow: true });
+    setActiveCourse(null);
+    setDetailCourseId(null);
+    router.replace({ pathname: "/student/dashboard", query: { tab: menu } }, undefined, { shallow: true });
   };
 
   if (!student) return null;
@@ -436,9 +493,15 @@ export default function StudentDashboard() {
                 courses={courses} cart={cart} addToCart={addToCart}
                 setCartOpen={setCartOpen}
                 onEnrolled={() => fetchCourses(localStorage.getItem("studentToken"))}
-                onOpenCourse={setActiveCourse}
+                onOpenCourse={(id) => {
+                  setActiveCourse(id);
+                  router.replace({ pathname: router.pathname, query: { tab:"courses", courseId:id } }, undefined, { shallow:true });
+                }}
                 wishlist={wishlist} toggleWishlist={toggleWishlist}
-                openDetail={setDetailCourseId}
+                openDetail={(id) => {
+                  setDetailCourseId(id);
+                  router.replace({ pathname: router.pathname, query: { tab:"courses", detailId:id } }, undefined, { shallow:true });
+                }}
               />
             )}
 
@@ -448,15 +511,28 @@ export default function StudentDashboard() {
                 courseId={detailCourseId}
                 cart={cart}
                 addToCart={addToCart}
-                onEnrolled={() => { fetchCourses(localStorage.getItem("studentToken")); setDetailCourseId(null); }}
-                onBack={() => setDetailCourseId(null)}
-                onOpenPlayer={(id) => { setActiveCourse(id); setDetailCourseId(null); }}
+                onEnrolled={() => {
+                  fetchCourses(localStorage.getItem("studentToken"));
+                  setDetailCourseId(null);
+                  router.replace({ pathname: router.pathname, query: { tab:"courses" } }, undefined, { shallow:true });
+                }}
+                onBack={() => {
+                  setDetailCourseId(null);
+                  router.replace({ pathname: router.pathname, query: { tab:"courses" } }, undefined, { shallow:true });
+                }}
+                onOpenPlayer={(id) => {
+                  setActiveCourse(id); setDetailCourseId(null);
+                  router.replace({ pathname: router.pathname, query: { tab:"courses", courseId:id } }, undefined, { shallow:true });
+                }}
               />
             )}
 
             {/* COURSES — player */}
             {activeMenu === "courses" && activeCourse && (
-              <CoursePlayer courseId={activeCourse} onBack={() => setActiveCourse(null)}/>
+              <CoursePlayer courseId={activeCourse} onBack={() => {
+                setActiveCourse(null);
+                router.replace({ pathname: router.pathname, query: { tab:"courses" } }, undefined, { shallow:true });
+              }}/>
             )}
 
             {/* WISHLIST */}
@@ -477,9 +553,15 @@ export default function StudentDashboard() {
                       <CourseCard
                         key={course._id} course={course} cart={cart} addToCart={addToCart}
                         onEnrolled={() => fetchCourses(localStorage.getItem("studentToken"))}
-                        onOpen={() => { setActiveCourse(course._id); setActiveMenu("courses"); }}
+                        onOpen={() => {
+                          setActiveCourse(course._id); setActiveMenu("courses");
+                          router.replace({ pathname: router.pathname, query: { tab:"courses", courseId:course._id } }, undefined, { shallow:true });
+                        }}
                         wishlist={wishlist} toggleWishlist={toggleWishlist}
-                        openDetail={(id) => { setDetailCourseId(id); setActiveMenu("courses"); }}
+                        openDetail={(id) => {
+                          setDetailCourseId(id); setActiveMenu("courses");
+                          router.replace({ pathname: router.pathname, query: { tab:"courses", detailId:id } }, undefined, { shallow:true });
+                        }}
                       />
                     ))}
                   </div>
@@ -496,7 +578,12 @@ export default function StudentDashboard() {
                 <h1 className="sdlc-page-title">Live Classes</h1>
                 <p className="sdlc-page-sub">Watch Live Classes</p>
                 <div className="sdlc-grid4">
-                  {(liveClasses.length > 0 ? liveClasses : STATIC_LIVE_CLASSES).map((cls) => (
+                  {liveClasses.length === 0 ? (
+                    <div style={{gridColumn:"1/-1",textAlign:"center",padding:"60px 20px",color:"#9ca3af"}}>
+                      <div style={{fontSize:40,marginBottom:12}}>📡</div>
+                      <div style={{fontWeight:600,fontSize:16}}>No live classes right now</div>
+                    </div>
+                  ) : liveClasses.map((cls) => (
                     <ClassCard key={cls._id} cls={cls} formatDate={formatDate} formatTime={formatTime} getYoutubeId={getYoutubeId}/>
                   ))}
                 </div>
@@ -509,7 +596,12 @@ export default function StudentDashboard() {
                 <h1 className="sdlc-page-title">Upcoming Classes</h1>
                 <p className="sdlc-page-sub">Download And View All Upcoming Classes</p>
                 <div className="sdlc-grid4">
-                  {(upcomingClasses.length > 0 ? upcomingClasses : STATIC_UPCOMING_CLASSES).map((cls) => (
+                  {upcomingClasses.length === 0 ? (
+                    <div style={{gridColumn:"1/-1",textAlign:"center",padding:"60px 20px",color:"#9ca3af"}}>
+                      <div style={{fontSize:40,marginBottom:12}}>📅</div>
+                      <div style={{fontWeight:600,fontSize:16}}>No upcoming classes</div>
+                    </div>
+                  ) : upcomingClasses.map((cls) => (
                     <ClassCard key={cls._id} cls={cls} formatDate={formatDate} formatTime={formatTime} getYoutubeId={getYoutubeId}/>
                   ))}
                 </div>
@@ -554,8 +646,16 @@ export default function StudentDashboard() {
           cart={cart}
           removeFromCart={removeFromCart}
           onEnrolled={() => {
-            fetchCourses(localStorage.getItem("studentToken"));
+            const token = localStorage.getItem("studentToken");
+            fetchCourses(token);
             setCart([]);
+            localStorage.removeItem("ss_cart_ids");
+            // Clear cart in DB too
+            fetch("/api/student/cart", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+              body: JSON.stringify({}),
+            }).catch(() => {});
             setCartOpen(false);
           }}
         />
@@ -594,42 +694,6 @@ export default function StudentDashboard() {
 /* ════════════════════════════════════════
    INVOICES SECTION  ← new, fully inline
 ════════════════════════════════════════ */
-const STATIC_LIVE_CLASSES = [
-  { _id:"sl1", title:"An Astrologers Day", subject:"English", className:"Class 10", batch:"CLASS 10TH", status:"live",
-    streamLink:"https://www.youtube.com/watch?v=LXb3EKWsInQ", chapters:[], notes:[] },
-  { _id:"sl2", title:"Soap, Detergents And Polymers", subject:"Physics", className:"Class 12", batch:"CLASS 12TH", status:"live",
-    streamLink:"https://www.youtube.com/watch?v=9bZkp7q19f0", chapters:[], notes:[] },
-  { _id:"sl3", title:"Cartesian System Of Rectangular Coordinates", subject:"Mathematics", className:"Class 12", batch:"CLASS 12TH", status:"live",
-    streamLink:"https://www.youtube.com/watch?v=JGwVdJCpHqc", chapters:[], notes:[] },
-  { _id:"sl4", title:"Data Science Explained - How It Works, Its Effects On Modern Science", subject:"Science", className:"Class 10", batch:"CLASS 10TH", status:"live",
-    streamLink:"https://www.youtube.com/watch?v=X3paOmcrTjQ", chapters:[], notes:[] },
-];
-
-const STATIC_UPCOMING_CLASSES = [
-  { _id:"su1", title:"An Astrologers Day", subject:"English", className:"Class 10", batch:"CLASS 10TH", status:"upcoming",
-    date:"2026-06-22", time:"14:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su2", title:"Soap, Detergents And Polymers", subject:"Physics", className:"Class 12", batch:"CLASS 12TH", status:"upcoming",
-    date:"2026-06-23", time:"10:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su3", title:"Cartesian System Of Rectangular Coordinates", subject:"Mathematics", className:"Class 12", batch:"CLASS 12TH", status:"upcoming",
-    date:"2026-06-24", time:"11:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su4", title:"Data Science Explained - How It Works, Its Effects On Modern Science", subject:"Science", className:"Class 10", batch:"CLASS 10TH", status:"upcoming",
-    date:"2026-06-25", time:"15:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su5", title:"Polynomials And Algebraic Expressions", subject:"Mathematics", className:"Class 9", batch:"CLASS 9TH", status:"upcoming",
-    date:"2026-06-26", time:"09:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su6", title:"Reflection Of Light", subject:"Physics", className:"Class 10", batch:"CLASS 10TH", status:"upcoming",
-    date:"2026-06-27", time:"14:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su7", title:"The Fun They Had", subject:"English", className:"Class 9", batch:"CLASS 9TH", status:"upcoming",
-    date:"2026-06-28", time:"16:00", streamLink:null, chapters:[], notes:[] },
-  { _id:"su8", title:"Chemical Reactions And Equations", subject:"Science", className:"Class 10", batch:"CLASS 10TH", status:"upcoming",
-    date:"2026-06-29", time:"13:00", streamLink:null, chapters:[], notes:[] },
-];
-
-const STATIC_INVOICES = [
-  { _id:"s1", invoiceNumber:"SS-2026-0003", courseTitle:"English Full Course - Class 10th",      issuedAt:"2026-06-14T00:00:00Z", paymentMethod:"Online", total:1248, status:"paid",    isStatic:true },
-  { _id:"s2", invoiceNumber:"SS-2026-0025", courseTitle:"Science Full Course - Class 10th",      issuedAt:"2026-06-13T00:00:00Z", paymentMethod:"Online", total:1350, status:"pending", isStatic:true },
-  { _id:"s3", invoiceNumber:"SS-2026-0008", courseTitle:"Social Science Full Course - Class 10th",issuedAt:"2026-06-12T00:00:00Z", paymentMethod:"Cash",   total:1260, status:"paid",    isStatic:true },
-  { _id:"s4", invoiceNumber:"SS-2026-0012", courseTitle:"Maths Full Course - Class 10th",        issuedAt:"2026-06-11T00:00:00Z", paymentMethod:"Online", total:1420, status:"pending", isStatic:true },
-];
 
 function InvoicesSection() {
   const [invoices, setInvoices]     = useState([]);
@@ -675,19 +739,23 @@ function InvoicesSection() {
       </div>
       <p className="sdinv-page-sub">Download and view all your course purchase invoices</p>
 
-      {/* Table — real invoices or static placeholders */}
-      {(() => {
-        const rows = invoices.length > 0 ? invoices : STATIC_INVOICES;
-        return (
-          <div className="sdinv-wrap">
-            <div className="sdinv-head">
-              <span>Invoice</span>
-              <span>Date</span>
-              <span>Payment</span>
-              <span>Amount</span>
-              <span></span>
-            </div>
-            {rows.map((inv) => {
+      {/* Invoices table */}
+      {invoices.length === 0 ? (
+        <div style={{textAlign:"center",padding:"60px 20px",color:"#9ca3af"}}>
+          <div style={{fontSize:40,marginBottom:12}}>🧾</div>
+          <div style={{fontWeight:600,fontSize:16,marginBottom:6}}>No invoices yet</div>
+          <div style={{fontSize:14}}>Your course purchase invoices will appear here.</div>
+        </div>
+      ) : (
+        <div className="sdinv-wrap">
+          <div className="sdinv-head">
+            <span>Invoice</span>
+            <span>Date</span>
+            <span>Payment</span>
+            <span>Amount</span>
+            <span></span>
+          </div>
+          {invoices.map((inv) => {
               const sc = STATUS_INV[inv.status] || STATUS_INV.paid;
               return (
                 <div key={inv._id} className="sdinv-row">
@@ -704,15 +772,14 @@ function InvoicesSection() {
                   <div className="sdinv-amt">{fmtMoney(inv.total)}</div>
                   <div className="sdinv-actions">
                     <span className={inv.status === "pending" ? "sdinv-pay-pend" : "sdinv-pay-paid"}>{sc.label}</span>
-                    {!inv.isStatic && <button className="sdinv-icon-btn" title="Download PDF" onClick={() => downloadPdf(inv)}><MdDownload size={16}/></button>}
-                    {!inv.isStatic && <button className="sdinv-icon-btn" title="View Details" onClick={() => setSelected(inv)}><MdOpenInNew size={15}/></button>}
+                    <button className="sdinv-icon-btn" title="Download PDF" onClick={() => downloadPdf(inv)}><MdDownload size={16}/></button>
+                    <button className="sdinv-icon-btn" title="View Details" onClick={() => setSelected(inv)}><MdOpenInNew size={15}/></button>
                   </div>
                 </div>
               );
             })}
           </div>
-        );
-      })()}
+        )}
 
       {/* Detail modal */}
       {selected && (
@@ -911,12 +978,14 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
 
   const subjects = [...new Set(courses.map((c) => c.subject).filter(Boolean))];
   const filtered = courses.filter((c) => {
-    if (filter === "enrolled" && !c.isEnrolled) return false;
-    if (filter === "free"     && !c.isFree)     return false;
-    if (filter === "paid"     && c.isFree)      return false;
-    if (subject && c.subject !== subject)        return false;
+    if (filter === "enrolled" && !c.isEnrolled)          return false;
+    if (filter === "free"     && !c.isFree)              return false;
+    if (filter === "paid"     && c.isFree)               return false;
+    if (filter === "bundle"   && c.courseType !== "bundle") return false;
+    if (subject && c.subject !== subject)                return false;
     if (search && !c.title.toLowerCase().includes(search.toLowerCase()) &&
-        !(c.subject||"").toLowerCase().includes(search.toLowerCase())) return false;
+        !(c.subject||"").toLowerCase().includes(search.toLowerCase()) &&
+        !(c.bundledSubjects||[]).some(s => s.toLowerCase().includes(search.toLowerCase()))) return false;
     return true;
   });
   return (
@@ -951,7 +1020,13 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
           <input className="sdc-search" placeholder="Search your course here...." value={search} onChange={(e) => setSearch(e.target.value)}/>
         </div>
         <div className="sdc-filter-row" style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-          {[{val:"all",label:"All courses"},{val:"free",label:"Free"},{val:"paid",label:"Paid"},{val:"enrolled",label:"My Courses"}].map((f) => (
+          {[
+            {val:"all",label:"All courses"},
+            {val:"bundle",label:"📦 Full Bundles"},
+            {val:"free",label:"Free"},
+            {val:"paid",label:"Paid"},
+            {val:"enrolled",label:"My Courses"},
+          ].map((f) => (
             <button key={f.val} className={`sdc-chip ${filter===f.val?"sdc-chip-active":""}`} onClick={() => setFilter(f.val)}>{f.label}</button>
           ))}
           {subjects.length > 1 && (
@@ -990,6 +1065,9 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
   const inCart = cart.find((c) => c._id === course._id);
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
   const isWishlisted = wishlist.includes(course._id);
+  const isBundle = course.courseType === "bundle";
+  const bundledSubs = course.bundledSubjects || [];
+  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
 
   const handleWishlist = (e) => {
     e.stopPropagation();
@@ -1044,26 +1122,53 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
 
       {/* Body */}
       <div className="sdc-card-body">
-        <div className="sdc-card-meta">
-          <div className="sdc-meta-left">
-            <span className="sdc-meta-item">
-              <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
-              {course.chapters?.length||0} Chapters
-            </span>
-            <span className="sdc-meta-item">
-              <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-              {totalLessons} Topics
-            </span>
+        {isBundle ? (
+          /* Bundle card meta */
+          <div>
+            <div className="sdc-card-meta" style={{marginBottom:6}}>
+              <div className="sdc-meta-left">
+                <span style={{background:"#fff7ed",color:"#f59e0b",fontWeight:700,fontSize:11,padding:"2px 8px",borderRadius:20,border:"1px solid #fde68a"}}>📦 BUNDLE</span>
+                <span style={{fontSize:11,color:"#6b7280",fontWeight:600,marginLeft:4}}>{bundledSubs.length} Subjects</span>
+              </div>
+              <div className="sdc-meta-right">
+                {course.batch && <span className="sdc-tag-cls-pill">{course.batch.toUpperCase()}</span>}
+              </div>
+            </div>
+            {/* Subject pills — max 4 visible */}
+            <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:6}}>
+              {bundledSubs.slice(0,4).map((s,i) => (
+                <span key={s} style={{fontSize:10,fontWeight:600,color:SUBJ_COLORS[i%SUBJ_COLORS.length],background:`${SUBJ_COLORS[i%SUBJ_COLORS.length]}15`,padding:"2px 7px",borderRadius:10}}>
+                  {s}
+                </span>
+              ))}
+              {bundledSubs.length > 4 && (
+                <span style={{fontSize:10,color:"#9ca3af",fontWeight:600,padding:"2px 7px"}}>+{bundledSubs.length-4} more</span>
+              )}
+            </div>
           </div>
-          <div className="sdc-meta-right">
-            {course.subject && (
-              <span className="sdc-tag" style={{background:`${getSubjectColor(course.subject)}22`,color:getSubjectColor(course.subject)}}>
-                {course.subject.toUpperCase()}
+        ) : (
+          /* Subject course meta */
+          <div className="sdc-card-meta">
+            <div className="sdc-meta-left">
+              <span className="sdc-meta-item">
+                <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
+                {course.chapters?.length||0} Chapters
               </span>
-            )}
-            {course.batch && <span className="sdc-tag-cls-pill">{course.batch.toUpperCase()}</span>}
+              <span className="sdc-meta-item">
+                <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
+                {totalLessons} Topics
+              </span>
+            </div>
+            <div className="sdc-meta-right">
+              {course.subject && (
+                <span className="sdc-tag" style={{background:`${getSubjectColor(course.subject)}22`,color:getSubjectColor(course.subject)}}>
+                  {course.subject.toUpperCase()}
+                </span>
+              )}
+              {course.batch && <span className="sdc-tag-cls-pill">{course.batch.toUpperCase()}</span>}
+            </div>
           </div>
-        </div>
+        )}
         <div className="sdc-cc-name">{course.title}</div>
         {course.isEnrolled ? (
           <button className="sdc-btn sdc-btn-start" onClick={(e) => { e.stopPropagation(); onOpen(); }}><MdPlayCircle size={16}/> Continue Learning</button>
@@ -1120,11 +1225,19 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
     </div>
   );
 
+  const isBundle     = course.courseType === "bundle";
   const inCart       = cart?.find((c) => c._id === course._id);
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
   const thumbClass   = getSubjectThumbClass(course.subject);
   const subjectColor = getSubjectColor(course.subject);
   const hasImg       = !!course.featureImage;
+  const bundledSubs  = course.bundledSubjects || [];
+
+  // Count total materials across all sections
+  const matSections  = ["books","tma","assignments","samplePapers","notes"];
+  const matLabels    = { books:"Books", tma:"TMA", assignments:"Assignments", samplePapers:"Sample Papers", notes:"Notes" };
+  const matIcons     = { books:"📚", tma:"📝", assignments:"📋", samplePapers:"📄", notes:"🗒️" };
+  const totalMats    = matSections.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
 
   const handleAddToCart = (e) => { e.stopPropagation(); addToCart(course); setCouponMsg("Added to cart!"); };
 
@@ -1143,34 +1256,156 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
     setEnrolling(false);
   };
 
-  const INCLUDED = [
-    "Limited Classroom Size","Experienced Teachers",
-    "Live Classes And Doubt Session","Premium Study Materials From SS Coaching",
-    "1:1 Live Doubt & Academic Support (48Hrs Per Week)",
-    "Student Performance Dashboard & Insights","Online & Offline Tests",
+  const INCLUDED_SUBJECT = [
+    "Live Video Classes","Chapter-wise Study Notes",
+    "TMA & Practice Tests","Sample Papers (Previous Year)",
+    "Assignments & Worksheets","1:1 Doubt Support",
+    "Student Performance Dashboard","Online & Offline Tests",
   ];
+  const INCLUDED_BUNDLE = [
+    `All ${bundledSubs.length} Subjects Covered`,"Live Classes For Every Subject",
+    "Books, Notes & Study Material","TMA, Assignments & Sample Papers",
+    "1:1 Live Doubt Support (48Hrs/Week)","Student Performance Dashboard & Insights",
+    "Premium SS Coaching Content","Online & Offline Tests",
+  ];
+  const INCLUDED = isBundle ? INCLUDED_BUNDLE : INCLUDED_SUBJECT;
+
+  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
 
   return (
     <div className="cdp-wrapper">
       <button className="scp-back-btn" onClick={onBack} style={{marginBottom:20}}><MdArrowBack size={18}/> Back to Courses</button>
+
+      {/* Bundle banner */}
+      {isBundle && (
+        <div style={{background:"linear-gradient(135deg,#EFEFFF,#e8e4ff)",border:"2px solid #c5b8f8",borderRadius:16,padding:"16px 24px",marginBottom:20,display:"flex",alignItems:"center",gap:12}}>
+          <span style={{fontSize:28}}>📦</span>
+          <div>
+            <div style={{fontWeight:800,fontSize:16,color:"#4c1d95"}}>Complete Bundle Course</div>
+            <div style={{fontSize:13,color:"#5b21b6",marginTop:2}}>Includes all {bundledSubs.length} subjects — Live classes unlocked automatically for all subjects</div>
+          </div>
+        </div>
+      )}
 
       <div className="cdp-body">
         {/* ── LEFT ── */}
         <div className="cdp-left">
           <div className="cdp-header">
             <h1 className="cdp-title">{course.title}</h1>
-            {(course.batch||course.className) && <p className="cdp-class-tag">{(course.batch||course.className).toUpperCase()}</p>}
+            <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginTop:6}}>
+              {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>📦 BUNDLE</span>}
+              {(course.batch||course.className) && <p className="cdp-class-tag" style={{margin:0}}>{(course.batch||course.className).toUpperCase()}</p>}
+              {!isBundle && course.subject && <span style={{background:`${subjectColor}22`,color:subjectColor,fontWeight:700,fontSize:12,padding:"3px 10px",borderRadius:20}}>{course.subject}</span>}
+            </div>
           </div>
 
           {/* Details box */}
           <div className="cdp-details-box">
             <h2>Course Details</h2>
             <div className="cdp-details-row">
-              <div className="cdp-detail-item"><small>Topics covered</small><b>{totalLessons} Topics</b></div>
-              <div className="cdp-detail-item"><small>BATCH FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
-              <div className="cdp-detail-item"><small>Duration</small><b>{course.duration||"Self-paced"}</b></div>
+              {isBundle ? (
+                <>
+                  <div className="cdp-detail-item"><small>Subjects</small><b>{bundledSubs.length} Subjects</b></div>
+                  <div className="cdp-detail-item"><small>BUNDLE FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
+                  <div className="cdp-detail-item"><small>Study Materials</small><b>{totalMats > 0 ? `${totalMats} Files` : "Included"}</b></div>
+                </>
+              ) : (
+                <>
+                  <div className="cdp-detail-item"><small>Topics covered</small><b>{totalLessons} Topics</b></div>
+                  <div className="cdp-detail-item"><small>BATCH FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
+                  <div className="cdp-detail-item"><small>Duration</small><b>{course.duration||"Self-paced"}</b></div>
+                </>
+              )}
             </div>
           </div>
+
+          {/* Bundle: Included subjects */}
+          {isBundle && bundledSubs.length > 0 && (
+            <div className="cdp-content-box" style={{background:"#EFEFFF",border:"1.5px solid #c5b8f8"}}>
+              <h2 className="cdp-content-title" style={{color:"#4c1d95"}}>📚 Subjects Included in this Bundle</h2>
+              <div style={{display:"flex",flexWrap:"wrap",gap:10,marginTop:12}}>
+                {bundledSubs.map((sub,i) => (
+                  <div key={sub} style={{display:"flex",alignItems:"center",gap:8,background:"white",border:`2px solid ${SUBJ_COLORS[i%SUBJ_COLORS.length]}30`,borderRadius:12,padding:"8px 16px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)"}}>
+                    <span style={{width:10,height:10,borderRadius:"50%",background:SUBJ_COLORS[i%SUBJ_COLORS.length],flexShrink:0,display:"inline-block"}}/>
+                    <span style={{fontWeight:700,fontSize:14,color:"#374151"}}>{sub}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{marginTop:14,padding:"10px 14px",background:"#f0fdf4",borderRadius:10,fontSize:13,color:"#166534",fontWeight:600}}>
+                ✓ Purchasing this bundle unlocks Live Classes for ALL subjects automatically
+              </div>
+            </div>
+          )}
+
+          {/* Bundle: Subject-wise material preview */}
+          {isBundle && totalMats > 0 && (
+            <div className="cdp-content-box">
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
+                <h2 className="cdp-content-title" style={{margin:0}}>📁 Study Materials — Subject Wise</h2>
+                <span style={{fontSize:12,color:"#6c47d4",fontWeight:700,background:"#ede9fe",padding:"3px 10px",borderRadius:20}}>{totalMats} Total Files</span>
+              </div>
+              {bundledSubs.map((sub, si) => {
+                const subMats = matSections.flatMap(k =>
+                  (course.materials?.[k]||[])
+                    .filter(m => m.title.startsWith(`${sub} | `))
+                    .map(m => ({ ...m, secKey: k, icon: matIcons[k], label: matLabels[k] }))
+                );
+                if (subMats.length === 0) return null;
+                const color = SUBJ_COLORS[si % SUBJ_COLORS.length];
+                return (
+                  <div key={sub} style={{marginBottom:16,border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
+                    {/* Subject header */}
+                    <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
+                      <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
+                      <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>{sub}</span>
+                      <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{subMats.length} file{subMats.length>1?"s":""}</span>
+                    </div>
+                    {/* File rows */}
+                    <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8,background:"white"}}>
+                      {subMats.map((mat) => {
+                        const displayTitle = mat.title.replace(`${sub} | `,"");
+                        return (
+                          <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10,position:"relative",overflow:"hidden"}}>
+                            {/* File icon */}
+                            <div style={{width:38,height:46,background:`${color}15`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${color}25`}}>
+                              <span style={{fontSize:20}}>{mat.icon}</span>
+                            </div>
+                            <div style={{flex:1,minWidth:0}}>
+                              <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
+                              <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
+                            </div>
+                            {course.isEnrolled ? (
+                              <a href={mat.fileUrl} target="_blank" rel="noreferrer"
+                                style={{flexShrink:0,padding:"6px 14px",background:color,color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
+                                onClick={e=>e.stopPropagation()}>
+                                View ↗
+                              </a>
+                            ) : (
+                              <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                                <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                  </svg>
+                                </div>
+                                <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              {!course.isEnrolled && (
+                <div style={{textAlign:"center",padding:"12px 16px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:12,marginTop:4}}>
+                  <span style={{fontSize:16}}>🔒</span>
+                  <div style={{fontWeight:700,fontSize:13,color:"#6c47d4",marginTop:4}}>Enroll to unlock all study materials</div>
+                  <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>Books · TMA · Assignments · Sample Papers · Notes</div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* What's Included */}
           <div className="cdp-included-box">
@@ -1185,43 +1420,91 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
             </div>
           </div>
 
-          {/* Course Content */}
-          <div className="cdp-content-box">
-            <h2 className="cdp-content-title">Course Content</h2>
-            <div className="cdp-content-meta">
-              <span className="sdc-meta-item">
-                <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
-                {course.chapters?.length||0} Chapters
-              </span>
-              <span className="cdp-content-meta-dot">·</span>
-              <span className="sdc-meta-item">
-                <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                {totalLessons} Topics
-              </span>
-            </div>
-            {course.chapters?.map((ch,ci) => (
-              <div key={ch._id||ci} className="cdp-chapter">
-                <button className="cdp-chapter-hd" onClick={() => setOpenChapters(p=>({...p,[ci]:!p[ci]}))}>
-                  <span>{ch.title}</span>
-                  <span className="cdp-chapter-right">
-                    <span className="cdp-chapter-count">{ch.lessons.length} Lectures</span>
-                    {openChapters[ci] ? <MdExpandLess size={18}/> : <MdExpandMore size={18}/>}
-                  </span>
-                </button>
-                {openChapters[ci] && (
-                  <div className="cdp-lessons">
-                    {ch.lessons.map((les,li) => (
-                      <div key={les._id||li} className="cdp-lesson-row">
-                        <span className="cdp-lesson-dot"/>
-                        <span className="cdp-lesson-name">{les.title}</span>
-                        {les.duration && <span className="cdp-lesson-dur">{les.duration}</span>}
-                      </div>
-                    ))}
-                  </div>
-                )}
+          {/* Subject course: Course Content chapters */}
+          {!isBundle && (
+            <div className="cdp-content-box">
+              <h2 className="cdp-content-title">Course Content</h2>
+              <div className="cdp-content-meta">
+                <span className="sdc-meta-item">
+                  <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
+                  {course.chapters?.length||0} Chapters
+                </span>
+                <span className="cdp-content-meta-dot">·</span>
+                <span className="sdc-meta-item">
+                  <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
+                  {totalLessons} Topics
+                </span>
               </div>
-            ))}
-          </div>
+              {course.chapters?.map((ch,ci) => (
+                <div key={ch._id||ci} className="cdp-chapter">
+                  <button className="cdp-chapter-hd" onClick={() => setOpenChapters(p=>({...p,[ci]:!p[ci]}))}>
+                    <span>{ch.title}</span>
+                    <span className="cdp-chapter-right">
+                      <span className="cdp-chapter-count">{ch.lessons.length} Lectures</span>
+                      {openChapters[ci] ? <MdExpandLess size={18}/> : <MdExpandMore size={18}/>}
+                    </span>
+                  </button>
+                  {openChapters[ci] && (
+                    <div className="cdp-lessons">
+                      {ch.lessons.map((les,li) => (
+                        <div key={les._id||li} className="cdp-lesson-row">
+                          <span className="cdp-lesson-dot"/>
+                          <span className="cdp-lesson-name">{les.title}</span>
+                          {les.duration && <span className="cdp-lesson-dur">{les.duration}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Subject course: material preview */}
+          {!isBundle && totalMats > 0 && (
+            <div className="cdp-content-box">
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+                <h2 className="cdp-content-title" style={{margin:0}}>📁 Study Materials</h2>
+                <span style={{fontSize:12,color:"#6c47d4",fontWeight:700,background:"#ede9fe",padding:"3px 10px",borderRadius:20}}>{totalMats} Files</span>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {matSections.flatMap(k =>
+                  (course.materials?.[k]||[]).map(mat => ({...mat, secKey:k, icon:matIcons[k], label:matLabels[k]}))
+                ).map((mat) => (
+                  <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10}}>
+                    <div style={{width:38,height:46,background:"#ede9fe",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      <span style={{fontSize:20}}>{mat.icon}</span>
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{mat.title}</div>
+                      <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
+                    </div>
+                    {course.isEnrolled ? (
+                      <a href={mat.fileUrl} target="_blank" rel="noreferrer"
+                        style={{flexShrink:0,padding:"6px 14px",background:"#6c47d4",color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
+                        onClick={e=>e.stopPropagation()}>
+                        View ↗
+                      </a>
+                    ) : (
+                      <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                        <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                        </div>
+                        <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {!course.isEnrolled && (
+                <div style={{textAlign:"center",padding:"10px 14px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:10,marginTop:8}}>
+                  <span style={{fontSize:13,fontWeight:700,color:"#6c47d4"}}>🔒 Enroll to unlock all materials</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── RIGHT ── */}
@@ -1239,17 +1522,24 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
           <div className="cdp-price-card">
             <div className="cdp-price-meta">
               <div className="cdp-meta-left-g">
-                <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
-                  <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
-                  {course.chapters?.length||0} Chapters
-                </span>
-                <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
-                  <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                  {totalLessons} Topics
-                </span>
+                {isBundle ? (
+                  <span style={{fontSize:11,color:"#f59e0b",fontWeight:700,background:"#fff7ed",padding:"2px 8px",borderRadius:10}}>📦 {bundledSubs.length} Subjects</span>
+                ) : (
+                  <>
+                    <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
+                      <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
+                      {course.chapters?.length||0} Chapters
+                    </span>
+                    <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
+                      <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
+                      {totalLessons} Topics
+                    </span>
+                  </>
+                )}
               </div>
               <div className="cdp-meta-right-g">
-                {course.subject && <span className="sdc-tag" style={{background:`${subjectColor}22`,color:subjectColor,fontSize:10}}>{course.subject.toUpperCase()}</span>}
+                {isBundle && <span style={{background:"#fef3c7",color:"#92400e",fontWeight:700,fontSize:10,padding:"2px 8px",borderRadius:10}}>BUNDLE</span>}
+                {!isBundle && course.subject && <span className="sdc-tag" style={{background:`${subjectColor}22`,color:subjectColor,fontSize:10}}>{course.subject.toUpperCase()}</span>}
                 {(course.batch||course.className) && <span className="sdc-tag-cls-pill" style={{fontSize:10}}>{(course.batch||course.className).toUpperCase()}</span>}
               </div>
             </div>
@@ -1261,13 +1551,25 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
             </div>
 
             {course.isEnrolled ? (
-              <button className="cdp-btn-start" onClick={() => onOpenPlayer && onOpenPlayer(course._id)}><MdPlayCircle size={18}/> Start Learning</button>
+              <button className="cdp-btn-start" onClick={() => onOpenPlayer && onOpenPlayer(course._id)}><MdPlayCircle size={18}/> {isBundle?"Access All Subjects":"Start Learning"}</button>
             ) : course.isFree ? (
               <button className="cdp-btn-enroll" onClick={handleFreeEnroll} disabled={enrolling}>{enrolling?"Enrolling...":<><MdCheck size={16}/> Enroll Free</>}</button>
             ) : inCart ? (
               <button className="cdp-btn-incart"><img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> In Cart · ₹{course.price?.toLocaleString("en-IN")}</button>
             ) : (
               <button className="cdp-btn-cart" onClick={handleAddToCart}><img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> Add To Cart &nbsp;₹{course.price?.toLocaleString("en-IN")}</button>
+            )}
+
+            {/* Bundle quick-info in sidebar */}
+            {isBundle && bundledSubs.length > 0 && (
+              <div style={{marginTop:14,padding:"12px",background:"#EFEFFF",borderRadius:10,border:"1px solid #c5b8f8"}}>
+                <div style={{fontSize:11,fontWeight:700,color:"#4c1d95",marginBottom:8}}>SUBJECTS IN THIS BUNDLE</div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                  {bundledSubs.map((s,i) => (
+                    <span key={s} style={{fontSize:11,fontWeight:600,color:SUBJ_COLORS[i%SUBJ_COLORS.length],background:`${SUBJ_COLORS[i%SUBJ_COLORS.length]}15`,padding:"2px 8px",borderRadius:12}}>{s}</span>
+                  ))}
+                </div>
+              </div>
             )}
 
             {!course.isEnrolled && !course.isFree && (
@@ -1518,11 +1820,156 @@ function BunnyPlayer({ src }) {
 /* ════════════════════════════════════════
    COURSE PLAYER
 ════════════════════════════════════════ */
+/* ── Secure in-app file viewer modal ── */
+function SecureFileViewer({ courseId, mat, secKey, subject, onClose }) {
+  const containerRef = useRef(null);
+  const [status, setStatus]   = useState("loading"); // loading | done | error
+  const [errMsg, setErrMsg]   = useState("");
+  const MAT_ICONS  = { books:"📚", tma:"📝", assignments:"📋", samplePapers:"📄", notes:"🗒️" };
+  const displayTitle = subject ? mat.title.replace(`${subject} | `, "") : mat.title;
+
+  // Block Ctrl+S/P/C and F12 on the parent window
+  useEffect(() => {
+    const block = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ["s","S","p","P","c","C","a","A"].includes(e.key))
+        e.preventDefault();
+      if (e.key === "F12") e.preventDefault();
+    };
+    window.addEventListener("keydown", block);
+    return () => window.removeEventListener("keydown", block);
+  }, []);
+
+  // Load PDF.js from CDN then fetch PDF bytes and render as canvas directly in DOM
+  // No iframe → no src URL visible in DevTools Elements tab
+  useEffect(() => {
+    let cancelled = false;
+
+    function drawWatermark(ctx, w, h) {
+      ctx.save();
+      ctx.globalAlpha = 0.10;
+      ctx.font = "bold 28px Arial";
+      ctx.fillStyle = "#6c47d4";
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(-30 * Math.PI / 180);
+      ctx.textAlign = "center";
+      for (let y = -h; y < h; y += 110) {
+        ctx.fillText("SS Coaching — Protected", 0, y);
+        ctx.fillText("© sscoaching.in", 0, y + 34);
+      }
+      ctx.restore();
+    }
+
+    async function loadPdfJs() {
+      if (window.pdfjsLib) return;
+      await new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+        s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
+    async function renderPdf() {
+      try {
+        await loadPdfJs();
+        if (cancelled) return;
+
+        const token = localStorage.getItem("studentToken") || "";
+        // Fetch PDF bytes — shows in Network tab briefly, but no URL in Elements tab
+        const proxyUrl = `/api/student/file?token=${encodeURIComponent(token)}&courseId=${courseId}&matId=${mat._id}`;
+        const resp = await fetch(proxyUrl);
+        if (!resp.ok) throw new Error("Access denied or file not found");
+        if (cancelled) return;
+
+        const buffer = await resp.arrayBuffer();
+        const pdf = await window.pdfjsLib.getDocument({ data: buffer }).promise;
+        if (cancelled) return;
+
+        const el = containerRef.current;
+        if (!el) return;
+        el.innerHTML = ""; // clear spinner
+
+        for (let n = 1; n <= pdf.numPages; n++) {
+          if (cancelled) return;
+          const page     = await pdf.getPage(n);
+          const viewport = page.getViewport({ scale: 1.8 });
+          const canvas   = document.createElement("canvas");
+          canvas.width   = viewport.width;
+          canvas.height  = viewport.height;
+          Object.assign(canvas.style, {
+            display:"block", maxWidth:"100%", margin:"0 auto 20px",
+            boxShadow:"0 4px 20px rgba(0,0,0,.5)", borderRadius:"2px"
+          });
+          const ctx = canvas.getContext("2d");
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          drawWatermark(ctx, viewport.width, viewport.height);
+          el.appendChild(canvas);
+          if (n === 1) setStatus("done");
+        }
+        setStatus("done");
+      } catch (err) {
+        if (!cancelled) { setStatus("error"); setErrMsg(err.message); }
+      }
+    }
+
+    renderPdf();
+    return () => { cancelled = true; };
+  }, [courseId, mat._id]);
+
+  return (
+    <div
+      style={{position:"fixed",inset:0,zIndex:9999,display:"flex",flexDirection:"column",userSelect:"none"}}
+      onContextMenu={e => e.preventDefault()}
+    >
+      {/* Header */}
+      <div style={{background:"#1a1f4b",padding:"12px 20px",display:"flex",alignItems:"center",gap:14,flexShrink:0,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>
+        <span style={{fontSize:22}}>{MAT_ICONS[secKey]||"📄"}</span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{color:"white",fontWeight:700,fontSize:15,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
+          {subject && <div style={{color:"#a5b4fc",fontSize:12,marginTop:2}}>{subject}</div>}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <span style={{fontSize:11,color:"#a5b4fc",background:"rgba(255,255,255,0.08)",padding:"4px 12px",borderRadius:20,fontWeight:600,border:"1px solid rgba(255,255,255,0.12)"}}>🔒 Protected</span>
+          <button onClick={onClose} style={{background:"#ef4444",color:"white",border:"none",borderRadius:8,padding:"8px 18px",fontWeight:700,cursor:"pointer",fontSize:14}}>✕ Close</button>
+        </div>
+      </div>
+
+      {/* Canvas area — PDF pages rendered directly here, no iframe */}
+      <div style={{flex:1,overflow:"auto",background:"#404040",WebkitUserSelect:"none"}} onContextMenu={e=>e.preventDefault()}>
+        {status === "loading" && (
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",color:"white",gap:16}}>
+            <div style={{width:40,height:40,border:"3px solid rgba(255,255,255,0.2)",borderTop:"3px solid white",borderRadius:"50%",animation:"sfv-spin 0.8s linear infinite"}}/>
+            <div style={{fontSize:13,fontWeight:600}}>Loading document…</div>
+          </div>
+        )}
+        {status === "error" && (
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",color:"#fca5a5",fontSize:13,padding:24,textAlign:"center"}}>
+            Could not load document. Please close and try again.<br/><small>{errMsg}</small>
+          </div>
+        )}
+        <div ref={containerRef} style={{padding:"24px 16px",minHeight:"100%"}} />
+      </div>
+
+      {/* Footer */}
+      <div style={{background:"#111827",padding:"5px 20px",textAlign:"center",flexShrink:0}}>
+        <span style={{fontSize:11,color:"#4b5563"}}>© SS Coaching — Protected material. Downloading, sharing or screenshotting is strictly prohibited.</span>
+      </div>
+
+      <style jsx global>{`@keyframes sfv-spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+}
+
 function CoursePlayer({ courseId, onBack }) {
   const [course, setCourse]             = useState(null);
   const [loading, setLoading]           = useState(true);
   const [activeLesson, setActiveLesson] = useState(null);
   const [openChapters, setOpenChapters] = useState({});
+  const [openSubjects, setOpenSubjects] = useState({});
+  const [viewingMat, setViewingMat]     = useState(null); // { mat, secKey, subject }
+  const [mobileSidebar, setMobileSidebar] = useState(false); // mobile bottom drawer
 
   useEffect(() => {
     const load = async () => {
@@ -1533,7 +1980,10 @@ function CoursePlayer({ courseId, onBack }) {
         const data  = await res.json();
         if (data.success) {
           setCourse(data.course);
-          if (data.course.chapters?.length > 0) {
+          if (data.course.courseType === "bundle") {
+            // Open first subject by default
+            setOpenSubjects({ 0: true });
+          } else if (data.course.chapters?.length > 0) {
             setOpenChapters({ 0: true });
             const fl = data.course.chapters[0]?.lessons?.[0];
             if (fl) setActiveLesson({ chapterIdx:0, lessonIdx:0, lesson:fl });
@@ -1546,6 +1996,7 @@ function CoursePlayer({ courseId, onBack }) {
   }, [courseId]);
 
   const toggleChapter = (idx) => setOpenChapters(prev => ({ ...prev, [idx]: !prev[idx] }));
+  const toggleSubject = (idx) => setOpenSubjects(prev => ({ ...prev, [idx]: !prev[idx] }));
 
   const getYoutubeId = (url) => {
     if (!url) return null;
@@ -1574,118 +2025,297 @@ function CoursePlayer({ courseId, onBack }) {
     </div>
   );
 
+  const isBundle   = course.courseType === "bundle";
+  const bundleSubs = course.bundledSubjects || [];
+  const MAT_SECTIONS = [
+    {key:"books",       label:"Books",         Icon:MdMenuBook,    color:"#6c47d4"},
+    {key:"tma",         label:"TMA",           Icon:MdInventory2,  color:"#f59e0b"},
+    {key:"assignments", label:"Assignments",   Icon:MdAssignment,  color:"#0ea5e9"},
+    {key:"samplePapers",label:"Sample Papers", Icon:MdArticle,     color:"#10b981"},
+    {key:"notes",       label:"Notes",         Icon:MdStickyNote2, color:"#f43f5e"},
+  ];
+  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
+
+  const getSubjectMats = (sub) =>
+    MAT_SECTIONS.flatMap(s =>
+      (course.materials?.[s.key]||[])
+        .filter(m => m.title.startsWith(`${sub} | `))
+        .map(m => ({ ...m, secKey:s.key, Icon:s.Icon, color:s.color, label:s.label }))
+    );
+
+  const openViewer = (mat, secKey, subject) => setViewingMat({ mat, secKey, subject });
+
   return (
-    <div className="scp-wrapper">
-      <div className="scp-header">
-        <button className="scp-back-btn" onClick={onBack}><MdArrowBack size={18}/> Back to Courses</button>
-        <div className="scp-header-info">
-          <div className="scp-course-title">{course.title}</div>
-          <div className="scp-course-meta">
-            <span style={{color:getSubjectColor(course.subject)}}>{subjectIcons[course.subject]||"📚"} {course.subject}</span>
-            <span>•</span><span>{course.batch}</span>
-            <span>•</span><span>{course.chapters?.length||0} Chapters</span>
-            <span>•</span><span>{totalLessons} Topics</span>
+    <>
+      {/* Secure file viewer overlay */}
+      {viewingMat && (
+        <SecureFileViewer
+          courseId={courseId}
+          mat={viewingMat.mat}
+          secKey={viewingMat.secKey}
+          subject={viewingMat.subject}
+          onClose={() => setViewingMat(null)}
+        />
+      )}
+
+      <div className="scp-wrapper">
+        <div className="scp-header">
+          <button className="scp-back-btn" onClick={onBack}><MdArrowBack size={18}/> Back to Courses</button>
+          <div className="scp-header-info">
+            <div className="scp-course-title">{course.title}</div>
+            <div className="scp-course-meta">
+              {isBundle ? (
+                <><span style={{color:"#f59e0b"}}>📦 Bundle</span><span>•</span><span>{bundleSubs.length} Subjects</span></>
+              ) : (
+                <><span style={{color:getSubjectColor(course.subject)}}>{subjectIcons[course.subject]||"📚"} {course.subject}</span>
+                <span>•</span><span>{course.batch}</span>
+                <span>•</span><span>{course.chapters?.length||0} Chapters</span>
+                <span>•</span><span>{totalLessons} Topics</span></>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="scp-body">
-        <div className="scp-video-area">
-          {lesson && ytId && (
-            <>
-              <div className="scp-video-wrap">
-                <iframe key={ytId} src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen className="scp-iframe" title={lesson.title}/>
-              </div>
-              <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
-            </>
-          )}
-          {lesson && lesson.videoType==="custom" && lesson.videoUrl && !ytId && (
-            <>
-              <div className="scp-video-wrap">
-                <video key={lesson.videoUrl} controls autoPlay className="scp-iframe" style={{background:"#000"}}>
-                  <source src={lesson.videoUrl}/>
-                </video>
-              </div>
-              <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
-            </>
-          )}
-          {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
-            <>
-              <div className="scp-video-wrap">
-                <BunnyPlayer src={lesson.videoUrl}/>
-              </div>
-              <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
-            </>
-          )}
-          {lesson && !lessonHasVideo(lesson) && lessonHasNotes(lesson) && (
-            <>
-              <div className="scp-notes-only-header">
-                <div style={{fontSize:"2.8rem",marginBottom:10}}>📂</div>
-                <div style={{fontSize:"1.15rem",fontWeight:700,marginBottom:6}}>{lesson.title}</div>
-                <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.48)"}}>Study materials — no video</div>
-              </div>
-              <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
-            </>
-          )}
-          {lesson && !lessonHasVideo(lesson) && !lessonHasNotes(lesson) && (
-            <div className="scp-locked"><MdOndemandVideo size={48}/><div>No content available yet</div></div>
-          )}
-          {!lesson && (
-            <div className="scp-no-lesson"><MdOndemandVideo size={64}/><div>Select a topic to start</div></div>
-          )}
-        </div>
-        <div className="scp-sidebar">
-          <div className="scp-sidebar-title">Course Content</div>
-          {course.chapters?.length === 0 && <div className="scp-no-content">No chapters yet.</div>}
-          {course.chapters?.map((chapter, ci) => {
-            const isOpen = !!openChapters[ci];
-            return (
-              <div key={chapter._id||ci} className="scp-chapter">
-                <button className="scp-chapter-header" onClick={() => toggleChapter(ci)}>
-                  <div className="scp-chapter-left">
-                    <span className="scp-chapter-num">Ch {ci+1}</span>
-                    <span className="scp-chapter-title">{chapter.title}</span>
-                  </div>
-                  <div className="scp-chapter-right">
-                    <span className="scp-chapter-count">{chapter.lessons.length} topics</span>
-                    {isOpen?<MdExpandLess size={18}/>:<MdExpandMore size={18}/>}
-                  </div>
-                </button>
-                {isOpen && (
-                  <div className="scp-lessons">
-                    {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No topics yet</div>}
-                    {chapter.lessons.map((les, li) => {
-                      const isActive = activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
-                      const canOpen  = lessonAccessible(les);
-                      const hasNotes = lessonHasNotes(les);
-                      return (
-                        <button key={les._id||li}
-                          className={`scp-lesson ${isActive?"scp-lesson-active":""} ${!canOpen?"scp-lesson-locked":""}`}
-                          onClick={() => { if (canOpen) setActiveLesson({ chapterIdx:ci, lessonIdx:li, lesson:les }); }}
-                          disabled={!canOpen}
-                        >
-                          <div className="scp-lesson-left">
-                            {les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
-                              : les.videoType==="custom"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#6c47d4"} style={{flexShrink:0}}/>
-                              : hasNotes ? <MdAttachFile size={15} color={isActive?"#fff":"#f59e0b"} style={{flexShrink:0}}/>
-                              : <MdLock size={13} className="scp-lock-icon" style={{flexShrink:0}}/>}
-                            <span className="scp-lesson-name">{les.title}</span>
-                          </div>
-                          <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
-                            {hasNotes && <span className="scp-notes-badge">📎{les.notes.length}</span>}
-                            {les.duration && <span className="scp-lesson-time">{les.duration}</span>}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+
+        <div className="scp-body">
+          {/* ── MAIN AREA ── */}
+          <div className="scp-video-area">
+            {!isBundle && (
+              <>
+                {lesson && ytId && (
+                  <>
+                    <div className="scp-video-wrap">
+                      <iframe key={ytId} src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen className="scp-iframe" title={lesson.title}/>
+                    </div>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                  </>
                 )}
+                {lesson && lesson.videoType==="custom" && lesson.videoUrl && !ytId && (
+                  <>
+                    <div className="scp-video-wrap">
+                      <video key={lesson.videoUrl} controls autoPlay className="scp-iframe" style={{background:"#000"}}>
+                        <source src={lesson.videoUrl}/>
+                      </video>
+                    </div>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                  </>
+                )}
+                {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
+                  <>
+                    <div className="scp-video-wrap"><BunnyPlayer src={lesson.videoUrl}/></div>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                  </>
+                )}
+                {lesson && !lessonHasVideo(lesson) && lessonHasNotes(lesson) && (
+                  <>
+                    <div className="scp-notes-only-header">
+                      <div style={{fontSize:"2.8rem",marginBottom:10}}>📂</div>
+                      <div style={{fontSize:"1.15rem",fontWeight:700,marginBottom:6}}>{lesson.title}</div>
+                      <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.48)"}}>Study materials — no video</div>
+                    </div>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                  </>
+                )}
+                {lesson && !lessonHasVideo(lesson) && !lessonHasNotes(lesson) && (
+                  <div className="scp-locked"><MdOndemandVideo size={48}/><div>No content available yet</div></div>
+                )}
+                {!lesson && (
+                  <div className="scp-no-lesson"><MdOndemandVideo size={64}/><div>Select a topic to start</div></div>
+                )}
+              </>
+            )}
+
+            {/* Bundle: main welcome area */}
+            {isBundle && (
+              <div className="bcp-welcome">
+                {/* Hero */}
+                <div className="bcp-hero">
+                  <div className="bcp-hero-icon">
+                    <MdInventory2 size={32} color="#fff"/>
+                  </div>
+                  <h1 className="bcp-hero-title">{course.title}</h1>
+                  <p className="bcp-hero-sub">Bundle Course &nbsp;·&nbsp; {bundleSubs.length} Subjects</p>
+                  <div className="bcp-protected-pill">
+                    <MdLock size={11}/> All materials are protected
+                  </div>
+                </div>
+
+                {/* Subject cards grid */}
+                <div className="bcp-subjects-label">Subjects Included</div>
+                <div className="bcp-subject-grid">
+                  {bundleSubs.map((s, i) => {
+                    const color   = SUBJ_COLORS[i % SUBJ_COLORS.length];
+                    const subMats = getSubjectMats(s);
+                    return (
+                      <button key={s} className="bcp-subj-card"
+                        style={{"--subj-color": color}}
+                        onClick={() => {
+                          toggleSubject(i);
+                          setMobileSidebar(true);
+                        }}>
+                        <div className="bcp-subj-dot" style={{background:color}}/>
+                        <span className="bcp-subj-name">{s}</span>
+                        <span className="bcp-subj-count" style={{color,background:`${color}18`}}>
+                          {subMats.length > 0 ? `${subMats.length} files` : "No files"}
+                        </span>
+                        <MdChevronRight size={15} color={color}/>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Mobile sidebar toggle */}
+                <button className="bcp-mobile-mat-btn" onClick={() => setMobileSidebar(true)}>
+                  <MdViewList size={18}/> View All Materials
+                </button>
               </div>
-            );
-          })}
+            )}
+          </div>
+
+          {/* Mobile drawer overlay */}
+          {mobileSidebar && isBundle && (
+            <div className="bcp-drawer-overlay" onClick={() => setMobileSidebar(false)}/>
+          )}
+
+          {/* ── SIDEBAR ── */}
+          <div className={`scp-sidebar${isBundle && mobileSidebar ? " bcp-drawer-open" : ""}`}>
+            {!isBundle && (
+              <>
+                <div className="scp-sidebar-title">Course Content</div>
+                {course.chapters?.length === 0 && <div className="scp-no-content">No chapters yet.</div>}
+                {/* Subject course materials */}
+                {(() => {
+                  const allMats = MAT_SECTIONS.flatMap(s =>
+                    (course.materials?.[s.key]||[]).map(m => ({...m, secKey:s.key, icon:s.icon, label:s.label}))
+                  );
+                  if (!allMats.length) return null;
+                  return (
+                    <div className="scp-materials-section">
+                      <div className="scp-materials-title">📁 Study Materials</div>
+                      <div className="scp-materials-list">
+                        {allMats.map(mat => (
+                          <button key={mat._id} className="scp-material-link" onClick={() => openViewer(mat, mat.secKey, null)}
+                            style={{width:"100%",textAlign:"left",cursor:"pointer",border:"none",background:"white"}}>
+                            <span className="scp-material-icon">{mat.icon}</span>
+                            <span className="scp-material-name">{mat.title}</span>
+                            <span className="scp-material-open">View</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+                {course.chapters?.map((chapter, ci) => {
+                  const isOpen = !!openChapters[ci];
+                  return (
+                    <div key={chapter._id||ci} className="scp-chapter">
+                      <button className="scp-chapter-header" onClick={() => toggleChapter(ci)}>
+                        <div className="scp-chapter-left">
+                          <span className="scp-chapter-num">Ch {ci+1}</span>
+                          <span className="scp-chapter-title">{chapter.title}</span>
+                        </div>
+                        <div className="scp-chapter-right">
+                          <span className="scp-chapter-count">{chapter.lessons.length} topics</span>
+                          {isOpen?<MdExpandLess size={18}/>:<MdExpandMore size={18}/>}
+                        </div>
+                      </button>
+                      {isOpen && (
+                        <div className="scp-lessons">
+                          {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No topics yet</div>}
+                          {chapter.lessons.map((les, li) => {
+                            const isActive = activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
+                            const canOpen  = lessonAccessible(les);
+                            const hasNotes = lessonHasNotes(les);
+                            return (
+                              <button key={les._id||li}
+                                className={`scp-lesson ${isActive?"scp-lesson-active":""} ${!canOpen?"scp-lesson-locked":""}`}
+                                onClick={() => { if (canOpen) setActiveLesson({ chapterIdx:ci, lessonIdx:li, lesson:les }); }}
+                                disabled={!canOpen}>
+                                <div className="scp-lesson-left">
+                                  {les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
+                                    : les.videoType==="custom"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#6c47d4"} style={{flexShrink:0}}/>
+                                    : hasNotes ? <MdAttachFile size={15} color={isActive?"#fff":"#f59e0b"} style={{flexShrink:0}}/>
+                                    : <MdLock size={13} className="scp-lock-icon" style={{flexShrink:0}}/>}
+                                  <span className="scp-lesson-name">{les.title}</span>
+                                </div>
+                                <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
+                                  {hasNotes && <span className="scp-notes-badge">📎{les.notes.length}</span>}
+                                  {les.duration && <span className="scp-lesson-time">{les.duration}</span>}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Bundle sidebar — subjects accordion */}
+            {isBundle && (
+              <>
+                <div className="bcp-sb-header">
+                  <div style={{flex:1,minWidth:0}}>
+                    <div className="bcp-sb-title">{course.title}</div>
+                    <div className="bcp-sb-meta">{bundleSubs.length} Subjects</div>
+                  </div>
+                  <button className="bcp-sb-close-btn" onClick={() => setMobileSidebar(false)}>
+                    <MdClose size={18}/>
+                  </button>
+                </div>
+                {bundleSubs.map((sub, si) => {
+                  const color   = SUBJ_COLORS[si % SUBJ_COLORS.length];
+                  const subMats = getSubjectMats(sub);
+                  const isOpen  = !!openSubjects[si];
+                  return (
+                    <div key={sub} className="bcp-sb-subject">
+                      <button
+                        className={`bcp-sb-subj-btn${isOpen ? " bcp-sb-subj-open" : ""}`}
+                        style={{"--sc":color}}
+                        onClick={() => toggleSubject(si)}
+                      >
+                        <span className="bcp-sb-dot" style={{background:color}}/>
+                        <span className="bcp-sb-subj-name">{sub}</span>
+                        {subMats.length > 0
+                          ? <span className="bcp-sb-badge" style={{color,background:`${color}18`}}>{subMats.length}</span>
+                          : <span className="bcp-sb-nofile">No files</span>}
+                        {isOpen ? <MdExpandLess size={16}/> : <MdExpandMore size={16}/>}
+                      </button>
+
+                      {isOpen && subMats.length > 0 && (
+                        <div className="bcp-sb-mats">
+                          {subMats.map(mat => {
+                            const displayTitle = mat.title.replace(`${sub} | `, "");
+                            const MatIcon = mat.Icon || MdMenuBook;
+                            return (
+                              <button key={mat._id}
+                                className="bcp-sb-mat-row"
+                                style={{"--mc": mat.color || color}}
+                                onClick={() => { openViewer(mat, mat.secKey, sub); setMobileSidebar(false); }}
+                              >
+                                <span className="bcp-sb-mat-icon" style={{background:`${mat.color||color}15`}}>
+                                  <MatIcon size={14} color={mat.color||color}/>
+                                </span>
+                                <div className="bcp-sb-mat-info">
+                                  <div className="bcp-sb-mat-title">{displayTitle}</div>
+                                  <div className="bcp-sb-mat-type">{mat.label}</div>
+                                </div>
+                                <span className="bcp-sb-mat-view" style={{color:mat.color||color}}>View</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
         </div>
-      </div>
       <style jsx>{`
         .scp-notes-only-header{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 24px 32px;background:linear-gradient(135deg,#1a1f4b,#0f1530);text-align:center;color:#fff;min-height:180px;}
         .scp-notes-badge{font-size:.62rem;font-weight:700;background:rgba(245,158,11,.18);color:#f59e0b;padding:1px 5px;border-radius:4px;white-space:nowrap;}
@@ -1701,7 +2331,8 @@ function CoursePlayer({ courseId, onBack }) {
         .scp-material-open{font-size:.72rem;color:#4441e5;font-weight:600;flex-shrink:0;}
         .scp-iframe{width:100%;height:100%;border:none;display:block;}
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }
 
@@ -1892,13 +2523,19 @@ function CartDrawer({ open, onClose, cart, removeFromCart, onEnrolled }) {
 ════════════════════════════════════════ */
 function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
   const [saving, setSaving]         = useState(false);
-  const [form, setForm]             = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"" });
+  const [form, setForm]             = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"", email:student.email||"" });
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg]     = useState("");
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
-    setHasChanges(form.name!==(student.name||"")||form.className!==(student.className||"")||form.batch!==(student.batch||""));
+    const changed =
+      form.name    !== (student.name||"")      ||
+      form.className !== (student.className||"")||
+      form.batch   !== (student.batch||"")     ||
+      form.phone   !== (student.phone||"")     ||
+      form.email   !== (student.email||"");
+    setHasChanges(changed);
   }, [form, student]);
 
   const handleSave = async () => {
@@ -1914,7 +2551,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
       });
       const data = await res.json();
       if (data.success) {
-        const updated = {...student,...data.student};
+        const updated = {...student,...data.student, email: data.student.email||student.email };
         localStorage.setItem("studentInfo", JSON.stringify(updated));
         setStudent(updated);
         setSuccessMsg("Profile updated successfully!");
@@ -1925,7 +2562,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
     setSaving(false);
   };
 
-  const handleReset = () => { setForm({name:student.name||"",className:student.className||"",batch:student.batch||""}); setErrorMsg(""); setSuccessMsg(""); };
+  const handleReset = () => { setForm({name:student.name||"",className:student.className||"",batch:student.batch||"",phone:student.phone||"",email:student.email||""}); setErrorMsg(""); setSuccessMsg(""); };
 
   return (
     <div>
@@ -1945,15 +2582,20 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
         <div>
           <div className="sdpr-box">
             <h3>Contact Information</h3>
-            <div className="sdpr-info">
-              <div className="sdpr-info-ic"><MdPhone size={16}/></div>
-              <div><small>Mobile</small><b>+91 {student.phone}</b></div>
-            </div>
+            {student.phone && (
+              <div className="sdpr-info">
+                <div className="sdpr-info-ic"><MdPhone size={16}/></div>
+                <div><small>Mobile</small><b>+91 {student.phone}</b></div>
+              </div>
+            )}
             {student.email && (
               <div className="sdpr-info">
                 <div className="sdpr-info-ic"><MdPerson size={16}/></div>
                 <div><small>Email</small><b>{student.email}</b></div>
               </div>
+            )}
+            {!student.phone && !student.email && (
+              <div style={{color:"#9ca3af",fontSize:13}}>No contact info added yet</div>
             )}
           </div>
           <div className="sdpr-box">
@@ -2021,8 +2663,11 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
             </div>
             <div className="sdpr-field">
               <label className="sdpr-label">Mobile Number</label>
-              <input type="text" className="sdpr-input" value={`+91 ${student.phone}`} disabled/>
-              <div className="sdpr-hint">📵 Phone number cannot be changed</div>
+              <input type="tel" className="sdpr-input" value={form.phone} onChange={(e) => setForm({...form,phone:e.target.value.replace(/\D/g,"").slice(0,10)})} placeholder="10-digit mobile number"/>
+            </div>
+            <div className="sdpr-field">
+              <label className="sdpr-label">Email Address</label>
+              <input type="email" className="sdpr-input" value={form.email} onChange={(e) => setForm({...form,email:e.target.value})} placeholder="your@email.com"/>
             </div>
             <div className="sdpr-field">
               <label className="sdpr-label">Class <span className="sdpr-req">*</span></label>
@@ -2052,10 +2697,210 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
 }
 
 /* ════════════════════════════════════════
+   SECURE YOUTUBE PLAYER
+════════════════════════════════════════ */
+function SecureYouTubePlayer({ videoId, isLive = false }) {
+  const divId     = useRef(`syp-${Math.random().toString(36).slice(2)}`);
+  const playerRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted,   setMuted]   = useState(false);
+  const [ready,   setReady]   = useState(false);
+  const [showChat, setShowChat] = useState(false);
+
+  useEffect(() => {
+    let destroyed = false;
+
+    function initPlayer() {
+      const el = document.getElementById(divId.current);
+      if (!el || destroyed) return;
+      // eslint-disable-next-line no-new
+      new window.YT.Player(divId.current, {
+        videoId,
+        playerVars: { autoplay: 1, controls: 0, rel: 0, modestbranding: 1, iv_load_policy: 3, fs: 0, disablekb: 1, playsinline: 1 },
+        events: {
+          onReady: (e) => {
+            if (destroyed) return;
+            playerRef.current = e.target;
+            setReady(true);
+            setPlaying(true);
+            try { e.target.playVideo(); } catch {}
+          },
+          onStateChange: (e) => {
+            if (destroyed) return;
+            const s = e.data;
+            setPlaying(s === window.YT.PlayerState.PLAYING || s === window.YT.PlayerState.BUFFERING);
+          },
+          onError: () => { if (!destroyed) setReady(false); },
+        },
+      });
+    }
+
+    // Small delay ensures div is in DOM before YT.Player tries to find it
+    const timer = setTimeout(() => {
+      if (window.YT && window.YT.Player) {
+        initPlayer();
+      } else {
+        if (!document.getElementById("yt-iframe-api")) {
+          const tag = document.createElement("script");
+          tag.id = "yt-iframe-api";
+          tag.src = "https://www.youtube.com/iframe_api";
+          document.head.appendChild(tag);
+        }
+        const prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => { if (prev) prev(); initPlayer(); };
+      }
+    }, 50);
+
+    return () => {
+      destroyed = true;
+      clearTimeout(timer);
+      try { playerRef.current?.destroy(); } catch {}
+      playerRef.current = null;
+      setReady(false);
+      setPlaying(false);
+    };
+  }, [videoId]);
+
+  const containerRef = useRef(null);
+  const [fullscreen, setFullscreen] = useState(false);
+
+  useEffect(() => {
+    const onFsChange = () => setFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
+  const togglePlay = () => {
+    if (!playerRef.current || !ready) return;
+    try { playing ? playerRef.current.pauseVideo() : playerRef.current.playVideo(); } catch {}
+  };
+  const toggleMute = () => {
+    if (!playerRef.current || !ready) return;
+    try {
+      if (muted) { playerRef.current.unMute(); setMuted(false); }
+      else        { playerRef.current.mute();   setMuted(true);  }
+    } catch {}
+  };
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+  const iconBtn = (onClick, active = true) => ({
+    onClick, disabled: !active,
+    style: {
+      display:"flex", alignItems:"center", justifyContent:"center",
+      background: "rgba(255,255,255,0.07)",
+      color: active ? "#e2e8f0" : "#444",
+      border: "1px solid rgba(255,255,255,0.1)",
+      borderRadius: 8, padding: "6px 10px",
+      cursor: active ? "pointer" : "not-allowed",
+      transition: "background 0.15s", flexShrink: 0,
+    }
+  });
+
+  return (
+    <div ref={containerRef} style={{borderRadius:"14px 14px 0 0",background:"#0a0a14"}}>
+      {/* Video area — overflow hidden only here for radius */}
+      <div style={{position:"relative",paddingBottom:"56.25%",height:0,background:"#0a0a14",borderRadius:"14px 14px 0 0",overflow:"hidden"}}>
+        <div id={divId.current} style={{position:"absolute",top:0,left:0,width:"100%",height:"100%"}}/>
+        {/* Full overlay — blocks all YouTube UI; click = play/pause */}
+        <div style={{position:"absolute",inset:0,zIndex:10,cursor:ready?"pointer":"default"}} onClick={togglePlay}/>
+        {/* Loading */}
+        {!ready && (
+          <div style={{position:"absolute",inset:0,zIndex:20,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"#0a0a14",gap:12}}>
+            <div style={{width:36,height:36,border:"3px solid #6c47d422",borderTop:"3px solid #6c47d4",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+            <span style={{color:"#6b7280",fontSize:12}}>Loading stream...</span>
+          </div>
+        )}
+        {/* Paused overlay */}
+        {ready && !playing && (
+          <div style={{position:"absolute",inset:0,zIndex:11,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none"}}>
+            <div style={{background:"rgba(108,71,212,0.8)",borderRadius:"50%",width:60,height:60,display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <MdPlayCircle size={38} color="#fff"/>
+            </div>
+          </div>
+        )}
+        {/* LIVE pill — inside video top-right, always visible */}
+        {isLive && (
+          <div style={{position:"absolute",top:10,right:10,zIndex:12,display:"flex",alignItems:"center",gap:5,background:"rgba(239,68,68,0.9)",borderRadius:20,padding:"4px 10px",backdropFilter:"blur(4px)"}}>
+            <span style={{width:6,height:6,background:"#fff",borderRadius:"50%",display:"inline-block",animation:"pulse 1.2s ease-in-out infinite"}}/>
+            <span style={{color:"#fff",fontSize:11,fontWeight:800,letterSpacing:1.5}}>LIVE</span>
+          </div>
+        )}
+      </div>
+
+      {/* Control bar — single row */}
+      <div style={{display:"flex",alignItems:"center",gap:6,padding:"9px 12px",background:"linear-gradient(135deg,#0f0f1e,#160f30)"}}>
+        {/* Play/Pause */}
+        <button
+          onClick={togglePlay} disabled={!ready}
+          style={{display:"flex",alignItems:"center",gap:5,background:ready?"#6c47d4":"#2d2d4e",color:"#fff",border:"none",borderRadius:8,padding:"6px 14px",fontWeight:700,cursor:ready?"pointer":"not-allowed",fontSize:12,flexShrink:0,whiteSpace:"nowrap"}}
+        >
+          {playing ? <><MdPauseCircle size={15}/> Pause</> : <><MdPlayCircle size={15}/> Play</>}
+        </button>
+
+        {/* Mute — icon only */}
+        <button {...iconBtn(toggleMute, ready)} title={muted ? "Unmute" : "Mute"}>
+          {muted ? <MdVolumeOff size={18} color="#f59e0b"/> : <MdVolumeUp size={18}/>}
+        </button>
+
+        <div style={{flex:1}}/>
+
+        {!isLive && <span style={{color:"#4b5563",fontSize:11,whiteSpace:"nowrap"}}>⏺ Rec</span>}
+
+        {/* Chat toggle — only for live */}
+        {isLive && (
+          <button
+            onClick={() => setShowChat(c => !c)}
+            style={{display:"flex",alignItems:"center",gap:4,background:showChat?"rgba(108,71,212,0.3)":"rgba(255,255,255,0.07)",color:showChat?"#a78bfa":"#9ca3af",border:`1px solid ${showChat?"#6c47d4":"rgba(255,255,255,0.1)"}`,borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:11,fontWeight:600,flexShrink:0}}
+          >
+            💬 {showChat ? "Hide Chat" : "Live Chat"}
+          </button>
+        )}
+
+        {/* Fullscreen — icon only */}
+        <button {...iconBtn(toggleFullscreen, true)} title={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
+          {fullscreen ? <MdFullscreenExit size={18}/> : <MdFullscreen size={18}/>}
+        </button>
+      </div>
+
+      {/* YouTube Live Chat panel */}
+      {isLive && showChat && (
+        <div style={{background:"#0f0f1e",borderTop:"1px solid rgba(255,255,255,0.06)"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px 6px"}}>
+            <span style={{color:"#a78bfa",fontSize:12,fontWeight:700,display:"flex",alignItems:"center",gap:5}}>
+              <span style={{width:6,height:6,background:"#10b981",borderRadius:"50%",display:"inline-block"}}/>
+              Live Chat
+            </span>
+            <span style={{color:"#4b5563",fontSize:10}}>Sign in with Google to chat</span>
+          </div>
+          <iframe
+            src={`https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${typeof window !== "undefined" ? window.location.hostname : "sscoaching.in"}`}
+            style={{width:"100%",height:320,border:"none",display:"block"}}
+            allow="microphone; camera"
+          />
+        </div>
+      )}
+
+      <style>{`
+        @keyframes spin  { to { transform:rotate(360deg); } }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+      `}</style>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
    CLASS CARD
 ════════════════════════════════════════ */
 function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
-  const [watching, setWatching] = useState(false);
+  const [watching, setWatching]   = useState(false);
+  const [recording, setRecording] = useState(false);
+  const isLocked = cls.isUnlocked === false;
   const ytId = getYoutubeId(cls.streamLink);
   const noteColors = { notes:"#6c47d4", assignment:"#d97706", solution:"#059669", other:"#6b7280" };
   const thumbClass = getSubjectThumbClass(cls.subject);
@@ -2104,7 +2949,7 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
 
   /* Meta row — same as CourseCard */
   const meta = (
-    <div className="sdc-card-meta">
+    <div className="sdc-card-meta" style={{marginTop:10}}>
       <div className="sdc-meta-left">
         <span className="sdc-meta-item">
           <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
@@ -2122,23 +2967,40 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
     </div>
   );
 
+  /* ── LOCKED (not enrolled in this subject) ── */
+  if (isLocked) {
+    return (
+      <div className="sdc-card" style={{position:"relative",overflow:"hidden"}}>
+        <div className={`sdc-card-thumb ${thumbClass}`} style={{...thumbStyle,filter:"blur(2px)",opacity:0.5}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.55)",zIndex:2}}>
+          <span style={{fontSize:32,marginBottom:8}}>🔒</span>
+          <div style={{color:"white",fontWeight:700,fontSize:14,textAlign:"center",padding:"0 16px"}}>Purchase {cls.subject} course to unlock</div>
+          <div style={{color:"rgba(255,255,255,0.7)",fontSize:12,marginTop:4}}>{cls.batch}</div>
+        </div>
+        <div className="sdc-card-body">
+          {meta}
+          <div className="sdc-cc-name" style={{color:"#9ca3af"}}>{cls.title}</div>
+          <div style={{padding:"6px 12px",background:"#f3f4f6",borderRadius:8,fontSize:12,color:"#6b7280",textAlign:"center"}}>
+            {cls.status==="live"?"🔴 Live now — purchase to watch":cls.status==="upcoming"?`🕐 ${formatDate(cls.date)}`:"✓ Completed"}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   /* ── LIVE ── */
   if (cls.status === "live") {
     return (
       <div className="sdc-card">
         {watching && ytId ? (
-          <div style={{position:"relative",paddingBottom:"56.25%",height:0,background:"#000",borderRadius:"14px 14px 0 0",overflow:"hidden"}}>
-            <iframe src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
-              style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",border:"none"}}
-              allowFullScreen allow="autoplay; encrypted-media"/>
-          </div>
+          <SecureYouTubePlayer videoId={ytId} isLive={true} />
         ) : thumb}
         <div className="sdc-card-body">
           {meta}
           <div className="sdc-cc-name">{cls.title}</div>
           <div className="clsc-prog-bar"><i style={{width:"30%",background:"#f0473e"}}/></div>
           <button className="sdc-btn clsc-btn-live" onClick={() => ytId && setWatching(!watching)} disabled={!ytId} style={{opacity:ytId?1:0.5}}>
-            {watching ? <><MdPauseCircle size={15}/> Hide Stream</> : <>▶ Watch Now</>}
+            {watching ? "✕ Close Stream" : "▶ Watch Now"}
           </button>
           {notesSection}
         </div>
@@ -2176,9 +3038,16 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
           {cls.date     && <span>📅 {formatDate(cls.date)}</span>}
         </div>
         {cls.streamLink ? (
-          <a href={cls.streamLink} target="_blank" rel="noopener noreferrer" className="sdc-btn clsc-btn-done" style={{display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}>
-            ▶ Watch Recording
-          </a>
+          <>
+            <button className="sdc-btn clsc-btn-done" onClick={() => setRecording(!recording)}>
+              {recording ? "✕ Close Recording" : "▶ Watch Recording"}
+            </button>
+            {recording && ytId && (
+              <div style={{marginTop:10,borderRadius:10,overflow:"hidden"}}>
+                <SecureYouTubePlayer videoId={ytId} isLive={false} />
+              </div>
+            )}
+          </>
         ) : (
           <button className="sdc-btn clsc-btn-done" style={{opacity:0.5}} disabled>▶ Watch Recording</button>
         )}

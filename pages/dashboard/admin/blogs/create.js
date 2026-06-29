@@ -1,6 +1,6 @@
 "use client";
 import { withAdminAuth } from "@/lib/withAdminAuth";
-import React, { useState } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 
@@ -10,7 +10,17 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 
+const MAX_IMG_SIZE = 400 * 1024; // 400 KB
+
+function validateWebP(file) {
+  if (!file) return "Koi file select nahi ki.";
+  if (file.type !== "image/webp") return "Sirf WebP format allowed hai (.webp).";
+  if (file.size > MAX_IMG_SIZE) return `Image 400KB se choti honi chahiye (current: ${(file.size / 1024).toFixed(0)}KB).`;
+  return null;
+}
+
 export default function CreateBlogPost() {
+  const quillRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -48,9 +58,71 @@ export default function CreateBlogPost() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Cover image — WebP only, max 400KB
   const handleImageChange = (e) => {
-    setFormData((prev) => ({ ...prev, coverImage: e.target.files[0] }));
+    const file = e.target.files[0];
+    if (!file) return;
+    const err = validateWebP(file);
+    if (err) {
+      toast.error(err);
+      e.target.value = "";
+      return;
+    }
+    setFormData((prev) => ({ ...prev, coverImage: file }));
   };
+
+  // Quill editor — custom image handler: upload to server, insert URL
+  const imageHandler = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/webp");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      const err = validateWebP(file);
+      if (err) { toast.error(err); return; }
+
+      const toastId = toast.loading("Image upload ho rahi hai...");
+      try {
+        const fd = new FormData();
+        fd.append("image", file);
+        const res  = await fetch("/api/upload/blog-image", { method: "POST", body: fd });
+        const data = await res.json();
+
+        if (!data.success) { toast.error(data.message || "Upload failed", { id: toastId }); return; }
+
+        // Insert image URL at cursor position
+        const quill = quillRef.current?.getEditor?.();
+        if (quill) {
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, "image", data.url);
+          quill.setSelection(range.index + 1);
+        }
+        toast.success("Image upload ho gayi!", { id: toastId });
+      } catch (e) {
+        toast.error("Upload failed. Try again.", { id: toastId });
+      }
+    };
+  };
+
+  // Quill toolbar + custom image handler (memoized to avoid re-renders)
+  const quillModules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        ["blockquote", "code-block"],
+        ["link", "image"],
+        ["clean"],
+      ],
+      handlers: { image: imageHandler },
+    },
+  }), []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -212,11 +284,13 @@ export default function CreateBlogPost() {
                             Content
                           </label>
                           <ReactQuill
+                            ref={quillRef}
                             theme="snow"
                             value={formData.content}
                             onChange={(val) =>
                               setFormData((prev) => ({ ...prev, content: val }))
                             }
+                            modules={quillModules}
                             placeholder="Write your article here..."
                             style={{ height: "300px", marginBottom: "60px" }}
                           />
@@ -314,10 +388,13 @@ export default function CreateBlogPost() {
                       <div className="card-body">
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/webp"
                           onChange={handleImageChange}
                           className="form-control mb-2"
                         />
+                        <small className="text-muted d-block mb-2">
+                          ⚠️ Sirf <strong>WebP</strong> format, max <strong>400KB</strong>
+                        </small>
                         {formData.coverImage && (
                           <img
                             src={URL.createObjectURL(formData.coverImage)}

@@ -79,11 +79,18 @@ export default function CheckoutPage() {
     const studentInfo = JSON.parse(info);
     setStudent(studentInfo);
 
-    // Pre-fill form with student info
+    // Pre-fill: saved billing info first, then fallback to student profile
+    const savedBilling = JSON.parse(localStorage.getItem("ss_billing_info") || "{}");
     setForm((f) => ({
       ...f,
-      fullName: studentInfo.name  || "",
-      phone:    studentInfo.phone || "",
+      fullName: savedBilling.fullName || studentInfo.name  || "",
+      phone:    savedBilling.phone    || studentInfo.phone || "",
+      email:    savedBilling.email    || studentInfo.email || "",
+      address:  savedBilling.address  || "",
+      city:     savedBilling.city     || "",
+      state:    savedBilling.state    || "Uttar Pradesh",
+      pincode:  savedBilling.pincode  || "",
+      notes:    "",
     }));
 
     // Load cart from localStorage (CartDrawer saves it before navigating)
@@ -168,6 +175,16 @@ export default function CheckoutPage() {
     const emailSent = results.some((r) => r.emailSent);
 
     if (anyOk) {
+      // Save billing details for next time
+      localStorage.setItem("ss_billing_info", JSON.stringify({
+        fullName: form.fullName,
+        phone:    form.phone,
+        email:    form.email,
+        address:  form.address,
+        city:     form.city,
+        state:    form.state,
+        pincode:  form.pincode,
+      }));
       // Clear cart from localStorage
       localStorage.removeItem("ss_checkout_cart");
       setSuccess({ invoiceNumbers: invoices, emailSent, total, form });

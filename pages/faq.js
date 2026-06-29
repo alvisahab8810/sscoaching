@@ -130,7 +130,15 @@ export default function FAQSection() {
                         </div>
                       </div>
                       {openIndex === index && (
-                        <div className="faq-answer mt-2">{item.answer}</div>
+                        <div className="faq-answer mt-2">
+                          {item.answer.includes("<a ") ? (
+                            <span dangerouslySetInnerHTML={{ __html: item.answer }} />
+                          ) : (
+                            item.answer.length > 300
+                              ? item.answer.substring(0, 300) + "..."
+                              : item.answer
+                          )}
+                        </div>
                       )}
                     </div>
                   ))

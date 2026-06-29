@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const { name, className, batch } = req.body;
+    const { name, className, batch, phone, email } = req.body;
 
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: "Name is required" });
@@ -28,16 +28,16 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: "Class is required" });
     }
 
-    const student = await StudentUser.findByIdAndUpdate(
-      decoded.id,
-      {
-        name: name.trim(),
-        className,
-        batch: batch || "",
-        isProfileComplete: true,
-      },
-      { new: true }
-    );
+    const updates = {
+      name: name.trim(),
+      className,
+      batch: batch || "",
+      isProfileComplete: true,
+    };
+    if (phone) updates.phone = phone.trim();
+    if (email) updates.email = email.toLowerCase().trim();
+
+    const student = await StudentUser.findByIdAndUpdate(decoded.id, updates, { new: true });
 
     if (!student) {
       return res.status(404).json({ success: false, message: "Student not found" });
@@ -50,6 +50,7 @@ export default async function handler(req, res) {
         id: student._id,
         name: student.name,
         phone: student.phone,
+        email: student.email,
         className: student.className,
         batch: student.batch,
         isProfileComplete: student.isProfileComplete,

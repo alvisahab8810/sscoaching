@@ -274,7 +274,7 @@
 
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
@@ -285,9 +285,18 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 
+const MAX_IMG_SIZE = 400 * 1024;
+function validateWebP(file) {
+  if (!file) return "Koi file select nahi ki.";
+  if (file.type !== "image/webp") return "Sirf WebP format allowed hai (.webp).";
+  if (file.size > MAX_IMG_SIZE) return `Image 400KB se choti honi chahiye (current: ${(file.size / 1024).toFixed(0)}KB).`;
+  return null;
+}
+
 export default function EditBlog() {
   const router = useRouter();
-  const { id } = router.query; // blog ID from URL
+  const quillRef = useRef(null);
+  const { id } = router.query;
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -349,8 +358,55 @@ export default function EditBlog() {
   };
 
   const handleImageChange = (e) => {
-    setFormData((prev) => ({ ...prev, coverImage: e.target.files[0] }));
+    const file = e.target.files[0];
+    if (!file) return;
+    const err = validateWebP(file);
+    if (err) { toast.error(err); e.target.value = ""; return; }
+    setFormData((prev) => ({ ...prev, coverImage: file }));
   };
+
+  const imageHandler = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/webp");
+    input.click();
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (!file) return;
+      const err = validateWebP(file);
+      if (err) { toast.error(err); return; }
+      const toastId = toast.loading("Image upload ho rahi hai...");
+      try {
+        const fd = new FormData();
+        fd.append("image", file);
+        const res  = await fetch("/api/upload/blog-image", { method: "POST", body: fd });
+        const data = await res.json();
+        if (!data.success) { toast.error(data.message || "Upload failed", { id: toastId }); return; }
+        const quill = quillRef.current?.getEditor?.();
+        if (quill) {
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, "image", data.url);
+          quill.setSelection(range.index + 1);
+        }
+        toast.success("Image upload ho gayi!", { id: toastId });
+      } catch { toast.error("Upload failed.", { id: toastId }); }
+    };
+  };
+
+  const quillModules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        ["blockquote", "code-block"],
+        ["link", "image"],
+        ["clean"],
+      ],
+      handlers: { image: imageHandler },
+    },
+  }), []);
 
   const handleTitleChange = (e) => {
     const title = e.target.value;
@@ -464,9 +520,11 @@ export default function EditBlog() {
             <div className="mb-3">
               <label className="form-label">Content</label>
               <ReactQuill
+                ref={quillRef}
                 theme="snow"
                 value={formData.content}
                 onChange={(value) => setFormData((prev) => ({ ...prev, content: value }))}
+                modules={quillModules}
               />
             </div>
 
@@ -488,7 +546,8 @@ export default function EditBlog() {
                   style={{ maxHeight: "200px" }}
                 />
               ) : null}
-              <input type="file" name="coverImage" className="form-control" onChange={handleImageChange} />
+              <input type="file" name="coverImage" accept="image/webp" className="form-control" onChange={handleImageChange} />
+              <small className="text-muted">⚠️ Sirf <strong>WebP</strong> format, max <strong>400KB</strong></small>
             </div>
 
             {/* Status */}
