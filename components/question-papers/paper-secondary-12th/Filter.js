@@ -209,6 +209,8 @@ const QuestionPapers12 = () => {
     { id: 3012601, code: "301", subject: "Hindi", title: "301 - Hindi (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/301-hindi-apr-2026.pdf" },
     { id: 3022601, code: "302", subject: "English", title: "302 - English (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/302-english-apr-2026.pdf" },
     { id: 3122601, code: "312", subject: "Physics", title: "312 - Physics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/312-physics-apr-2026.pdf" },
+    { id: 3132601, code: "313", subject: "Chemistry", title: "313 - Chemistry (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/313-chemistry-apr-2026.pdf" },
+
     { id: 3142601, code: "314", subject: "Biology", title: "314 - Biology (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/314-biology-apr-2026.pdf" },
     { id: 3182601, code: "318", subject: "Economics", title: "318 - Economics (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/318-economics-apr-2026.pdf" },
     { id: 3192601, code: "319", subject: "Business Studies", title: "319 - Business Studies (April 2026)", session: "April 2026", sample: false, file: "/papers/10th-2026/319-business-studies-apr-2026.pdf" },
