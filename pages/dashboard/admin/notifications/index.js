@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { withAdminAuth } from "@/lib/withAdminAuth";
 import Head from "next/head";
 import Topbar from "@/components/dashboard/Topbar";
@@ -21,6 +21,17 @@ export default function NotificationsPage() {
   const [body, setBody]     = useState("");
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
+  const [stats, setStats]   = useState(null);
+
+  const loadStats = async () => {
+    try {
+      const res = await fetch("/api/admin/notifications/stats");
+      const data = await res.json();
+      if (data.success) setStats(data);
+    } catch {}
+  };
+
+  useEffect(() => { loadStats(); }, []);
 
   const send = async () => {
     if (!title.trim() || !body.trim()) { toast.error("Title and message are required"); return; }
@@ -62,6 +73,35 @@ export default function NotificationsPage() {
                   <p className="ntf-sub">Send notifications to all students on the SS Coaching app</p>
                 </div>
               </div>
+
+              {/* Token stats bar */}
+              <div style={{ background: stats?.withToken > 0 ? "#f0fdf4" : "#fef9c3", border: `1px solid ${stats?.withToken > 0 ? "#bbf7d0" : "#fde68a"}`, borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <MdPeople size={20} color={stats?.withToken > 0 ? "#16a34a" : "#92400e"} />
+                {stats ? (
+                  <>
+                    <span style={{ fontWeight: 700, color: stats.withToken > 0 ? "#15803d" : "#92400e" }}>
+                      {stats.withToken} of {stats.total} students have notifications enabled
+                    </span>
+                    {stats.withToken === 0 && (
+                      <span style={{ color: "#92400e", fontSize: 13 }}>— Students need to install the app and log in to save their token</span>
+                    )}
+                    <button onClick={loadStats} style={{ marginLeft: "auto", fontSize: 12, background: "none", border: "1px solid #d1d5db", borderRadius: 6, padding: "3px 10px", cursor: "pointer" }}>Refresh</button>
+                  </>
+                ) : (
+                  <span style={{ color: "#6b7280", fontSize: 13 }}>Loading stats...</span>
+                )}
+              </div>
+
+              {stats?.samples?.length > 0 && (
+                <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "12px 16px", marginBottom: 20 }}>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8, color: "#374151" }}>Students with tokens saved:</div>
+                  {stats.samples.map(s => (
+                    <div key={s._id} style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
+                      <b>{s.name}</b> ({s.phone}) — <code style={{ fontSize: 11 }}>{s.expoPushToken?.slice(0, 40)}…</code>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="ntf-layout">
 
