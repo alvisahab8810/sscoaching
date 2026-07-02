@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const liveClass = await LiveClass.findById(id);
+      const liveClass = await LiveClass.findById(id).populate("course", "title subject batch isFree price");
       if (!liveClass) return res.status(404).json({ success: false, message: "Live class not found" });
       return res.status(200).json({ success: true, data: liveClass });
     } catch (error) {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   if (req.method === "PUT") {
     try {
-      const { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status } = req.body;
+      const { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
       if (!title || !teacher || !subject || !batch || !date || !time || !streamLink) {
         return res.status(400).json({ success: false, message: "Please fill all required fields" });
       }
@@ -26,9 +26,10 @@ export default async function handler(req, res) {
       const before = await LiveClass.findById(id).lean();
       const updated = await LiveClass.findByIdAndUpdate(
         id,
-        { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status },
+        { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status, course: course || null },
         { new: true, runValidators: true }
-      );
+      ).populate("course", "title subject batch isFree price");
+
       if (!updated) return res.status(404).json({ success: false, message: "Live class not found" });
 
       await logActivity(req, {

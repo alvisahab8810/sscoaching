@@ -3,7 +3,50 @@ import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
 import Coupon from "@/models/CouponModel";
+import Invoice from "@/models/Invoice";
+import StudentUser from "@/models/StudentUser";
 import jwt from "jsonwebtoken";
+
+async function createFreeInvoiceAndEmail({ student, course, enrollment, couponCode = "", discount = 0 }) {
+  try {
+    const invoice = await Invoice.create({
+      student:    student.id,
+      course:     course._id,
+      enrollment: enrollment._id,
+      studentName:  student.name  || "",
+      studentPhone: student.phone || "",
+      studentEmail: student.email || "",
+      courseTitle:   course.title   || "",
+      courseSubject: course.subject || "",
+      courseBatch:   course.batch   || "",
+      orderId:       `FREE-${Date.now()}`,
+      paymentId:     "",
+      paymentMethod: discount > 0 ? "Coupon (100% Discount)" : "Free Course",
+      subtotal:   course.price || 0,
+      discount,
+      couponCode: couponCode || "",
+      tax:        0,
+      total:      0,
+      status:     "paid",
+    });
+
+    // Send email non-blocking
+    if (student.email) {
+      try {
+        const { sendInvoiceEmailHtmlOnly } = await import("@/lib/sendInvoiceEmail");
+        const result = await sendInvoiceEmailHtmlOnly({ invoice, studentEmail: student.email });
+        if (result.success) {
+          await Invoice.findByIdAndUpdate(invoice._id, { emailSent: true, emailSentAt: new Date() });
+        }
+      } catch {}
+    }
+
+    return invoice;
+  } catch (err) {
+    console.error("Free invoice creation failed (non-fatal):", err.message);
+    return null;
+  }
+}
 
 function getStudent(req) {
   try {
@@ -33,8 +76,12 @@ export default async function handler(req, res) {
 
       /* ── FREE COURSE — enroll directly ── */
       if (course.isFree) {
-        await Enrollment.create({ student: student.id, course: courseId, type: "free" });
+        const enrollment = await Enrollment.create({ student: student.id, course: courseId, type: "free" });
         await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
+        // Create invoice + send email (non-blocking)
+        const studentDoc = await StudentUser.findById(student.id).select("name email phone").lean();
+        const fullStudent = { ...student, name: studentDoc?.name || "", email: studentDoc?.email || "", phone: studentDoc?.phone || "" };
+        createFreeInvoiceAndEmail({ student: fullStudent, course, enrollment }).catch(() => {});
         return res.status(200).json({ success: true, message: "Enrolled successfully!", type: "free" });
       }
 
@@ -68,13 +115,17 @@ export default async function handler(req, res) {
 
       // If finalPrice is 0 after coupon — enroll for free
       if (finalPrice === 0) {
-        await Enrollment.create({
+        const enrollment = await Enrollment.create({
           student: student.id, course: courseId,
           type: "paid", amountPaid: 0,
           couponCode: appliedCode, discount,
         });
         await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
         if (appliedCode) await Coupon.findOneAndUpdate({ code: appliedCode }, { $inc: { usedCount: 1 } });
+        // Create invoice + send email (non-blocking)
+        const studentDoc = await StudentUser.findById(student.id).select("name email phone").lean();
+        const fullStudent = { ...student, name: studentDoc?.name || "", email: studentDoc?.email || "", phone: studentDoc?.phone || "" };
+        createFreeInvoiceAndEmail({ student: fullStudent, course, enrollment, couponCode: appliedCode, discount }).catch(() => {});
         return res.status(200).json({ success: true, message: "Enrolled with 100% discount!", type: "free" });
       }
 

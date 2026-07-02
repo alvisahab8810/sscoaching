@@ -32,6 +32,11 @@ export default async function handler(req, res) {
       { expiresIn: "30d" }
     );
 
+    // Send welcome email (non-blocking — never fail the registration)
+    import("@/lib/sendWelcomeEmail")
+      .then(({ sendWelcomeEmail }) => sendWelcomeEmail({ name: student.name, email: student.email }))
+      .catch(() => {});
+
     return res.status(201).json({
       success: true,
       token,

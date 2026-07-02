@@ -1052,6 +1052,7 @@ export default function AdminCoursesPage({ admin }) {
   const [showMaterialForm, setShowMaterialForm] = useState(false);
   const [activeMatTab, setActiveMatTab]     = useState("books");
   const [uploadingPdf, setUploadingPdf]     = useState(false);
+  const [linkedClasses, setLinkedClasses]   = useState([]);
 
   const totalLessons = (c) => c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
 
@@ -1074,7 +1075,7 @@ export default function AdminCoursesPage({ admin }) {
     setIsEditing(false); setActiveChapter(null);
     setShowChapterForm(false); setShowLessonForm(null);
     setShowNoteForm(null); setShowMaterialForm(false);
-    setBundleForm(EMPTY_BUNDLE);
+    setBundleForm(EMPTY_BUNDLE); setLinkedClasses([]);
   };
 
   const openManage = (course) => {
@@ -1087,11 +1088,15 @@ export default function AdminCoursesPage({ admin }) {
     });
     setIsEditing(false);
     setView("detail");
-    // Reset material tab to first subject (or empty) so panel starts fresh
     const firstSub = course.courseType === "bundle"
       ? (course.bundledSubjects?.[0] || "")
       : (course.subject || "");
     setActiveMatTab(firstSub);
+    // Fetch linked online classes
+    fetch(`/api/onlineClasses?course=${course._id}&limit=50`)
+      .then(r => r.json())
+      .then(d => { if (d.success) setLinkedClasses(d.data || []); })
+      .catch(() => {});
   };
 
   /* ════════════════════════════════════════
@@ -2162,6 +2167,57 @@ export default function AdminCoursesPage({ admin }) {
                     handleDelete={handleDeleteMaterial}
                     saving={saving}
                   />
+
+                  {/* ── ONLINE CLASSES LINKED TO THIS COURSE ── */}
+                  <div style={{background:"#f0f9ff",border:"1.5px solid #bae6fd",borderRadius:12,padding:20}}>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
+                      <div style={{fontWeight:700,color:"#0369a1",fontSize:15,display:"flex",alignItems:"center",gap:8}}>
+                        📡 Online Classes Linked to This Course
+                        <span style={{background:"#0369a1",color:"white",borderRadius:20,fontSize:11,padding:"2px 8px",fontWeight:600}}>
+                          {linkedClasses.length}
+                        </span>
+                      </div>
+                      <a
+                        href="/dashboard/admin/online-classes"
+                        style={{fontSize:12,color:"#0369a1",textDecoration:"none",fontWeight:600,border:"1.5px solid #bae6fd",borderRadius:6,padding:"4px 10px"}}
+                      >
+                        + Add Online Class →
+                      </a>
+                    </div>
+                    {linkedClasses.length === 0 ? (
+                      <div style={{textAlign:"center",padding:"20px 0",color:"#64748b",fontSize:13}}>
+                        <div style={{fontSize:32,marginBottom:8}}>📭</div>
+                        No online classes linked to this course yet.
+                        <div style={{marginTop:8,fontSize:12}}>
+                          Go to <strong>Online Classes</strong> → Schedule a class → Select this course in "Link to Course" dropdown.
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                        {linkedClasses.map(cls => {
+                          const statusColors = { upcoming:"#f59e0b", live:"#ef4444", completed:"#10b981" };
+                          return (
+                            <div key={cls._id} style={{background:"white",borderRadius:8,padding:"10px 14px",display:"flex",alignItems:"center",gap:12,border:"1px solid #e0f2fe"}}>
+                              <span style={{width:8,height:8,borderRadius:"50%",background:statusColors[cls.status]||"#9ca3af",flexShrink:0}}/>
+                              <div style={{flex:1,minWidth:0}}>
+                                <div style={{fontWeight:600,fontSize:13,color:"#1e3a5f",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cls.title}</div>
+                                <div style={{fontSize:11,color:"#64748b",marginTop:2}}>
+                                  {cls.teacher} · {cls.date} {cls.time} {cls.duration ? `· ${cls.duration}` : ""}
+                                </div>
+                              </div>
+                              <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,background:statusColors[cls.status]+"22",color:statusColors[cls.status]}}>
+                                {cls.status?.toUpperCase()}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <div style={{marginTop:12,fontSize:11,color:"#0369a1",background:"#e0f2fe",borderRadius:6,padding:"8px 10px"}}>
+                      ✓ Only students enrolled in this course can access these online classes.
+                      {selectedCourse.isFree ? " (Free course — students enroll directly)" : " (Paid course — students must purchase first)"}
+                    </div>
+                  </div>
 
                   </div>
                 </div>

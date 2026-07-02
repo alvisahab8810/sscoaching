@@ -687,6 +687,7 @@ const initialForm = {
   streamLink: "",
   description: "",
   status: "upcoming",
+  course: "",
 };
 
 /* ================================================================
@@ -902,6 +903,9 @@ export default function OnlineClassesAdmin() {
   // Notes modal state
   const [notesModal, setNotesModal] = useState(null);
 
+  // All published courses for linking
+  const [allCourses, setAllCourses] = useState([]);
+
   /* ================= FETCH ALL CLASSES ================= */
   const fetchClasses = async (currentPage = page) => {
     try {
@@ -922,6 +926,13 @@ export default function OnlineClassesAdmin() {
   useEffect(() => {
     fetchClasses(page);
   }, [page]);
+
+  useEffect(() => {
+    fetch("/api/courses?admin=1")
+      .then(r => r.json())
+      .then(d => { if (d.success) setAllCourses(d.courses || []); })
+      .catch(() => {});
+  }, []);
 
   /* ================= FORM CHANGE ================= */
   const handleChange = (e) => {
@@ -982,6 +993,7 @@ export default function OnlineClassesAdmin() {
       streamLink: item.streamLink,
       description: item.description,
       status: item.status,
+      course: item.course?._id || item.course || "",
     });
     setActiveTab("create");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1226,6 +1238,30 @@ export default function OnlineClassesAdmin() {
                     </div>
                   </div>
 
+                  <div className="oc-section-label">🔗 Course Link (Optional)</div>
+                  <div className="row g-3 mb-4">
+                    <div className="col-12">
+                      <label className="form-label fw-semibold">Link to Course</label>
+                      <select
+                        className="form-select oc-input"
+                        name="course"
+                        value={form.course}
+                        onChange={handleChange}
+                      >
+                        <option value="">— No course link (subject+batch based access) —</option>
+                        {allCourses.map(c => (
+                          <option key={c._id} value={c._id}>
+                            {c.title} ({c.subject} · {c.batch}) {c.isFree ? "· FREE" : `· ₹${c.price}`}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="form-text">
+                        If a course is selected, only students enrolled in that course can access this class.
+                        Otherwise, access is granted to all students enrolled in any {form.subject || "matching"} course.
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="oc-section-label">📝 Additional Info</div>
                   <div className="row g-3 mb-4">
                     <div className="col-md-6">
@@ -1331,9 +1367,9 @@ export default function OnlineClassesAdmin() {
                               <th>Teacher</th>
                               <th>Subject</th>
                               <th>Batch</th>
+                              <th>Linked Course</th>
                               <th>Date</th>
                               <th>Time</th>
-                              <th>Duration</th>
                               <th>Status</th>
                               <th className="text-end">Actions</th>
                             </tr>
@@ -1355,9 +1391,17 @@ export default function OnlineClassesAdmin() {
                                 <td>
                                   <span className="oc-batch-tag">{item.batch}</span>
                                 </td>
+                                <td>
+                                  {item.course ? (
+                                    <span style={{fontSize:11,background:"#ede9ff",color:"#6c47d4",borderRadius:4,padding:"2px 6px",fontWeight:600}}>
+                                      {item.course.title || "Linked"}
+                                    </span>
+                                  ) : (
+                                    <span style={{color:"#9ca3af",fontSize:11}}>—</span>
+                                  )}
+                                </td>
                                 <td>{item.date}</td>
                                 <td>{item.time}</td>
-                                <td>{item.duration || "—"}</td>
                                 <td>
                                   <StatusBadge status={item.status} />
                                 </td>

@@ -79,7 +79,6 @@ export default async function handler(req, res) {
       // Serve from in-process cache if fresh (avoids repeated slow MongoDB queries)
       const now = Date.now();
       if (!_courseCache || now - _courseCacheAt > CACHE_TTL_MS) {
-        // Exclude heavy fields that bloat the response
         const raw = await Course.find({ status: "published" })
           .sort({ createdAt: -1 })
           .select("-chapters.lessons.youtubeLink -chapters.lessons.videoUrl -chapters.lessons.bunnyVideoId -chapters.lessons.notes -materials")
@@ -88,7 +87,30 @@ export default async function handler(req, res) {
         _courseCacheAt = now;
       }
 
-      // Also set CDN-level cache for Vercel / proxies
+      // Overlay enrollment status per student
+      const studentId = getStudentId(req);
+      if (studentId) {
+        const enrollments = await Enrollment.find({ student: studentId, status: "active" })
+          .select("course").lean();
+
+        const enrolledIds = new Set(enrollments.map(e => String(e.course)));
+
+        // For bundle enrollments, also mark all includedCourses as enrolled
+        const bundleEnrolledIds = new Set();
+        for (const c of _courseCache) {
+          if (c.courseType === "bundle" && enrolledIds.has(String(c._id))) {
+            (c.includedCourses || []).forEach(id => bundleEnrolledIds.add(String(id)));
+          }
+        }
+
+        const courses = _courseCache.map(c => ({
+          ...c,
+          isEnrolled: enrolledIds.has(String(c._id)) || bundleEnrolledIds.has(String(c._id)),
+        }));
+
+        return res.status(200).json({ success: true, courses });
+      }
+
       res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=120");
       return res.status(200).json({ success: true, courses: _courseCache });
     } catch (err) {

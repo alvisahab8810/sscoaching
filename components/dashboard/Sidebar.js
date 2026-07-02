@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { FiClipboard } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
-import { MdHistory } from "react-icons/md";
+import { MdHistory, MdBarChart, MdNotifications } from "react-icons/md";
 
 const FEATURE_PATHS = {
   blogs: "/dashboard/admin/blogs",
@@ -19,6 +19,7 @@ const FEATURE_PATHS = {
   announcements: "/dashboard/admin/announcements",
   invoices: "/dashboard/admin/invoices",
   enrollments: "/dashboard/admin/enrollments",
+  analytics: "/dashboard/admin/analytics",
 };
 
 export default function Sidebar() {
@@ -132,6 +133,24 @@ export default function Sidebar() {
             <img className="dashboard-icon" src="/assets/icons/dashboard.svg" alt="" /> Dashboard
           </Link>
         </li>
+
+        {/* Analytics — super admin only */}
+        {isSuperAdmin && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/analytics" style={styles.navLink(pathname?.startsWith("/dashboard/admin/analytics"))}>
+              <MdBarChart style={{ marginRight: "8px" }} size={18} /> Analytics
+            </Link>
+          </li>
+        )}
+
+        {/* Push Notifications */}
+        {isSuperAdmin && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/notifications" style={styles.navLink(pathname?.startsWith("/dashboard/admin/notifications"))}>
+              <MdNotifications style={{ marginRight: "8px" }} size={18} /> Notifications
+            </Link>
+          </li>
+        )}
 
         {/* Blogs — super admin or sub-admin with blogs permission */}
         {canSee("blogs") && (

@@ -41,8 +41,23 @@ export default async function handler(req, res) {
       const studentId = getStudentId(req);
       let isEnrolled = false;
       if (studentId) {
+        // Direct enrollment check
         const enr = await Enrollment.findOne({ student: studentId, course: id, status: "active" });
         isEnrolled = !!enr;
+
+        // Bundle enrollment check — student may have bought a bundle that includes this course
+        if (!isEnrolled) {
+          const allEnrollments = await Enrollment.find({ student: studentId, status: "active" }).select("course").lean();
+          const enrolledCourseIds = allEnrollments.map(e => String(e.course));
+          if (enrolledCourseIds.length > 0) {
+            const bundleWithThisCourse = await Course.findOne({
+              _id: { $in: enrolledCourseIds },
+              courseType: "bundle",
+              includedCourses: id,
+            }).select("_id").lean();
+            isEnrolled = !!bundleWithThisCourse;
+          }
+        }
       }
       if (!isEnrolled) {
         return res.status(200).json({

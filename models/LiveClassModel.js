@@ -93,6 +93,13 @@ const LiveClassSchema = new mongoose.Schema(
       type: [NoteSchema],
       default: [],
     },
+
+    // Optional link to a Course document
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      default: null,
+    },
   },
   {
     timestamps: true,

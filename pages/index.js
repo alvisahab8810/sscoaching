@@ -38,6 +38,7 @@ const RecongnitionMobile = dynamic(
   () => import("@/components/home/RecognitionMobile"),
 );
 const GoogleReview = dynamic(() => import("@/components/home/GoogleReview"));
+const HomeCourses = dynamic(() => import("@/components/home/HomeCourses"), { ssr: false });
 const StepProcess = dynamic(() => import("@/components/home/StepProcess"));
 const LearnersNiosMobile = dynamic(
   () => import("@/components/home/LearnersNiosMobile"),
@@ -101,6 +102,7 @@ export default function Home() {
         <LearnersNiosMobile />
 
         <GoogleReview />
+        <HomeCourses />
         <StepProcess />
         {/* PROSPECTUS BANNER */}
         <section className="prospectus-area">

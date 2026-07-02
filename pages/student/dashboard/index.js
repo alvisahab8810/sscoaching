@@ -1969,34 +1969,98 @@ function CoursePlayer({ courseId, onBack }) {
   const [openChapters, setOpenChapters] = useState({});
   const [openSubjects, setOpenSubjects] = useState({});
   const [viewingMat, setViewingMat]     = useState(null); // { mat, secKey, subject }
-  const [mobileSidebar, setMobileSidebar] = useState(false); // mobile bottom drawer
+  const [mobileSidebar, setMobileSidebar] = useState(false);
+  const [linkedClasses, setLinkedClasses] = useState([]);
+  const [showLinkedClasses, setShowLinkedClasses] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState(new Set());
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("studentToken");
-        const res   = await fetch(`/api/courses/${courseId}`, { headers:{ Authorization:`Bearer ${token}` } });
-        const data  = await res.json();
+        const [courseRes, progressRes] = await Promise.all([
+          fetch(`/api/courses/${courseId}`, { headers:{ Authorization:`Bearer ${token}` } }),
+          fetch(`/api/courses/${courseId}/progress`, { headers:{ Authorization:`Bearer ${token}` } }),
+        ]);
+        const data  = await courseRes.json();
+        const pData = await progressRes.json().catch(() => ({}));
+
+        if (pData.success) setCompletedLessons(new Set(pData.completedLessons || []));
+
         if (data.success) {
           setCourse(data.course);
           if (data.course.courseType === "bundle") {
-            // Open first subject by default
             setOpenSubjects({ 0: true });
           } else if (data.course.chapters?.length > 0) {
-            setOpenChapters({ 0: true });
-            const fl = data.course.chapters[0]?.lessons?.[0];
-            if (fl) setActiveLesson({ chapterIdx:0, lessonIdx:0, lesson:fl });
+            // Auto-resume to last watched lesson
+            let resumed = false;
+            if (pData.lastLessonId) {
+              for (let ci = 0; ci < data.course.chapters.length; ci++) {
+                const ch = data.course.chapters[ci];
+                for (let li = 0; li < ch.lessons.length; li++) {
+                  if (String(ch.lessons[li]._id) === pData.lastLessonId) {
+                    setOpenChapters({ [ci]: true });
+                    setActiveLesson({ chapterIdx: ci, lessonIdx: li, lesson: ch.lessons[li] });
+                    resumed = true;
+                    break;
+                  }
+                }
+                if (resumed) break;
+              }
+            }
+            if (!resumed) {
+              setOpenChapters({ 0: true });
+              const fl = data.course.chapters[0]?.lessons?.[0];
+              if (fl) setActiveLesson({ chapterIdx:0, lessonIdx:0, lesson:fl });
+            }
           }
         }
       } catch {}
       setLoading(false);
     };
     load();
+    // Fetch linked online classes
+    const token = localStorage.getItem("studentToken");
+    fetch(`/api/onlineClasses?course=${courseId}&limit=50`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+      .then(r => r.json())
+      .then(d => { if (d.success) setLinkedClasses(d.data || []); })
+      .catch(() => {});
   }, [courseId]);
 
   const toggleChapter = (idx) => setOpenChapters(prev => ({ ...prev, [idx]: !prev[idx] }));
   const toggleSubject = (idx) => setOpenSubjects(prev => ({ ...prev, [idx]: !prev[idx] }));
+
+  const savePosition = (les, ci, li) => {
+    const token = localStorage.getItem("studentToken");
+    if (!token || !les?._id) return;
+    fetch(`/api/courses/${courseId}/progress`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ lessonId: les._id, chapterIdx: ci, lessonIdx: li, action: "position" }),
+    }).catch(() => {});
+  };
+
+  const toggleComplete = (lessonId) => {
+    const done = completedLessons.has(String(lessonId));
+    setCompletedLessons(prev => {
+      const next = new Set(prev);
+      done ? next.delete(String(lessonId)) : next.add(String(lessonId));
+      return next;
+    });
+    const token = localStorage.getItem("studentToken");
+    fetch(`/api/courses/${courseId}/progress`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        lessonId, action: done ? "uncomplete" : "complete",
+        chapterIdx: activeLesson?.chapterIdx ?? 0,
+        lessonIdx:  activeLesson?.lessonIdx  ?? 0,
+      }),
+    }).catch(() => {});
+  };
 
   const getYoutubeId = (url) => {
     if (!url) return null;
@@ -2072,9 +2136,89 @@ function CoursePlayer({ courseId, onBack }) {
                 <span>•</span><span>{course.chapters?.length||0} Chapters</span>
                 <span>•</span><span>{totalLessons} Topics</span></>
               )}
+            {!isBundle && totalLessons > 0 && (
+              <div style={{display:"flex",alignItems:"center",gap:8,marginTop:5,width:"100%"}}>
+                <div style={{flex:1,height:4,background:"rgba(255,255,255,0.18)",borderRadius:2,overflow:"hidden",maxWidth:200}}>
+                  <div style={{height:"100%",borderRadius:2,transition:"width 0.35s ease",
+                    background: completedLessons.size === totalLessons ? "#10b981" : "#a78bfa",
+                    width:`${Math.round(completedLessons.size/totalLessons*100)}%`}}/>
+                </div>
+                <span style={{fontSize:11,color:"rgba(255,255,255,0.75)",fontWeight:700,whiteSpace:"nowrap"}}>
+                  {completedLessons.size}/{totalLessons} done
+                  {completedLessons.size === totalLessons && " 🎉"}
+                </span>
+              </div>
+            )}
             </div>
           </div>
+          {linkedClasses.length > 0 && (
+            <button
+              onClick={() => setShowLinkedClasses(v => !v)}
+              style={{
+                display:"flex",alignItems:"center",gap:6,
+                background:showLinkedClasses?"#6c47d4":"rgba(108,71,212,0.12)",
+                color:showLinkedClasses?"white":"#6c47d4",
+                border:"1.5px solid #6c47d4",borderRadius:8,
+                padding:"6px 14px",fontWeight:700,fontSize:12,
+                cursor:"pointer",flexShrink:0,whiteSpace:"nowrap",
+              }}
+            >
+              📡 Live Classes
+              {linkedClasses.filter(c=>c.status==="live").length > 0 && (
+                <span style={{background:"#ef4444",color:"white",borderRadius:20,fontSize:10,padding:"1px 6px",fontWeight:800}}>
+                  {linkedClasses.filter(c=>c.status==="live").length} LIVE
+                </span>
+              )}
+              {linkedClasses.filter(c=>c.status==="live").length === 0 && (
+                <span style={{background:showLinkedClasses?"rgba(255,255,255,0.25)":"#ede9ff",color:showLinkedClasses?"white":"#6c47d4",borderRadius:20,fontSize:10,padding:"1px 6px",fontWeight:800}}>
+                  {linkedClasses.length}
+                </span>
+              )}
+            </button>
+          )}
         </div>
+
+        {/* Linked online classes panel */}
+        {showLinkedClasses && linkedClasses.length > 0 && (
+          <div style={{background:"#f8f7ff",borderBottom:"2px solid #e8e0ff",padding:"16px 20px"}}>
+            <div style={{fontWeight:700,fontSize:14,color:"#4c1d95",marginBottom:12}}>
+              📡 Online Classes for this Course
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:10}}>
+              {linkedClasses.map(cls => {
+                const statusColor = {live:"#ef4444",upcoming:"#f59e0b",completed:"#10b981"}[cls.status]||"#9ca3af";
+                const isLive = cls.status === "live";
+                return (
+                  <div key={cls._id} style={{background:"white",border:`2px solid ${isLive?"#ef4444":"#e5e7eb"}`,borderRadius:10,padding:"12px 16px",minWidth:200,maxWidth:280,flex:"1 1 200px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+                      <span style={{width:8,height:8,borderRadius:"50%",background:statusColor,flexShrink:0}}/>
+                      <span style={{fontSize:10,fontWeight:800,color:statusColor,textTransform:"uppercase",letterSpacing:0.5}}>{cls.status}</span>
+                    </div>
+                    <div style={{fontWeight:700,fontSize:13,color:"#1e293b",marginBottom:4,lineHeight:1.3}}>{cls.title}</div>
+                    <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>
+                      {cls.teacher} · {cls.date} {cls.time ? `· ${cls.time}` : ""}
+                    </div>
+                    {isLive && cls.isUnlocked && cls.streamLink && (
+                      <a href={cls.streamLink} target="_blank" rel="noopener noreferrer"
+                        style={{display:"inline-flex",alignItems:"center",gap:4,background:"#ef4444",color:"white",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,textDecoration:"none"}}>
+                        ◉ Watch Live
+                      </a>
+                    )}
+                    {cls.status === "upcoming" && (
+                      <div style={{fontSize:11,color:"#f59e0b",fontWeight:600}}>🕐 Upcoming</div>
+                    )}
+                    {cls.status === "completed" && cls.isUnlocked && cls.streamLink && (
+                      <a href={cls.streamLink} target="_blank" rel="noopener noreferrer"
+                        style={{display:"inline-flex",alignItems:"center",gap:4,background:"#6c47d4",color:"white",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,textDecoration:"none"}}>
+                        ▶ Watch Recording
+                      </a>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="scp-body">
           {/* ── MAIN AREA ── */}
@@ -2088,7 +2232,7 @@ function CoursePlayer({ courseId, onBack }) {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen className="scp-iframe" title={lesson.title}/>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
                   </>
                 )}
                 {lesson && lesson.videoType==="custom" && lesson.videoUrl && !ytId && (
@@ -2098,13 +2242,13 @@ function CoursePlayer({ courseId, onBack }) {
                         <source src={lesson.videoUrl}/>
                       </video>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
                   </>
                 )}
                 {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
                   <>
                     <div className="scp-video-wrap"><BunnyPlayer src={lesson.videoUrl}/></div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
                   </>
                 )}
                 {lesson && !lessonHasVideo(lesson) && lessonHasNotes(lesson) && (
@@ -2114,7 +2258,7 @@ function CoursePlayer({ courseId, onBack }) {
                       <div style={{fontSize:"1.15rem",fontWeight:700,marginBottom:6}}>{lesson.title}</div>
                       <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.48)"}}>Study materials — no video</div>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
                   </>
                 )}
                 {lesson && !lessonHasVideo(lesson) && !lessonHasNotes(lesson) && (
@@ -2187,21 +2331,26 @@ function CoursePlayer({ courseId, onBack }) {
                 {/* Subject course materials */}
                 {(() => {
                   const allMats = MAT_SECTIONS.flatMap(s =>
-                    (course.materials?.[s.key]||[]).map(m => ({...m, secKey:s.key, icon:s.icon, label:s.label}))
+                    (course.materials?.[s.key]||[]).map(m => ({...m, secKey:s.key, Icon:s.Icon, label:s.label}))
                   );
                   if (!allMats.length) return null;
                   return (
                     <div className="scp-materials-section">
                       <div className="scp-materials-title">📁 Study Materials</div>
                       <div className="scp-materials-list">
-                        {allMats.map(mat => (
-                          <button key={mat._id} className="scp-material-link" onClick={() => openViewer(mat, mat.secKey, null)}
-                            style={{width:"100%",textAlign:"left",cursor:"pointer",border:"none",background:"white"}}>
-                            <span className="scp-material-icon">{mat.icon}</span>
-                            <span className="scp-material-name">{mat.title}</span>
-                            <span className="scp-material-open">View</span>
-                          </button>
-                        ))}
+                        {allMats.map(mat => {
+                          const MatIcon = mat.Icon;
+                          return (
+                            <button key={mat._id} className="scp-material-link" onClick={() => openViewer(mat, mat.secKey, null)}
+                              style={{width:"100%",textAlign:"left",cursor:"pointer",border:"none",background:"white"}}>
+                              <span className="scp-material-icon">
+                                {MatIcon ? <MatIcon size={14} color={mat.color||"#6c47d4"}/> : "📁"}
+                              </span>
+                              <span className="scp-material-name">{mat.title}</span>
+                              <span className="scp-material-open">View</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -2216,7 +2365,14 @@ function CoursePlayer({ courseId, onBack }) {
                           <span className="scp-chapter-title">{chapter.title}</span>
                         </div>
                         <div className="scp-chapter-right">
-                          <span className="scp-chapter-count">{chapter.lessons.length} topics</span>
+                          {(() => {
+                            const done = chapter.lessons.filter(l => completedLessons.has(String(l._id))).length;
+                            return (
+                              <span className="scp-chapter-count" style={done===chapter.lessons.length&&chapter.lessons.length>0?{color:"#10b981",fontWeight:700}:{}}>
+                                {done > 0 ? `${done}/${chapter.lessons.length}` : `${chapter.lessons.length} topics`}
+                              </span>
+                            );
+                          })()}
                           {isOpen?<MdExpandLess size={18}/>:<MdExpandMore size={18}/>}
                         </div>
                       </button>
@@ -2224,20 +2380,23 @@ function CoursePlayer({ courseId, onBack }) {
                         <div className="scp-lessons">
                           {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No topics yet</div>}
                           {chapter.lessons.map((les, li) => {
-                            const isActive = activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
-                            const canOpen  = lessonAccessible(les);
-                            const hasNotes = lessonHasNotes(les);
+                            const isActive  = activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
+                            const canOpen   = lessonAccessible(les);
+                            const hasNotes  = lessonHasNotes(les);
+                            const isDone    = completedLessons.has(String(les._id));
                             return (
                               <button key={les._id||li}
                                 className={`scp-lesson ${isActive?"scp-lesson-active":""} ${!canOpen?"scp-lesson-locked":""}`}
-                                onClick={() => { if (canOpen) setActiveLesson({ chapterIdx:ci, lessonIdx:li, lesson:les }); }}
+                                onClick={() => { if (canOpen) { setActiveLesson({ chapterIdx:ci, lessonIdx:li, lesson:les }); savePosition(les,ci,li); } }}
                                 disabled={!canOpen}>
                                 <div className="scp-lesson-left">
-                                  {les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
+                                  {isDone
+                                    ? <MdCheckCircle size={15} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
+                                    : les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
                                     : les.videoType==="custom"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#6c47d4"} style={{flexShrink:0}}/>
                                     : hasNotes ? <MdAttachFile size={15} color={isActive?"#fff":"#f59e0b"} style={{flexShrink:0}}/>
                                     : <MdLock size={13} className="scp-lock-icon" style={{flexShrink:0}}/>}
-                                  <span className="scp-lesson-name">{les.title}</span>
+                                  <span className="scp-lesson-name" style={isDone&&!isActive?{color:"#10b981"}:{}}>{les.title}</span>
                                 </div>
                                 <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
                                   {hasNotes && <span className="scp-notes-badge">📎{les.notes.length}</span>}
@@ -2336,15 +2495,31 @@ function CoursePlayer({ courseId, onBack }) {
   );
 }
 
-function LessonInfoPanel({ lesson, course, activeLesson }) {
+function LessonInfoPanel({ lesson, course, activeLesson, isCompleted, onToggleComplete }) {
   return (
     <div className="scp-lesson-info">
       <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
         <div className="scp-lesson-title">{lesson.title}</div>
-        <div style={{display:"flex",gap:6,flexShrink:0,flexWrap:"wrap"}}>
+        <div style={{display:"flex",gap:6,flexShrink:0,flexWrap:"wrap",alignItems:"center"}}>
           {lesson.videoType==="youtube" && <span style={{fontSize:"0.7rem",background:"#fee2e2",color:"#ef4444",padding:"2px 9px",borderRadius:"100px",fontWeight:700,display:"flex",alignItems:"center",gap:4}}><FaYoutube size={11}/> YouTube</span>}
           {lesson.videoType==="custom"  && <span style={{fontSize:"0.7rem",background:"#ede9fe",color:"#6c47d4",padding:"2px 9px",borderRadius:"100px",fontWeight:700,display:"flex",alignItems:"center",gap:4}}><FaVideo size={10}/> Video</span>}
           {lesson.duration && <span style={{fontSize:"0.7rem",background:"#f3f4f6",color:"#374151",padding:"2px 9px",borderRadius:"100px",fontWeight:600,display:"flex",alignItems:"center",gap:4}}><MdTimelapse size={12}/> {lesson.duration}</span>}
+          {onToggleComplete && (
+            <button
+              onClick={() => onToggleComplete(lesson._id)}
+              style={{
+                display:"flex",alignItems:"center",gap:5,
+                background: isCompleted ? "#d1fae5" : "#f3f4f6",
+                color:      isCompleted ? "#065f46" : "#374151",
+                border:     isCompleted ? "1.5px solid #10b981" : "1.5px solid #d1d5db",
+                borderRadius:"100px",padding:"4px 12px",fontSize:"0.72rem",fontWeight:700,
+                cursor:"pointer",transition:"all 0.2s",
+              }}
+            >
+              <MdCheckCircle size={14} color={isCompleted?"#10b981":"#9ca3af"}/>
+              {isCompleted ? "Completed" : "Mark Done"}
+            </button>
+          )}
         </div>
       </div>
       {activeLesson && (
@@ -2699,7 +2874,112 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
 /* ════════════════════════════════════════
    SECURE YOUTUBE PLAYER
 ════════════════════════════════════════ */
-function SecureYouTubePlayer({ videoId, isLive = false }) {
+/* In-app live chat panel — replaces YouTube Live Chat iframe */
+function LiveChatPanel({ classId }) {
+  const [messages, setMessages] = useState([]);
+  const [text, setText]         = useState("");
+  const [sending, setSending]   = useState(false);
+  const [error, setError]       = useState("");
+  const bottomRef               = useRef(null);
+
+  const token = typeof window !== "undefined" ? localStorage.getItem("studentToken") : null;
+
+  const fetchMessages = async () => {
+    if (!classId || !token) return;
+    try {
+      const res = await fetch(`/api/onlineClasses/${classId}/chat`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success) setMessages(data.messages || []);
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+    return () => clearInterval(interval);
+  }, [classId]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = async () => {
+    if (!text.trim() || !token) return;
+    setSending(true); setError("");
+    try {
+      const res = await fetch(`/api/onlineClasses/${classId}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ message: text.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) { setText(""); fetchMessages(); }
+      else setError(data.message || "Failed to send");
+    } catch { setError("Network error"); }
+    setSending(false);
+  };
+
+  const onKey = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
+
+  const timeStr = (iso) => {
+    try { const d = new Date(iso); return `${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`; }
+    catch { return ""; }
+  };
+
+  return (
+    <div style={{background:"#0f0f1e",borderTop:"1px solid rgba(255,255,255,0.06)",display:"flex",flexDirection:"column",height:340}}>
+      {/* Header */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px 6px",borderBottom:"1px solid rgba(255,255,255,0.06)",flexShrink:0}}>
+        <span style={{color:"#a78bfa",fontSize:12,fontWeight:700,display:"flex",alignItems:"center",gap:5}}>
+          <span style={{width:6,height:6,background:"#10b981",borderRadius:"50%",display:"inline-block"}}/>
+          Live Chat
+        </span>
+        <span style={{color:"#4b5563",fontSize:10}}>{messages.length} messages</span>
+      </div>
+      {/* Messages */}
+      <div style={{flex:1,overflowY:"auto",padding:"10px 14px",display:"flex",flexDirection:"column",gap:6}}>
+        {messages.length === 0 && (
+          <div style={{color:"#4b5563",fontSize:12,textAlign:"center",marginTop:20}}>No messages yet. Start the conversation!</div>
+        )}
+        {messages.map((m, i) => (
+          <div key={m._id || i} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+            <div style={{width:24,height:24,borderRadius:"50%",background:"#6c47d4",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"white",fontWeight:700,flexShrink:0}}>
+              {(m.senderName||"S")[0].toUpperCase()}
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
+                <span style={{color:"#a78bfa",fontSize:11,fontWeight:700}}>{m.senderName}</span>
+                <span style={{color:"#374151",fontSize:10}}>{timeStr(m.createdAt)}</span>
+              </div>
+              <div style={{color:"#d1d5db",fontSize:12,lineHeight:1.4,wordBreak:"break-word"}}>{m.message}</div>
+            </div>
+          </div>
+        ))}
+        <div ref={bottomRef}/>
+      </div>
+      {/* Input */}
+      {error && <div style={{padding:"4px 14px",color:"#ef4444",fontSize:11}}>{error}</div>}
+      <div style={{display:"flex",gap:6,padding:"8px 10px",borderTop:"1px solid rgba(255,255,255,0.06)",flexShrink:0}}>
+        <input
+          value={text} onChange={e=>setText(e.target.value)} onKeyDown={onKey}
+          placeholder="Type a message..."
+          maxLength={500}
+          style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:6,padding:"6px 10px",color:"#e2e8f0",fontSize:12,outline:"none"}}
+        />
+        <button
+          onClick={sendMessage} disabled={sending || !text.trim()}
+          style={{background:sending||!text.trim()?"#2d2d4e":"#6c47d4",color:"white",border:"none",borderRadius:6,padding:"6px 12px",fontSize:12,fontWeight:700,cursor:sending||!text.trim()?"not-allowed":"pointer",flexShrink:0}}
+        >
+          {sending ? "..." : "Send"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SecureYouTubePlayer({ videoId, isLive = false, classId = null }) {
   const divId     = useRef(`syp-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -2868,23 +3148,8 @@ function SecureYouTubePlayer({ videoId, isLive = false }) {
         </button>
       </div>
 
-      {/* YouTube Live Chat panel */}
-      {isLive && showChat && (
-        <div style={{background:"#0f0f1e",borderTop:"1px solid rgba(255,255,255,0.06)"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px 6px"}}>
-            <span style={{color:"#a78bfa",fontSize:12,fontWeight:700,display:"flex",alignItems:"center",gap:5}}>
-              <span style={{width:6,height:6,background:"#10b981",borderRadius:"50%",display:"inline-block"}}/>
-              Live Chat
-            </span>
-            <span style={{color:"#4b5563",fontSize:10}}>Sign in with Google to chat</span>
-          </div>
-          <iframe
-            src={`https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${typeof window !== "undefined" ? window.location.hostname : "sscoaching.in"}`}
-            style={{width:"100%",height:320,border:"none",display:"block"}}
-            allow="microphone; camera"
-          />
-        </div>
-      )}
+      {/* In-app Live Chat panel */}
+      {isLive && showChat && classId && <LiveChatPanel classId={classId} />}
 
       <style>{`
         @keyframes spin  { to { transform:rotate(360deg); } }
@@ -2993,7 +3258,7 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
     return (
       <div className="sdc-card">
         {watching && ytId ? (
-          <SecureYouTubePlayer videoId={ytId} isLive={true} />
+          <SecureYouTubePlayer videoId={ytId} isLive={true} classId={cls._id} />
         ) : thumb}
         <div className="sdc-card-body">
           {meta}

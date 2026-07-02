@@ -66,6 +66,11 @@ const StudentUserSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    expoPushToken: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
