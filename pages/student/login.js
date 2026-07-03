@@ -68,7 +68,7 @@ export default function StudentLogin() {
   const [mode, setMode] = useState("login"); // "login" | "register"
 
   /* ── LOGIN state ── */
-  const [loginEmail, setLoginEmail] = useState("");
+  const [loginEmail, setLoginEmail] = useState(""); // holds email OR phone
   const [loginPass, setLoginPass]   = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -208,10 +208,10 @@ export default function StudentLogin() {
                 </div>
                 <form onSubmit={handleLogin}>
                   <div className="sl-field">
-                    <label className="sl-label">Email Address</label>
+                    <label className="sl-label">Email or Phone</label>
                     <div className="sl-iw">
                       <MdEmail className="sl-ii" size={16}/>
-                      <input type="email" className="sl-input" placeholder="you@email.com"
+                      <input type="text" className="sl-input" placeholder="Email or 10-digit phone"
                         value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required autoFocus/>
                     </div>
                   </div>

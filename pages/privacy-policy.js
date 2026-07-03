@@ -210,7 +210,34 @@ export default function PrivacyPolicyPage() {
               and we will make reasonable efforts to respond in a timely manner.
             </p>
 
-            <h3>11. Third-Party Links</h3>
+            <h3>11. Mobile Application &amp; Push Notifications</h3>
+
+            <p>
+              SS Coaching provides a mobile application for Android devices. When you use
+              the mobile app, we may collect device identifiers and push notification tokens
+              to deliver course updates, live class alerts, and important notifications.
+            </p>
+            <p>
+              You can disable push notifications at any time through your device settings or
+              within the app. To delete your account, go to <strong>Profile → Delete Account</strong>
+              inside the app, or email us at sscoachinglko@gmail.com.
+            </p>
+
+            <h3>12. Account Deletion</h3>
+
+            <p>
+              You have the right to delete your SS Coaching account at any time:
+            </p>
+            <ul>
+              <li><strong>Mobile App:</strong> Profile → Delete Account</li>
+              <li><strong>Email:</strong> sscoachinglko@gmail.com</li>
+            </ul>
+            <p>
+              Upon deletion, your personal data will be anonymised and course access revoked.
+              Enrollment and financial records may be retained for up to 7 years for legal compliance.
+            </p>
+
+            <h3>13. Third-Party Links</h3>
 
             <p>
               Our website may contain links to third-party websites for your

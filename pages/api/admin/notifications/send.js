@@ -19,6 +19,7 @@ export default async function handler(req, res) {
   if (!verifyAdmin(req)) return res.status(401).json({ success: false, message: "Unauthorized" });
 
   const { title, body, data = {}, target = "all", studentIds = [] } = req.body || {};
+  const notifData = { screen: 'Notifications', ...data };
 
   if (!title || !body)
     return res.status(400).json({ success: false, message: "Title and body are required" });
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
 
   for (let i = 0; i < tokens.length; i += BATCH) {
     const batch = tokens.slice(i, i + BATCH).map(to => ({
-      to, title, body, data,
+      to, title, body, data: notifData,
       sound: "default",
       priority: "high",
       channelId: "default",

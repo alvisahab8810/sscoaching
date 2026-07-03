@@ -9,10 +9,17 @@ export default async function handler(req, res) {
 
   const { email, password } = req.body;
   if (!email || !password)
-    return res.status(400).json({ success: false, message: "Email and password required" });
+    return res.status(400).json({ success: false, message: "Email/phone and password required" });
+
+  // Support login by email OR phone
+  const identifier = email.trim();
+  const isPhone = /^\d{10}$/.test(identifier.replace(/\D/g, "")) && !identifier.includes("@");
 
   try {
-    const student = await StudentUser.findOne({ email: email.toLowerCase().trim() }).select("+password");
+    const query = isPhone
+      ? { phone: identifier.replace(/\D/g, "") }
+      : { email: identifier.toLowerCase() };
+    const student = await StudentUser.findOne(query).select("+password");
     if (!student || !student.password)
       return res.status(401).json({ success: false, message: "Invalid credentials" });
 
