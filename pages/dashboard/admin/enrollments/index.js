@@ -11,7 +11,7 @@ import {
   MdCheckCircle, MdSchool, MdPayment, MdPhone, MdEmail,
   MdCalendarToday, MdArrowBack, MdOpenInNew, MdReceipt,
   MdLocalOffer, MdPerson, MdExpandMore, MdExpandLess,
-  MdMonetizationOn, MdFreeBreakfast,
+  MdMonetizationOn, MdFreeBreakfast, MdDesktopMac, MdPhoneAndroid,
 } from "react-icons/md";
 import { FaRupeeSign, FaGraduationCap } from "react-icons/fa";
 import { BsCollection, BsPersonCheck } from "react-icons/bs";
@@ -58,6 +58,9 @@ export default function AdminEnrollmentsPage({ admin }) {
   const [loading, setLoading]         = useState(true);
   const [pagination, setPagination]   = useState({ page:1, totalPages:1, total:0 });
 
+  /* source tab */
+  const [sourceTab, setSourceTab] = useState("all"); // "all" | "web" | "app"
+
   /* filters */
   const [search, setSearch]     = useState("");
   const [type, setType]         = useState("all");
@@ -75,7 +78,8 @@ export default function AdminEnrollmentsPage({ admin }) {
     try {
       const params = new URLSearchParams({
         page, limit: 20, sort,
-        ...(type !== "all" && { type }),
+        ...(type !== "all"      && { type }),
+        ...(sourceTab !== "all" && { source: sourceTab }),
         ...(search   && { search }),
         ...(fromDate && { from: fromDate }),
         ...(toDate   && { to: toDate }),
@@ -90,7 +94,7 @@ export default function AdminEnrollmentsPage({ admin }) {
       }
     } catch (e) { console.error(e); }
     setLoading(false);
-  }, [type, search, fromDate, toDate, sort]);
+  }, [type, search, fromDate, toDate, sort, sourceTab]);
 
   useEffect(() => { fetchEnrollments(1); }, [fetchEnrollments]);
 
@@ -99,15 +103,17 @@ export default function AdminEnrollmentsPage({ admin }) {
   };
   const hasFilters = search || type !== "all" || fromDate || toDate || sort !== "newest";
 
+  const switchTab = (tab) => { setSourceTab(tab); };
+
   const openDetail = (enr) => { setSelected(enr); setDetailOpen(true); };
 
   /* ── stat cards ── */
   const statCards = [
     { label:"Total Enrollments", value: stats.total || 0,         color:"#6c47d4", icon:<BsPersonCheck size={22}/> },
-    { label:"Free Enrollments",  value: stats.freeCount || 0,     color:"#10b981", icon:<MdFreeBreakfast size={22}/> },
-    { label:"COD Enrollments",   value: stats.codCount || 0,      color:"#f59e0b", icon:<MdPayment size={22}/> },
+    { label:"Desktop Enrollments", value: stats.webCount ?? (stats.total || 0), color:"#0ea5e9", icon:<MdDesktopMac size={22}/> },
+    { label:"App Enrollments",   value: stats.appCount || 0,      color:"#10b981", icon:<MdPhoneAndroid size={22}/> },
+    { label:"Total Revenue",     value: fmt(stats.totalRevenue),  color:"#f59e0b", icon:<MdMonetizationOn size={22}/> },
     { label:"Online Paid",       value: stats.paidCount || 0,     color:"#6c47d4", icon:<FaRupeeSign size={18}/> },
-    { label:"Total Revenue",     value: fmt(stats.totalRevenue),  color:"#0ea5e9", icon:<MdMonetizationOn size={22}/> },
   ];
 
   return (
@@ -145,6 +151,31 @@ export default function AdminEnrollmentsPage({ admin }) {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* SOURCE TABS */}
+              <div className="en-source-tabs">
+                <button
+                  className={`en-source-tab${sourceTab === "all" ? " active" : ""}`}
+                  onClick={() => switchTab("all")}
+                >
+                  <MdPeople size={15}/> All Sources
+                  <span className="en-tab-count">{stats.total || 0}</span>
+                </button>
+                <button
+                  className={`en-source-tab${sourceTab === "web" ? " active web" : " web"}`}
+                  onClick={() => switchTab("web")}
+                >
+                  <MdDesktopMac size={15}/> Desktop
+                  <span className="en-tab-count web">{stats.webCount ?? "—"}</span>
+                </button>
+                <button
+                  className={`en-source-tab${sourceTab === "app" ? " active app" : " app"}`}
+                  onClick={() => switchTab("app")}
+                >
+                  <MdPhoneAndroid size={15}/> App
+                  <span className="en-tab-count app">{stats.appCount || 0}</span>
+                </button>
               </div>
 
               {/* TOP COURSES + FILTERS row */}
@@ -227,7 +258,9 @@ export default function AdminEnrollmentsPage({ admin }) {
               <div className="en-table-wrap">
                 <div className="en-table-header">
                   <div className="en-table-title">
-                    All Enrollments
+                    {sourceTab === "web" ? <><MdDesktopMac size={17}/> Desktop Enrollments</> :
+                     sourceTab === "app" ? <><MdPhoneAndroid size={17}/> App Enrollments</> :
+                     "All Enrollments"}
                     <span className="en-table-count">{pagination.total} total</span>
                   </div>
                 </div>
@@ -248,6 +281,7 @@ export default function AdminEnrollmentsPage({ admin }) {
                         <th>Student</th>
                         <th>Course</th>
                         <th>Type</th>
+                        <th>Source</th>
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Actions</th>
@@ -285,6 +319,13 @@ export default function AdminEnrollmentsPage({ admin }) {
                                 <span className="en-type-dot" style={{ background: tc.dot }}/>
                                 {tc.icon} {tc.label}
                               </span>
+                            </td>
+                            <td>
+                              {enr.source === "app" ? (
+                                <span className="en-source-badge app"><MdPhoneAndroid size={11}/> App</span>
+                              ) : (
+                                <span className="en-source-badge web"><MdDesktopMac size={11}/> Desktop</span>
+                              )}
                             </td>
                             <td>
                               {enr.amountPaid > 0 ? (
@@ -457,6 +498,15 @@ export default function AdminEnrollmentsPage({ admin }) {
                 <div className="en-ds-title">🕐 Timeline</div>
                 <div className="en-ds-row"><span>Enrolled At</span><span>{fmtDateTime(selected.createdAt)}</span></div>
                 <div className="en-ds-row"><span>Last Updated</span><span>{fmtDateTime(selected.updatedAt)}</span></div>
+                <div className="en-ds-row">
+                  <span>Source</span>
+                  <span>
+                    {selected.source === "app"
+                      ? <span style={{color:"#10b981",fontWeight:700}}><MdPhoneAndroid size={13}/> Mobile App</span>
+                      : <span style={{color:"#0ea5e9",fontWeight:700}}><MdDesktopMac size={13}/> Desktop / Web</span>
+                    }
+                  </span>
+                </div>
               </div>
 
             </div>
@@ -465,6 +515,23 @@ export default function AdminEnrollmentsPage({ admin }) {
       )}
 
       <style jsx>{`
+        /* Source tabs */
+        .en-source-tabs { display:flex; gap:8px; margin-bottom:20px; }
+        .en-source-tab { display:flex; align-items:center; gap:6px; padding:9px 18px; border:1.5px solid #dde0f8; border-radius:10px; background:#fff; font-size:0.82rem; font-weight:600; color:#6b7a99; cursor:pointer; transition:all 0.14s; }
+        .en-source-tab:hover { border-color:#6c47d4; color:#6c47d4; background:#fafbff; }
+        .en-source-tab.active { background:#6c47d4; border-color:#6c47d4; color:#fff; }
+        .en-source-tab.active .en-tab-count { background:rgba(255,255,255,0.25); color:#fff; }
+        .en-source-tab.active.web { background:#0ea5e9; border-color:#0ea5e9; }
+        .en-source-tab.active.app { background:#10b981; border-color:#10b981; }
+        .en-tab-count { font-size:0.7rem; font-weight:800; background:#ede9fe; color:#6c47d4; padding:1px 7px; border-radius:100px; margin-left:2px; }
+        .en-tab-count.web { background:#e0f2fe; color:#0284c7; }
+        .en-tab-count.app { background:#d1fae5; color:#065f46; }
+
+        /* Source badge in table */
+        .en-source-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:100px; font-size:0.68rem; font-weight:700; white-space:nowrap; }
+        .en-source-badge.web { background:#e0f2fe; color:#0284c7; }
+        .en-source-badge.app { background:#d1fae5; color:#065f46; }
+
         /* Page header */
         .en-page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
         .en-page-title  { font-size:1.25rem; font-weight:800; color:#0f1f3d; display:flex; align-items:center; gap:9px; margin:0 0 3px; }

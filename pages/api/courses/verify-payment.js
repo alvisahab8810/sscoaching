@@ -118,6 +118,8 @@ export default async function handler(req, res) {
     const course = await Course.findById(courseId).lean();
     if (!course) return res.status(404).json({ error: "Course not found" });
 
+    const source = req.headers["x-source"] === "app" ? "app" : "web";
+
     // ── 3. Create enrollment ──
     const enrollment = await Enrollment.create({
       student:    student.id,
@@ -128,6 +130,7 @@ export default async function handler(req, res) {
       amountPaid: Number(amount) || 0,
       couponCode: couponCode || "",
       discount:   Number(discount) || 0,
+      source,
     });
 
     // ── 4. Increment enrolled count ──

@@ -15,6 +15,7 @@ export default async function handler(req, res) {
       page   = 1,
       limit  = 20,
       type,
+      source,
       search,
       courseId,
       from,
@@ -25,6 +26,8 @@ export default async function handler(req, res) {
     /* ── Filter ── */
     const filter = {};
     if (type && type !== "all") filter.type = type;
+    if (source === "app") filter.source = "app";
+    else if (source === "web") filter.source = { $in: ["web", null] };
     if (courseId && mongoose.isValidObjectId(courseId))
       filter.course = courseId;
     if (from || to) {
@@ -70,6 +73,7 @@ export default async function handler(req, res) {
     const enrollments = paginated.map((e) => ({
       _id:          e._id,
       type:         e.type,
+      source:       e.source || "web",
       amountPaid:   e.amountPaid,
       couponCode:   e.couponCode,
       discount:     e.discount,
@@ -104,6 +108,8 @@ export default async function handler(req, res) {
           codCount:     { $sum: { $cond: [{ $eq: ["$type", "cod"]  }, 1, 0] } },
           paidCount:    { $sum: { $cond: [{ $eq: ["$type", "paid"] }, 1, 0] } },
           totalRevenue: { $sum: "$amountPaid" },
+          appCount:     { $sum: { $cond: [{ $eq: ["$source", "app"] }, 1, 0] } },
+          webCount:     { $sum: { $cond: [{ $ne: ["$source", "app"] }, 1, 0] } },
         },
       },
     ]);
@@ -138,7 +144,7 @@ export default async function handler(req, res) {
         limit:      Number(limit),
         totalPages: Math.ceil(total / Number(limit)),
       },
-      stats:      statsRaw[0] || { total:0, freeCount:0, codCount:0, paidCount:0, totalRevenue:0 },
+      stats:      statsRaw[0] || { total:0, freeCount:0, codCount:0, paidCount:0, totalRevenue:0, webCount:0, appCount:0 },
       topCourses,
     });
 

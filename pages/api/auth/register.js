@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       phone: phone || "",
       className: className || "",
       isProfileComplete: true,
+      signupSource: "web",
     });
 
     const token = jwt.sign(

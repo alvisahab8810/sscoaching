@@ -74,9 +74,11 @@ export default async function handler(req, res) {
       const existing = await Enrollment.findOne({ student: student.id, course: courseId });
       if (existing) return res.status(400).json({ error: "Already enrolled in this course" });
 
+      const source = req.headers["x-source"] === "app" ? "app" : "web";
+
       /* ── FREE COURSE — enroll directly ── */
       if (course.isFree) {
-        const enrollment = await Enrollment.create({ student: student.id, course: courseId, type: "free" });
+        const enrollment = await Enrollment.create({ student: student.id, course: courseId, type: "free", source });
         await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
         // Create invoice + send email (non-blocking)
         const studentDoc = await StudentUser.findById(student.id).select("name email phone").lean();
@@ -118,7 +120,7 @@ export default async function handler(req, res) {
         const enrollment = await Enrollment.create({
           student: student.id, course: courseId,
           type: "paid", amountPaid: 0,
-          couponCode: appliedCode, discount,
+          couponCode: appliedCode, discount, source,
         });
         await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
         if (appliedCode) await Coupon.findOneAndUpdate({ code: appliedCode }, { $inc: { usedCount: 1 } });

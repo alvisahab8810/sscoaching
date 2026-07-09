@@ -71,6 +71,17 @@ const StudentUserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    signupSource: {
+      type: String,
+      enum: ["web", "app"],
+      default: "web",
+    },
+
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

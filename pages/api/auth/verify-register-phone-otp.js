@@ -42,6 +42,8 @@ export default async function handler(req, res) {
 
     const { name, email, password, className } = record.pendingData;
 
+    const signupSource = req.headers["x-source"] === "app" ? "app" : "web";
+
     // Create student account
     let student;
     try {
@@ -52,6 +54,7 @@ export default async function handler(req, res) {
         phone: digits,
         className: className || "",
         isProfileComplete: true,
+        signupSource,
       });
     } catch (err) {
       if (err.code === 11000) {

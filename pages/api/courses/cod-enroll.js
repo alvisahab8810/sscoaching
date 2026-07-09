@@ -47,6 +47,8 @@ export default async function handler(req, res) {
     const existing = await Enrollment.findOne({ student: student.id, course: courseId });
     if (existing)  return res.status(400).json({ error: "Already enrolled in this course" });
 
+    const source = req.headers["x-source"] === "app" ? "app" : "web";
+
     // 3. Create enrollment
     const enrollment = await Enrollment.create({
       student:    student.id,
@@ -55,6 +57,7 @@ export default async function handler(req, res) {
       amountPaid: 0,
       couponCode: "",
       discount:   0,
+      source,
       deliveryInfo: { fullName, phone, email, address, city, state, pincode, notes },
     });
 

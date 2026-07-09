@@ -11,7 +11,7 @@ const EnrollmentSchema = new mongoose.Schema({
   couponCode:{ type: String, default: "" },
   discount:  { type: Number, default: 0 },
   status:    { type: String, enum: ["active", "expired", "refunded"], default: "active" },
-
+  source:    { type: String, enum: ["web", "app"], default: "web" },
 
   deliveryInfo: {
   fullName: String, phone: String, email: String,

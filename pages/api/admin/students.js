@@ -25,20 +25,23 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const {
-        page = 1, limit = 15, search = "",
-        className = "", batch = "",
+        page = 1, limit = 20, search = "",
+        className = "", batch = "", signupSource = "",
         sortBy = "createdAt", sortOrder = "desc",
       } = req.query;
 
       const filter = {};
       if (search) {
         filter.$or = [
-          { name: { $regex: search, $options: "i" } },
+          { name:  { $regex: search, $options: "i" } },
           { phone: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
         ];
       }
       if (className) filter.className = { $regex: `^${className}$`, $options: "i" };
       if (batch) filter.batch = { $regex: batch, $options: "i" };
+      if (signupSource === "app") filter.signupSource = "app";
+      else if (signupSource === "web") filter.signupSource = { $in: ["web", null] };
 
       const skip = (Number(page) - 1) * Number(limit);
       const sort = { [sortBy]: sortOrder === "desc" ? -1 : 1 };
@@ -48,16 +51,21 @@ export default async function handler(req, res) {
         StudentUser.countDocuments(filter),
       ]);
 
-      const [totalStudents, activeStudents, completeProfiles] = await Promise.all([
+      const [totalStudents, activeStudents, appStudents] = await Promise.all([
         StudentUser.countDocuments({}),
         StudentUser.countDocuments({ isActive: true }),
-        StudentUser.countDocuments({ isProfileComplete: true }),
+        StudentUser.countDocuments({ signupSource: "app" }),
       ]);
 
       return res.status(200).json({
         success: true,
         data: students,
-        stats: { total: totalStudents, active: activeStudents, profileComplete: completeProfiles },
+        stats: {
+          total: totalStudents,
+          active: activeStudents,
+          appCount: appStudents,
+          webCount: totalStudents - appStudents,
+        },
         pagination: { total, page: Number(page), limit: Number(limit), totalPages: Math.ceil(total / Number(limit)) },
       });
     } catch (error) {
