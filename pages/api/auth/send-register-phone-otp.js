@@ -8,10 +8,14 @@ import { sendOtpEmail } from "@/lib/sendOtpEmail";
 // import { sendSmsOtp } from "@/lib/msg91";
 
 export default async function handler(req, res) {
+  const origin = req.headers.origin || "no-origin";
+  console.log(`[SEND-OTP] ${req.method} from origin: ${origin}`);
+
   if (req.method !== "POST") return res.status(405).end();
   await dbConnect();
 
   const { name, email, password, phone, class: className } = req.body;
+  console.log(`[SEND-OTP] name: ${name}, email: ${email}, phone: ${phone}, class: ${className}`);
 
   if (!name || !phone || !password || !email)
     return res.status(400).json({ success: false, message: "Name, phone, email and password are required" });
@@ -65,8 +69,11 @@ export default async function handler(req, res) {
   });
 
   // Send OTP via email
+  console.log(`[SEND-OTP] Sending OTP to email: ${normalEmail}`);
   const result = await sendOtpEmail({ name: name.trim(), email: normalEmail, otp });
+  console.log(`[SEND-OTP] Email result:`, result);
   if (!result.success) {
+    console.error(`[SEND-OTP] Email failed:`, result.error);
     return res.status(500).json({ success: false, message: "Failed to send OTP email. Please try again." });
   }
 
