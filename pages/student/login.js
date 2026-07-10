@@ -278,11 +278,11 @@ export default function StudentLogin() {
                           </div>
                         </div>
                         <div className="sl-field">
-                          <label className="sl-label">Email</label>
+                          <label className="sl-label">Email <span className="sl-req">*</span></label>
                           <div className="sl-iw">
                             <MdEmail className="sl-ii" size={16}/>
-                            <input type="email" className="sl-input" placeholder="Optional"
-                              value={regEmail} onChange={e => setRegEmail(e.target.value)}/>
+                            <input type="email" className="sl-input" placeholder="you@example.com"
+                              value={regEmail} onChange={e => setRegEmail(e.target.value)} required/>
                           </div>
                         </div>
                       </div>
@@ -297,7 +297,7 @@ export default function StudentLogin() {
                       </div>
                       {regError && <div className="sl-err">{regError}</div>}
                       <button type="submit" className="sl-btn" disabled={regLoading}>
-                        {regLoading ? <span className="sl-spin"/> : "Send OTP to Phone →"}
+                        {regLoading ? <span className="sl-spin"/> : "Send OTP to Email →"}
                       </button>
                     </form>
                     <p className="sl-foot">Already registered? <button className="sl-link" onClick={() => switchMode("login")}>Login here</button></p>
@@ -308,11 +308,11 @@ export default function StudentLogin() {
                 {regStep === 2 && (
                   <>
                     <div className="sl-pane-head">
-                      <div className="sl-pane-emoji">📱</div>
-                      <div className="sl-pane-title">Verify Your Phone</div>
+                      <div className="sl-pane-emoji">📧</div>
+                      <div className="sl-pane-title">Verify Your Email</div>
                       <div className="sl-pane-sub">
                         OTP sent to<br/>
-                        <strong style={{ color: "#6c47d4" }}>+91 {regPhone}</strong>
+                        <strong style={{ color: "#6c47d4" }}>{regEmail}</strong>
                       </div>
                     </div>
                     <form onSubmit={handleVerifyOtp}>

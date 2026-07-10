@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-// Stores pending registration data while MSG91 manages the actual OTP
 const PhoneOTPSchema = new mongoose.Schema({
   phone:       { type: String, required: true, trim: true },
   purpose:     { type: String, default: "register" },
+  otp:         { type: String, default: "" },
   pendingData: { type: mongoose.Schema.Types.Mixed, default: null },
   expiresAt:   { type: Date, required: true },
   isUsed:      { type: Boolean, default: false },

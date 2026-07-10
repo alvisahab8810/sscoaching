@@ -102,7 +102,7 @@ export default function Home() {
         <LearnersNiosMobile />
 
         <GoogleReview />
-        {/* <HomeCourses /> */}
+        {/* <HomeCourses />  */}
         <StepProcess />
         {/* PROSPECTUS BANNER */}
         <section className="prospectus-area">

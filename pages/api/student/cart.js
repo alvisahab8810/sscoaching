@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
+import Course from "@/models/CourseModel";
 import jwt from "jsonwebtoken";
 
 function getStudentId(req) {
@@ -16,10 +17,36 @@ export default async function handler(req, res) {
   const studentId = getStudentId(req);
   if (!studentId) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-  // GET — return cart course IDs
+  // GET — return cart with full course data (not just IDs)
   if (req.method === "GET") {
     const student = await StudentUser.findById(studentId).select("cart").lean();
-    return res.status(200).json({ success: true, cart: student?.cart || [] });
+    const cartIds = (student?.cart || []).filter(Boolean);
+
+    if (cartIds.length === 0) {
+      return res.status(200).json({ success: true, cart: [] });
+    }
+
+    const courses = await Course.find({ _id: { $in: cartIds } })
+      .select("title subject price originalPrice featureImage batch")
+      .lean();
+
+    const courseMap = Object.fromEntries(courses.map(c => [c._id.toString(), c]));
+
+    // Preserve original cart order, skip any deleted courses
+    const cart = cartIds
+      .map(id => courseMap[id?.toString()])
+      .filter(Boolean)
+      .map(c => ({
+        _id:           c._id.toString(),
+        title:         c.title         || "",
+        subject:       c.subject       || "",
+        price:         c.price         || 0,
+        originalPrice: c.originalPrice || c.price || 0,
+        featureImage:  c.featureImage  || "",
+        batch:         c.batch         || "",
+      }));
+
+    return res.status(200).json({ success: true, cart });
   }
 
   // POST — add course to cart
@@ -34,7 +61,7 @@ export default async function handler(req, res) {
       student.cart = [...(student.cart || []), courseId];
       await student.save();
     }
-    return res.status(200).json({ success: true, cart: student.cart });
+    return res.status(200).json({ success: true });
   }
 
   // DELETE — remove course from cart (or clear all)
@@ -46,10 +73,10 @@ export default async function handler(req, res) {
     if (courseId) {
       student.cart = (student.cart || []).filter(id => id !== courseId);
     } else {
-      student.cart = []; // clear entire cart (after checkout)
+      student.cart = [];
     }
     await student.save();
-    return res.status(200).json({ success: true, cart: student.cart });
+    return res.status(200).json({ success: true });
   }
 
   return res.status(405).json({ success: false, message: "Method not allowed" });
