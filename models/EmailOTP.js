@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const EmailOTPSchema = new mongoose.Schema({
   email:       { type: String, required: true, lowercase: true, trim: true },
   otp:         { type: String, required: true },
-  purpose:     { type: String, enum: ["register", "reset"], default: "register" },
+  purpose:     { type: String, enum: ["register", "reset", "login"], default: "register" },
   pendingData: { type: mongoose.Schema.Types.Mixed, default: null },
   expiresAt:   { type: Date, required: true },
   attempts:    { type: Number, default: 0 },
