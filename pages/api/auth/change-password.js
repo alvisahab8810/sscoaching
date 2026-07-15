@@ -21,10 +21,17 @@ export default async function handler(req, res) {
     if (!student)
       return res.status(404).json({ success: false, message: "User not found" });
 
+    if (newPassword.length < 6)
+      return res.status(400).json({ success: false, message: "New password must be at least 6 characters" });
+
     if (student.password) {
       const match = await bcrypt.compare(currentPassword, student.password);
       if (!match)
         return res.status(400).json({ success: false, message: "Current password is incorrect" });
+
+      const sameAsOld = await bcrypt.compare(newPassword, student.password);
+      if (sameAsOld)
+        return res.status(400).json({ success: false, message: "New password cannot be the same as your current password" });
     }
 
     student.password = await bcrypt.hash(newPassword, 10);

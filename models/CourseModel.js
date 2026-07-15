@@ -26,6 +26,12 @@ const ChapterSchema = new mongoose.Schema({
   lessons: [LessonSchema],
 }, { _id: true });
 
+// Per-subject chapters for bundle courses
+const SubjectContentSchema = new mongoose.Schema({
+  subject:  { type: String, required: true },
+  chapters: [ChapterSchema],
+}, { _id: false });
+
 // Materials section — PDFs for books, TMA, assignments, notes, sample papers
 const MaterialsSchema = new mongoose.Schema({
   books:        { type: [FileSchema], default: [] },
@@ -54,9 +60,12 @@ const CourseSchema = new mongoose.Schema({
   materials:    { type: MaterialsSchema, default: () => ({}) },
 
   // Bundle-only fields
-  bundledSubjects:  { type: [String], default: [] },   // e.g. ["Hindi","English","Maths"]
-  includedCourses:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }], default: [] },
+  bundledSubjects:   { type: [String], default: [] },
+  includedCourses:   { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }], default: [] },
+  subjectContents:   { type: [SubjectContentSchema], default: [] }, // per-subject chapters & videos
 
 }, { timestamps: true });
 
-export default mongoose.models.Course || mongoose.model("Course", CourseSchema);
+// Force recompile when schema changes (handles Next.js HMR model caching)
+if (mongoose.models.Course) delete mongoose.models.Course;
+export default mongoose.model("Course", CourseSchema);

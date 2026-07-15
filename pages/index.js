@@ -72,8 +72,15 @@ export default function Home() {
           content="NIOS Admission, NIOS Online Registration 2025, NIOS Eligibility Criteria, NIOS Board, NIOS Streams, NIOS Entry Qualification, NIOS Exam Pattern, NIOS Syllabus, NIOS Coaching, NIOS Online Coaching Classes, SS Coaching NIOS Question Paper, NIOS Coaching Classes, NIOS Tuition Classes, NIOS Tuition, NIOS Private Tuition, SS Coaching Near Me, NIOS Tutor Near Me, NIOS Coaching Online, NIOS Coaching Center Near Me, NIOS Online Tuition, Coaching for NIOS Class 12, NIOS Coaching Centres Near Me, NIOS Coaching Institute, SSCoaching NIOS, NIOS Coaching Center, NIOS Question Paper, NIOS Online Coaching, NIOS Tuition Classes, NIOS Admission, NIOS Online Admission, NIOS Admission 2025, NIOS Admission Form, NIOS Admission 12th Class, 10th 12th NIOS Admission, NIOS Admission Status, NIOS Admission for 12th Class Last Date 2025, NIOS Admission 2025 Last Date, NIOS Admission Date, NIOS Class 12 Admission, NIOS Class 10 Admission, NIOS Apply Online, NIOS 12 Admission 2025, NIOS Online Form, Open 10th Class Admission, NIOS Graduation Admission 2025, NIOS New Admission 2025, NIOS Examination, NIOS Senior Secondary Admission, NIOS Admission in Lucknow, NIOS Admission Lucknow, NIOS Lucknow, NIOS Coaching in Lucknow, NIOS Coaching Lucknow, NIOS Center in Lucknow, NIOS Center Lucknow, NIOS Office in Lucknow, NIOS Office Lucknow, NIOS School in Lucknow, NIOS School Lucknow, Best NIOS Coaching in Lucknow, Best NIOS Coaching Lucknow, NIOS Lucknow Centre, NIOS Popular Coaching in Lucknow, NIOS Online Admission in Lucknow, NIOS Online Admission, NIOS, NIOS Lucknow"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://sscoaching.in/" />
+
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+        
       </Head>
 
       <section className="home-page-area">

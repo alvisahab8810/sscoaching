@@ -103,7 +103,24 @@ export default function StudentDashboard() {
     const token = localStorage.getItem("studentToken");
     const info  = localStorage.getItem("studentInfo");
     if (!token || !info) { router.push("/student/login"); return; }
-    setStudent(JSON.parse(info));
+
+    // Load cached data instantly (normalize class→className for Edit Profile form)
+    const cached = JSON.parse(info);
+    const normalizeStu = (s) => ({ ...s, className: s.className || s.class || "" });
+    setStudent(normalizeStu(cached));
+
+    // Fetch fresh from server so app edits reflect on web immediately
+    fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.user) {
+          const fresh = normalizeStu(d.user);
+          localStorage.setItem("studentInfo", JSON.stringify(fresh));
+          setStudent(fresh);
+        }
+      })
+      .catch(() => {});
+
     fetchClasses(token);
     fetchCourses(token);
     // Load wishlist + cart from DB
@@ -260,7 +277,10 @@ export default function StudentDashboard() {
           </div>
           <div className="sd-navbar-right">
             <div className="sd-user-pill">
-              <div className="sd-user-pill-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              {student.avatar
+                ? <img src={student.avatar} alt="avatar" style={{width:32,height:32,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(255,255,255,0.4)"}}/>
+                : <div className="sd-user-pill-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              }
               <span>{student.name || "Student"}</span>
             </div>
             <button className="sd-navbar-cart" onClick={() => setCartOpen(true)}>
@@ -276,7 +296,10 @@ export default function StudentDashboard() {
           {/* ── WHITE SIDEBAR ── */}
           <aside className={`sd-white-sidebar ${sidebarOpen ? "sd-sidebar-open" : ""}`}>
             <div className="sd-profile-chip">
-              <div className="sd-profile-chip-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              {student.avatar
+                ? <img src={student.avatar} alt="avatar" style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",border:"2px solid #ede9fe",flexShrink:0}}/>
+                : <div className="sd-profile-chip-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
+              }
               <span>{student.name || "Student"}</span>
             </div>
             <ul className="sd-nav-menu">
@@ -2697,19 +2720,71 @@ function CartDrawer({ open, onClose, cart, removeFromCart, onEnrolled }) {
    PROFILE SECTION
 ════════════════════════════════════════ */
 function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
-  const [saving, setSaving]         = useState(false);
-  const [form, setForm]             = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"", email:student.email||"" });
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg]     = useState("");
-  const [hasChanges, setHasChanges] = useState(false);
+  const [saving, setSaving]           = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [form, setForm]               = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"" });
+  const [successMsg, setSuccessMsg]   = useState("");
+  const [errorMsg, setErrorMsg]       = useState("");
+  const [hasChanges, setHasChanges]   = useState(false);
+  const [avatarSrc, setAvatarSrc]     = useState(student.avatar && !student.avatar.startsWith("data:") ? student.avatar : "");
+  const fileRef                       = useRef(null);
+
+  // Change Password state
+  const [cpCurrent, setCpCurrent]     = useState("");
+  const [cpNew, setCpNew]             = useState("");
+  const [cpConfirm, setCpConfirm]     = useState("");
+  const [cpSaving, setCpSaving]       = useState(false);
+  const [cpSuccess, setCpSuccess]     = useState("");
+  const [cpError, setCpError]         = useState("");
+  const [showCpCurrent, setShowCpCurrent] = useState(false);
+  const [showCpNew, setShowCpNew]     = useState(false);
+  const [showCpConfirm, setShowCpConfirm] = useState(false);
+
+  const cpStrength = (() => {
+    if (!cpNew) return 0;
+    let s = 0;
+    if (cpNew.length >= 6) s++;
+    if (cpNew.length >= 8) s++;
+    if (/[A-Z]/.test(cpNew)) s++;
+    if (/[0-9]/.test(cpNew)) s++;
+    if (/[^A-Za-z0-9]/.test(cpNew)) s++;
+    return Math.min(s, 4);
+  })();
+  const cpStrengthColors = ["#e2e8f0","#ef4444","#f59e0b","#22c55e","#16a34a"];
+  const cpStrengthLabels = ["","Weak","Fair","Good","Strong"];
+
+  const handleChangePassword = async () => {
+    setCpError(""); setCpSuccess("");
+    if (!cpCurrent || !cpNew || !cpConfirm) { setCpError("Please fill in all three fields."); return; }
+    if (cpNew.length < 6) { setCpError("New password must be at least 6 characters."); return; }
+    if (cpNew !== cpConfirm) { setCpError("New password and confirm password do not match."); return; }
+    if (cpNew === cpCurrent) { setCpError("New password cannot be the same as your current password."); return; }
+    setCpSaving(true);
+    try {
+      const token = localStorage.getItem("studentToken");
+      const res = await fetch("/api/auth/change-password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword: cpCurrent, newPassword: cpNew }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCpSuccess("Password changed successfully!");
+        setCpCurrent(""); setCpNew(""); setCpConfirm("");
+        setTimeout(() => setCpSuccess(""), 4000);
+      } else {
+        setCpError(data.message || "Failed to change password.");
+      }
+    } catch { setCpError("Server error. Please try again."); }
+    setCpSaving(false);
+  };
 
   useEffect(() => {
     const changed =
-      form.name    !== (student.name||"")      ||
-      form.className !== (student.className||"")||
-      form.batch   !== (student.batch||"")     ||
-      form.phone   !== (student.phone||"")     ||
-      form.email   !== (student.email||"");
+      form.name      !== (student.name||"")      ||
+      form.className !== (student.className||"") ||
+      form.batch     !== (student.batch||"")     ||
+      form.phone     !== (student.phone||"");
     setHasChanges(changed);
   }, [form, student]);
 
@@ -2722,38 +2797,218 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
       const token = localStorage.getItem("studentToken");
       const res   = await fetch("/api/student/update-profile", {
         method:"PUT", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, email: student.email }),
       });
       const data = await res.json();
       if (data.success) {
-        const updated = {...student,...data.student, email: data.student.email||student.email };
+        const updated = { ...student, ...data.student, email: student.email };
         localStorage.setItem("studentInfo", JSON.stringify(updated));
         setStudent(updated);
         setSuccessMsg("Profile updated successfully!");
         setHasChanges(false);
-        setTimeout(()=>setSuccessMsg(""),3000);
+        setTimeout(()=>setSuccessMsg(""), 3000);
       } else { setErrorMsg(data.message||"Failed to update"); }
     } catch { setErrorMsg("Server error. Please try again."); }
     setSaving(false);
   };
 
-  const handleReset = () => { setForm({name:student.name||"",className:student.className||"",batch:student.batch||"",phone:student.phone||"",email:student.email||""}); setErrorMsg(""); setSuccessMsg(""); };
+  const handleReset = () => {
+    setForm({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"" });
+    setErrorMsg(""); setSuccessMsg("");
+  };
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { setErrorMsg("Image must be under 2MB"); return; }
+    setUploadingPhoto(true);
+    setErrorMsg("");
+    try {
+      const token = localStorage.getItem("studentToken");
+      const fd = new FormData();
+      fd.append("avatar", file);
+      const res  = await fetch("/api/auth/avatar", { method:"POST", headers:{ Authorization:`Bearer ${token}` }, body: fd });
+      const data = await res.json();
+      if (data.success) {
+        setAvatarSrc(data.avatar);
+        const updated = { ...student, avatar: data.avatar };
+        localStorage.setItem("studentInfo", JSON.stringify(updated));
+        setStudent(updated);
+        setSuccessMsg("Profile photo updated!");
+        setTimeout(()=>setSuccessMsg(""), 3000);
+      } else { setErrorMsg(data.message || "Upload failed"); }
+    } catch { setErrorMsg("Upload failed. Please try again."); }
+    setUploadingPhoto(false);
+    e.target.value = "";
+  };
+
+  const initials = student.name ? student.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase() : "S";
 
   return (
     <div>
-      {/* Hero — profile-banner.svg background */}
-      <div className="sdpr-hero">
-        <div className="sdpr-hero-av">{student.name ? student.name.charAt(0).toUpperCase() : "S"}</div>
-        <div>
-          <h1>{student.name || "Student"}</h1>
-          <p>{student.className || ""}{student.batch ? ` · ${student.batch}` : ""}</p>
+
+      {/* ── Main edit card ── */}
+      <div className="sdpr-box" style={{marginBottom:24}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:24}}>
+          <MdEdit size={20} color="#7c3aed"/>
+          <h3 style={{margin:0,fontSize:18,fontWeight:700,color:"#1e1b4b"}}>Edit Profile</h3>
+          {hasChanges && <span className="sdpr-unsaved" style={{marginLeft:"auto"}}>Unsaved changes</span>}
+        </div>
+
+        {successMsg && <div className="sdpr-msg-ok" style={{marginBottom:16}}>✅ {successMsg}</div>}
+        {errorMsg   && <div className="sdpr-msg-err" style={{marginBottom:16}}>⚠️ {errorMsg}</div>}
+
+        {/* Avatar row */}
+        <div style={{display:"flex",alignItems:"center",gap:20,marginBottom:28,paddingBottom:24,borderBottom:"1px solid #f0effe"}}>
+          <div style={{position:"relative",flexShrink:0}}>
+            {avatarSrc ? (
+              <img src={avatarSrc} alt="avatar" style={{width:88,height:88,borderRadius:24,objectFit:"cover",border:"3px solid #ede9fe"}}/>
+            ) : (
+              <div style={{width:88,height:88,borderRadius:24,background:"linear-gradient(135deg,#7c3aed,#5b21b6)",display:"flex",alignItems:"center",justifyContent:"center",border:"3px solid #ede9fe"}}>
+                <span style={{fontSize:32,fontWeight:800,color:"#fff"}}>{initials}</span>
+              </div>
+            )}
+            <button
+              onClick={()=>fileRef.current?.click()}
+              disabled={uploadingPhoto}
+              style={{position:"absolute",bottom:-4,right:-4,width:30,height:30,borderRadius:"50%",background:"#7c3aed",border:"2px solid #fff",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 6px rgba(124,58,237,0.4)"}}
+              title="Change profile photo"
+            >
+              {uploadingPhoto
+                ? <span style={{width:12,height:12,border:"2px solid #fff",borderTopColor:"transparent",borderRadius:"50%",display:"inline-block",animation:"spin 0.7s linear infinite"}}/>
+                : <MdEdit size={14} color="#fff"/>
+              }
+            </button>
+            <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handlePhotoChange}/>
+          </div>
+          <div>
+            <div style={{fontWeight:700,fontSize:18,color:"#1e1b4b"}}>{student.name||"Student"}</div>
+            <div style={{color:"#6b7280",fontSize:13,marginTop:2}}>{student.email||""}</div>
+            <div style={{color:"#7c3aed",fontSize:12,fontWeight:600,marginTop:6,cursor:"pointer"}} onClick={()=>fileRef.current?.click()}>
+              📷 Change profile photo
+            </div>
+          </div>
+        </div>
+
+        {/* Form grid */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Full Name <span className="sdpr-req">*</span></label>
+            <input type="text" className="sdpr-input" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} placeholder="Your full name"/>
+          </div>
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Mobile Number</label>
+            <input type="tel" className="sdpr-input" value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value.replace(/\D/g,"").slice(0,10)})} placeholder="10-digit mobile number"/>
+          </div>
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Email Address <span style={{background:"#f0fdf4",color:"#16a34a",fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:6,marginLeft:6}}>🔒 Fixed</span></label>
+            <input type="email" className="sdpr-input" value={student.email||""} readOnly style={{background:"#f9fafb",color:"#6b7280",cursor:"not-allowed"}}/>
+          </div>
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Class <span className="sdpr-req">*</span></label>
+            <select className="sdpr-input" value={form.className} onChange={(e)=>setForm({...form,className:e.target.value})}>
+              <option value="">Select your class</option>
+              {["Class 9","Class 10","Class 11","Class 12","NIOS Stream 1","NIOS Stream 2","Dropper Batch"].map(cl=>(
+                <option key={cl} value={cl}>{cl}</option>
+              ))}
+            </select>
+          </div>
+          <div className="sdpr-field" style={{margin:0,gridColumn:"1/-1"}}>
+            <label className="sdpr-label">Batch <span className="sdpr-optional">(optional)</span></label>
+            <input type="text" className="sdpr-input" value={form.batch} onChange={(e)=>setForm({...form,batch:e.target.value})} placeholder="e.g. Morning Batch"/>
+          </div>
+        </div>
+
+        <div className="sdpr-actions" style={{marginTop:20}}>
+          <button className="sdpr-reset-btn" onClick={handleReset} disabled={!hasChanges||saving}><MdClose size={15}/> Reset</button>
+          <button className="sdpr-save-btn" onClick={handleSave} disabled={!hasChanges||saving}>
+            {saving ? <><span className="sdpr-spinner"/>&nbsp;Saving...</> : <><MdSave size={15}/> Save Changes</>}
+          </button>
         </div>
       </div>
 
-      {/* Grid: left info boxes | right current courses + edit form */}
-      <div className="sdpr-grid">
+      {/* ── Change Password card ── */}
+      <div className="sdpr-box" style={{marginBottom:24}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:20}}>
+          <MdLock size={20} color="#7c3aed"/>
+          <h3 style={{margin:0,fontSize:18,fontWeight:700,color:"#1e1b4b"}}>Change Password</h3>
+        </div>
 
-        {/* ── Left ── */}
+        {cpSuccess && <div className="sdpr-msg-ok" style={{marginBottom:16}}>✅ {cpSuccess}</div>}
+        {cpError   && <div className="sdpr-msg-err" style={{marginBottom:16}}>⚠️ {cpError}</div>}
+
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
+          {/* Current Password */}
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Current Password</label>
+            <div style={{position:"relative"}}>
+              <input type={showCpCurrent?"text":"password"} className="sdpr-input" value={cpCurrent} onChange={e=>setCpCurrent(e.target.value)} placeholder="Current password" style={{paddingRight:36}}/>
+              <span onClick={()=>setShowCpCurrent(v=>!v)} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",cursor:"pointer",color:"#9ca3af",fontSize:16}}>{showCpCurrent?"🙈":"👁"}</span>
+            </div>
+          </div>
+          {/* New Password */}
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">New Password</label>
+            <div style={{position:"relative"}}>
+              <input type={showCpNew?"text":"password"} className="sdpr-input" value={cpNew} onChange={e=>setCpNew(e.target.value)} placeholder="New password (min 6 chars)" style={{paddingRight:36}}/>
+              <span onClick={()=>setShowCpNew(v=>!v)} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",cursor:"pointer",color:"#9ca3af",fontSize:16}}>{showCpNew?"🙈":"👁"}</span>
+            </div>
+            {/* Strength bar */}
+            {cpNew.length > 0 && (
+              <div style={{display:"flex",alignItems:"center",gap:6,marginTop:6}}>
+                <div style={{display:"flex",gap:3,flex:1}}>
+                  {[1,2,3,4].map(i=>(
+                    <div key={i} style={{flex:1,height:4,borderRadius:2,background:i<=cpStrength?cpStrengthColors[cpStrength]:"#e2e8f0"}}/>
+                  ))}
+                </div>
+                <span style={{fontSize:10,fontWeight:700,color:cpStrengthColors[cpStrength]}}>{cpStrengthLabels[cpStrength]}</span>
+              </div>
+            )}
+          </div>
+          {/* Confirm Password */}
+          <div className="sdpr-field" style={{margin:0}}>
+            <label className="sdpr-label">Confirm New Password</label>
+            <div style={{position:"relative"}}>
+              <input type={showCpConfirm?"text":"password"} className="sdpr-input" value={cpConfirm} onChange={e=>setCpConfirm(e.target.value)} placeholder="Re-enter new password" style={{paddingRight:36}}/>
+              <span onClick={()=>setShowCpConfirm(v=>!v)} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",cursor:"pointer",color:"#9ca3af",fontSize:16}}>{showCpConfirm?"🙈":"👁"}</span>
+            </div>
+            {cpConfirm.length>0 && (
+              <div style={{display:"flex",alignItems:"center",gap:5,marginTop:6}}>
+                {cpNew===cpConfirm
+                  ? <><span style={{color:"#16a34a",fontSize:12}}>✓</span><span style={{fontSize:12,color:"#16a34a",fontWeight:600}}>Passwords match</span></>
+                  : <><span style={{color:"#ef4444",fontSize:12}}>✗</span><span style={{fontSize:12,color:"#ef4444",fontWeight:600}}>Don't match</span></>
+                }
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Rules */}
+        <div style={{display:"flex",gap:16,flexWrap:"wrap",marginTop:12,padding:"10px 14px",background:"#f9fafb",borderRadius:10,border:"1px solid #f0effe"}}>
+          {[
+            {text:"At least 6 characters", ok:cpNew.length>=6},
+            {text:"Must differ from current", ok:cpNew.length>0&&cpNew!==cpCurrent},
+            {text:"Passwords match", ok:cpConfirm.length>0&&cpNew===cpConfirm},
+          ].map((r,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:5}}>
+              <span style={{color:r.ok?"#16a34a":"#9ca3af",fontSize:13}}>{r.ok?"✓":"○"}</span>
+              <span style={{fontSize:12,color:r.ok?"#16a34a":"#6b7280",fontWeight:r.ok?700:400}}>{r.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{marginTop:16,display:"flex",gap:10}}>
+          <button className="sdpr-save-btn" onClick={handleChangePassword} disabled={cpSaving} style={{minWidth:160}}>
+            {cpSaving ? <><span className="sdpr-spinner"/>&nbsp;Updating...</> : <><MdLock size={14}/> Update Password</>}
+          </button>
+          <button className="sdpr-reset-btn" onClick={()=>{setCpCurrent("");setCpNew("");setCpConfirm("");setCpError("");setCpSuccess("");}}>
+            <MdClose size={14}/> Clear
+          </button>
+        </div>
+      </div>
+
+      {/* ── Info + Courses grid ── */}
+      <div className="sdpr-grid">
         <div>
           <div className="sdpr-box">
             <h3>Contact Information</h3>
@@ -2769,27 +3024,21 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
                 <div><small>Email</small><b>{student.email}</b></div>
               </div>
             )}
-            {!student.phone && !student.email && (
-              <div style={{color:"#9ca3af",fontSize:13}}>No contact info added yet</div>
-            )}
           </div>
-          <div className="sdpr-box">
+          <div className="sdpr-box" style={{marginTop:16}}>
             <h3>Academic Info</h3>
             <div className="sdpr-info">
               <div className="sdpr-info-ic"><MdSchool size={16}/></div>
-              <div><small>Class</small><b>{student.className || "—"}</b></div>
+              <div><small>Class</small><b>{student.className||"—"}</b></div>
             </div>
             <div className="sdpr-info">
               <div className="sdpr-info-ic"><FaGraduationCap size={14}/></div>
-              <div><small>Batch</small><b>{student.batch || "—"}</b></div>
+              <div><small>Batch</small><b>{student.batch||"—"}</b></div>
             </div>
           </div>
         </div>
-
-        {/* ── Right ── */}
         <div>
-          {/* Current Courses */}
-          <div className="sdpr-box" style={{marginBottom:24}}>
+          <div className="sdpr-box">
             <h3 className="sdpr-cc-title">Current Courses</h3>
             {enrolledCourses.length === 0 ? (
               <p style={{color:"#888",fontSize:14}}>No enrolled courses yet.</p>
@@ -2797,7 +3046,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
               enrolledCourses.map((c) => {
                 const tc = getSubjectThumbClass(c.subject);
                 const sc = getSubjectColor(c.subject);
-                const totalLessons = c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
+                const totalLessons = c.chapters?.reduce((a,ch)=>a+ch.lessons.length,0)||0;
                 return (
                   <div key={c._id} className="sdpr-ccourse">
                     <div className={`sdpr-ct ${tc}`}>
@@ -2815,7 +3064,6 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
                         {c.subject && <span className="sdc-tag" style={{background:`${sc}22`,color:sc}}>{c.subject.toUpperCase()}</span>}
                         {c.batch && <span className="sdc-tag-cls-pill">{c.batch.toUpperCase()}</span>}
                       </div>
-                      <div className="sdpr-cbar"><i style={{width:"0%",background:"#7c3aed"}}/></div>
                     </div>
                     <button className="sdpr-btn-watch">▶ Continue</button>
                   </div>
@@ -2823,49 +3071,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
               })
             )}
           </div>
-
-          {/* Edit Profile */}
-          <div className="sdpr-box">
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
-              <h3 style={{marginBottom:0}}>Edit Profile</h3>
-              {hasChanges && <span className="sdpr-unsaved">Unsaved changes</span>}
-            </div>
-            {successMsg && <div className="sdpr-msg-ok">✅ {successMsg}</div>}
-            {errorMsg   && <div className="sdpr-msg-err">⚠️ {errorMsg}</div>}
-            <div className="sdpr-field">
-              <label className="sdpr-label">Full Name <span className="sdpr-req">*</span></label>
-              <input type="text" className="sdpr-input" value={form.name} onChange={(e) => setForm({...form,name:e.target.value})} placeholder="Your full name"/>
-            </div>
-            <div className="sdpr-field">
-              <label className="sdpr-label">Mobile Number</label>
-              <input type="tel" className="sdpr-input" value={form.phone} onChange={(e) => setForm({...form,phone:e.target.value.replace(/\D/g,"").slice(0,10)})} placeholder="10-digit mobile number"/>
-            </div>
-            <div className="sdpr-field">
-              <label className="sdpr-label">Email Address</label>
-              <input type="email" className="sdpr-input" value={form.email} onChange={(e) => setForm({...form,email:e.target.value})} placeholder="your@email.com"/>
-            </div>
-            <div className="sdpr-field">
-              <label className="sdpr-label">Class <span className="sdpr-req">*</span></label>
-              <select className="sdpr-input" value={form.className} onChange={(e) => setForm({...form,className:e.target.value})}>
-                <option value="">Select your class</option>
-                {["Class 9","Class 10","Class 11","Class 12","NIOS Stream 1","NIOS Stream 2","Dropper Batch"].map((cl) => (
-                  <option key={cl} value={cl}>{cl}</option>
-                ))}
-              </select>
-            </div>
-            <div className="sdpr-field">
-              <label className="sdpr-label">Batch <span className="sdpr-optional">(optional)</span></label>
-              <input type="text" className="sdpr-input" value={form.batch} onChange={(e) => setForm({...form,batch:e.target.value})} placeholder="e.g. Morning Batch"/>
-            </div>
-            <div className="sdpr-actions">
-              <button className="sdpr-reset-btn" onClick={handleReset} disabled={!hasChanges || saving}><MdClose size={15}/> Reset</button>
-              <button className="sdpr-save-btn" onClick={handleSave} disabled={!hasChanges || saving}>
-                {saving ? <><span className="sdpr-spinner"/>&nbsp;Saving...</> : <><MdSave size={15}/> Save Changes</>}
-              </button>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
   );

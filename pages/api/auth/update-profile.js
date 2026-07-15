@@ -31,7 +31,9 @@ export default async function handler(req, res) {
         email: student.email,
         phone: student.phone,
         class: student.className,
-        avatar: student.avatar || "",
+        className: student.className,
+        role: "student",
+        avatar: (student.avatar && !student.avatar.startsWith("data:")) ? student.avatar : "",
       },
     });
   } catch {

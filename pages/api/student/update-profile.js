@@ -47,12 +47,14 @@ export default async function handler(req, res) {
       success: true,
       message: "Profile updated successfully",
       student: {
-        id: student._id,
+        _id: student._id,
         name: student.name,
         phone: student.phone,
         email: student.email,
+        class: student.className,
         className: student.className,
-        batch: student.batch,
+        batch: student.batch || "",
+        avatar: (student.avatar && !student.avatar.startsWith("data:")) ? student.avatar : "",
         isProfileComplete: student.isProfileComplete,
       },
     });

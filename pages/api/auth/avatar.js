@@ -2,6 +2,8 @@ import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
 import jwt from "jsonwebtoken";
 import multer from "multer";
+import fs from "fs";
+import path from "path";
 
 export const config = { api: { bodyParser: false } };
 
@@ -37,20 +39,29 @@ export default async function handler(req, res) {
     if (!req.file)
       return res.status(400).json({ success: false, message: "No image provided" });
 
+    // Save file to public/uploads/avatars/
+    const ext = req.file.mimetype === "image/png" ? "png" : "jpg";
+    const filename = `${id}.${ext}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads", "avatars");
+    fs.mkdirSync(uploadDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadDir, filename), req.file.buffer);
+
+    const avatarUrl = `/uploads/avatars/${filename}`;
+
     await dbConnect();
-    const base64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-    const student = await StudentUser.findByIdAndUpdate(id, { avatar: base64 }, { new: true });
+    const student = await StudentUser.findByIdAndUpdate(id, { avatar: avatarUrl }, { new: true });
 
     return res.status(200).json({
       success: true,
-      avatar: student.avatar,
+      avatar: avatarUrl,
       user: {
         _id: student._id,
         name: student.name,
         email: student.email,
         phone: student.phone,
         class: student.className,
-        avatar: student.avatar,
+        className: student.className,
+        avatar: avatarUrl,
       },
     });
   } catch (err) {

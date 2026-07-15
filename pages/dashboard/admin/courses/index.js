@@ -890,7 +890,7 @@ const MATERIAL_SECTIONS = [
 const EMPTY_BUNDLE = {
   title:"", batch:"", price:"", isFree:false,
   description:"", status:"draft", featureImage:"",
-  bundledSubjects:[],
+  bundledSubjects:[], includedCourses:[],
 };
 
 const EMPTY_MATERIAL = { section:"books", title:"", fileUrl:"" };
@@ -1041,6 +1041,9 @@ export default function AdminCoursesPage({ admin }) {
   const [uploading, setUploading]             = useState(false);
   const [uploadProgress, setUploadProgress]   = useState(0);
   const videoFileRef                          = useRef(null);
+  const bsubVideoFileRef                      = useRef(null);
+  const [bsubUploading, setBsubUploading]     = useState(false);
+  const [bsubUploadProgress, setBsubUploadProgress] = useState(0);
 
   const [form, setForm]           = useState(EMPTY_FORM);
   const [isEditing, setIsEditing] = useState(false);
@@ -1053,6 +1056,15 @@ export default function AdminCoursesPage({ admin }) {
   const [activeMatTab, setActiveMatTab]     = useState("books");
   const [uploadingPdf, setUploadingPdf]     = useState(false);
   const [linkedClasses, setLinkedClasses]   = useState([]);
+  const [editingBundleCourses, setEditingBundleCourses] = useState(false);
+  const [bundleCourseEdits, setBundleCourseEdits]       = useState([]);
+  // Per-subject content management for bundles
+  const [bsubActiveChapter, setBsubActiveChapter]       = useState(null); // "subject::chapterId"
+  const [bsubShowChapterForm, setBsubShowChapterForm]   = useState(null); // subject name
+  const [bsubChapterInput, setBsubChapterInput]         = useState("");
+  const [bsubShowLessonForm, setBsubShowLessonForm]     = useState(null); // "subject::chapterId"
+  const [bsubLessonForm, setBsubLessonForm]             = useState(EMPTY_LESSON);
+  const [bsubFetching, setBsubFetching]                 = useState(null); // subject being fetched
 
   const totalLessons = (c) => c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
 
@@ -1076,6 +1088,9 @@ export default function AdminCoursesPage({ admin }) {
     setShowChapterForm(false); setShowLessonForm(null);
     setShowNoteForm(null); setShowMaterialForm(false);
     setBundleForm(EMPTY_BUNDLE); setLinkedClasses([]);
+    setEditingBundleCourses(false); setBundleCourseEdits([]);
+    setBsubActiveChapter(null); setBsubShowChapterForm(null); setBsubChapterInput("");
+    setBsubShowLessonForm(null); setBsubLessonForm(EMPTY_LESSON); setBsubFetching(null);
   };
 
   const openManage = (course) => {
@@ -1303,6 +1318,46 @@ export default function AdminCoursesPage({ admin }) {
     }
   };
 
+  /* ── Bunny upload for bundle subject lessons ── */
+  const handleBsubBunnyUpload = async (file) => {
+    if (!file) return;
+    setBsubUploading(true);
+    setBsubUploadProgress(0);
+    try {
+      const createRes  = await fetch("/api/bunny/create-video", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ title: bsubLessonForm.title?.trim() || file.name }),
+      });
+      const createData = await createRes.json();
+      if (!createData.videoId) { toast.error(createData.error || "Failed to create video"); return; }
+      const { videoId, cdnUrl, tusSignature, tusExpiry, libraryId } = createData;
+      const tus = await import("tus-js-client");
+      await new Promise((resolve, reject) => {
+        const upload = new tus.Upload(file, {
+          endpoint: "https://video.bunnycdn.com/tusupload",
+          retryDelays: [0, 3000, 5000, 10000, 20000],
+          headers: {
+            AuthorizationSignature: tusSignature, AuthorizationExpire: String(tusExpiry),
+            VideoId: videoId, LibraryId: String(libraryId),
+          },
+          metadata: { filetype: file.type, title: bsubLessonForm.title?.trim() || file.name },
+          onError: reject,
+          onProgress: (u, t) => setBsubUploadProgress(Math.round((u/t)*100)),
+          onSuccess: resolve,
+        });
+        upload.findPreviousUploads().then(prev => { if (prev.length) upload.resumeFromPreviousUpload(prev[0]); upload.start(); });
+      });
+      setBsubLessonForm(prev => ({ ...prev, videoUrl: cdnUrl, videoType: "bunny" }));
+      toast.success("Video uploaded to Bunny CDN!");
+    } catch (err) {
+      toast.error(err?.message || "Upload failed");
+    } finally {
+      setBsubUploading(false);
+      setBsubUploadProgress(0);
+      if (bsubVideoFileRef.current) bsubVideoFileRef.current.value = "";
+    }
+  };
+
   const handleDeleteLesson = async (chapterId, lessonId) => {
     if (!confirm("Delete this topic?")) return;
     try {
@@ -1383,8 +1438,84 @@ export default function AdminCoursesPage({ admin }) {
   const toggleBundleSubject = (sub) => {
     setBundleForm(prev => {
       const has = prev.bundledSubjects.includes(sub);
-      return { ...prev, bundledSubjects: has ? prev.bundledSubjects.filter(s=>s!==sub) : [...prev.bundledSubjects, sub] };
+      const newSubjects = has ? prev.bundledSubjects.filter(s=>s!==sub) : [...prev.bundledSubjects, sub];
+      const matched = courses.filter(c =>
+        c.courseType !== "bundle" && c.batch === prev.batch &&
+        (newSubjects.length === 0 || newSubjects.includes(c.subject))
+      );
+      return { ...prev, bundledSubjects: newSubjects, includedCourses: matched.map(c => c._id) };
     });
+  };
+
+  /* ── Update bundle's linked courses ── */
+  const handleUpdateBundleCourses = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/courses/${selectedCourse._id}?action=update-bundle`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ includedCourses: bundleCourseEdits }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        setEditingBundleCourses(false);
+        toast.success("Bundle content updated!");
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setSaving(false); }
+  };
+
+  /* ── Bundle subject content handlers ── */
+  const bsubCall = async (action, body) => {
+    const res  = await fetch(`/api/courses/${selectedCourse._id}?action=${action}`, {
+      method:"PUT", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setSelectedCourse(data.course);
+      setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+    } else { toast.error(data.error||"Failed"); }
+    return data.success;
+  };
+
+  const handleBsubAddChapter = async (subject) => {
+    if (!bsubChapterInput.trim()) { toast.error("Chapter title required"); return; }
+    setSaving(true);
+    const ok = await bsubCall("add-bsubject-chapter", { subject, title: bsubChapterInput.trim() });
+    if (ok) { setBsubChapterInput(""); setBsubShowChapterForm(null); toast.success("Chapter added!"); }
+    setSaving(false);
+  };
+
+  const handleBsubAddLesson = async (subject, chapterId) => {
+    if (!bsubLessonForm.title.trim()) { toast.error("Topic title required"); return; }
+    setSaving(true);
+    const ok = await bsubCall("add-bsubject-lesson", { subject, chapterId, lesson: bsubLessonForm });
+    if (ok) { setBsubLessonForm(EMPTY_LESSON); setBsubShowLessonForm(null); toast.success("Topic added!"); }
+    setSaving(false);
+  };
+
+  const handleBsubDeleteChapter = async (subject, chapterId) => {
+    if (!confirm("Delete this chapter?")) return;
+    setSaving(true);
+    const ok = await bsubCall("delete-bsubject-chapter", { subject, chapterId });
+    if (ok) toast.success("Chapter deleted");
+    setSaving(false);
+  };
+
+  const handleBsubDeleteLesson = async (subject, chapterId, lessonId) => {
+    if (!confirm("Delete this topic?")) return;
+    const ok = await bsubCall("delete-bsubject-lesson", { subject, chapterId, lessonId });
+    if (ok) toast.success("Topic deleted");
+  };
+
+  const handleBsubFetch = async (subject) => {
+    if (!confirm(`Fetch chapters from existing ${subject} (${selectedCourse.batch}) course? This will replace current content for this subject.`)) return;
+    setBsubFetching(subject);
+    const ok = await bsubCall("fetch-bsubject-content", { subject });
+    if (ok) toast.success(`Imported chapters from ${subject} course!`);
+    setBsubFetching(null);
   };
 
   /* ── Upload PDF for materials ── */
@@ -1674,7 +1805,14 @@ export default function AdminCoursesPage({ admin }) {
                     <div className="cr-field-row">
                       <div className="cr-field-group">
                         <label className="cr-label">Class / Batch *</label>
-                        <select className="cr-input" value={bundleForm.batch} onChange={e=>setBundleForm(p=>({...p,batch:e.target.value}))}>
+                        <select className="cr-input" value={bundleForm.batch} onChange={e=>{
+                          const batch = e.target.value;
+                          const matched = courses.filter(c =>
+                            c.courseType !== "bundle" && c.batch === batch &&
+                            (bundleForm.bundledSubjects.length === 0 || bundleForm.bundledSubjects.includes(c.subject))
+                          );
+                          setBundleForm(p=>({...p, batch, includedCourses: matched.map(c=>c._id)}));
+                        }}>
                           <option value="">Select batch</option>
                           {batches.map(b=><option key={b}>{b}</option>)}
                         </select>
@@ -1722,6 +1860,70 @@ export default function AdminCoursesPage({ admin }) {
                         </div>
                       )}
                     </div>
+
+                    {/* Auto-import chapters & videos from existing courses */}
+                    {bundleForm.batch && (()=>{
+                      const matchedCourses = courses.filter(c =>
+                        c.courseType !== "bundle" && c.batch === bundleForm.batch &&
+                        (bundleForm.bundledSubjects.length === 0 || bundleForm.bundledSubjects.includes(c.subject))
+                      );
+                      return (
+                        <div className="cr-field-group">
+                          <label className="cr-label" style={{display:"flex",alignItems:"center",gap:8}}>
+                            📚 Auto-import Videos &amp; Chapters
+                            <span style={{fontWeight:400,color:"#9ca3af",fontSize:12}}>
+                              ({matchedCourses.length} course{matchedCourses.length!==1?"s":""} found for {bundleForm.batch})
+                            </span>
+                          </label>
+                          {matchedCourses.length===0 ? (
+                            <div style={{padding:"12px 16px",background:"#f9fafb",borderRadius:10,fontSize:13,color:"#9ca3af",border:"1.5px dashed #e5e7eb"}}>
+                              No individual courses found for <strong>{bundleForm.batch}</strong> yet. Create subject courses first, then they'll auto-import here.
+                            </div>
+                          ) : (
+                            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                              <div style={{fontSize:12,color:"#6b7280",marginBottom:4}}>
+                                Students who enroll in this bundle will get access to all selected course content below.
+                              </div>
+                              {matchedCourses.map(c=>{
+                                const isSel = bundleForm.includedCourses.includes(c._id);
+                                const chCount = c.chapters?.length||0;
+                                const topicCount = c.chapters?.reduce((a,ch)=>a+(ch.lessons?.length||0),0)||0;
+                                return (
+                                  <label key={c._id} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",
+                                    borderRadius:10,border:`2px solid ${isSel?"#6c47d4":"#e5e7eb"}`,
+                                    background:isSel?"#f5f3ff":"#fafafa",cursor:"pointer",transition:"all 0.15s"}}>
+                                    <input type="checkbox" checked={isSel}
+                                      onChange={()=>setBundleForm(prev=>({
+                                        ...prev,
+                                        includedCourses: isSel
+                                          ? prev.includedCourses.filter(id=>id!==c._id)
+                                          : [...prev.includedCourses, c._id]
+                                      }))}
+                                      style={{marginTop:3,accentColor:"#6c47d4"}}/>
+                                    <div style={{flex:1}}>
+                                      <div style={{fontWeight:700,fontSize:14,color:"#1f2937"}}>{c.title}</div>
+                                      <div style={{fontSize:12,color:"#6b7280",marginTop:3,display:"flex",gap:12,flexWrap:"wrap"}}>
+                                        <span>📘 {c.subject||"—"}</span>
+                                        <span>📂 {chCount} chapter{chCount!==1?"s":""}</span>
+                                        <span>🎬 {topicCount} topic{topicCount!==1?"s":""}</span>
+                                        <span style={{padding:"1px 8px",borderRadius:20,fontSize:11,fontWeight:600,
+                                          background:c.status==="published"?"#d1fae5":"#fef3c7",
+                                          color:c.status==="published"?"#065f46":"#92400e"}}>
+                                          {c.status}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </label>
+                                );
+                              })}
+                              <div style={{fontSize:12,color:"#6c47d4",fontWeight:600,marginTop:2}}>
+                                ✓ {bundleForm.includedCourses.filter(id=>matchedCourses.some(c=>c._id===id)).length} of {matchedCourses.length} courses selected
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     {/* Thumbnail */}
                     <div className="cr-field-group">
@@ -2132,23 +2334,236 @@ export default function AdminCoursesPage({ admin }) {
                     )}
                   </div>}
 
-                  {/* Bundle subjects panel */}
+                  {/* Bundle subject-wise course content */}
                   {selectedCourse.courseType === "bundle" && (
-                    <div style={{background:"#fffbeb",border:"1.5px solid #fde68a",borderRadius:12,padding:20,marginBottom:16}}>
-                      <div style={{fontWeight:700,color:"#92400e",marginBottom:12,fontSize:15,display:"flex",alignItems:"center",gap:8}}>
-                        <BsBoxSeam size={18}/> Included Subjects
+                    <div className="cr-chapters-card">
+                      <div className="cr-chapters-header">
+                        <div className="cr-chapters-title">
+                          <BsBoxSeam size={18} color="#f59e0b"/> Bundle Course Content
+                          <span className="cr-chapters-count" style={{background:"#fef3c7",color:"#92400e"}}>
+                            {(selectedCourse.bundledSubjects||[]).length} subjects
+                          </span>
+                        </div>
                       </div>
-                      <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:12}}>
-                        {(selectedCourse.bundledSubjects||[]).map(s=>(
-                          <span key={s} style={{padding:"6px 16px",background:"#f59e0b",color:"white",borderRadius:20,fontSize:13,fontWeight:700}}>{s}</span>
-                        ))}
-                        {(selectedCourse.bundledSubjects||[]).length===0 && (
-                          <span style={{color:"#9ca3af",fontSize:13}}>No subjects added — edit the bundle to add subjects</span>
-                        )}
-                      </div>
-                      <div style={{fontSize:12,color:"#78350f",background:"#fef3c7",padding:"8px 12px",borderRadius:8}}>
-                        ✓ Students who purchase this bundle get access to live classes for ALL above subjects automatically.
-                      </div>
+
+                      {(selectedCourse.bundledSubjects||[]).length===0 ? (
+                        <div className="cr-empty cr-chapters-empty">
+                          <span style={{fontSize:40}}>📦</span>
+                          <div className="cr-empty-title">No subjects in this bundle</div>
+                          <p>Edit bundle info to add subjects first.</p>
+                        </div>
+                      ) : (selectedCourse.bundledSubjects||[]).map(subject => {
+                        const sc = (selectedCourse.subjectContents||[]).find(s=>s.subject===subject);
+                        const chapters = sc?.chapters||[];
+                        const topicTotal = chapters.reduce((a,ch)=>a+(ch.lessons?.length||0),0);
+
+                        return (
+                          <div key={subject} style={{border:"1.5px solid #fde68a",borderRadius:12,marginBottom:12,overflow:"hidden"}}>
+                            {/* Subject header */}
+                            <div style={{background:"#fffbeb",padding:"12px 16px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                              <span style={{fontSize:18}}>{subjectIcons[subject]||"📚"}</span>
+                              <div style={{flex:1}}>
+                                <div style={{fontWeight:700,fontSize:14,color:"#92400e"}}>{subject}</div>
+                                <div style={{fontSize:12,color:"#78350f"}}>
+                                  {chapters.length} chapter{chapters.length!==1?"s":""} · {topicTotal} topic{topicTotal!==1?"s":""}
+                                </div>
+                              </div>
+                              {/* Fetch from existing course button */}
+                              <button
+                                onClick={()=>handleBsubFetch(subject)}
+                                disabled={bsubFetching===subject}
+                                style={{fontSize:12,padding:"5px 12px",borderRadius:8,border:"1.5px solid #f59e0b",
+                                  background:"white",color:"#92400e",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
+                                {bsubFetching===subject
+                                  ? "Importing..."
+                                  : <><MdRefresh size={14}/> Fetch from existing course</>}
+                              </button>
+                              <button
+                                onClick={()=>{ setBsubShowChapterForm(subject); setBsubChapterInput(""); }}
+                                style={{fontSize:12,padding:"5px 12px",borderRadius:8,border:"none",
+                                  background:"#f59e0b",color:"white",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
+                                <MdAdd size={14}/> Add Chapter
+                              </button>
+                            </div>
+
+                            {/* Add chapter form */}
+                            {bsubShowChapterForm===subject && (
+                              <div style={{padding:"12px 16px",borderBottom:"1px solid #fde68a",background:"#fefce8"}}>
+                                <div style={{fontWeight:600,fontSize:13,color:"#92400e",marginBottom:8}}>New Chapter</div>
+                                <div style={{display:"flex",gap:8}}>
+                                  <input className="cr-input" placeholder="e.g. Cell Biology"
+                                    value={bsubChapterInput}
+                                    onChange={e=>setBsubChapterInput(e.target.value)}
+                                    onKeyDown={e=>e.key==="Enter"&&handleBsubAddChapter(subject)}
+                                    autoFocus style={{flex:1}}/>
+                                  <button className="cr-primary-btn" style={{background:"#f59e0b"}}
+                                    onClick={()=>handleBsubAddChapter(subject)} disabled={saving}>
+                                    {saving?"...":"Add"}
+                                  </button>
+                                  <button className="cr-cancel-btn"
+                                    onClick={()=>setBsubShowChapterForm(null)}>
+                                    <MdClose size={15}/>
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Chapters list */}
+                            <div style={{padding:"8px 0"}}>
+                              {chapters.length===0 ? (
+                                <div style={{padding:"16px",textAlign:"center",color:"#9ca3af",fontSize:13}}>
+                                  No chapters yet — click "Add Chapter" or "Fetch from existing course"
+                                </div>
+                              ) : chapters.map((ch, ci) => {
+                                const chKey = `${subject}::${ch._id}`;
+                                const isOpen = bsubActiveChapter===chKey;
+                                return (
+                                  <div key={ch._id} className="cr-chapter-item">
+                                    <div
+                                      className={`cr-chapter-header ${isOpen?"cr-chapter-open":""}`}
+                                      onClick={()=>setBsubActiveChapter(isOpen?null:chKey)}>
+                                      <div className="cr-chapter-left">
+                                        <span className="cr-chapter-num">{ci+1}</span>
+                                        <div>
+                                          <div className="cr-chapter-name">{ch.title}</div>
+                                          <div className="cr-chapter-count">
+                                            <MdVideoLibrary size={11}/> {ch.lessons?.length||0} topics
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="cr-chapter-actions">
+                                        <button className="cr-del-chapter-btn"
+                                          onClick={e=>{e.stopPropagation();handleBsubDeleteChapter(subject,String(ch._id));}}>
+                                          <MdDelete size={14}/>
+                                        </button>
+                                        {isOpen?<MdExpandLess size={22} color="#9ca3af"/>:<MdExpandMore size={22} color="#9ca3af"/>}
+                                      </div>
+                                    </div>
+
+                                    {isOpen && (
+                                      <div className="cr-lessons-wrap">
+                                        {(ch.lessons||[]).map((lesson,li)=>(
+                                          <div key={lesson._id} className="cr-lesson-item">
+                                            <span className="cr-lesson-num">{li+1}</span>
+                                            {lesson.videoType==="youtube"
+                                              ?<FaYoutube size={15} color="#ef4444"/>
+                                              :lesson.videoType==="bunny"
+                                                ?<FaVideo size={14} color="#6c47d4"/>
+                                                :<MdVideoLibrary size={15} color="#9ca3af"/>}
+                                            <span className="cr-lesson-title">{lesson.title}</span>
+                                            {lesson.duration&&<span className="cr-lesson-duration"><MdTimelapse size={12}/> {lesson.duration}</span>}
+                                            <div className="cr-lesson-btns">
+                                              <button className="cr-del-lesson-btn"
+                                                onClick={()=>handleBsubDeleteLesson(subject,String(ch._id),String(lesson._id))}>
+                                                <MdDelete size={13}/>
+                                              </button>
+                                            </div>
+                                          </div>
+                                        ))}
+
+                                        {/* Add lesson form */}
+                                        {bsubShowLessonForm===chKey ? (
+                                          <div className="cr-lesson-form">
+                                            <div className="cr-lesson-form-title">
+                                              <MdVideoLibrary size={15} color="#f59e0b"/> Add New Topic
+                                            </div>
+                                            <input className="cr-input" placeholder="Topic title"
+                                              value={bsubLessonForm.title}
+                                              onChange={e=>setBsubLessonForm({...bsubLessonForm,title:e.target.value})} autoFocus/>
+
+                                            {/* Video type */}
+                                            <div className="cr-video-type-row">
+                                              <span className="cr-video-type-label">Video source:</span>
+                                              {[
+                                                {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
+                                                {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/>},
+                                                {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#6c47d4"}/>},
+                                                {t:"none",label:"No Video",icon:"📄"},
+                                              ].map(({t,label,icon})=>(
+                                                <button key={t}
+                                                  className={`cr-video-type-btn ${bsubLessonForm.videoType===t?"cr-video-type-active":""}`}
+                                                  onClick={()=>setBsubLessonForm({...bsubLessonForm,videoType:t,youtubeLink:"",videoUrl:""})}>
+                                                  {icon} {label}
+                                                </button>
+                                              ))}
+                                            </div>
+
+                                            {bsubLessonForm.videoType==="youtube" && (
+                                              <input className="cr-input" placeholder="YouTube link https://youtube.com/watch?v=..."
+                                                value={bsubLessonForm.youtubeLink}
+                                                onChange={e=>setBsubLessonForm({...bsubLessonForm,youtubeLink:e.target.value})}/>
+                                            )}
+                                            {bsubLessonForm.videoType==="custom" && (
+                                              <>
+                                                <input className="cr-input" placeholder="Video URL (Vimeo, Drive, S3...)"
+                                                  value={bsubLessonForm.videoUrl}
+                                                  onChange={e=>setBsubLessonForm({...bsubLessonForm,videoUrl:e.target.value})}/>
+                                                <div className="cr-video-url-hint">
+                                                  💡 Paste direct video URL from Vimeo, Google Drive, or S3.
+                                                </div>
+                                              </>
+                                            )}
+                                            {bsubLessonForm.videoType==="bunny" && (
+                                              <div className="cr-bunny-upload">
+                                                <input ref={bsubVideoFileRef} type="file" accept="video/*" style={{display:"none"}}
+                                                  onChange={e=>e.target.files[0]&&handleBsubBunnyUpload(e.target.files[0])}/>
+                                                {bsubLessonForm.videoUrl ? (
+                                                  <div className="cr-bunny-success">
+                                                    <MdCheckCircle size={16} color="#10b981"/>
+                                                    <span>Video uploaded to Bunny CDN</span>
+                                                    <button className="cr-bunny-change-btn"
+                                                      onClick={()=>setBsubLessonForm(prev=>({...prev,videoUrl:""}))}>Change</button>
+                                                  </div>
+                                                ) : (
+                                                  <>
+                                                    <button className="cr-bunny-pick-btn"
+                                                      onClick={()=>bsubVideoFileRef.current?.click()}
+                                                      disabled={bsubUploading}>
+                                                      <MdCloudUpload size={18}/>
+                                                      {bsubUploading ? `Uploading... ${bsubUploadProgress}%` : "Choose Video File"}
+                                                    </button>
+                                                    {bsubUploading && (
+                                                      <div className="cr-progress-bar">
+                                                        <div className="cr-progress-fill" style={{width:`${bsubUploadProgress}%`}}/>
+                                                      </div>
+                                                    )}
+                                                    <div className="cr-video-url-hint">
+                                                      💡 Video will be encoded and streamed via <strong>Bunny CDN</strong>.
+                                                    </div>
+                                                  </>
+                                                )}
+                                              </div>
+                                            )}
+                                            <input className="cr-input" placeholder="Duration e.g. 45 mins"
+                                              value={bsubLessonForm.duration}
+                                              onChange={e=>setBsubLessonForm({...bsubLessonForm,duration:e.target.value})}/>
+
+                                            <div className="cr-lesson-form-btns">
+                                              <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#f59e0b"}}
+                                                onClick={()=>handleBsubAddLesson(subject,String(ch._id))} disabled={saving}>
+                                                <MdCheckCircle size={15}/> {saving?"Adding...":"Add Topic"}
+                                              </button>
+                                              <button className="cr-cancel-btn"
+                                                onClick={()=>{setBsubShowLessonForm(null);setBsubLessonForm(EMPTY_LESSON);}}>
+                                                <MdClose size={15}/> Cancel
+                                              </button>
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <button className="cr-add-lesson-btn"
+                                            onClick={()=>setBsubShowLessonForm(chKey)}>
+                                            <MdAdd size={16}/> Add Topic
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
 

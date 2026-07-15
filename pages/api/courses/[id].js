@@ -1,4 +1,5 @@
 // pages/api/courses/[id].js — REPLACE your existing file
+import mongoose from "mongoose";
 import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
@@ -204,6 +205,103 @@ export default async function handler(req, res) {
         if (includedCourses) course.includedCourses = includedCourses;
         await course.save();
         return res.status(200).json({ success: true, course });
+      }
+
+      // ── Bundle subject content actions — use raw MongoDB ops to bypass schema cache ──
+
+      if (action === "add-bsubject-chapter") {
+        const { subject, title } = req.body;
+        if (!subject || !title) return res.status(400).json({ error: "Subject and title required" });
+        const newChapter = { _id: new mongoose.Types.ObjectId(), title, order: 0, lessons: [] };
+        // .lean() reads raw MongoDB doc (not filtered by Mongoose schema)
+        const raw = await Course.findById(id).lean();
+        const hasSub = (raw?.subjectContents||[]).some(s => s.subject === subject);
+        if (hasSub) {
+          await Course.findOneAndUpdate(
+            { _id: id, "subjectContents.subject": subject },
+            { $push: { "subjectContents.$.chapters": newChapter } },
+            { strict: false }
+          );
+        } else {
+          await Course.findByIdAndUpdate(id,
+            { $push: { subjectContents: { subject, chapters: [newChapter] } } },
+            { strict: false }
+          );
+        }
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "add-bsubject-lesson") {
+        const { subject, chapterId, lesson } = req.body;
+        if (!subject || !chapterId || !lesson) return res.status(400).json({ error: "Required fields missing" });
+        const newLesson = { _id: new mongoose.Types.ObjectId(), ...lesson, notes: [] };
+        await Course.findOneAndUpdate(
+          { _id: id, "subjectContents.subject": subject },
+          { $push: { "subjectContents.$.chapters.$[ch].lessons": newLesson } },
+          { arrayFilters: [{ "ch._id": new mongoose.Types.ObjectId(chapterId) }], strict: false }
+        );
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "delete-bsubject-chapter") {
+        const { subject, chapterId } = req.body;
+        if (!subject || !chapterId) return res.status(400).json({ error: "Subject and chapterId required" });
+        await Course.findOneAndUpdate(
+          { _id: id, "subjectContents.subject": subject },
+          { $pull: { "subjectContents.$.chapters": { _id: new mongoose.Types.ObjectId(chapterId) } } },
+          { strict: false }
+        );
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "delete-bsubject-lesson") {
+        const { subject, chapterId, lessonId } = req.body;
+        if (!subject || !chapterId || !lessonId) return res.status(400).json({ error: "Required fields missing" });
+        await Course.findOneAndUpdate(
+          { _id: id, "subjectContents.subject": subject },
+          { $pull: { "subjectContents.$.chapters.$[ch].lessons": { _id: new mongoose.Types.ObjectId(lessonId) } } },
+          { arrayFilters: [{ "ch._id": new mongoose.Types.ObjectId(chapterId) }], strict: false }
+        );
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "fetch-bsubject-content") {
+        const { subject } = req.body;
+        if (!subject) return res.status(400).json({ error: "Subject required" });
+        const subCourse = await Course.findOne({
+          courseType: { $ne: "bundle" }, batch: course.batch, subject,
+        }).lean();
+        if (!subCourse) return res.status(404).json({ error: `No individual ${subject} course found for ${course.batch}` });
+        const copiedChapters = (subCourse.chapters||[]).map(ch => ({
+          _id: new mongoose.Types.ObjectId(),
+          title: ch.title, order: ch.order||0,
+          lessons: (ch.lessons||[]).map(l => ({
+            _id: new mongoose.Types.ObjectId(),
+            title: l.title, youtubeLink: l.youtubeLink||"",
+            videoUrl: l.videoUrl||"", videoType: l.videoType||"youtube",
+            duration: l.duration||"", notes: [],
+          })),
+        }));
+        const raw = await Course.findById(id).lean();
+        const hasSub = (raw?.subjectContents||[]).some(s => s.subject === subject);
+        if (hasSub) {
+          await Course.findOneAndUpdate(
+            { _id: id, "subjectContents.subject": subject },
+            { $set: { "subjectContents.$.chapters": copiedChapters } },
+            { strict: false }
+          );
+        } else {
+          await Course.findByIdAndUpdate(id,
+            { $push: { subjectContents: { subject, chapters: copiedChapters } } },
+            { strict: false }
+          );
+        }
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
       }
 
       return res.status(400).json({ error: "Unknown action" });
