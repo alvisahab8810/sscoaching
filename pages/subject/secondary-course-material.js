@@ -44,6 +44,7 @@ export default function TmaSrsecondary12th() {
           </a>
         </div>
 
+        {/* Keyword Cluster section removed per request
         <div className="footer-park">
           <div className="container">
             <p>
@@ -58,6 +59,7 @@ export default function TmaSrsecondary12th() {
             </p>
           </div>
         </div>
+        */}
 
         <Footer />
         <Popup />

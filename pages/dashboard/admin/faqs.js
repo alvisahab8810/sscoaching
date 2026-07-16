@@ -3,8 +3,12 @@ import { withAdminAuth } from "@/lib/withAdminAuth";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { toast } from "sonner";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+import "react-quill-new/dist/quill.snow.css";
 
 export default function FaqManager() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +22,14 @@ export default function FaqManager() {
   const [faqs, setFaqs] = useState([]);
   const [form, setForm] = useState({ question: "", answer: "", category: "", pageUrl: "" });
   const [editing, setEditing] = useState(null);
+
+  const quillModules = useMemo(() => ({
+    toolbar: [
+      ["bold", "italic", "underline"],
+      ["link"],
+      ["clean"],
+    ],
+  }), []);
 
   const fetchFaqs = async () => {
     const res = await fetch("/api/faqs");
@@ -145,15 +157,14 @@ export default function FaqManager() {
                 </div> */}
                 <div className="col-12">
                   <label className="form-label fw-semibold">Answer</label>
-                  <textarea
-                    rows="3"
-                    className="form-control"
+                  <ReactQuill
+                    theme="snow"
                     value={form.answer}
-                    onChange={(e) =>
-                      setForm({ ...form, answer: e.target.value })
-                    }
-                    required
-                  ></textarea>
+                    onChange={(val) => setForm({ ...form, answer: val })}
+                    modules={quillModules}
+                    placeholder="Write the answer here... select text and click the link icon to add a link"
+                    style={{ marginBottom: "40px" }}
+                  />
                 </div>
                 <div className="col-md-12">
                   <label className="form-label fw-semibold">

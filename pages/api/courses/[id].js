@@ -117,6 +117,16 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course });
       }
 
+      if (action === "edit-chapter") {
+        const { chapterId, title } = req.body;
+        if (!title?.trim()) return res.status(400).json({ error: "Chapter title required" });
+        const chapter = course.chapters.id(chapterId);
+        if (!chapter) return res.status(404).json({ error: "Chapter not found" });
+        chapter.title = title.trim();
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
       if (action === "delete-chapter") {
         const { chapterId } = req.body;
         course.chapters = course.chapters.filter(c => c._id.toString() !== chapterId);
@@ -138,6 +148,28 @@ export default async function handler(req, res) {
           title, youtubeLink: youtubeLink || "", videoUrl: videoUrl || "",
           videoType: vType, duration: duration || "", notes: [],
         });
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
+      if (action === "edit-lesson") {
+        const { chapterId, lessonId, title, youtubeLink, videoUrl, videoType, duration } = req.body;
+        if (!title?.trim()) return res.status(400).json({ error: "Topic title required" });
+        const chapter = course.chapters.id(chapterId);
+        if (!chapter) return res.status(404).json({ error: "Chapter not found" });
+        const lesson = chapter.lessons.id(lessonId);
+        if (!lesson) return res.status(404).json({ error: "Lesson not found" });
+        lesson.title = title.trim();
+        if (videoType !== undefined) {
+          if (videoType === "youtube" && !youtubeLink)
+            return res.status(400).json({ error: "YouTube link required" });
+          if ((videoType === "custom" || videoType === "bunny") && !videoUrl)
+            return res.status(400).json({ error: "Video URL required" });
+          lesson.videoType   = videoType;
+          lesson.youtubeLink = youtubeLink || "";
+          lesson.videoUrl    = videoUrl || "";
+        }
+        if (duration !== undefined) lesson.duration = duration;
         await course.save();
         return res.status(200).json({ success: true, course });
       }
@@ -240,6 +272,43 @@ export default async function handler(req, res) {
           { _id: id, "subjectContents.subject": subject },
           { $push: { "subjectContents.$.chapters.$[ch].lessons": newLesson } },
           { arrayFilters: [{ "ch._id": new mongoose.Types.ObjectId(chapterId) }], strict: false }
+        );
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "edit-bsubject-chapter") {
+        const { subject, chapterId, title } = req.body;
+        if (!subject || !chapterId || !title?.trim()) return res.status(400).json({ error: "Required fields missing" });
+        await Course.findOneAndUpdate(
+          { _id: id, "subjectContents.subject": subject },
+          { $set: { "subjectContents.$.chapters.$[ch].title": title.trim() } },
+          { arrayFilters: [{ "ch._id": new mongoose.Types.ObjectId(chapterId) }], strict: false }
+        );
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated });
+      }
+
+      if (action === "edit-bsubject-lesson") {
+        const { subject, chapterId, lessonId, title, youtubeLink, videoUrl, videoType, duration } = req.body;
+        if (!subject || !chapterId || !lessonId || !title?.trim()) return res.status(400).json({ error: "Required fields missing" });
+        if (videoType !== undefined) {
+          if (videoType === "youtube" && !youtubeLink)
+            return res.status(400).json({ error: "YouTube link required" });
+          if ((videoType === "custom" || videoType === "bunny") && !videoUrl)
+            return res.status(400).json({ error: "Video URL required" });
+        }
+        const set = { "subjectContents.$.chapters.$[ch].lessons.$[ls].title": title.trim() };
+        if (videoType !== undefined) {
+          set["subjectContents.$.chapters.$[ch].lessons.$[ls].videoType"]   = videoType;
+          set["subjectContents.$.chapters.$[ch].lessons.$[ls].youtubeLink"] = youtubeLink || "";
+          set["subjectContents.$.chapters.$[ch].lessons.$[ls].videoUrl"]    = videoUrl || "";
+        }
+        if (duration !== undefined) set["subjectContents.$.chapters.$[ch].lessons.$[ls].duration"] = duration;
+        await Course.findOneAndUpdate(
+          { _id: id, "subjectContents.subject": subject },
+          { $set: set },
+          { arrayFilters: [{ "ch._id": new mongoose.Types.ObjectId(chapterId) }, { "ls._id": new mongoose.Types.ObjectId(lessonId) }], strict: false }
         );
         const updated = await Course.findById(id).lean();
         return res.status(200).json({ success: true, course: updated });

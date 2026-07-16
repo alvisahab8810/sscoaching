@@ -159,6 +159,7 @@ export default function SyllabusClass12th() {
     </section>
 
 
+        {/* Keyword Cluster section removed per request
         <div className="footer-park">
           <div className="container">
             <p>
@@ -177,6 +178,7 @@ export default function SyllabusClass12th() {
             </p>
           </div>
         </div>
+        */}
 
         <Footer />
         <Popup />

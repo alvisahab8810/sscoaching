@@ -7,7 +7,7 @@ export default function TmaHero() {
       <div className="container">
         <div className="hero-text">
           <h1 className="qustion-paper-hero-title">
-           <span className="highlight text-left">NIOS Question Papers of TMA</span>  for Secondary (10th) session 2024-25
+           <span className="highlight text-left">NIOS Question Papers of TMA</span>  for Secondary (10th) session 2025-26
           </h1>
           <p className="hero-description text-left">
             Secondary (10th) Tutor Marked Assignment question papers

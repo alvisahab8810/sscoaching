@@ -460,16 +460,19 @@ export default function Header() {
                 onMouseLeave={() => toggleDropdown(null)}
               >
                 <span className="dropdown-toggle">
-                  NIOS Results <FiChevronDown className="arrow-icon" />
+                  <Link href="/nios-results">
+
+                   NIOS Results <FiChevronDown className="arrow-icon" />
+                  </Link>
                 </span>
                 {openDropdown === "niosresults" && (
                   <div className="dropdown-menu">
-                    <Link
+                    {/* <Link
                       href="/nios-results"
                       className={`mb-2 ${isActive("/nios-results") ? "active" : ""}`}
                     >
                       NIOS Results 2026
-                    </Link>
+                    </Link> */}
                     <Link
                       href="/nios-class-12th-result"
                       className={`mb-2 ${isActive("/nios-class-12th-result") ? "active" : ""}`}
@@ -620,7 +623,7 @@ export default function Header() {
     </section>
 
     {/* ── Results Announcement Strip ── */}
-    {!pathname.startsWith("/dashboard") && <ResultsAnnouncementStrip />}
+    {/* {!pathname.startsWith("/dashboard") && <ResultsAnnouncementStrip />} */}
 
     {/* ── Breadcrumb ── */}
     {pathname !== "/" && !pathname.startsWith("/dashboard") && (

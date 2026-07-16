@@ -330,6 +330,7 @@ export default function SyllabusSecondary() {
         </a>
       </div>
 
+      {/* Keyword Cluster section removed per request
       <div className="footer-park">
         <div className="container">
           <p>
@@ -337,6 +338,7 @@ export default function SyllabusSecondary() {
           </p>
         </div>
       </div>
+      */}
     </div>
   );
 }

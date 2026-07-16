@@ -3282,18 +3282,12 @@ button:focus,
 }
 
 
-/* .blog-toc {
-  position: sticky;
-  top: 100px;
-  max-height: 80vh;
-  overflow-y: auto;
-  border-left: 4px solid #007bff10;
-  transition: all 0.3s ease;
-}
-
 .toc-link {
   cursor: pointer;
   transition: all 0.3s;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .toc-link:hover {
@@ -3306,12 +3300,13 @@ button:focus,
   font-weight: 600;
   border-left: 3px solid #007bff;
   padding-left: 6px;
-} */
-
-
+}
 
 .blog-toc {
   border-radius: 10px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 

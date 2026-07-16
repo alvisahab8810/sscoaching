@@ -52,6 +52,7 @@ export default function srsecondary() {
           </a>
         </div>
 
+        {/* Keyword Cluster section removed per request
         <div className="footer-park">
           <div className="container">
             <p>
@@ -66,6 +67,7 @@ export default function srsecondary() {
             </p>
           </div>
         </div>
+        */}
 
         <Footer />
         <Popup />

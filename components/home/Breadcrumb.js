@@ -206,6 +206,16 @@ const PARENT_MAP = {
   "nios-class-12th-result": { label: "NIOS Results", href: "/nios-results" },
 };
 
+// Category segments that have no index page of their own (visiting the bare
+// URL 404s) — point the crumb at the real hub page a user would land on
+// instead of the dead URL, so the link never 404s.
+const SEGMENT_OVERRIDE = {
+  "curriculum-10th": { label: "Syllabus Class 10th", href: "/subject/syllabus-class-10th" },
+  "curriculum-12th": { label: "Syllabus Class 12th", href: "/subject/syllabus-class-12th" },
+  "summary-10th":    { label: "Syllabus Class 10th", href: "/subject/syllabus-class-10th" },
+  "summary-12th":    { label: "Syllabus Class 12th", href: "/subject/syllabus-class-12th" },
+};
+
 // Fallback: auto-format unknown slugs — strips numbers at end
 // e.g. "some-slug-123" → "Some Slug"
 function formatLabel(slug) {
@@ -240,6 +250,15 @@ export default function Breadcrumb({ customPaths }) {
       if (parent && !result.find(c => c.href === parent.href)) {
         result.push(parent);
       }
+
+      const override = SEGMENT_OVERRIDE[seg];
+      if (override) {
+        if (!result.find(c => c.href === override.href)) {
+          result.push(override);
+        }
+        return;
+      }
+
       result.push({
         label: getLabel(decodeURIComponent(seg)),
         href: "/" + segments.slice(0, i + 1).join("/"),

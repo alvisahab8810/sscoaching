@@ -25,32 +25,55 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
 
   const [headings, setHeadings] = useState([]);
+  const [processedHTML, setProcessedHTML] = useState("");
+
+  // ✅ Decode HTML entities (e.g. &nbsp;) so TOC labels/ids don't contain
+  // literal entity text — safe here since this only ever runs client-side.
+  const decodeEntities = (str) => {
+    const el = document.createElement("textarea");
+    el.innerHTML = str;
+    return el.value;
+  };
+
+  // ✅ Single pass: inject unique heading IDs and collect the matching TOC
+  // list together, so the rendered anchors and the TOC links can never
+  // drift apart (e.g. from duplicate heading text or formatted headings).
+  const processBlogContent = (htmlContent) => {
+    if (!htmlContent) return { html: "", headings: [] };
+
+    const extractedHeadings = [];
+    let counter = 0;
+
+    const html = htmlContent.replace(
+      /<(h2|h3)[^>]*>([\s\S]*?)<\/\1>/g,
+      (match, tag, innerHtml) => {
+        const text = decodeEntities(innerHtml.replace(/<[^>]+>/g, "")).trim();
+        const baseId = text
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+        const id = `${baseId || "section"}-${counter}`;
+        counter++;
+        extractedHeadings.push({ id, text, level: tag.toUpperCase() });
+        return `<${tag} id="${id}">${innerHtml}</${tag}>`;
+      }
+    );
+
+    return { html, headings: extractedHeadings };
+  };
 
   const renderBlogContent = (htmlContent) => {
     if (!htmlContent) return null;
 
-    // ✅ Add IDs to headings before parsing
-    let processedHTML = htmlContent.replace(
-      /<(h2|h3)>(.*?)<\/\1>/g,
-      (match, tag, text) => {
-        const id = text
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
-        return `<${tag} id="${id}">${text}</${tag}>`;
-      }
-    );
-
-    const elements = parse(processedHTML);
-
+    const elements = parse(htmlContent);
     const contentArray = Array.isArray(elements) ? elements : [elements];
     const enhancedContent = [];
 
     contentArray.forEach((element, index) => {
       enhancedContent.push(element);
-      if (index === 10) enhancedContent.push(<CTA2 key="cta2" />);
-      if (index === 20) enhancedContent.push(<CTA3 key="cta3" />);
-      if (index === 30) enhancedContent.push(<CTA2 key="cta4" />);
+      // if (index === 10) enhancedContent.push(<CTA2 key="cta2" />);
+      // if (index === 20) enhancedContent.push(<CTA3 key="cta3" />);
+      // if (index === 30) enhancedContent.push(<CTA2 key="cta4" />);
     });
 
     return enhancedContent;
@@ -58,33 +81,11 @@ export default function BlogDetail() {
 
   useEffect(() => {
     if (blog?.content) {
-      const h = extractHeadings(blog.content);
+      const { html, headings: h } = processBlogContent(blog.content);
+      setProcessedHTML(html);
       setHeadings(h);
     }
   }, [blog]);
-
-  // ✅ Extract headings safely
-  const extractHeadings = (htmlContent) => {
-    if (!htmlContent) return [];
-
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlContent;
-
-    const headings = Array.from(tempDiv.querySelectorAll("h2, h3"));
-    return headings.map((h) => {
-      const id = h.innerText
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-
-      h.setAttribute("id", id); // ✅ add IDs directly
-      return {
-        id,
-        text: h.innerText,
-        level: h.tagName,
-      };
-    });
-  };
 
   useEffect(() => {
     if (!slug) return;
@@ -203,7 +204,7 @@ export default function BlogDetail() {
                   className="mb-5"
                 /> */}
 
-              <div className="mb-5">{renderBlogContent(blog.content)}</div>
+              <div className="mb-5">{renderBlogContent(processedHTML)}</div>
 
               {/* Category & Tags */}
               <p

@@ -838,6 +838,7 @@ export default function SeniosSecondary() {
         </a>
       </div>
 
+      {/* Keyword Cluster section removed per request
       <div className="footer-park">
         <div className="container">
           <p>
@@ -851,6 +852,7 @@ export default function SeniosSecondary() {
           </p>
         </div>
       </div>
+      */}
     </div>
   );
 }

@@ -921,10 +921,15 @@ const EMPTY_FORM = {
 };
 
 const EMPTY_LESSON = {
-  title:"", videoType:"youtube", youtubeLink:"", videoUrl:"", duration:"",
+  title:"", videoType:"bunny", youtubeLink:"", videoUrl:"", duration:"",
 };
 
 const EMPTY_NOTE = { noteTitle:"", fileUrl:"", type:"pdf" };
+
+function toYoutubeEmbed(url) {
+  const m = url?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+}
 
 /* ─────────────────────────────────────────
    IMAGE UPLOADER (unchanged)
@@ -1035,6 +1040,10 @@ export default function AdminCoursesPage({ admin }) {
   const [showChapterForm, setShowChapterForm] = useState(false);
   const [chapterInput, setChapterInput]       = useState("");
   const [lessonForm, setLessonForm]           = useState(EMPTY_LESSON);
+  const [editingChapterId, setEditingChapterId] = useState(null);
+  const [editChapterInput, setEditChapterInput] = useState("");
+  const [editingLessonId, setEditingLessonId]   = useState(null);
+  const [previewLessonId, setPreviewLessonId]   = useState(null);
   // Note form — keyed by lessonId
   const [showNoteForm, setShowNoteForm]       = useState(null); // lessonId
   const [noteForm, setNoteForm]               = useState(EMPTY_NOTE);
@@ -1086,6 +1095,8 @@ export default function AdminCoursesPage({ admin }) {
     setView("list"); setSelectedCourse(null); setForm(EMPTY_FORM);
     setIsEditing(false); setActiveChapter(null);
     setShowChapterForm(false); setShowLessonForm(null);
+    setEditingChapterId(null); setEditChapterInput("");
+    setEditingLessonId(null); setPreviewLessonId(null);
     setShowNoteForm(null); setShowMaterialForm(false);
     setBundleForm(EMPTY_BUNDLE); setLinkedClasses([]);
     setEditingBundleCourses(false); setBundleCourseEdits([]);
@@ -1222,6 +1233,53 @@ export default function AdminCoursesPage({ admin }) {
         toast.success("Chapter deleted");
       }
     } catch { toast.error("Network error"); }
+  };
+
+  const handleEditChapter = async (chapterId) => {
+    if (!editChapterInput.trim()) { toast.error("Chapter title required"); return; }
+    setSaving(true);
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=edit-chapter`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({chapterId, title:editChapterInput.trim()}),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        setEditingChapterId(null); setEditChapterInput("");
+        toast.success("Chapter updated!");
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setSaving(false); }
+  };
+
+  const handleEditLesson = async (chapterId, lessonId) => {
+    if (!lessonForm.title.trim()) { toast.error("Topic title required"); return; }
+    if (lessonForm.videoType==="youtube" && !lessonForm.youtubeLink.trim()) {
+      toast.error("YouTube link required"); return;
+    }
+    if (lessonForm.videoType==="custom" && !lessonForm.videoUrl.trim()) {
+      toast.error("Video URL required"); return;
+    }
+    if (lessonForm.videoType==="bunny" && !lessonForm.videoUrl.trim()) {
+      toast.error("Please upload a video first"); return;
+    }
+    setSaving(true);
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=edit-lesson`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({chapterId, lessonId, ...lessonForm}),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        setEditingLessonId(null); setLessonForm(EMPTY_LESSON);
+        toast.success("Topic updated!");
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setSaving(false); }
   };
 
   /* ── Add lesson — now with videoType ── */
@@ -1504,10 +1562,30 @@ export default function AdminCoursesPage({ admin }) {
     setSaving(false);
   };
 
+  const handleBsubEditChapter = async (subject, chapterId) => {
+    if (!editChapterInput.trim()) { toast.error("Chapter title required"); return; }
+    setSaving(true);
+    const ok = await bsubCall("edit-bsubject-chapter", { subject, chapterId, title: editChapterInput.trim() });
+    if (ok) { setEditingChapterId(null); setEditChapterInput(""); toast.success("Chapter updated!"); }
+    setSaving(false);
+  };
+
   const handleBsubDeleteLesson = async (subject, chapterId, lessonId) => {
     if (!confirm("Delete this topic?")) return;
     const ok = await bsubCall("delete-bsubject-lesson", { subject, chapterId, lessonId });
     if (ok) toast.success("Topic deleted");
+  };
+
+  const handleBsubEditLesson = async (subject, chapterId, lessonId) => {
+    if (!bsubLessonForm.title.trim()) { toast.error("Topic title required"); return; }
+    if (bsubLessonForm.videoType==="youtube" && !bsubLessonForm.youtubeLink.trim()) { toast.error("YouTube link required"); return; }
+    if ((bsubLessonForm.videoType==="custom" || bsubLessonForm.videoType==="bunny") && !bsubLessonForm.videoUrl.trim()) {
+      toast.error(bsubLessonForm.videoType==="bunny" ? "Please upload a video first" : "Video URL required"); return;
+    }
+    setSaving(true);
+    const ok = await bsubCall("edit-bsubject-lesson", { subject, chapterId, lessonId, ...bsubLessonForm });
+    if (ok) { setEditingLessonId(null); setBsubLessonForm(EMPTY_LESSON); toast.success("Topic updated!"); }
+    setSaving(false);
   };
 
   const handleBsubFetch = async (subject) => {
@@ -2078,13 +2156,35 @@ export default function AdminCoursesPage({ admin }) {
                             <div className="cr-chapter-left">
                               <span className="cr-chapter-num">{ci+1}</span>
                               <div>
-                                <div className="cr-chapter-name">{chapter.title}</div>
+                                {editingChapterId===chapter._id ? (
+                                  <div className="cr-chapter-form-row" onClick={e=>e.stopPropagation()}>
+                                    <input className="cr-input" value={editChapterInput}
+                                      onChange={e=>setEditChapterInput(e.target.value)}
+                                      onKeyDown={e=>e.key==="Enter"&&handleEditChapter(chapter._id)}
+                                      autoFocus/>
+                                    <button className="cr-primary-btn" onClick={()=>handleEditChapter(chapter._id)} disabled={saving}>
+                                      {saving?"...":"Save"}
+                                    </button>
+                                    <button className="cr-cancel-btn"
+                                      onClick={()=>{setEditingChapterId(null);setEditChapterInput("");}}>
+                                      <MdClose size={16}/>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="cr-chapter-name">{chapter.title}</div>
+                                )}
                                 <div className="cr-chapter-count">
                                   <MdVideoLibrary size={11}/> {chapter.lessons.length} topics
                                 </div>
                               </div>
                             </div>
                             <div className="cr-chapter-actions">
+                              {editingChapterId!==chapter._id && (
+                                <button className="cr-edit-chapter-btn" title="Edit chapter"
+                                  onClick={e=>{e.stopPropagation();setEditingChapterId(chapter._id);setEditChapterInput(chapter.title);}}>
+                                  <MdEdit size={14}/>
+                                </button>
+                              )}
                               <button className="cr-del-chapter-btn"
                                 onClick={e=>{e.stopPropagation();handleDeleteChapter(chapter._id);}}>
                                 <MdDelete size={14}/>
@@ -2121,6 +2221,12 @@ export default function AdminCoursesPage({ admin }) {
                                       </span>
                                     )}
                                     <div className="cr-lesson-btns">
+                                      {lesson.videoType!=="none" && (lesson.youtubeLink || lesson.videoUrl) && (
+                                        <button className="cr-preview-lesson-btn" title="Preview video"
+                                          onClick={()=>setPreviewLessonId(previewLessonId===lesson._id?null:lesson._id)}>
+                                          <MdPlayCircle size={13}/> Preview
+                                        </button>
+                                      )}
                                       <button
                                         className="cr-add-note-inline-btn"
                                         title="Add note/PDF"
@@ -2131,12 +2237,162 @@ export default function AdminCoursesPage({ admin }) {
                                       >
                                         <MdAttachFile size={13}/> Notes
                                       </button>
+                                      {editingLessonId!==lesson._id && (
+                                        <button className="cr-edit-lesson-btn" title="Edit topic"
+                                          onClick={()=>{
+                                            setEditingLessonId(lesson._id);
+                                            setLessonForm({
+                                              title: lesson.title||"",
+                                              videoType: lesson.videoType||"none",
+                                              youtubeLink: lesson.youtubeLink||"",
+                                              videoUrl: lesson.videoUrl||"",
+                                              duration: lesson.duration||"",
+                                            });
+                                          }}>
+                                          <MdEdit size={13}/>
+                                        </button>
+                                      )}
                                       <button className="cr-del-lesson-btn"
                                         onClick={()=>handleDeleteLesson(chapter._id, lesson._id)}>
                                         <MdDelete size={13}/>
                                       </button>
                                     </div>
                                   </div>
+
+                                  {/* ── Video preview panel ── */}
+                                  {previewLessonId===lesson._id && (
+                                    <div className="cr-video-preview">
+                                      {lesson.videoType==="youtube" && toYoutubeEmbed(lesson.youtubeLink) ? (
+                                        <iframe
+                                          src={toYoutubeEmbed(lesson.youtubeLink)}
+                                          title={lesson.title}
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                          allowFullScreen
+                                        />
+                                      ) : lesson.videoUrl ? (
+                                        <video src={lesson.videoUrl} controls/>
+                                      ) : (
+                                        <div className="cr-video-url-hint">No valid video source to preview.</div>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  {/* ── Edit topic form ── */}
+                                  {editingLessonId===lesson._id && (
+                                    <div className="cr-lesson-form">
+                                      <div className="cr-lesson-form-title">
+                                        <MdEdit size={15} color="#6c47d4"/> Edit Topic
+                                      </div>
+
+                                      <input className="cr-input" placeholder="Topic title"
+                                        value={lessonForm.title}
+                                        onChange={e=>setLessonForm({...lessonForm,title:e.target.value})} autoFocus/>
+
+                                      <div className="cr-video-type-row">
+                                        <span className="cr-video-type-label">Video source:</span>
+                                        <button
+                                          className={`cr-video-type-btn ${lessonForm.videoType==="bunny"?"cr-video-type-active":""}`}
+                                          onClick={()=>setLessonForm({...lessonForm,videoType:"bunny",youtubeLink:"",videoUrl:""})}
+                                          disabled={uploading}
+                                        >
+                                          <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/> Upload
+                                        </button>
+                                        <button
+                                          className={`cr-video-type-btn ${lessonForm.videoType==="youtube"?"cr-video-type-active":""}`}
+                                          onClick={()=>setLessonForm({...lessonForm,videoType:"youtube",videoUrl:""})}
+                                        >
+                                          <FaYoutube size={14} color={lessonForm.videoType==="youtube"?"#fff":"#ef4444"}/> YouTube
+                                        </button>
+                                        <button
+                                          className={`cr-video-type-btn ${lessonForm.videoType==="custom"?"cr-video-type-active":""}`}
+                                          onClick={()=>setLessonForm({...lessonForm,videoType:"custom",youtubeLink:""})}
+                                        >
+                                          <FaVideo size={13} color={lessonForm.videoType==="custom"?"#fff":"#6c47d4"}/> Custom URL
+                                        </button>
+                                        <button
+                                          className={`cr-video-type-btn ${lessonForm.videoType==="none"?"cr-video-type-active":""}`}
+                                          onClick={()=>setLessonForm({...lessonForm,videoType:"none",youtubeLink:"",videoUrl:""})}
+                                        >
+                                          📄 No Video
+                                        </button>
+                                      </div>
+
+                                      {lessonForm.videoType==="youtube" && (
+                                        <input className="cr-input"
+                                          placeholder="YouTube link https://youtube.com/watch?v=..."
+                                          value={lessonForm.youtubeLink}
+                                          onChange={e=>setLessonForm({...lessonForm,youtubeLink:e.target.value})}/>
+                                      )}
+
+                                      {lessonForm.videoType==="bunny" && (
+                                        <div className="cr-bunny-upload">
+                                          <input
+                                            ref={videoFileRef}
+                                            type="file"
+                                            accept="video/*"
+                                            style={{display:"none"}}
+                                            onChange={e=>e.target.files[0] && handleBunnyUpload(e.target.files[0])}
+                                          />
+                                          {lessonForm.videoUrl ? (
+                                            <div className="cr-bunny-success">
+                                              <MdCheckCircle size={16} color="#10b981"/>
+                                              <span>Video uploaded to Bunny Stream</span>
+                                              <button className="cr-bunny-change-btn"
+                                                onClick={()=>setLessonForm(prev=>({...prev,videoUrl:""}))}>
+                                                Change
+                                              </button>
+                                            </div>
+                                          ) : (
+                                            <>
+                                              <button
+                                                className="cr-bunny-pick-btn"
+                                                onClick={()=>videoFileRef.current?.click()}
+                                                disabled={uploading}
+                                              >
+                                                <MdCloudUpload size={18}/>
+                                                {uploading ? `Uploading... ${uploadProgress}%` : "Choose Video File"}
+                                              </button>
+                                              {uploading && (
+                                                <div className="cr-progress-bar">
+                                                  <div className="cr-progress-fill" style={{width:`${uploadProgress}%`}}/>
+                                                </div>
+                                              )}
+                                              <div className="cr-video-url-hint">
+                                                💡 Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
+                                              </div>
+                                            </>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {lessonForm.videoType==="custom" && (
+                                        <>
+                                          <input className="cr-input"
+                                            placeholder="Video URL (Vimeo, Drive, S3...)"
+                                            value={lessonForm.videoUrl}
+                                            onChange={e=>setLessonForm({...lessonForm,videoUrl:e.target.value})}/>
+                                          <div className="cr-video-url-hint">
+                                            💡 Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
+                                          </div>
+                                        </>
+                                      )}
+
+                                      <input className="cr-input" placeholder="Duration e.g. 45 mins"
+                                        value={lessonForm.duration}
+                                        onChange={e=>setLessonForm({...lessonForm,duration:e.target.value})}/>
+
+                                      <div className="cr-lesson-form-btns">
+                                        <button className="cr-primary-btn" style={{flex:1,justifyContent:"center"}}
+                                          onClick={()=>handleEditLesson(chapter._id, lesson._id)} disabled={saving}>
+                                          <MdCheckCircle size={15}/> {saving?"Saving...":"Save Changes"}
+                                        </button>
+                                        <button className="cr-cancel-btn"
+                                          onClick={()=>{setEditingLessonId(null);setLessonForm(EMPTY_LESSON);}}>
+                                          <MdClose size={15}/> Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
 
                                   {/* ── Existing notes under lesson ── */}
                                   {lesson.notes?.length > 0 && (
@@ -2217,17 +2473,17 @@ export default function AdminCoursesPage({ admin }) {
                                   <div className="cr-video-type-row">
                                     <span className="cr-video-type-label">Video source:</span>
                                     <button
-                                      className={`cr-video-type-btn ${lessonForm.videoType==="youtube"?"cr-video-type-active":""}`}
-                                      onClick={()=>setLessonForm({...lessonForm,videoType:"youtube",videoUrl:""})}
-                                    >
-                                      <FaYoutube size={14} color={lessonForm.videoType==="youtube"?"#fff":"#ef4444"}/> YouTube
-                                    </button>
-                                    <button
                                       className={`cr-video-type-btn ${lessonForm.videoType==="bunny"?"cr-video-type-active":""}`}
                                       onClick={()=>setLessonForm({...lessonForm,videoType:"bunny",youtubeLink:"",videoUrl:""})}
                                       disabled={uploading}
                                     >
                                       <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/> Upload
+                                    </button>
+                                    <button
+                                      className={`cr-video-type-btn ${lessonForm.videoType==="youtube"?"cr-video-type-active":""}`}
+                                      onClick={()=>setLessonForm({...lessonForm,videoType:"youtube",videoUrl:""})}
+                                    >
+                                      <FaYoutube size={14} color={lessonForm.videoType==="youtube"?"#fff":"#ef4444"}/> YouTube
                                     </button>
                                     <button
                                       className={`cr-video-type-btn ${lessonForm.videoType==="custom"?"cr-video-type-active":""}`}
@@ -2425,13 +2681,35 @@ export default function AdminCoursesPage({ admin }) {
                                       <div className="cr-chapter-left">
                                         <span className="cr-chapter-num">{ci+1}</span>
                                         <div>
-                                          <div className="cr-chapter-name">{ch.title}</div>
+                                          {editingChapterId===String(ch._id) ? (
+                                            <div className="cr-chapter-form-row" onClick={e=>e.stopPropagation()}>
+                                              <input className="cr-input" value={editChapterInput}
+                                                onChange={e=>setEditChapterInput(e.target.value)}
+                                                onKeyDown={e=>e.key==="Enter"&&handleBsubEditChapter(subject,String(ch._id))}
+                                                autoFocus/>
+                                              <button className="cr-primary-btn" onClick={()=>handleBsubEditChapter(subject,String(ch._id))} disabled={saving}>
+                                                {saving?"...":"Save"}
+                                              </button>
+                                              <button className="cr-cancel-btn"
+                                                onClick={()=>{setEditingChapterId(null);setEditChapterInput("");}}>
+                                                <MdClose size={16}/>
+                                              </button>
+                                            </div>
+                                          ) : (
+                                            <div className="cr-chapter-name">{ch.title}</div>
+                                          )}
                                           <div className="cr-chapter-count">
                                             <MdVideoLibrary size={11}/> {ch.lessons?.length||0} topics
                                           </div>
                                         </div>
                                       </div>
                                       <div className="cr-chapter-actions">
+                                        {editingChapterId!==String(ch._id) && (
+                                          <button className="cr-edit-chapter-btn" title="Edit chapter"
+                                            onClick={e=>{e.stopPropagation();setEditingChapterId(String(ch._id));setEditChapterInput(ch.title);}}>
+                                            <MdEdit size={14}/>
+                                          </button>
+                                        )}
                                         <button className="cr-del-chapter-btn"
                                           onClick={e=>{e.stopPropagation();handleBsubDeleteChapter(subject,String(ch._id));}}>
                                           <MdDelete size={14}/>
@@ -2443,7 +2721,8 @@ export default function AdminCoursesPage({ admin }) {
                                     {isOpen && (
                                       <div className="cr-lessons-wrap">
                                         {(ch.lessons||[]).map((lesson,li)=>(
-                                          <div key={lesson._id} className="cr-lesson-item">
+                                          <div key={lesson._id} className="cr-lesson-item-wrap">
+                                          <div className="cr-lesson-item">
                                             <span className="cr-lesson-num">{li+1}</span>
                                             {lesson.videoType==="youtube"
                                               ?<FaYoutube size={15} color="#ef4444"/>
@@ -2453,11 +2732,140 @@ export default function AdminCoursesPage({ admin }) {
                                             <span className="cr-lesson-title">{lesson.title}</span>
                                             {lesson.duration&&<span className="cr-lesson-duration"><MdTimelapse size={12}/> {lesson.duration}</span>}
                                             <div className="cr-lesson-btns">
+                                              {lesson.videoType!=="none" && (lesson.youtubeLink || lesson.videoUrl) && (
+                                                <button className="cr-preview-lesson-btn" title="Preview video"
+                                                  onClick={()=>setPreviewLessonId(previewLessonId===String(lesson._id)?null:String(lesson._id))}>
+                                                  <MdPlayCircle size={13}/> Preview
+                                                </button>
+                                              )}
+                                              {editingLessonId!==String(lesson._id) && (
+                                                <button className="cr-edit-lesson-btn" title="Edit topic"
+                                                  onClick={()=>{
+                                                    setEditingLessonId(String(lesson._id));
+                                                    setBsubLessonForm({
+                                                      title: lesson.title||"",
+                                                      videoType: lesson.videoType||"none",
+                                                      youtubeLink: lesson.youtubeLink||"",
+                                                      videoUrl: lesson.videoUrl||"",
+                                                      duration: lesson.duration||"",
+                                                    });
+                                                  }}>
+                                                  <MdEdit size={13}/>
+                                                </button>
+                                              )}
                                               <button className="cr-del-lesson-btn"
                                                 onClick={()=>handleBsubDeleteLesson(subject,String(ch._id),String(lesson._id))}>
                                                 <MdDelete size={13}/>
                                               </button>
                                             </div>
+                                          </div>
+
+                                          {/* ── Video preview panel ── */}
+                                          {previewLessonId===String(lesson._id) && (
+                                            <div className="cr-video-preview">
+                                              {lesson.videoType==="youtube" && toYoutubeEmbed(lesson.youtubeLink) ? (
+                                                <iframe
+                                                  src={toYoutubeEmbed(lesson.youtubeLink)}
+                                                  title={lesson.title}
+                                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                  allowFullScreen
+                                                />
+                                              ) : lesson.videoUrl ? (
+                                                <video src={lesson.videoUrl} controls/>
+                                              ) : (
+                                                <div className="cr-video-url-hint">No valid video source to preview.</div>
+                                              )}
+                                            </div>
+                                          )}
+
+                                          {/* ── Edit topic form ── */}
+                                          {editingLessonId===String(lesson._id) && (
+                                            <div className="cr-lesson-form">
+                                              <div className="cr-lesson-form-title">
+                                                <MdEdit size={15} color="#f59e0b"/> Edit Topic
+                                              </div>
+                                              <input className="cr-input" placeholder="Topic title"
+                                                value={bsubLessonForm.title}
+                                                onChange={e=>setBsubLessonForm({...bsubLessonForm,title:e.target.value})} autoFocus/>
+
+                                              <div className="cr-video-type-row">
+                                                <span className="cr-video-type-label">Video source:</span>
+                                                {[
+                                                  {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/>},
+                                                  {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
+                                                  {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#6c47d4"}/>},
+                                                  {t:"none",label:"No Video",icon:"📄"},
+                                                ].map(({t,label,icon})=>(
+                                                  <button key={t}
+                                                    className={`cr-video-type-btn ${bsubLessonForm.videoType===t?"cr-video-type-active":""}`}
+                                                    onClick={()=>setBsubLessonForm({...bsubLessonForm,videoType:t,youtubeLink:"",videoUrl:""})}>
+                                                    {icon} {label}
+                                                  </button>
+                                                ))}
+                                              </div>
+
+                                              {bsubLessonForm.videoType==="youtube" && (
+                                                <input className="cr-input" placeholder="YouTube link https://youtube.com/watch?v=..."
+                                                  value={bsubLessonForm.youtubeLink}
+                                                  onChange={e=>setBsubLessonForm({...bsubLessonForm,youtubeLink:e.target.value})}/>
+                                              )}
+                                              {bsubLessonForm.videoType==="custom" && (
+                                                <>
+                                                  <input className="cr-input" placeholder="Video URL (Vimeo, Drive, S3...)"
+                                                    value={bsubLessonForm.videoUrl}
+                                                    onChange={e=>setBsubLessonForm({...bsubLessonForm,videoUrl:e.target.value})}/>
+                                                  <div className="cr-video-url-hint">
+                                                    💡 Paste direct video URL from Vimeo, Google Drive, or S3.
+                                                  </div>
+                                                </>
+                                              )}
+                                              {bsubLessonForm.videoType==="bunny" && (
+                                                <div className="cr-bunny-upload">
+                                                  <input ref={bsubVideoFileRef} type="file" accept="video/*" style={{display:"none"}}
+                                                    onChange={e=>e.target.files[0]&&handleBsubBunnyUpload(e.target.files[0])}/>
+                                                  {bsubLessonForm.videoUrl ? (
+                                                    <div className="cr-bunny-success">
+                                                      <MdCheckCircle size={16} color="#10b981"/>
+                                                      <span>Video uploaded to Bunny CDN</span>
+                                                      <button className="cr-bunny-change-btn"
+                                                        onClick={()=>setBsubLessonForm(prev=>({...prev,videoUrl:""}))}>Change</button>
+                                                    </div>
+                                                  ) : (
+                                                    <>
+                                                      <button className="cr-bunny-pick-btn"
+                                                        onClick={()=>bsubVideoFileRef.current?.click()}
+                                                        disabled={bsubUploading}>
+                                                        <MdCloudUpload size={18}/>
+                                                        {bsubUploading ? `Uploading... ${bsubUploadProgress}%` : "Choose Video File"}
+                                                      </button>
+                                                      {bsubUploading && (
+                                                        <div className="cr-progress-bar">
+                                                          <div className="cr-progress-fill" style={{width:`${bsubUploadProgress}%`}}/>
+                                                        </div>
+                                                      )}
+                                                      <div className="cr-video-url-hint">
+                                                        💡 Video will be encoded and streamed via <strong>Bunny CDN</strong>.
+                                                      </div>
+                                                    </>
+                                                  )}
+                                                </div>
+                                              )}
+                                              <input className="cr-input" placeholder="Duration e.g. 45 mins"
+                                                value={bsubLessonForm.duration}
+                                                onChange={e=>setBsubLessonForm({...bsubLessonForm,duration:e.target.value})}/>
+
+                                              <div className="cr-lesson-form-btns">
+                                                <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#f59e0b"}}
+                                                  onClick={()=>handleBsubEditLesson(subject,String(ch._id),String(lesson._id))} disabled={saving}>
+                                                  <MdCheckCircle size={15}/> {saving?"Saving...":"Save Changes"}
+                                                </button>
+                                                <button className="cr-cancel-btn"
+                                                  onClick={()=>{setEditingLessonId(null);setBsubLessonForm(EMPTY_LESSON);}}>
+                                                  <MdClose size={15}/> Cancel
+                                                </button>
+                                              </div>
+                                            </div>
+                                          )}
                                           </div>
                                         ))}
 
