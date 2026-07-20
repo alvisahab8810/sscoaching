@@ -65,9 +65,20 @@ export default async function handler(req, res) {
           success: true,
           course: {
             ...course, isEnrolled: false,
-            chapters: course.chapters.map(ch => ({
+            chapters: course.chapters.map((ch, chIdx) => ({
               ...ch,
-              lessons: ch.lessons.map(l => ({ _id: l._id, title: l.title, duration: l.duration })),
+              lessons: ch.lessons.map((l, lIdx) => {
+                const isDemoLesson = chIdx === 0 && lIdx === 0;
+                if (isDemoLesson || l.isFree) {
+                  // First lesson (demo) and free lessons: include video data
+                  return {
+                    _id: l._id, title: l.title, duration: l.duration, isFree: l.isFree,
+                    videoUrl: l.videoUrl, youtubeLink: l.youtubeLink,
+                    videoType: l.videoType, bunnyVideoId: l.bunnyVideoId,
+                  };
+                }
+                return { _id: l._id, title: l.title, duration: l.duration, isFree: l.isFree };
+              }),
             })),
           },
         });

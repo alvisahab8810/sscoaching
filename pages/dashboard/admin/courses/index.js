@@ -2883,8 +2883,8 @@ export default function AdminCoursesPage({ admin }) {
                                             <div className="cr-video-type-row">
                                               <span className="cr-video-type-label">Video source:</span>
                                               {[
-                                                {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
                                                 {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/>},
+                                                {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
                                                 {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#6c47d4"}/>},
                                                 {t:"none",label:"No Video",icon:"📄"},
                                               ].map(({t,label,icon})=>(
