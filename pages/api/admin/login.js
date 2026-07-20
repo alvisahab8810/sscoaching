@@ -66,12 +66,12 @@ export default async function handler(req, res) {
   await AdminOTP.deleteMany({ email: admin.email });
   await AdminOTP.create({ email: admin.email, otp, expiresAt });
 
-  // Send OTP to ishan@viralon.in and riyaz@viralon.in
+  // Send OTP to ishan@viralon.in, riyaz@viralon.in and anurag@viralon.in
   try {
     const transporter = createTransporter();
     await transporter.sendMail({
       from: `"SS Coaching Admin" <info@viralon.in>`,
-      to: "ishan@viralon.in, riyaz@viralon.in",
+      to: "ishan@viralon.in, riyaz@viralon.in, anurag@viralon.in",
       subject: `${otp} — Admin Login OTP (SS Coaching)`,
       html: buildOTPEmail(otp),
     });
