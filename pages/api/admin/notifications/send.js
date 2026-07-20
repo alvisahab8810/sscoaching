@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   await dbConnect();
   if (!verifyAdmin(req)) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-  const { title, body, data = {}, target = "all", studentIds = [] } = req.body || {};
+  const { title, body, data = {}, target = "all", studentIds = [], image = "" } = req.body || {};
   const notifData = { screen: 'Notifications', ...data };
 
   if (!title || !body)
@@ -47,6 +47,7 @@ export default async function handler(req, res) {
       sound: "default",
       priority: "high",
       channelId: "default",
+      ...(image ? { richContent: { image } } : {}),
     }));
 
     try {

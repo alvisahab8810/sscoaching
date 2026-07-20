@@ -4,8 +4,10 @@ import Head from "next/head";
 import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
-import { MdNotifications, MdSend, MdCheckCircle, MdPeople, MdPhone } from "react-icons/md";
+import { MdNotifications, MdSend, MdCheckCircle, MdPeople, MdPhone, MdImage, MdClose } from "react-icons/md";
 import { toast } from "sonner";
+
+const MAX_BANNER_SIZE = 1 * 1024 * 1024; // 1MB
 
 const QUICK = [
   { label: "New Live Class", title: "🔴 Live Class Starting!", body: "Your class is starting now. Join immediately!" },
@@ -19,6 +21,8 @@ const QUICK = [
 export default function NotificationsPage() {
   const [title, setTitle]   = useState("");
   const [body, setBody]     = useState("");
+  const [banner, setBanner] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState("");
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
   const [stats, setStats]   = useState(null);
@@ -33,14 +37,43 @@ export default function NotificationsPage() {
 
   useEffect(() => { loadStats(); }, []);
 
+  const handleBannerChange = (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Sirf JPG, PNG ya WebP image allowed hai"); return;
+    }
+    if (file.size > MAX_BANNER_SIZE) {
+      toast.error(`Banner image 1MB se choti honi chahiye (current: ${(file.size / 1024).toFixed(0)}KB)`); return;
+    }
+    setBanner(file);
+    setBannerPreview(URL.createObjectURL(file));
+  };
+
+  const clearBanner = () => { setBanner(null); setBannerPreview(""); };
+
   const send = async () => {
     if (!title.trim() || !body.trim()) { toast.error("Title and message are required"); return; }
     setSending(true); setResult(null);
     try {
+      let image = "";
+      if (banner) {
+        const fd = new FormData();
+        fd.append("image", banner);
+        const upRes  = await fetch("/api/upload/notification-banner", { method: "POST", body: fd });
+        const upData = await upRes.json();
+        if (!upData.success) {
+          toast.error(upData.message || "Banner upload failed");
+          setSending(false); return;
+        }
+        image = `https://sscoaching.in${upData.url}`;
+      }
+
       const res  = await fetch("/api/admin/notifications/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: body.trim(), target: "all" }),
+        body: JSON.stringify({ title: title.trim(), body: body.trim(), target: "all", image }),
       });
       const data = await res.json();
       if (data.success) {
@@ -141,6 +174,23 @@ export default function NotificationsPage() {
                     <div className="ntf-char">{body.length}/200</div>
                   </div>
 
+                  <div className="ntf-field">
+                    <label className="ntf-label">Banner Image <span style={{ color: "#94a3b8", fontWeight: 400 }}>(optional)</span></label>
+                    {bannerPreview ? (
+                      <div className="ntf-banner-preview">
+                        <img src={bannerPreview} alt="Banner" />
+                        <button type="button" className="ntf-banner-remove" onClick={clearBanner}><MdClose size={16}/></button>
+                      </div>
+                    ) : (
+                      <label className="ntf-banner-upload">
+                        <MdImage size={22} color="#8491a8"/>
+                        <span>Click to upload a banner — shown as a big image in the notification, like an offer banner</span>
+                        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleBannerChange} hidden />
+                      </label>
+                    )}
+                    <div className="ntf-char" style={{ textAlign: "left" }}>Recommended 1024×512px, JPG/PNG/WebP, max 1MB. Shows in the Android notification drawer.</div>
+                  </div>
+
                   {/* Preview */}
                   {(title || body) && (
                     <div className="ntf-preview">
@@ -152,6 +202,7 @@ export default function NotificationsPage() {
                         </div>
                         <div className="ntf-preview-title">{title || "Title"}</div>
                         <div className="ntf-preview-body">{body || "Message"}</div>
+                        {bannerPreview && <img src={bannerPreview} alt="" className="ntf-preview-banner" />}
                       </div>
                     </div>
                   )}
@@ -292,6 +343,28 @@ export default function NotificationsPage() {
           font-size: 11px; color: #94a3b8; text-align: right; margin-top: 4px;
         }
 
+        /* Banner upload */
+        .ntf-banner-upload {
+          display: flex; flex-direction: column; align-items: center; text-align: center;
+          gap: 6px; padding: 22px 16px;
+          border: 1.5px dashed #cbd5e1; border-radius: 10px;
+          cursor: pointer; transition: border-color 0.15s, background 0.15s;
+        }
+        .ntf-banner-upload:hover { border-color: #4441e5; background: #f8f7ff; }
+        .ntf-banner-upload span { font-size: 12px; color: #8491a8; max-width: 320px; }
+        .ntf-banner-preview {
+          position: relative; border-radius: 10px; overflow: hidden;
+          border: 1.5px solid #e2e8f0;
+        }
+        .ntf-banner-preview img { display: block; width: 100%; max-height: 180px; object-fit: cover; }
+        .ntf-banner-remove {
+          position: absolute; top: 8px; right: 8px;
+          width: 28px; height: 28px; border-radius: 50%;
+          background: rgba(0,0,0,0.6); color: #fff; border: none;
+          display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .ntf-banner-remove:hover { background: rgba(0,0,0,0.8); }
+
         /* Preview */
         .ntf-preview { margin-bottom: 20px; }
         .ntf-preview-label {
@@ -310,6 +383,7 @@ export default function NotificationsPage() {
         .ntf-preview-icon { width: 14px; height: 14px; border-radius: 3px; }
         .ntf-preview-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
         .ntf-preview-body { font-size: 12.5px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+        .ntf-preview-banner { width: 100%; max-height: 140px; object-fit: cover; border-radius: 8px; margin-top: 10px; }
 
         .ntf-send-btn {
           width: 100%; height: 46px;
