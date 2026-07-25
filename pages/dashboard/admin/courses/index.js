@@ -876,7 +876,7 @@ import { BsCollection, BsFilePdf, BsFileEarmarkText, BsBoxSeam } from "react-ico
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
-const subjects = ["Mathematics","Physics","Chemistry","Biology","English","Hindi","Social Science","Computer Science","Science","History","Geography","Economics","Political Science"];
+const subjects = ["Mathematics","Physics","Chemistry","Biology","English","Hindi","Social Science","Computer Science","Science","History","Geography","Economics","Political Science","Accountancy","Business Studies"];
 const batches  = ["Class 9","Class 10","Class 11","Class 12","NIOS Stream 1","NIOS Stream 2","Dropper Batch"];
 
 const MATERIAL_SECTIONS = [
@@ -899,11 +899,13 @@ const subjectColors = {
   Mathematics:"#6c47d4", Physics:"#0ea5e9", Chemistry:"#f59e0b",
   Biology:"#10b981", English:"#f43f5e", Hindi:"#8b5cf6",
   "Social Science":"#64748b", "Computer Science":"#06b6d4",
+  Accountancy:"#0d9488", "Business Studies":"#d97706",
 };
 const subjectIcons = {
   Mathematics:"📐", Physics:"⚛️", Chemistry:"🧪",
   Biology:"🧬", English:"📖", Hindi:"🪔",
   "Social Science":"🌍", "Computer Science":"💻",
+  Accountancy:"📒", "Business Studies":"💼",
 };
 const getColor = (s) => subjectColors[s] || "#6c47d4";
 

@@ -18,8 +18,8 @@ export default async function handler(req, res) {
   await dbConnect();
   if (!verifyAdmin(req)) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-  const { title, body, data = {}, target = "all", studentIds = [], image = "" } = req.body || {};
-  const notifData = { screen: 'Notifications', ...data };
+  const { title, body, data = {}, target = "all", studentIds = [], image = "", screen = "Courses" } = req.body || {};
+  const notifData = { screen, ...data };
 
   if (!title || !body)
     return res.status(400).json({ success: false, message: "Title and body are required" });

@@ -17,6 +17,8 @@ function verifyAdmin(req) {
   } catch { return false; }
 }
 
+const ALLOWED_EXTS = [...PDF_EXTS, ...IMG_EXTS];
+
 function parseForm(req, uploadDir) {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
@@ -25,6 +27,8 @@ function parseForm(req, uploadDir) {
       keepExtensions: true,
       multiples: false,
       maxFileSize: 25 * 1024 * 1024,
+      filter: ({ originalFilename }) =>
+        ALLOWED_EXTS.includes(path.extname(originalFilename || "").toLowerCase()),
     });
     form.parse(req, (err, fields, files) => {
       if (err) reject(err);
@@ -50,9 +54,13 @@ export default async function handler(req, res) {
 
     const { files } = await parseForm(req, uploadDir);
     const file = files.image?.[0] || files.file?.[0];
-    if (!file) return res.status(400).json({ success: false, message: "No file provided" });
+    if (!file) return res.status(400).json({ success: false, message: "No file provided, or file type not allowed" });
 
     const ext  = path.extname(file.originalFilename || file.filepath).toLowerCase();
+    if (!ALLOWED_EXTS.includes(ext)) {
+      fs.unlinkSync(file.filepath);
+      return res.status(400).json({ success: false, message: "File type not allowed" });
+    }
     const isDocExt = PDF_EXTS.includes(ext);
 
     // If it's a document, ensure it's in private_uploads regardless of field name

@@ -9,6 +9,13 @@ import { toast } from "sonner";
 
 const MAX_BANNER_SIZE = 1 * 1024 * 1024; // 1MB
 
+const SCREENS = [
+  { value: "Courses", label: "Courses" },
+  { value: "Notifications", label: "Notifications" },
+  { value: "Live", label: "Live Classes" },
+  { value: "MyLearning", label: "My Learning" },
+];
+
 const QUICK = [
   { label: "New Live Class", title: "🔴 Live Class Starting!", body: "Your class is starting now. Join immediately!" },
   { label: "New Course", title: "📚 New Course Added!", body: "A new course has been added. Check it out now." },
@@ -23,6 +30,7 @@ export default function NotificationsPage() {
   const [body, setBody]     = useState("");
   const [banner, setBanner] = useState(null);
   const [bannerPreview, setBannerPreview] = useState("");
+  const [screen, setScreen] = useState("Courses");
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
   const [stats, setStats]   = useState(null);
@@ -73,7 +81,7 @@ export default function NotificationsPage() {
       const res  = await fetch("/api/admin/notifications/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: body.trim(), target: "all", image }),
+        body: JSON.stringify({ title: title.trim(), body: body.trim(), target: "all", image, screen }),
       });
       const data = await res.json();
       if (data.success) {
@@ -189,6 +197,16 @@ export default function NotificationsPage() {
                       </label>
                     )}
                     <div className="ntf-char" style={{ textAlign: "left" }}>Recommended 1024×512px, JPG/PNG/WebP, max 1MB. Shows in the Android notification drawer.</div>
+                  </div>
+
+                  <div className="ntf-field">
+                    <label className="ntf-label">On Tap, Open Screen</label>
+                    <select className="ntf-input" value={screen} onChange={e => setScreen(e.target.value)}>
+                      {SCREENS.map(s => (
+                        <option key={s.value} value={s.value}>{s.label}</option>
+                      ))}
+                    </select>
+                    <div className="ntf-char" style={{ textAlign: "left" }}>Jab student notification/banner pe tap kare to app mein yeh screen khulegi.</div>
                   </div>
 
                   {/* Preview */}

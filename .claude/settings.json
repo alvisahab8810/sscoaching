@@ -14,7 +14,8 @@
       "Bash(git -C \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\" diff HEAD -- pages/student/dashboard/index.js)",
       "Bash(git -C \"d:\\\\sscoaching\\\\.claude\\\\worktrees\\\\agent-a85d07d02a65dfe62\" diff HEAD -- public/assets/css/online-classes.css)",
       "Bash(git -C \"d:\\\\sscoaching\" apply --index)",
-      "Bash(git -C \"d:\\\\sscoaching\" apply --reject)"
+      "Bash(git -C \"d:\\\\sscoaching\" apply --reject)",
+      "Bash(git check-ignore *)"
     ]
   }
 }
