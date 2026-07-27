@@ -93,7 +93,7 @@ function CourseCard({ course, onClick }) {
           )}
         </div>
         <button className="hcc-btn" style={{ background: meta.color }}>
-          Enroll →
+          Buy Now →
         </button>
       </div>
     </div>
@@ -126,7 +126,7 @@ export default function HomeCourses() {
         {/* Header */}
         <div className="hcc-header">
           <h2 className="section-title" style={{ marginBottom: 0 }}>
-            Our <span className="highlight">Courses</span>
+            Our Online <span className="highlight">Courses</span>
           </h2>
           <a href="/student/login" className="hcc-see-all">See all courses →</a>
         </div>
@@ -256,7 +256,7 @@ export default function HomeCourses() {
           flex: 1;
         }
         :global(.hcc-title) {
-          font-size: 14px; font-weight: 800; color: #0f172a;
+          font-size: 19px; font-weight: 800; color: #0f172a;
           line-height: 1.35; margin: 0 0 8px;
           display: -webkit-box; -webkit-line-clamp: 2;
           -webkit-box-orient: vertical; overflow: hidden;
@@ -267,14 +267,14 @@ export default function HomeCourses() {
         }
         :global(.hcc-chip) {
           display: inline-flex; align-items: center; gap: 3px;
-          font-size: 10.5px; color: #475569; background: #f1f5f9;
+          font-size: 12px; color: #475569; background: #f1f5f9;
           border-radius: 6px; padding: 3px 8px; font-weight: 600;
         }
         :global(.hcc-chip i) {
           font-style: normal; font-size: 11px;
         }
         :global(.hcc-desc) {
-          font-size: 11.5px; color: #94a3b8; line-height: 1.55;
+          font-size: 13.5px; color: #101010; line-height: 1.55;
           margin: 0; display: -webkit-box; -webkit-line-clamp: 2;
           -webkit-box-orient: vertical; overflow: hidden;
         }
@@ -295,16 +295,16 @@ export default function HomeCourses() {
           font-size: 17px; font-weight: 900; color: #16a34a;
         }
         :global(.hcc-price) {
-          font-size: 17px; font-weight: 900; color: #0f172a;
+          font-size: 20px; font-weight: 900; color: #101010;
           white-space: nowrap;
         }
         :global(.hcc-enrolled) {
-          font-size: 10px; color: #94a3b8; font-weight: 600;
+          font-size: 11px; color: #101010; font-weight: 600;
         }
         :global(.hcc-btn) {
           flex-shrink: 0;
           color: #fff; border: none; border-radius: 9px;
-          padding: 7px 16px; font-size: 12px; font-weight: 700;
+          padding: 10px 30px; font-size: 13px; font-weight: 700;
           cursor: pointer; transition: opacity 0.15s, transform 0.15s;
           font-family: 'Poppins', sans-serif; white-space: nowrap;
         }
