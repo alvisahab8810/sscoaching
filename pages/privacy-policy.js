@@ -289,7 +289,7 @@ export default function PrivacyPolicyPage() {
               Naza Computer Market<br />
               Near Basant Cinema<br />
               Lucknow, Uttar Pradesh, India<br />
-              Email: support@sscoaching.in<br />
+              Email: contact@sscoaching.in<br />
               Phone: 9792111121
             </p>
 
@@ -500,7 +500,7 @@ export default function PrivacyPolicyPage() {
 // Naza Computer Market,<br/>
 // Near Basant Cinema,<br/>
 // Lucknow, Uttar Pradesh, India<br/>
-// Email: support@sscoaching.in<br/>
+// Email: contact@sscoaching.in<br/>
 // Phone: 9792111121
 //             </p>
 

@@ -107,6 +107,7 @@ export default function Home() {
         <RecongnitionMobile />
 
         <LearnersNiosMobile />
+        
 
         <GoogleReview />
         <HomeCourses /> 

@@ -109,11 +109,11 @@ export default function RefundPolicy() {
             <ul>
               <li>
                 <strong>Email:</strong>{" "}
-                <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+                <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
               </li>
               <li>
                 <strong>Phone / WhatsApp:</strong>{" "}
-                <a href="tel:+919415553579">+91-9415553579</a>
+                <a href="tel:+9109792111121">+91-09792111121</a>
               </li>
               <li>
                 <strong>Address:</strong> SS Coaching, Alambagh / Hazratganj /
@@ -197,11 +197,11 @@ export default function RefundPolicy() {
             <ul>
               <li>
                 <strong>Email:</strong>{" "}
-                <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+                <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
               </li>
               <li>
                 <strong>Phone:</strong>{" "}
-                <a href="tel:+919415553579">+91-9415553579</a>
+                <a href="tel:+9109792111121">+91-09792111121</a>
               </li>
               <li>
                 <strong>Website:</strong>{" "}

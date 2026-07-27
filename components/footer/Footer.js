@@ -69,7 +69,14 @@ export default function Footer() {
                 <li><a href="/about-us">About Us</a></li>
                 <li><a href="/faq">FAQ</a></li>
                 <li><a href="/blogs">Blogs</a></li>
+               <li><a href="/sitemap">Sitemap</a></li>  
+
                 <li><a href="/disclaimer">Disclaimer</a></li>
+                 <li> <a href="/privacy-policy">Privacy Policy</a></li>
+                 <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                 <li><a href="/terms-&-conditions">Terms &amp; Conditions</a></li>
+                
+                
               </ul>
             </div>
 
@@ -128,13 +135,14 @@ export default function Footer() {
 
               {/* Legal links */}
               <div className="ss-footer-legal-links">
-                <a href="/disclaimer">Disclaimer</a>
+                {/* <a href="/disclaimer">Disclaimer</a>
                 <span className="ss-footer-legal-sep">|</span>
                 <a href="/privacy-policy">Privacy Policy</a>
-                <span className="ss-footer-legal-sep">|</span>
-                <a href="/terms-&-conditions">Terms &amp; Conditions</a>
-                <span className="ss-footer-legal-sep">|</span>
-                <a href="/sitemap">Sitemap</a>
+                <a href="/refund-policy">Refund & Cancellation Policy</a> */}
+                {/* <span className="ss-footer-legal-sep">|</span>
+                <a href="/terms-&-conditions">Terms &amp; Conditions</a> */}
+                {/* <span className="ss-footer-legal-sep">|</span> */}
+                {/* <a href="/sitemap">Sitemap</a> */}
 
 
               </div>
