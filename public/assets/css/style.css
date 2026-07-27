@@ -5261,6 +5261,25 @@ svg.green-svg {
 }
 
 
+.hero-card3 {
+  margin: auto;
+  height: 287px;
+ background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+
+  border-radius: 20px;
+  /* background-image: url("/assets/images/home/bg-hero.svg"); */
+  background-image: url("/assets/images/home/banner1.webp");
+
+
+  background-repeat: no-repeat;
+  position: relative;
+
+}
+
 .hero-card2 {
   margin: auto;
   height: 287px;

@@ -381,6 +381,13 @@ export default function Hero() {
           modules={[Autoplay]}        // ✅ IMPORTANT
         >
 
+
+          <SwiperSlide>
+              <a href="/student/login">
+            <div className="hero-card3"></div>
+            </a>
+          </SwiperSlide>
+
              <SwiperSlide>
            <div
   className="hero-card2"

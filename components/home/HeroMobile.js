@@ -194,7 +194,18 @@ export default function Hero() {
           modules={[Autoplay]} // ✅ IMPORTANT
         >
           {/* SINGLE SLIDE ONLY */}
+         
 
+          <SwiperSlide>
+            <div className="hero-card-mobile">
+              <a href="/student/login">
+              <img src="/assets/images/home/banner1-mobile.webp" 
+              alt="SS Coaching faculty team offering expert support for NIOS students in Lucknow"
+              title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
+              ></img>
+              </a>
+            </div>
+          </SwiperSlide>
           
           <SwiperSlide>
             <div className="hero-card-mobile">
