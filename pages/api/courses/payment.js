@@ -1,7 +1,6 @@
 // pages/api/courses/payment.js  — Razorpay order creation
 import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
-import Coupon from "@/models/CouponModel";
 import Razorpay from "razorpay";
 import jwt from "jsonwebtoken";
 
@@ -24,42 +23,29 @@ export default async function handler(req, res) {
   const student = getStudent(req);
   if (!student) return res.status(401).json({ error: "Unauthorized" });
 
-  const { courseId, couponCode } = req.body;
+  const { courseIds } = req.body;
   try {
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ error: "Course not found" });
+    if (!Array.isArray(courseIds) || courseIds.length === 0)
+      return res.status(400).json({ error: "No courses to pay for" });
 
-    let finalPrice = course.price;
-    let discount   = 0;
-    let appliedCode = "";
+    const courses = await Course.find({ _id: { $in: courseIds } });
+    if (courses.length === 0) return res.status(404).json({ error: "Course not found" });
 
-    if (couponCode) {
-      const coupon = await Coupon.findOne({ code: couponCode.toUpperCase(), isActive: true });
-      if (coupon) {
-        if (coupon.type === "percent") {
-          discount = Math.round((course.price * coupon.value) / 100);
-        } else {
-          discount = Math.min(coupon.value, course.price);
-        }
-        finalPrice  = Math.max(0, course.price - discount);
-        appliedCode = coupon.code;
-      }
-    }
+    const finalPrice = courses.reduce((sum, c) => sum + Number(c.price || 0), 0);
+    if (finalPrice <= 0) return res.status(400).json({ error: "Nothing to pay for" });
 
     const order = await razorpay.orders.create({
       amount:   finalPrice * 100,  // paise
       currency: "INR",
-      receipt:  `sscoach_${courseId}_${Date.now()}`,
-      notes:    { courseId, studentId: student.id, couponCode: appliedCode, discount },
+      receipt:  `sscoach_${Date.now()}`,
+      notes:    { courseIds: courseIds.join(","), studentId: student.id },
     });
 
     return res.status(200).json({
       success: true,
       orderId:    order.id,
       amount:     finalPrice,
-      discount,
-      couponCode: appliedCode,
-      courseName: course.title,
+      courseNames: courses.map((c) => c.title),
       keyId:      process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {

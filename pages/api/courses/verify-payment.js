@@ -4,7 +4,6 @@
 import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
-import Coupon from "@/models/CouponModel";
 import Invoice from "@/models/Invoice";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -97,10 +96,7 @@ export default async function handler(req, res) {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    courseId,
-    couponCode,
-    discount,
-    amount,
+    courseIds,
   } = req.body;
 
   // ── 1. Verify Razorpay signature ──
@@ -113,57 +109,56 @@ export default async function handler(req, res) {
   if (expected !== razorpay_signature)
     return res.status(400).json({ error: "Payment verification failed" });
 
-  try {
-    // ── 2. Fetch course for snapshot ──
-    const course = await Course.findById(courseId).lean();
-    if (!course) return res.status(404).json({ error: "Course not found" });
+  if (!Array.isArray(courseIds) || courseIds.length === 0)
+    return res.status(400).json({ error: "No courses to enroll" });
 
-    const source = req.headers["x-source"] === "app" ? "app" : "web";
+  const source = req.headers["x-source"] === "app" ? "app" : "web";
+  const results = [];
 
-    // ── 3. Create enrollment ──
-    const enrollment = await Enrollment.create({
-      student:    student.id,
-      course:     courseId,
-      type:       "paid",
-      orderId:    razorpay_order_id,
-      paymentId:  razorpay_payment_id,
-      amountPaid: Number(amount) || 0,
-      couponCode: couponCode || "",
-      discount:   Number(discount) || 0,
-      source,
-    });
+  for (const courseId of courseIds) {
+    try {
+      const course = await Course.findById(courseId).lean();
+      if (!course) { results.push({ courseId, success: false, error: "Course not found" }); continue; }
 
-    // ── 4. Increment enrolled count ──
-    await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
+      const coursePrice = Number(course.price || 0);
 
-    // ── 5. Increment coupon usage ──
-    if (couponCode) {
-      await Coupon.findOneAndUpdate(
-        { code: couponCode.toUpperCase() },
-        { $inc: { usedCount: 1 } }
-      );
-    }
-
-    // ── 6. Generate invoice + send email (non-blocking, non-fatal) ──
-    const subtotal = Number(amount) + Number(discount || 0); // original price before discount
-    await tryGenerateAndSendInvoice({
-      enrollment,
-      course,
-      student,
-      invoiceData: {
+      // ── Create enrollment ──
+      const enrollment = await Enrollment.create({
+        student:    student.id,
+        course:     courseId,
+        type:       "paid",
         orderId:    razorpay_order_id,
         paymentId:  razorpay_payment_id,
-        subtotal:   subtotal,
-        discount:   Number(discount) || 0,
-        couponCode: couponCode || "",
-        total:      Number(amount) || 0,
-      },
-    });
+        amountPaid: coursePrice,
+        source,
+      });
 
-    return res.status(200).json({ success: true, message: "Payment verified & enrolled!" });
-  } catch (err) {
-    if (err.code === 11000) return res.status(400).json({ error: "Already enrolled" });
-    console.error(err);
-    return res.status(500).json({ error: "Enrollment failed after payment" });
+      await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
+
+      // ── Generate invoice + send email (non-blocking, non-fatal) ──
+      const invoice = await tryGenerateAndSendInvoice({
+        enrollment,
+        course,
+        student,
+        invoiceData: {
+          orderId:    razorpay_order_id,
+          paymentId:  razorpay_payment_id,
+          subtotal:   coursePrice,
+          discount:   0,
+          couponCode: "",
+          total:      coursePrice,
+        },
+      });
+
+      results.push({ courseId, success: true, invoiceNumber: invoice?.invoiceNumber, emailSent: !!invoice?.emailSent });
+    } catch (err) {
+      if (err.code === 11000) results.push({ courseId, success: false, error: "Already enrolled" });
+      else { console.error(err); results.push({ courseId, success: false, error: "Enrollment failed" }); }
+    }
   }
+
+  const anyOk = results.some((r) => r.success);
+  if (!anyOk) return res.status(400).json({ error: results[0]?.error || "Enrollment failed after payment" });
+
+  return res.status(200).json({ success: true, message: "Payment verified & enrolled!", results });
 }

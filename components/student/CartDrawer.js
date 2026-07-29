@@ -233,8 +233,7 @@ export default function CartDrawer({ open, onClose, cart, removeFromCart, onEnro
 
           {/* Payment methods note */}
           <div className="sdc-pay-note">
-            <span className="sdc-pay-badge sdc-pay-cod">💵 Cash on Delivery</span>
-            <span className="sdc-pay-badge sdc-pay-online">💳 Online — Coming Soon</span>
+            <span className="sdc-pay-badge sdc-pay-online">💳 Secure Online Payment via Razorpay</span>
           </div>
         </>
       )}

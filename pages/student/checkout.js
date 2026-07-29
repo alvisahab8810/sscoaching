@@ -2,9 +2,9 @@
 // Full checkout page:
 // - Shows cart summary
 // - Student fills billing info
-// - Two payment options: COD (working) | Online Payment (coming soon)
-// - On COD submit: enrolls, creates invoice, sends email
-// - Shows success screen with invoice number
+// - Free courses enroll instantly; paid courses go through Razorpay
+// - On payment success: verify-payment.js creates enrollment(s), invoice(s), sends email
+// - Shows success screen with invoice number(s)
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -16,8 +16,7 @@ import {
   MdPayment, MdReceiptLong, MdClose, MdWarning,
   MdFolder, MdVideoLibrary,
 } from "react-icons/md";
-import { FaRupeeSign, FaMoneyBillWave, FaCreditCard, FaWhatsapp } from "react-icons/fa";
-import { BsCartCheck } from "react-icons/bs";
+import { FaCreditCard, FaWhatsapp } from "react-icons/fa";
 
 /* ─── helpers ─── */
 function fmt(n) {
@@ -63,7 +62,6 @@ export default function CheckoutPage() {
     notes: "",
   });
   const [errors, setErrors]     = useState({});
-  const [payMethod, setPayMethod] = useState("cod"); // "cod" | "online"
 
   /* UI states */
   const [submitting, setSubmitting] = useState(false);
@@ -121,61 +119,13 @@ export default function CheckoutPage() {
     return Object.keys(e).length === 0;
   }
 
-  /* ── COD Submit ── */
-  async function handleCODSubmit() {
-    if (!validate()) return;
-    setGlobalError("");
-    setSubmitting(true);
-
-    const token = localStorage.getItem("studentToken");
-
-    // Enroll each course in cart one by one
-    const results = [];
-    for (const course of cart) {
-      if (course.isFree) {
-        // Free course — use regular enroll endpoint
-        try {
-          const res  = await fetch("/api/courses/enroll", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ courseId: course._id }),
-          });
-          const data = await res.json();
-          results.push({ course, success: data.success, error: data.error });
-        } catch { results.push({ course, success: false, error: "Network error" }); }
-      } else {
-        // Paid course — COD enrollment
-        try {
-          const res  = await fetch("/api/courses/cod-enroll", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({
-              courseId:  course._id,
-              fullName:  form.fullName,
-              phone:     form.phone,
-              email:     form.email,
-              address:   form.address,
-              city:      form.city,
-              state:     form.state,
-              pincode:   form.pincode,
-              notes:     form.notes,
-            }),
-          });
-          const data = await res.json();
-          results.push({ course, success: data.success, invoiceNumber: data.invoiceNumber, emailSent: data.emailSent, error: data.error });
-        } catch { results.push({ course, success: false, error: "Network error" }); }
-      }
-    }
-
-    setSubmitting(false);
-
-    const allOk    = results.every((r) => r.success);
+  /* ── finish: save billing info, clear cart, show success screen ── */
+  function finishOrder(results) {
     const anyOk    = results.some((r) => r.success);
     const invoices = results.filter((r) => r.invoiceNumber).map((r) => r.invoiceNumber);
     const emailSent = results.some((r) => r.emailSent);
 
     if (anyOk) {
-      // Save billing details for next time
       localStorage.setItem("ss_billing_info", JSON.stringify({
         fullName: form.fullName,
         phone:    form.phone,
@@ -185,7 +135,6 @@ export default function CheckoutPage() {
         state:    form.state,
         pincode:  form.pincode,
       }));
-      // Clear cart from localStorage
       localStorage.removeItem("ss_checkout_cart");
       setSuccess({ invoiceNumbers: invoices, emailSent, total, form });
     } else {
@@ -194,16 +143,103 @@ export default function CheckoutPage() {
     }
   }
 
-  /* ── Online payment (coming soon) ── */
-  function handleOnlineSubmit() {
-    // TODO: Integrate Razorpay here when payment gateway is ready.
-    // The form data (form.*) is already collected and validated.
-    // Steps:
-    //   1. Call /api/courses/payment to create Razorpay order
-    //   2. Open Razorpay checkout
-    //   3. On success, call /api/courses/verify-payment (existing)
-    //   4. verify-payment.js already auto-generates invoice + sends email
-    alert("Online payment coming soon! Please use Cash on Delivery for now.");
+  /* ── Pay: free courses enroll instantly, paid courses go through Razorpay ── */
+  async function handlePay() {
+    if (!validate()) return;
+    setGlobalError("");
+    setSubmitting(true);
+
+    const token = localStorage.getItem("studentToken");
+    const freeCourses = cart.filter((c) => c.isFree);
+    const paidCourses = cart.filter((c) => !c.isFree);
+    const results = [];
+
+    // Free courses enroll immediately — no payment needed
+    for (const course of freeCourses) {
+      try {
+        const res  = await fetch("/api/courses/enroll", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ courseId: course._id }),
+        });
+        const data = await res.json();
+        results.push({ course, success: data.success, error: data.error });
+      } catch { results.push({ course, success: false, error: "Network error" }); }
+    }
+
+    if (paidCourses.length === 0) {
+      setSubmitting(false);
+      finishOrder(results);
+      return;
+    }
+
+    // Paid courses — create one Razorpay order for the whole cart
+    try {
+      const res  = await fetch("/api/courses/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ courseIds: paidCourses.map((c) => c._id) }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setSubmitting(false);
+        setGlobalError(data.error || "Could not start payment. Please try again.");
+        return;
+      }
+
+      const rzp = new window.Razorpay({
+        key:         data.keyId,
+        amount:      data.amount * 100,
+        currency:    "INR",
+        order_id:    data.orderId,
+        name:        "SS Coaching",
+        description: (data.courseNames || []).join(", "),
+        prefill:     { name: form.fullName, email: form.email, contact: form.phone },
+        theme:       { color: "#6c47d4" },
+        handler: async function (response) {
+          try {
+            const verifyRes = await fetch("/api/courses/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+              body: JSON.stringify({
+                razorpay_order_id:   response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature:  response.razorpay_signature,
+                courseIds:           paidCourses.map((c) => c._id),
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            setSubmitting(false);
+            if (verifyData.success) {
+              (verifyData.results || []).forEach((r) => {
+                const course = paidCourses.find((c) => c._id === r.courseId);
+                results.push({ course, success: r.success, invoiceNumber: r.invoiceNumber, emailSent: r.emailSent, error: r.error });
+              });
+              finishOrder(results);
+            } else {
+              setGlobalError(verifyData.error || "Payment succeeded but enrollment failed. Please contact support.");
+            }
+          } catch {
+            setSubmitting(false);
+            setGlobalError("Payment succeeded but verification failed. Please contact support.");
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setSubmitting(false);
+            setGlobalError("Payment was cancelled.");
+          },
+        },
+      });
+      rzp.on("payment.failed", function () {
+        setSubmitting(false);
+        setGlobalError("Payment failed. Please try again.");
+      });
+      rzp.open();
+    } catch {
+      setSubmitting(false);
+      setGlobalError("Could not start payment. Please check your connection.");
+    }
   }
 
   /* ── Success screen ── */
@@ -373,72 +409,25 @@ export default function CheckoutPage() {
               </div>
 
               <div className="co-pay-options">
-
-                {/* COD */}
-                <div
-                  className={`co-pay-opt ${payMethod === "cod" ? "co-pay-opt-active" : ""}`}
-                  onClick={() => setPayMethod("cod")}
-                >
-                  <div className="co-pay-opt-radio">
-                    <div className="co-radio-outer">
-                      {payMethod === "cod" && <div className="co-radio-inner" />}
-                    </div>
-                  </div>
-                  <div className="co-pay-opt-icon co-pay-opt-icon-cod">
-                    <FaMoneyBillWave size={20} />
-                  </div>
-                  <div className="co-pay-opt-body">
-                    <div className="co-pay-opt-title">Cash on Delivery</div>
-                    <div className="co-pay-opt-sub">Pay cash when you visit our coaching center. Invoice emailed instantly.</div>
-                  </div>
-                  <div className="co-pay-available">Available</div>
-                </div>
-
-                {/* Online */}
-                <div
-                  className={`co-pay-opt co-pay-opt-disabled ${payMethod === "online" ? "co-pay-opt-active" : ""}`}
-                  onClick={() => setPayMethod("online")}
-                >
-                  <div className="co-pay-opt-radio">
-                    <div className="co-radio-outer">
-                      {payMethod === "online" && <div className="co-radio-inner" />}
-                    </div>
-                  </div>
+                <div className="co-pay-opt co-pay-opt-active">
                   <div className="co-pay-opt-icon co-pay-opt-icon-online">
                     <FaCreditCard size={20} />
                   </div>
                   <div className="co-pay-opt-body">
-                    <div className="co-pay-opt-title">
-                      Online Payment
-                      <span className="co-soon-badge">Coming Soon</span>
-                    </div>
-                    <div className="co-pay-opt-sub">UPI, Cards, Net Banking via Razorpay — launching soon!</div>
+                    <div className="co-pay-opt-title">Pay Online</div>
+                    <div className="co-pay-opt-sub">UPI, Cards, Net Banking &amp; more via Razorpay — secure &amp; instant.</div>
                   </div>
+                  <div className="co-pay-available">Secure</div>
                 </div>
-
               </div>
 
-              {/* COD info box */}
-              {payMethod === "cod" && (
-                <div className="co-cod-info">
-                  <div className="co-cod-info-icon">💡</div>
-                  <div className="co-cod-info-text">
-                    <strong>How COD works:</strong> Your enrollment is confirmed immediately. Pay the amount
-                    (<strong>{fmt(total)}</strong>) when you visit our center. An invoice will be sent to
-                    <strong> {form.email || "your email"}</strong> right away for your records.
-                  </div>
+              <div className="co-online-info">
+                <div className="co-cod-info-icon">🚀</div>
+                <div className="co-cod-info-text">
+                  Your enrollment unlocks the moment payment is confirmed. Invoice will be emailed to
+                  <strong> {form.email || "your email"}</strong> right away.
                 </div>
-              )}
-
-              {/* Online info box */}
-              {payMethod === "online" && (
-                <div className="co-online-info">
-                  <div className="co-cod-info-icon">🚀</div>
-                  <div className="co-cod-info-text">
-                    Online payment via Razorpay is coming soon! For now, please use Cash on Delivery.
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
 
             {/* Global error */}
@@ -451,15 +440,13 @@ export default function CheckoutPage() {
             {/* Submit button */}
             <button
               className="co-submit-btn"
-              onClick={payMethod === "cod" ? handleCODSubmit : handleOnlineSubmit}
+              onClick={handlePay}
               disabled={submitting}
             >
               {submitting ? (
                 <><div className="co-btn-spinner" /> Processing...</>
-              ) : payMethod === "cod" ? (
-                <><MdReceiptLong size={19} /> Confirm Order & Get Invoice</>
               ) : (
-                <><MdLock size={16} /> Proceed to Pay {fmt(total)}</>
+                <><MdLock size={16} /> Pay {fmt(total)}</>
               )}
             </button>
 
@@ -731,8 +718,8 @@ function SuccessScreen({ success }) {
             <div className="cs-step">
               <span className="cs-step-num">2</span>
               <div>
-                <div className="cs-step-title">Visit Our Center</div>
-                <div className="cs-step-desc">Come to SS Coaching, Lucknow and pay ₹{success.total?.toLocaleString("en-IN") || ""}</div>
+                <div className="cs-step-title">Payment Received</div>
+                <div className="cs-step-desc">₹{success.total?.toLocaleString("en-IN") || ""} paid successfully. Your enrollment is active.</div>
               </div>
             </div>
             <div className="cs-step">
