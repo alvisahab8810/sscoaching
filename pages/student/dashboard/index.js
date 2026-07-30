@@ -476,30 +476,6 @@ export default function StudentDashboard() {
                   </div>
                 )}
 
-                {/* Live right now */}
-                {liveClasses.length > 0 && (
-                  <div className="sd-section">
-                    <div className="sd-section-header"><span className="sd-live-pulse"></span> Live Right Now</div>
-                    <div className="sd-cards-grid">
-                      {liveClasses.map((cls) => (
-                        <ClassCard key={cls._id} cls={cls} formatDate={formatDate} formatTime={formatTime} getYoutubeId={getYoutubeId}/>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Upcoming */}
-                {upcomingClasses.length > 0 && (
-                  <div className="sd-section">
-                    <div className="sd-section-header"><MdCalendarToday size={18} style={{color:"#4F2E97"}}/> Upcoming Classes</div>
-                    <div className="sd-cards-grid">
-                      {upcomingClasses.slice(0,4).map((cls) => (
-                        <ClassCard key={cls._id} cls={cls} formatDate={formatDate} formatTime={formatTime} getYoutubeId={getYoutubeId}/>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {classes.length === 0 && !loading && (
                   <div className="sd-empty">
                     <MdVideoLibrary size={52} className="sd-empty-svg"/>
@@ -1224,6 +1200,7 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
   const [couponMsg, setCouponMsg]   = useState("");
   const [enrolling, setEnrolling]   = useState(false);
   const [openChapters, setOpenChapters] = useState({ 0: true });
+  const [showDemo, setShowDemo]     = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -1255,6 +1232,16 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
   const subjectColor = getSubjectColor(course.subject);
   const hasImg       = !!course.featureImage;
   const bundledSubs  = course.bundledSubjects || [];
+
+  const demoLesson    = course.chapters?.[0]?.lessons?.[0];
+  const getDemoYtId   = (url) => {
+    if (!url) return null;
+    const pats = [/youtube\.com\/watch\?v=([^&]+)/,/youtu\.be\/([^?]+)/,/youtube\.com\/embed\/([^?]+)/,/youtube\.com\/live\/([^?]+)/];
+    for (const p of pats) { const m = url.match(p); if (m) return m[1]; }
+    return null;
+  };
+  const demoYtId      = demoLesson?.videoType==="youtube" ? getDemoYtId(demoLesson.youtubeLink) : null;
+  const hasDemoVideo  = !!(demoLesson && ((demoLesson.videoType==="youtube" && demoLesson.youtubeLink) || ((demoLesson.videoType==="custom"||demoLesson.videoType==="bunny") && demoLesson.videoUrl)));
 
   // Count total materials across all sections
   const matSections  = ["books","tma","assignments","samplePapers","notes"];
@@ -1329,13 +1316,13 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
               {isBundle ? (
                 <>
                   <div className="cdp-detail-item"><small>Subjects</small><b>{bundledSubs.length} Subjects</b></div>
-                  <div className="cdp-detail-item"><small>BUNDLE FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
+                  <div className="cdp-detail-item"><small>BUNDLE FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}</b></div>
                   <div className="cdp-detail-item"><small>Study Materials</small><b>{totalMats > 0 ? `${totalMats} Files` : "Included"}</b></div>
                 </>
               ) : (
                 <>
                   <div className="cdp-detail-item"><small>Topics covered</small><b>{totalLessons} Topics</b></div>
-                  <div className="cdp-detail-item"><small>BATCH FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}<span className="cdp-detail-note">/month</span></b></div>
+                  <div className="cdp-detail-item"><small>BATCH FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}</b></div>
                   <div className="cdp-detail-item"><small>Duration</small><b>{course.duration||"Self-paced"}</b></div>
                 </>
               )}
@@ -1459,19 +1446,22 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
                 </span>
               </div>
               {course.chapters?.map((ch,ci) => (
-                <div key={ch._id||ci} className="cdp-chapter">
+                <div key={ch._id||ci} className={`cdp-chapter ${openChapters[ci] ? "cdp-chapter-open" : ""}`}>
                   <button className="cdp-chapter-hd" onClick={() => setOpenChapters(p=>({...p,[ci]:!p[ci]}))}>
-                    <span>{ch.title}</span>
+                    <span className="cdp-chapter-title-row">
+                      <span className="cdp-chapter-num">{ci+1}</span>
+                      <span className="cdp-chapter-title-txt">{ch.title}</span>
+                    </span>
                     <span className="cdp-chapter-right">
                       <span className="cdp-chapter-count">{ch.lessons.length} Lectures</span>
-                      {openChapters[ci] ? <MdExpandLess size={18}/> : <MdExpandMore size={18}/>}
+                      <span className="cdp-chapter-chevron"><MdExpandMore size={16}/></span>
                     </span>
                   </button>
                   {openChapters[ci] && (
                     <div className="cdp-lessons">
                       {ch.lessons.map((les,li) => (
                         <div key={les._id||li} className="cdp-lesson-row">
-                          <span className="cdp-lesson-dot"/>
+                          <span className="cdp-lesson-icon-wrap"><MdPlayCircle size={14}/></span>
                           <span className="cdp-lesson-name">{les.title}</span>
                           {les.duration && <span className="cdp-lesson-dur">{les.duration}</span>}
                         </div>
@@ -1533,7 +1523,8 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
         {/* ── RIGHT ── */}
         <div className="cdp-right">
           <div className={`cdp-preview ${hasImg ? "sdc-thumb-has-img" : thumbClass}`}
-               style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}}>
+               style={{...(hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}), cursor: hasDemoVideo ? "pointer" : "default"}}
+               onClick={() => hasDemoVideo && setShowDemo(true)}>
             <span className="cdp-preview-label">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#702DFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="#702DFF" stroke="none"/>
@@ -1541,6 +1532,29 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
               Watch Free Demo
             </span>
           </div>
+
+          {showDemo && hasDemoVideo && (
+            <div className="cdp-demo-overlay" onClick={() => setShowDemo(false)}>
+              <div className="cdp-demo-modal" onClick={(e) => e.stopPropagation()}>
+                <button className="cdp-demo-close" onClick={() => setShowDemo(false)}><MdClose size={22}/></button>
+                {demoYtId ? (
+                  <div className="scp-video-wrap">
+                    <iframe src={`https://www.youtube.com/embed/${demoYtId}?autoplay=1&rel=0`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen className="scp-iframe" title="Free Demo"/>
+                  </div>
+                ) : demoLesson.videoType==="bunny" ? (
+                  <div className="scp-video-wrap"><BunnyPlayer src={demoLesson.videoUrl}/></div>
+                ) : (
+                  <div className="scp-video-wrap">
+                    <video controls autoPlay className="scp-iframe" style={{background:"#000"}}>
+                      <source src={demoLesson.videoUrl}/>
+                    </video>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="cdp-price-card">
             <div className="cdp-price-meta">
@@ -1570,7 +1584,6 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
             <div className="cdp-price-row">
               <span className="cdp-price-now">₹{course.price?.toLocaleString("en-IN")||"Free"}</span>
               {course.originalPrice && <span className="cdp-price-old">₹{course.originalPrice?.toLocaleString("en-IN")}</span>}
-              <span className="cdp-price-month">/Month</span>
             </div>
 
             {course.isEnrolled ? (
@@ -2417,7 +2430,9 @@ function CoursePlayer({ courseId, onBack }) {
                                     ? <MdCheckCircle size={15} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
                                     : les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
                                     : les.videoType==="custom"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#6c47d4"} style={{flexShrink:0}}/>
+                                    : les.videoType==="bunny"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
                                     : hasNotes ? <MdAttachFile size={15} color={isActive?"#fff":"#f59e0b"} style={{flexShrink:0}}/>
+                                    : canOpen ? <FaVideo size={13} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
                                     : <MdLock size={13} className="scp-lock-icon" style={{flexShrink:0}}/>}
                                   <span className="scp-lesson-name" style={isDone&&!isActive?{color:"#10b981"}:{}}>{les.title}</span>
                                 </div>

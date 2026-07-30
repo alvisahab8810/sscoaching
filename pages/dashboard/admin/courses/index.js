@@ -933,6 +933,26 @@ function toYoutubeEmbed(url) {
   return m ? `https://www.youtube.com/embed/${m[1]}` : null;
 }
 
+function formatDuration(totalSeconds) {
+  const s   = Math.round(totalSeconds || 0);
+  const m   = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
+function getVideoDuration(file) {
+  return new Promise((resolve) => {
+    const video     = document.createElement("video");
+    video.preload   = "metadata";
+    video.onloadedmetadata = () => {
+      window.URL.revokeObjectURL(video.src);
+      resolve(video.duration);
+    };
+    video.onerror = () => resolve(null);
+    video.src = URL.createObjectURL(file);
+  });
+}
+
 /* ─────────────────────────────────────────
    IMAGE UPLOADER (unchanged)
 ───────────────────────────────────────── */
@@ -1320,6 +1340,10 @@ export default function AdminCoursesPage({ admin }) {
     setUploadProgress(0);
 
     try {
+      // Auto-fetch duration from the local file so it doesn't need to be typed manually
+      const localDuration = await getVideoDuration(file);
+      if (localDuration) setLessonForm(prev => ({ ...prev, duration: formatDuration(localDuration) }));
+
       // Step 1: create video entry + get TUS auth signature from server
       const createRes  = await fetch("/api/bunny/create-video", {
         method:  "POST",
@@ -1384,6 +1408,9 @@ export default function AdminCoursesPage({ admin }) {
     setBsubUploading(true);
     setBsubUploadProgress(0);
     try {
+      const localDuration = await getVideoDuration(file);
+      if (localDuration) setBsubLessonForm(prev => ({ ...prev, duration: formatDuration(localDuration) }));
+
       const createRes  = await fetch("/api/bunny/create-video", {
         method:"POST", headers:{"Content-Type":"application/json"},
         body:JSON.stringify({ title: bsubLessonForm.title?.trim() || file.name }),
@@ -2581,7 +2608,7 @@ export default function AdminCoursesPage({ admin }) {
                                   </div>
                                 </div>
                               ) : (
-                                <button className="cr-add-lesson-btn" onClick={()=>setShowLessonForm(chapter._id)}>
+                                <button className="cr-add-lesson-btn" onClick={()=>{setShowLessonForm(chapter._id);setLessonForm({...EMPTY_LESSON,title:`Part ${(chapter.lessons?.length||0)+1}`});}}>
                                   <MdAdd size={16}/> Add Topic
                                 </button>
                               )}
@@ -2961,7 +2988,7 @@ export default function AdminCoursesPage({ admin }) {
                                           </div>
                                         ) : (
                                           <button className="cr-add-lesson-btn"
-                                            onClick={()=>setBsubShowLessonForm(chKey)}>
+                                            onClick={()=>{setBsubShowLessonForm(chKey);setBsubLessonForm({...EMPTY_LESSON,title:`Part ${(ch.lessons?.length||0)+1}`});}}>
                                             <MdAdd size={16}/> Add Topic
                                           </button>
                                         )}
