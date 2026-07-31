@@ -110,7 +110,7 @@ export default function Home() {
         
 
         <GoogleReview />
-        <HomeCourses /> 
+        {/* <HomeCourses />  */}
         <StepProcess />
         {/* PROSPECTUS BANNER */}
         <section className="prospectus-area">
