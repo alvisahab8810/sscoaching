@@ -8637,6 +8637,38 @@
   background: #6c47d4;
 }
 
+/* ── Chapter drag & drop reordering (admin course editor) ── */
+.cr-chapter-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #c4c4d4;
+  cursor: grab;
+  border-radius: 5px;
+  transition: color 0.15s, background 0.15s;
+}
+.cr-chapter-drag-handle:hover { color: #6c47d4; background: #f3f0ff; }
+.cr-chapter-drag-handle:active { cursor: grabbing; }
+
+.cr-chapter-item { transition: transform 0.12s, opacity 0.12s; position: relative; }
+
+.cr-chapter-dragging { opacity: 0.4; }
+
+.cr-chapter-drag-over::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -3px;
+  height: 4px;
+  border-radius: 4px;
+  background: #6c47d4;
+  z-index: 2;
+}
+
 /* ── LIVE card ── */
 .clsc-lbody { padding: 12px; }
 .clsc-tags {

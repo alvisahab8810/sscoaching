@@ -1068,6 +1068,8 @@ export default function AdminCoursesPage({ admin }) {
   const [previewLessonId, setPreviewLessonId]   = useState(null);
   const [dragLessonIdx, setDragLessonIdx]       = useState(null); // index being dragged, within active chapter
   const [dragOverLessonIdx, setDragOverLessonIdx] = useState(null);
+  const [dragChapterIdx, setDragChapterIdx]       = useState(null);
+  const [dragOverChapterIdx, setDragOverChapterIdx] = useState(null);
   // Note form — keyed by lessonId
   const [showNoteForm, setShowNoteForm]       = useState(null); // lessonId
   const [noteForm, setNoteForm]               = useState(EMPTY_NOTE);
@@ -1500,6 +1502,39 @@ export default function AdminCoursesPage({ admin }) {
     reordered.splice(dropIdx, 0, moved);
     setDragLessonIdx(null); setDragOverLessonIdx(null);
     handleReorderLessons(chapter._id, reordered);
+  };
+
+  /* ── Reorder chapters via drag & drop ── */
+  const handleReorderChapters = async (reorderedChapters) => {
+    const optimisticCourse = { ...selectedCourse, chapters: reorderedChapters };
+    setSelectedCourse(optimisticCourse);
+    setCourses(prev => prev.map(c => c._id === optimisticCourse._id ? optimisticCourse : c));
+
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=reorder-chapters`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ chapterIds: reorderedChapters.map(c => c._id) }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+      } else {
+        toast.error(data.error || "Failed to reorder chapters");
+      }
+    } catch { toast.error("Network error"); }
+  };
+
+  const handleChapterDrop = (dropIdx) => {
+    if (dragChapterIdx === null || dragChapterIdx === dropIdx) {
+      setDragChapterIdx(null); setDragOverChapterIdx(null);
+      return;
+    }
+    const reordered = [...selectedCourse.chapters];
+    const [moved] = reordered.splice(dragChapterIdx, 1);
+    reordered.splice(dropIdx, 0, moved);
+    setDragChapterIdx(null); setDragOverChapterIdx(null);
+    handleReorderChapters(reordered);
   };
 
   /* ── Add note ── */
@@ -2218,12 +2253,26 @@ export default function AdminCoursesPage({ admin }) {
                       </div>
                     ) : (
                       selectedCourse.chapters.map((chapter, ci) => (
-                        <div key={chapter._id} className="cr-chapter-item">
+                        <div key={chapter._id}
+                          className={`cr-chapter-item${dragOverChapterIdx===ci && dragChapterIdx!==null && dragChapterIdx!==ci ? " cr-chapter-drag-over" : ""}${dragChapterIdx===ci ? " cr-chapter-dragging" : ""}`}
+                          onDragOver={(e)=>{e.preventDefault(); if(dragOverChapterIdx!==ci) setDragOverChapterIdx(ci);}}
+                          onDragLeave={()=>{ if(dragOverChapterIdx===ci) setDragOverChapterIdx(null); }}
+                          onDrop={(e)=>{e.preventDefault(); handleChapterDrop(ci);}}
+                        >
                           <div
                             className={`cr-chapter-header ${activeChapter===chapter._id?"cr-chapter-open":""}`}
                             onClick={()=>setActiveChapter(activeChapter===chapter._id?null:chapter._id)}
                           >
                             <div className="cr-chapter-left">
+                              <span className="cr-chapter-drag-handle"
+                                title="Drag to reorder chapter"
+                                draggable
+                                onClick={e=>e.stopPropagation()}
+                                onDragStart={(e)=>{ e.stopPropagation(); e.dataTransfer.effectAllowed="move"; setDragChapterIdx(ci); }}
+                                onDragEnd={()=>{ setDragChapterIdx(null); setDragOverChapterIdx(null); }}
+                              >
+                                <MdDragIndicator size={18}/>
+                              </span>
                               <span className="cr-chapter-num">{ci+1}</span>
                               <div>
                                 {editingChapterId===chapter._id ? (

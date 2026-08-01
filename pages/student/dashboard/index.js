@@ -6,6 +6,7 @@ import {
   MdDashboard, MdLiveTv, MdCalendarToday, MdCheckCircle,
   MdLogout, MdMenu, MdPlayCircle, MdPauseCircle, MdNotifications,
   MdVolumeUp, MdVolumeOff, MdFullscreen, MdFullscreenExit,
+  MdFastRewind, MdFastForward, MdSettings,
   MdSchool, MdAccessTime, MdDateRange, MdTimelapse, MdVideoLibrary,
   MdSignalCellularAlt, MdPerson, MdEdit, MdSave, MdClose, MdPhone,
   MdShoppingCart, MdDelete, MdLocalOffer, MdLock, MdCheck, MdSearch,
@@ -1638,15 +1639,117 @@ const WATERMARK_POSITIONS = [
   { top:"10%",  left:"45%" },
 ];
 
-function BunnyPlayer({ src }) {
+function formatWatchTime(s) {
+  s = Math.floor(s || 0);
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
+
+function BunnyPlayer({ src, videoId, courseId }) {
   const videoRef    = useRef(null);
   const hlsRef      = useRef(null);
   const hlsAuthRef  = useRef(null); // { token, expires } for signing segment requests
+  const pendingResumeRef = useRef(null); // seconds to seek to once metadata is ready
+  const lastTapRef   = useRef({ left: 0, right: 0 }); // per-zone double-tap timestamps
+  const flashTimeoutRef = useRef(null);
   const [signedSrc, setSignedSrc]   = useState(null);
   const [hlsError,  setHlsError]    = useState(null);
   const [wmText,    setWmText]      = useState("");
   const [wmPos,     setWmPos]       = useState(WATERMARK_POSITIONS[0]);
   const [wmVisible, setWmVisible]   = useState(true);
+  const [resumePrompt, setResumePrompt] = useState(null); // { watchedTime, duration } | null
+  const [isPaused,  setIsPaused]    = useState(true);
+  const [seekFlash, setSeekFlash]   = useState(null); // "left" | "right" | null
+  const [usingHlsJs, setUsingHlsJs] = useState(false); // native Safari HLS has no manual quality control
+  const [qualityLevels, setQualityLevels]     = useState([]); // [{index, height}], high→low
+  const [currentQualityIndex, setCurrentQualityIndex] = useState(-1); // -1 = Auto (ABR)
+  const [activeHeight, setActiveHeight] = useState(null); // actually-playing height while on Auto
+  const [showQualityMenu, setShowQualityMenu] = useState(false);
+
+  /* ── Continue Watching: fetch saved progress for this video ── */
+  useEffect(() => {
+    if (!videoId || !courseId) return;
+    const token = localStorage.getItem("studentToken");
+    if (!token) return;
+    fetch(`/api/watch-progress/${videoId}?courseId=${courseId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.watchPercentage < 95 && d.watchedTime > 10) {
+          setResumePrompt({ watchedTime: d.watchedTime, duration: d.duration });
+        }
+      })
+      .catch(() => {});
+  }, [videoId, courseId]);
+
+  /* ── Continue Watching: pause playback while the resume prompt is showing ── */
+  useEffect(() => {
+    if (resumePrompt && videoRef.current) videoRef.current.pause();
+  }, [resumePrompt]);
+
+  /* ── Continue Watching: periodically save playback position ── */
+  useEffect(() => {
+    if (!videoId || !courseId) return;
+    const video = videoRef.current;
+    if (!video) return;
+    const token = localStorage.getItem("studentToken");
+    if (!token) return;
+
+    const saveWatchProgress = () => {
+      if (!video.duration || isNaN(video.duration)) return;
+      fetch(`/api/watch-progress/${videoId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          courseId,
+          watchedTime: Math.floor(video.currentTime),
+          duration: Math.floor(video.duration),
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    };
+
+    const interval = setInterval(() => { if (!video.paused) saveWatchProgress(); }, 5000);
+    video.addEventListener("pause", saveWatchProgress);
+    video.addEventListener("ended", saveWatchProgress);
+    window.addEventListener("beforeunload", saveWatchProgress);
+
+    return () => {
+      clearInterval(interval);
+      video.removeEventListener("pause", saveWatchProgress);
+      video.removeEventListener("ended", saveWatchProgress);
+      window.removeEventListener("beforeunload", saveWatchProgress);
+    };
+  }, [videoId, courseId]);
+
+  const applyResumeSeek = (seconds) => {
+    const video = videoRef.current;
+    if (!video) return;
+    const doSeek = () => { video.currentTime = seconds; video.play().catch(() => {}); };
+    if (video.readyState >= 1) {
+      doSeek();
+    } else {
+      pendingResumeRef.current = seconds;
+      const onMeta = () => {
+        video.removeEventListener("loadedmetadata", onMeta);
+        if (pendingResumeRef.current != null) { doSeek(); pendingResumeRef.current = null; }
+      };
+      video.addEventListener("loadedmetadata", onMeta);
+    }
+  };
+
+  const handleResume = () => {
+    applyResumeSeek(resumePrompt.watchedTime);
+    setResumePrompt(null);
+  };
+
+  const handleStartOver = () => {
+    const video = videoRef.current;
+    if (video) { video.currentTime = 0; video.play().catch(() => {}); }
+    setResumePrompt(null);
+  };
 
   /* ── 1. Fetch server-signed expiring URL ── */
   useEffect(() => {
@@ -1749,12 +1852,17 @@ function BunnyPlayer({ src }) {
       if (!video || cancelled) return;
 
       destroyHls();
+      setQualityLevels([]);
+      setCurrentQualityIndex(-1);
+      setActiveHeight(null);
+      setShowQualityMenu(false);
 
       // Only use native HLS on real Safari (iOS/macOS); Chrome falsely reports canPlayType
       const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
       const isSafari = /Safari/i.test(ua) && !/Chrome|CriOS|FxiOS|EdgA|Android/i.test(ua);
       if (isSafari && video.canPlayType("application/vnd.apple.mpegurl")) {
         console.log("[BunnyPlayer] Safari native HLS path");
+        setUsingHlsJs(false); // native HLS has no manual quality-level API
         video.src = signedSrc;
         video.load();
         video.play().catch(() => {});
@@ -1770,6 +1878,7 @@ function BunnyPlayer({ src }) {
         }
         console.log("[BunnyPlayer] hls.js path, loading:", signedSrc);
         const hls = new Hls({ enableWorker: true, startLevel: -1 });
+        setUsingHlsJs(true);
         hls.on(Hls.Events.ERROR, (event, data) => {
           console.error("[BunnyPlayer] HLS error:", data.type, data.details,
             "HTTP:", data.response?.code, "URL:", data.url);
@@ -1778,6 +1887,14 @@ function BunnyPlayer({ src }) {
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           console.log("[BunnyPlayer] manifest parsed — playing");
           videoRef.current?.play().catch(() => {});
+          const levels = (hls.levels || [])
+            .map((lvl, idx) => ({ index: idx, height: lvl.height || 0 }))
+            .filter((l) => l.height > 0)
+            .sort((a, b) => b.height - a.height);
+          setQualityLevels(levels);
+        });
+        hls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
+          setActiveHeight(hls.levels?.[data.level]?.height || null);
         });
         hls.loadSource(signedSrc);
         hls.attachMedia(videoRef.current);
@@ -1807,6 +1924,104 @@ function BunnyPlayer({ src }) {
     };
   }, [signedSrc]);
 
+  /* ── 6. Auto-landscape fullscreen on device rotation (mobile) ── */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const isFullscreen = () =>
+      !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+    const enterFullscreen = () => {
+      if (isFullscreen()) return;
+      if (video.requestFullscreen) video.requestFullscreen().catch(() => {});
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); // iOS Safari native player
+    };
+
+    const exitFullscreen = () => {
+      if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) {
+        video.webkitExitFullscreen(); // iOS Safari native player
+        return;
+      }
+      if (!isFullscreen()) return;
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    };
+
+    const onOrientationChange = () => {
+      const isMobile = window.matchMedia("(max-width: 900px)").matches || "ontouchstart" in window;
+      if (!isMobile) return; // don't hijack desktop window resizes
+      const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+      if (isLandscape) enterFullscreen();
+      else exitFullscreen();
+    };
+
+    const mq = window.matchMedia("(orientation: landscape)");
+    if (mq.addEventListener) mq.addEventListener("change", onOrientationChange);
+    else mq.addListener(onOrientationChange);
+
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", onOrientationChange);
+      else mq.removeListener(onOrientationChange);
+    };
+  }, []);
+
+  /* ── 7. Track play/pause state for the overlay center button ── */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const onPlay  = () => setIsPaused(false);
+    const onPause = () => setIsPaused(true);
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
+    setIsPaused(video.paused);
+    return () => {
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
+    };
+  }, []);
+
+  const togglePlayPause = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
+  };
+
+  const showSeekFlash = (side) => {
+    setSeekFlash(side);
+    if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current);
+    flashTimeoutRef.current = setTimeout(() => setSeekFlash(null), 1000);
+  };
+
+  /* Double-tap (or double-click) left/right half → seek ±10s. Timestamp-based
+     so the same handler works uniformly for mouse (desktop) and touch (mobile). */
+  const handleSeekZoneTap = (side) => {
+    const video = videoRef.current;
+    if (!video) return;
+    const now = Date.now();
+    const last = lastTapRef.current[side] || 0;
+    if (now - last < 350) {
+      lastTapRef.current[side] = 0;
+      if (video.duration && !isNaN(video.duration)) {
+        const delta = side === "left" ? -10 : 10;
+        video.currentTime = Math.min(Math.max(video.currentTime + delta, 0), video.duration);
+      }
+      showSeekFlash(side);
+    } else {
+      lastTapRef.current[side] = now;
+    }
+  };
+
+  useEffect(() => () => { if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current); }, []);
+
+  const selectQuality = (index) => {
+    if (hlsRef.current) hlsRef.current.currentLevel = index; // -1 = back to Auto (ABR)
+    setCurrentQualityIndex(index);
+    setShowQualityMenu(false);
+  };
+
   const blockContext = (e) => e.preventDefault();
 
   return (
@@ -1823,11 +2038,26 @@ function BunnyPlayer({ src }) {
               border:"none",borderRadius:6,cursor:"pointer"}}>Retry</button>
         </div>
       )}
+      {/* Continue Watching resume prompt */}
+      {resumePrompt && (
+        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column",
+          alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.85)", color:"#fff",
+          zIndex:20, gap:14, padding:20, textAlign:"center" }}>
+          <span style={{fontSize:16, fontWeight:600}}>Resume from {formatWatchTime(resumePrompt.watchedTime)}?</span>
+          <div style={{display:"flex", gap:10}}>
+            <button onClick={handleResume}
+              style={{padding:"8px 22px", background:"#6c47d4", color:"#fff", border:"none",
+                borderRadius:6, cursor:"pointer", fontWeight:600}}>Resume</button>
+            <button onClick={handleStartOver}
+              style={{padding:"8px 22px", background:"rgba(255,255,255,0.15)", color:"#fff",
+                border:"1px solid rgba(255,255,255,0.3)", borderRadius:6, cursor:"pointer", fontWeight:600}}>Start Over</button>
+          </div>
+        </div>
+      )}
       {/* actual video */}
       <video
         ref={videoRef}
         controls
-        autoPlay
         playsInline
         className="scp-iframe"
         style={{ background:"#000", width:"100%", height:"100%", display:"block" }}
@@ -1835,6 +2065,100 @@ function BunnyPlayer({ src }) {
         disablePictureInPicture
         onContextMenu={blockContext}
       />
+
+      {/* double-tap seek zones + center play/pause — sits above the video but
+          leaves the bottom strip free for the native <video controls> bar */}
+      {!hlsError && !resumePrompt && (
+        <div
+          style={{ position:"absolute", left:0, right:0, top:0, bottom:46, zIndex:5, display:"flex" }}
+          onClick={() => setShowQualityMenu(false)}
+        >
+          <div style={{ flex:1, position:"relative" }} onClick={() => handleSeekZoneTap("left")}>
+            {seekFlash === "left" && (
+              <div style={{
+                position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
+                display:"flex", alignItems:"center", gap:6, color:"#fff", fontSize:18, fontWeight:700,
+                background:"rgba(0,0,0,0.55)", padding:"10px 18px", borderRadius:999,
+                pointerEvents:"none", animation:"bvpSeekFlash 1s ease forwards",
+              }}>
+                <MdFastRewind size={24}/> 10
+              </div>
+            )}
+          </div>
+          <div style={{ flex:1, position:"relative" }} onClick={() => handleSeekZoneTap("right")}>
+            {seekFlash === "right" && (
+              <div style={{
+                position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
+                display:"flex", alignItems:"center", gap:6, color:"#fff", fontSize:18, fontWeight:700,
+                background:"rgba(0,0,0,0.55)", padding:"10px 18px", borderRadius:999,
+                pointerEvents:"none", animation:"bvpSeekFlash 1s ease forwards",
+              }}>
+                10 <MdFastForward size={24}/>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); togglePlayPause(); }}
+            aria-label={isPaused ? "Play" : "Pause"}
+            style={{
+              position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)",
+              width:56, height:56, borderRadius:"50%", background:"rgba(0,0,0,0.45)",
+              border:"2px solid rgba(255,255,255,0.6)", color:"#fff", zIndex:2,
+              display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer",
+            }}
+          >
+            {isPaused ? <MdPlayCircle size={34}/> : <MdPauseCircle size={34}/>}
+          </button>
+
+          {/* quality selector — only meaningful on the hls.js path; native Safari
+              HLS has no manual level-switching API */}
+          {usingHlsJs && qualityLevels.length > 0 && (
+            <div style={{ position:"absolute", top:10, right:10, zIndex:3 }}>
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowQualityMenu(v => !v); }}
+                style={{
+                  display:"flex", alignItems:"center", gap:4, background:"rgba(0,0,0,0.55)",
+                  color:"#fff", border:"1px solid rgba(255,255,255,0.3)", borderRadius:6,
+                  padding:"5px 10px", fontSize:12, fontWeight:600, cursor:"pointer",
+                }}
+              >
+                <MdSettings size={15}/>
+                {currentQualityIndex === -1
+                  ? `Auto${activeHeight ? ` ${activeHeight}p` : ""}`
+                  : `${qualityLevels.find(l => l.index === currentQualityIndex)?.height}p`}
+              </button>
+              {showQualityMenu && (
+                <div style={{
+                  position:"absolute", top:"calc(100% + 4px)", right:0,
+                  background:"rgba(20,20,20,0.95)", border:"1px solid rgba(255,255,255,0.15)",
+                  borderRadius:8, overflow:"hidden", minWidth:100,
+                }}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); selectQuality(-1); }}
+                    style={{
+                      display:"block", width:"100%", textAlign:"left", padding:"8px 12px", fontSize:12,
+                      background: currentQualityIndex === -1 ? "rgba(108,71,212,0.5)" : "transparent",
+                      color:"#fff", border:"none", cursor:"pointer",
+                    }}
+                  >Auto</button>
+                  {qualityLevels.map(l => (
+                    <button
+                      key={l.index}
+                      onClick={(e) => { e.stopPropagation(); selectQuality(l.index); }}
+                      style={{
+                        display:"block", width:"100%", textAlign:"left", padding:"8px 12px", fontSize:12,
+                        background: currentQualityIndex === l.index ? "rgba(108,71,212,0.5)" : "transparent",
+                        color:"#fff", border:"none", cursor:"pointer",
+                      }}
+                    >{l.height}p</button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      <style>{`@keyframes bvpSeekFlash{0%{opacity:1}70%{opacity:1}100%{opacity:0}}`}</style>
 
       {/* floating watermark */}
       {wmText && (
@@ -2283,7 +2607,7 @@ function CoursePlayer({ courseId, onBack }) {
                 )}
                 {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
                   <>
-                    <div className="scp-video-wrap"><BunnyPlayer src={lesson.videoUrl}/></div>
+                    <div className="scp-video-wrap"><BunnyPlayer key={lesson._id} src={lesson.videoUrl} videoId={String(lesson._id)} courseId={courseId}/></div>
                     <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
                   </>
                 )}

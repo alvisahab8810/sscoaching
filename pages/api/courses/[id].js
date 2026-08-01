@@ -145,6 +145,22 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course });
       }
 
+      if (action === "reorder-chapters") {
+        const { chapterIds } = req.body;
+        if (!Array.isArray(chapterIds) || !chapterIds.length)
+          return res.status(400).json({ error: "chapterIds required" });
+        const byId = new Map(course.chapters.map(c => [c._id.toString(), c]));
+        if (chapterIds.length !== byId.size || chapterIds.some(cid => !byId.has(cid)))
+          return res.status(400).json({ error: "chapterIds must match existing chapters" });
+        course.chapters = chapterIds.map((cid, idx) => {
+          const ch = byId.get(cid);
+          ch.order = idx + 1;
+          return ch;
+        });
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
       if (action === "add-lesson") {
         const { chapterId, title, youtubeLink, videoUrl, videoType, duration } = req.body;
         if (!title) return res.status(400).json({ error: "Lesson title required" });
