@@ -8603,6 +8603,40 @@
   font-family: 'Outfit', sans-serif !important;
 }
 
+/* ── Topic drag & drop reordering (admin course editor) ── */
+.cr-lesson-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #c4c4d4;
+  cursor: grab;
+  border-radius: 5px;
+  transition: color 0.15s, background 0.15s;
+}
+.cr-lesson-drag-handle:hover { color: #6c47d4; background: #f3f0ff; }
+.cr-lesson-drag-handle:active { cursor: grabbing; }
+
+.cr-lesson-item-wrap { transition: transform 0.12s, opacity 0.12s; }
+
+.cr-lesson-dragging { opacity: 0.4; }
+
+.cr-lesson-drag-over {
+  position: relative;
+}
+.cr-lesson-drag-over::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  height: 3px;
+  border-radius: 3px;
+  background: #6c47d4;
+}
+
 /* ── LIVE card ── */
 .clsc-lbody { padding: 12px; }
 .clsc-tags {

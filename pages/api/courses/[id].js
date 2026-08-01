@@ -194,6 +194,20 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course });
       }
 
+      if (action === "reorder-lessons") {
+        const { chapterId, lessonIds } = req.body;
+        if (!Array.isArray(lessonIds) || !lessonIds.length)
+          return res.status(400).json({ error: "lessonIds required" });
+        const chapter = course.chapters.id(chapterId);
+        if (!chapter) return res.status(404).json({ error: "Chapter not found" });
+        const byId = new Map(chapter.lessons.map(l => [l._id.toString(), l]));
+        if (lessonIds.length !== byId.size || lessonIds.some(lid => !byId.has(lid)))
+          return res.status(400).json({ error: "lessonIds must match existing topics" });
+        chapter.lessons = lessonIds.map(lid => byId.get(lid));
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
       if (action === "add-note") {
         const { chapterId, lessonId, noteTitle, fileUrl, type } = req.body;
         if (!noteTitle || !fileUrl)

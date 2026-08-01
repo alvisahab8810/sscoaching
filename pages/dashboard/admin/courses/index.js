@@ -867,7 +867,7 @@ import {
   MdImage, MdLink, MdCloudUpload, MdSave, MdRefresh,
   MdAttachFile, MdPictureAsPdf, MdOndemandVideo, MdYoutubeSearchedFor,
   MdLibraryBooks, MdAssignment, MdDescription, MdMenuBook, MdQuiz,
-  MdPackage, MdLocalOffer,
+  MdPackage, MdLocalOffer, MdDragIndicator,
 } from "react-icons/md";
 import { FaRupeeSign, FaYoutube, FaVideo } from "react-icons/fa";
 import { BiSolidBookContent } from "react-icons/bi";
@@ -1066,6 +1066,8 @@ export default function AdminCoursesPage({ admin }) {
   const [editChapterInput, setEditChapterInput] = useState("");
   const [editingLessonId, setEditingLessonId]   = useState(null);
   const [previewLessonId, setPreviewLessonId]   = useState(null);
+  const [dragLessonIdx, setDragLessonIdx]       = useState(null); // index being dragged, within active chapter
+  const [dragOverLessonIdx, setDragOverLessonIdx] = useState(null);
   // Note form — keyed by lessonId
   const [showNoteForm, setShowNoteForm]       = useState(null); // lessonId
   const [noteForm, setNoteForm]               = useState(EMPTY_NOTE);
@@ -1459,6 +1461,45 @@ export default function AdminCoursesPage({ admin }) {
         toast.success("Topic deleted");
       }
     } catch { toast.error("Network error"); }
+  };
+
+  /* ── Reorder topics via drag & drop ── */
+  const handleReorderLessons = async (chapterId, reorderedLessons) => {
+    // Optimistic local update so the drag feels instant
+    const optimisticCourse = {
+      ...selectedCourse,
+      chapters: selectedCourse.chapters.map(c =>
+        c._id === chapterId ? { ...c, lessons: reorderedLessons } : c
+      ),
+    };
+    setSelectedCourse(optimisticCourse);
+    setCourses(prev => prev.map(c => c._id === optimisticCourse._id ? optimisticCourse : c));
+
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=reorder-lessons`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ chapterId, lessonIds: reorderedLessons.map(l => l._id) }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+      } else {
+        toast.error(data.error || "Failed to reorder topics");
+      }
+    } catch { toast.error("Network error"); }
+  };
+
+  const handleLessonDrop = (chapter, dropIdx) => {
+    if (dragLessonIdx === null || dragLessonIdx === dropIdx) {
+      setDragLessonIdx(null); setDragOverLessonIdx(null);
+      return;
+    }
+    const reordered = [...chapter.lessons];
+    const [moved] = reordered.splice(dragLessonIdx, 1);
+    reordered.splice(dropIdx, 0, moved);
+    setDragLessonIdx(null); setDragOverLessonIdx(null);
+    handleReorderLessons(chapter._id, reordered);
   };
 
   /* ── Add note ── */
@@ -2228,9 +2269,22 @@ export default function AdminCoursesPage({ admin }) {
                           {activeChapter===chapter._id && (
                             <div className="cr-lessons-wrap">
                               {chapter.lessons.map((lesson, li) => (
-                                <div key={lesson._id} className="cr-lesson-item-wrap">
+                                <div key={lesson._id}
+                                  className={`cr-lesson-item-wrap${dragOverLessonIdx===li && dragLessonIdx!==null && dragLessonIdx!==li ? " cr-lesson-drag-over" : ""}${dragLessonIdx===li ? " cr-lesson-dragging" : ""}`}
+                                  onDragOver={(e)=>{e.preventDefault(); if(dragOverLessonIdx!==li) setDragOverLessonIdx(li);}}
+                                  onDragLeave={()=>{ if(dragOverLessonIdx===li) setDragOverLessonIdx(null); }}
+                                  onDrop={(e)=>{e.preventDefault(); handleLessonDrop(chapter, li);}}
+                                >
                                   {/* ── Lesson row ── */}
                                   <div className="cr-lesson-item">
+                                    <span className="cr-lesson-drag-handle"
+                                      title="Drag to reorder"
+                                      draggable
+                                      onDragStart={(e)=>{ e.dataTransfer.effectAllowed="move"; setDragLessonIdx(li); }}
+                                      onDragEnd={()=>{ setDragLessonIdx(null); setDragOverLessonIdx(null); }}
+                                    >
+                                      <MdDragIndicator size={16}/>
+                                    </span>
                                     <span className="cr-lesson-num">{li+1}</span>
                                     {lesson.videoType==="youtube"
                                       ? <FaYoutube size={15} color="#ef4444"/>
