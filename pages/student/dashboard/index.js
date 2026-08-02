@@ -1639,13 +1639,6 @@ const WATERMARK_POSITIONS = [
   { top:"10%",  left:"45%" },
 ];
 
-function formatWatchTime(s) {
-  s = Math.floor(s || 0);
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
-  return `${m}:${sec.toString().padStart(2, "0")}`;
-}
-
 function BunnyPlayer({ src, videoId, courseId }) {
   const videoRef    = useRef(null);
   const hlsRef      = useRef(null);
@@ -1658,7 +1651,6 @@ function BunnyPlayer({ src, videoId, courseId }) {
   const [wmText,    setWmText]      = useState("");
   const [wmPos,     setWmPos]       = useState(WATERMARK_POSITIONS[0]);
   const [wmVisible, setWmVisible]   = useState(true);
-  const [resumePrompt, setResumePrompt] = useState(null); // { watchedTime, duration } | null
   const [isPaused,  setIsPaused]    = useState(true);
   const [seekFlash, setSeekFlash]   = useState(null); // "left" | "right" | null
   const [usingHlsJs, setUsingHlsJs] = useState(false); // native Safari HLS has no manual quality control
@@ -1667,7 +1659,8 @@ function BunnyPlayer({ src, videoId, courseId }) {
   const [activeHeight, setActiveHeight] = useState(null); // actually-playing height while on Auto
   const [showQualityMenu, setShowQualityMenu] = useState(false);
 
-  /* ── Continue Watching: fetch saved progress for this video ── */
+  /* ── Continue Watching: fetch saved progress and silently resume from it — no prompt.
+     User can still drag the native seek bar to jump anywhere else. ── */
   useEffect(() => {
     if (!videoId || !courseId) return;
     const token = localStorage.getItem("studentToken");
@@ -1678,16 +1671,11 @@ function BunnyPlayer({ src, videoId, courseId }) {
       .then(r => r.json())
       .then(d => {
         if (d.success && d.watchPercentage < 95 && d.watchedTime > 10) {
-          setResumePrompt({ watchedTime: d.watchedTime, duration: d.duration });
+          applyResumeSeek(d.watchedTime);
         }
       })
       .catch(() => {});
   }, [videoId, courseId]);
-
-  /* ── Continue Watching: pause playback while the resume prompt is showing ── */
-  useEffect(() => {
-    if (resumePrompt && videoRef.current) videoRef.current.pause();
-  }, [resumePrompt]);
 
   /* ── Continue Watching: periodically save playback position ── */
   useEffect(() => {
@@ -1738,17 +1726,6 @@ function BunnyPlayer({ src, videoId, courseId }) {
       };
       video.addEventListener("loadedmetadata", onMeta);
     }
-  };
-
-  const handleResume = () => {
-    applyResumeSeek(resumePrompt.watchedTime);
-    setResumePrompt(null);
-  };
-
-  const handleStartOver = () => {
-    const video = videoRef.current;
-    if (video) { video.currentTime = 0; video.play().catch(() => {}); }
-    setResumePrompt(null);
   };
 
   /* ── 1. Fetch server-signed expiring URL ── */
@@ -2038,22 +2015,6 @@ function BunnyPlayer({ src, videoId, courseId }) {
               border:"none",borderRadius:6,cursor:"pointer"}}>Retry</button>
         </div>
       )}
-      {/* Continue Watching resume prompt */}
-      {resumePrompt && (
-        <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column",
-          alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.85)", color:"#fff",
-          zIndex:20, gap:14, padding:20, textAlign:"center" }}>
-          <span style={{fontSize:16, fontWeight:600}}>Resume from {formatWatchTime(resumePrompt.watchedTime)}?</span>
-          <div style={{display:"flex", gap:10}}>
-            <button onClick={handleResume}
-              style={{padding:"8px 22px", background:"#6c47d4", color:"#fff", border:"none",
-                borderRadius:6, cursor:"pointer", fontWeight:600}}>Resume</button>
-            <button onClick={handleStartOver}
-              style={{padding:"8px 22px", background:"rgba(255,255,255,0.15)", color:"#fff",
-                border:"1px solid rgba(255,255,255,0.3)", borderRadius:6, cursor:"pointer", fontWeight:600}}>Start Over</button>
-          </div>
-        </div>
-      )}
       {/* actual video */}
       <video
         ref={videoRef}
@@ -2068,7 +2029,7 @@ function BunnyPlayer({ src, videoId, courseId }) {
 
       {/* double-tap seek zones + center play/pause — sits above the video but
           leaves the bottom strip free for the native <video controls> bar */}
-      {!hlsError && !resumePrompt && (
+      {!hlsError && (
         <div
           style={{ position:"absolute", left:0, right:0, top:0, bottom:46, zIndex:5, display:"flex" }}
           onClick={() => setShowQualityMenu(false)}

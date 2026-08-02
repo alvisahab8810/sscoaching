@@ -879,6 +879,20 @@ import { BsCollection, BsFilePdf, BsFileEarmarkText, BsBoxSeam } from "react-ico
 const subjects = ["Mathematics","Physics","Chemistry","Biology","English","Hindi","Social Science","Computer Science","Science","History","Geography","Economics","Political Science","Accountancy","Business Studies"];
 const batches  = ["Class 9","Class 10","Class 11","Class 12","NIOS Stream 1","NIOS Stream 2","Dropper Batch"];
 
+// Admin-added subjects persist in localStorage so they survive reloads and
+// show up for every admin using this browser (no dedicated backend model for it yet).
+function loadCustomSubjects() {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem("ss_customSubjects") || "[]"); } catch { return []; }
+}
+function saveCustomSubject(name) {
+  const list = loadCustomSubjects();
+  if (!list.includes(name)) {
+    list.push(name);
+    localStorage.setItem("ss_customSubjects", JSON.stringify(list));
+  }
+}
+
 const MATERIAL_SECTIONS = [
   { key:"books",        label:"Books",         icon:"📚", color:"#6c47d4" },
   { key:"tma",          label:"TMA",           icon:"📝", color:"#f59e0b" },
@@ -3342,6 +3356,24 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
    COURSE FORM FIELDS (unchanged)
 ───────────────────────────────────────── */
 function CourseFormFields({ form, setForm, compact=false }) {
+  const [subjectList, setSubjectList] = useState(subjects);
+  const [addingSubject, setAddingSubject] = useState(false);
+  const [newSubjectName, setNewSubjectName] = useState("");
+
+  useEffect(() => {
+    setSubjectList([...subjects, ...loadCustomSubjects()]);
+  }, []);
+
+  const confirmAddSubject = () => {
+    const name = newSubjectName.trim();
+    if (!name) return;
+    saveCustomSubject(name);
+    setSubjectList(prev => prev.includes(name) ? prev : [...prev, name]);
+    setForm({...form, subject:name});
+    setAddingSubject(false);
+    setNewSubjectName("");
+  };
+
   return (
     <div className={`cr-form-grid ${compact?"cr-form-grid-compact":""}`}>
       <div className="cr-field cr-field-full">
@@ -3359,10 +3391,24 @@ function CourseFormFields({ form, setForm, compact=false }) {
       </div>
       <div className="cr-field">
         <label className="cr-label">Subject <span className="cr-req">*</span></label>
-        <select className="cr-input" value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})}>
+        <select className="cr-input" value={form.subject} onChange={e=>{
+          if (e.target.value === "__add_new__") { setAddingSubject(true); return; }
+          setForm({...form,subject:e.target.value});
+        }}>
           <option value="">Select Subject</option>
-          {subjects.map(s=><option key={s} value={s}>{s}</option>)}
+          {subjectList.map(s=><option key={s} value={s}>{s}</option>)}
+          <option value="__add_new__">+ Add New Subject</option>
         </select>
+        {addingSubject && (
+          <div style={{display:"flex",gap:8,marginTop:8}}>
+            <input className="cr-input" autoFocus placeholder="New subject name"
+              value={newSubjectName} onChange={e=>setNewSubjectName(e.target.value)}
+              onKeyDown={e=>{ if(e.key==="Enter"){ e.preventDefault(); confirmAddSubject(); } }}/>
+            <button type="button" className="cr-pricing-btn" onClick={confirmAddSubject}>Add</button>
+            <button type="button" className="cr-pricing-btn"
+              onClick={()=>{setAddingSubject(false);setNewSubjectName("");}}>Cancel</button>
+          </div>
+        )}
       </div>
       <div className="cr-field">
         <label className="cr-label">Batch / Class <span className="cr-req">*</span></label>
