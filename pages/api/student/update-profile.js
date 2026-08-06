@@ -18,7 +18,11 @@ export default async function handler(req, res) {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const { name, className, batch, phone, email } = req.body;
+    // Phone is intentionally NOT accepted here — it's the OTP-verified account
+    // identity (used for login & password reset), so changing it goes through
+    // /api/auth/send-change-phone-otp + /api/auth/verify-change-phone-otp,
+    // which prove the student actually owns the new number before saving it.
+    const { name, className, batch, email } = req.body;
 
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: "Name is required" });
@@ -34,10 +38,28 @@ export default async function handler(req, res) {
       batch: batch || "",
       isProfileComplete: true,
     };
-    if (phone) updates.phone = phone.trim();
-    if (email) updates.email = email.toLowerCase().trim();
 
-    const student = await StudentUser.findByIdAndUpdate(decoded.id, updates, { new: true });
+    if (email) {
+      const normalEmail = email.toLowerCase().trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalEmail))
+        return res.status(400).json({ success: false, message: "Enter a valid email address" });
+
+      const taken = await StudentUser.findOne({ email: normalEmail, _id: { $ne: decoded.id } }).select("_id");
+      if (taken)
+        return res.status(409).json({ success: false, message: "This email is already registered to another account." });
+
+      updates.email = normalEmail;
+    }
+
+    let student;
+    try {
+      student = await StudentUser.findByIdAndUpdate(decoded.id, updates, { new: true });
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(409).json({ success: false, message: "This email is already registered to another account." });
+      }
+      throw err;
+    }
 
     if (!student) {
       return res.status(404).json({ success: false, message: "Student not found" });

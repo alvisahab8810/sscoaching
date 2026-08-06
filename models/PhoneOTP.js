@@ -6,6 +6,7 @@ const PhoneOTPSchema = new mongoose.Schema({
   otp:         { type: String, default: "" },
   pendingData: { type: mongoose.Schema.Types.Mixed, default: null },
   expiresAt:   { type: Date, required: true },
+  attempts:    { type: Number, default: 0 },
   isUsed:      { type: Boolean, default: false },
 }, { timestamps: true });
 

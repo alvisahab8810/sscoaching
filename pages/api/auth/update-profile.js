@@ -12,14 +12,36 @@ export default async function handler(req, res) {
 
   try {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
-    const { name, phone, class: className } = req.body;
+    // Phone is the OTP-verified account identity (used for login & password
+    // reset) — it is intentionally NOT editable here. Changing it goes through
+    // the dedicated send-change-phone-otp / verify-change-phone-otp flow so the
+    // new number is proven to belong to the student before it's saved.
+    const { name, email, class: className } = req.body;
 
     const updates = {};
     if (name)      updates.name      = name.trim();
-    if (phone)     updates.phone     = phone.trim();
     if (className) updates.className = className.trim();
 
-    const student = await StudentUser.findByIdAndUpdate(id, updates, { new: true });
+    if (email) {
+      const normalEmail = email.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalEmail))
+        return res.status(400).json({ success: false, message: "Enter a valid email address" });
+
+      const taken = await StudentUser.findOne({ email: normalEmail, _id: { $ne: id } }).select("_id");
+      if (taken)
+        return res.status(409).json({ success: false, message: "This email is already registered to another account." });
+
+      updates.email = normalEmail;
+    }
+
+    let student;
+    try {
+      student = await StudentUser.findByIdAndUpdate(id, updates, { new: true });
+    } catch (err) {
+      if (err.code === 11000)
+        return res.status(409).json({ success: false, message: "This email is already registered to another account." });
+      throw err;
+    }
     if (!student)
       return res.status(404).json({ success: false, message: "User not found" });
 

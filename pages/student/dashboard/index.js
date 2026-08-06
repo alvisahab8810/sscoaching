@@ -972,17 +972,20 @@ function InvoicesSection() {
    COURSES SECTION
 ════════════════════════════════════════ */
 function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onOpenCourse, wishlist = [], toggleWishlist, openDetail }) {
-  const [filter, setFilter]   = useState("all");
-  const [search, setSearch]   = useState("");
-  const [subject, setSubject] = useState("");
+  const [filter, setFilter]     = useState("all");
+  const [search, setSearch]     = useState("");
+  const [subject, setSubject]   = useState("");
+  const [classVal, setClassVal] = useState("");
 
   const subjects = [...new Set(courses.map((c) => c.subject).filter(Boolean))];
+  const classes  = [...new Set(courses.map((c) => c.batch).filter(Boolean))];
   const filtered = courses.filter((c) => {
     if (filter === "enrolled" && !c.isEnrolled)          return false;
     if (filter === "free"     && !c.isFree)              return false;
     if (filter === "paid"     && c.isFree)               return false;
     if (filter === "bundle"   && c.courseType !== "bundle") return false;
     if (subject && c.subject !== subject)                return false;
+    if (classVal && c.batch !== classVal)                return false;
     if (search && !c.title.toLowerCase().includes(search.toLowerCase()) &&
         !(c.subject||"").toLowerCase().includes(search.toLowerCase()) &&
         !(c.bundledSubjects||[]).some(s => s.toLowerCase().includes(search.toLowerCase()))) return false;
@@ -1029,6 +1032,12 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
           ].map((f) => (
             <button key={f.val} className={`sdc-chip ${filter===f.val?"sdc-chip-active":""}`} onClick={() => setFilter(f.val)}>{f.label}</button>
           ))}
+          {classes.length > 1 && (
+            <select className="sdc-subject-select" value={classVal} onChange={(e) => setClassVal(e.target.value)}>
+              <option value="">All Classes</option>
+              {classes.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          )}
           {subjects.length > 1 && (
             <select className="sdc-subject-select" value={subject} onChange={(e) => setSubject(e.target.value)}>
               <option value="">All Subjects</option>
@@ -2294,6 +2303,8 @@ function CoursePlayer({ courseId, onBack }) {
   const [linkedClasses, setLinkedClasses] = useState([]);
   const [showLinkedClasses, setShowLinkedClasses] = useState(false);
   const [completedLessons, setCompletedLessons] = useState(new Set());
+  const [sidebarTab, setSidebarTab] = useState("videos"); // "videos" | "materials"
+  const [watchingLinkedId, setWatchingLinkedId] = useState(null); // linked-class _id currently playing in-app
 
   useEffect(() => {
     const load = async () => {
@@ -2509,8 +2520,11 @@ function CoursePlayer({ courseId, onBack }) {
               {linkedClasses.map(cls => {
                 const statusColor = {live:"#ef4444",upcoming:"#f59e0b",completed:"#10b981"}[cls.status]||"#9ca3af";
                 const isLive = cls.status === "live";
+                const ytId = getYoutubeId(cls.streamLink);
+                const isWatching = watchingLinkedId === cls._id;
+                const canWatch = (isLive || cls.status === "completed") && cls.isUnlocked && cls.streamLink;
                 return (
-                  <div key={cls._id} style={{background:"white",border:`2px solid ${isLive?"#ef4444":"#e5e7eb"}`,borderRadius:10,padding:"12px 16px",minWidth:200,maxWidth:280,flex:"1 1 200px"}}>
+                  <div key={cls._id} style={{background:"white",border:`2px solid ${isLive?"#ef4444":"#e5e7eb"}`,borderRadius:10,padding:"12px 16px",minWidth:200,maxWidth:isWatching?"100%":280,flex:isWatching?"1 1 100%":"1 1 200px"}}>
                     <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
                       <span style={{width:8,height:8,borderRadius:"50%",background:statusColor,flexShrink:0}}/>
                       <span style={{fontSize:10,fontWeight:800,color:statusColor,textTransform:"uppercase",letterSpacing:0.5}}>{cls.status}</span>
@@ -2519,20 +2533,21 @@ function CoursePlayer({ courseId, onBack }) {
                     <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>
                       {cls.teacher} · {cls.date} {cls.time ? `· ${cls.time}` : ""}
                     </div>
-                    {isLive && cls.isUnlocked && cls.streamLink && (
-                      <a href={cls.streamLink} target="_blank" rel="noopener noreferrer"
-                        style={{display:"inline-flex",alignItems:"center",gap:4,background:"#ef4444",color:"white",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,textDecoration:"none"}}>
-                        ◉ Watch Live
-                      </a>
+                    {canWatch && (
+                      <button
+                        onClick={() => setWatchingLinkedId(isWatching ? null : cls._id)}
+                        disabled={!ytId}
+                        style={{display:"inline-flex",alignItems:"center",gap:4,background:isWatching?"#374151":(isLive?"#ef4444":"#6c47d4"),color:"white",border:"none",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,cursor:ytId?"pointer":"not-allowed",opacity:ytId?1:0.5}}>
+                        {isWatching ? "✕ Close" : isLive ? "◉ Watch Live" : "▶ Watch Recording"}
+                      </button>
                     )}
                     {cls.status === "upcoming" && (
                       <div style={{fontSize:11,color:"#f59e0b",fontWeight:600}}>🕐 Upcoming</div>
                     )}
-                    {cls.status === "completed" && cls.isUnlocked && cls.streamLink && (
-                      <a href={cls.streamLink} target="_blank" rel="noopener noreferrer"
-                        style={{display:"inline-flex",alignItems:"center",gap:4,background:"#6c47d4",color:"white",borderRadius:6,padding:"5px 12px",fontSize:11,fontWeight:700,textDecoration:"none"}}>
-                        ▶ Watch Recording
-                      </a>
+                    {isWatching && ytId && (
+                      <div style={{marginTop:10,borderRadius:10,overflow:"hidden"}}>
+                        <SecureYouTubePlayer videoId={ytId} isLive={isLive} classId={cls._id}/>
+                      </div>
                     )}
                   </div>
                 );
@@ -2647,35 +2662,59 @@ function CoursePlayer({ courseId, onBack }) {
           <div className={`scp-sidebar${isBundle && mobileSidebar ? " bcp-drawer-open" : ""}`}>
             {!isBundle && (
               <>
-                <div className="scp-sidebar-title">Course Content</div>
-                {course.chapters?.length === 0 && <div className="scp-no-content">No chapters yet.</div>}
-                {/* Subject course materials */}
                 {(() => {
                   const allMats = MAT_SECTIONS.flatMap(s =>
                     (course.materials?.[s.key]||[]).map(m => ({...m, secKey:s.key, Icon:s.Icon, label:s.label}))
                   );
-                  if (!allMats.length) return null;
                   return (
-                    <div className="scp-materials-section">
-                      <div className="scp-materials-title">📁 Study Materials</div>
-                      <div className="scp-materials-list">
-                        {allMats.map(mat => {
-                          const MatIcon = mat.Icon;
-                          return (
-                            <button key={mat._id} className="scp-material-link" onClick={() => openViewer(mat, mat.secKey, null)}
-                              style={{width:"100%",textAlign:"left",cursor:"pointer",border:"none",background:"white"}}>
-                              <span className="scp-material-icon">
-                                {MatIcon ? <MatIcon size={14} color={mat.color||"#6c47d4"}/> : "📁"}
-                              </span>
-                              <span className="scp-material-name">{mat.title}</span>
-                              <span className="scp-material-open">View</span>
-                            </button>
-                          );
-                        })}
-                      </div>
+                    <div className="scp-sidebar-tabs">
+                      <button
+                        className={`scp-sidebar-tab scp-sidebar-tab-videos ${sidebarTab==="videos"?"scp-sidebar-tab-active":""}`}
+                        onClick={() => setSidebarTab("videos")}
+                      >
+                        <FaVideo size={12}/> Videos
+                      </button>
+                      <button
+                        className={`scp-sidebar-tab scp-sidebar-tab-materials ${sidebarTab==="materials"?"scp-sidebar-tab-active":""}`}
+                        onClick={() => setSidebarTab("materials")}
+                      >
+                        <MdAttachFile size={13}/> Course Material
+                        {allMats.length > 0 && <span className="scp-sidebar-tab-badge">{allMats.length}</span>}
+                      </button>
                     </div>
                   );
                 })()}
+
+                {sidebarTab==="materials" ? (
+                  (() => {
+                    const allMats = MAT_SECTIONS.flatMap(s =>
+                      (course.materials?.[s.key]||[]).map(m => ({...m, secKey:s.key, Icon:s.Icon, label:s.label}))
+                    );
+                    if (!allMats.length) return <div className="scp-no-content">No study materials yet.</div>;
+                    return (
+                      <div className="scp-materials-section">
+                        <div className="scp-materials-title">📁 Study Materials</div>
+                        <div className="scp-materials-list">
+                          {allMats.map(mat => {
+                            const MatIcon = mat.Icon;
+                            return (
+                              <button key={mat._id} className="scp-material-link" onClick={() => openViewer(mat, mat.secKey, null)}
+                                style={{width:"100%",textAlign:"left",cursor:"pointer",border:"none",background:"white"}}>
+                                <span className="scp-material-icon">
+                                  {MatIcon ? <MatIcon size={14} color={mat.color||"#6c47d4"}/> : "📁"}
+                                </span>
+                                <span className="scp-material-name">{mat.title}</span>
+                                <span className="scp-material-open">View</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <>
+                {course.chapters?.length === 0 && <div className="scp-no-content">No chapters yet.</div>}
                 {course.chapters?.map((chapter, ci) => {
                   const isOpen = !!openChapters[ci];
                   return (
@@ -2733,6 +2772,8 @@ function CoursePlayer({ courseId, onBack }) {
                     </div>
                   );
                 })}
+                  </>
+                )}
               </>
             )}
 
@@ -2799,6 +2840,14 @@ function CoursePlayer({ courseId, onBack }) {
           </div>
         </div>
       <style jsx>{`
+        .scp-sidebar-tabs{display:flex;gap:8px;padding:14px 16px 12px;background:#fff;position:sticky;top:0;z-index:2;border-bottom:1.5px solid #eceefb;}
+        .scp-sidebar-tab{display:flex;align-items:center;justify-content:center;gap:5px;min-height:38px;padding:9px 6px;border:1.5px solid #e0e3f5;border-radius:9px;background:#f8f9ff;color:#5a6485;font-size:.76rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
+        .scp-sidebar-tab-videos{flex:0.8;}
+        .scp-sidebar-tab-materials{flex:1.2;}
+        .scp-sidebar-tab:not(.scp-sidebar-tab-active):hover{border-color:#c7ccf0;color:#4441e5;background:#eef0ff;}
+        .scp-sidebar-tab-active{background:#4441e5;border-color:#4441e5;color:#fff;box-shadow:0 3px 10px rgba(68,65,229,.28);}
+        .scp-sidebar-tab-badge{background:rgba(255,255,255,.25);color:inherit;font-size:.63rem;font-weight:800;padding:1px 6px;border-radius:100px;flex-shrink:0;}
+        .scp-sidebar-tab:not(.scp-sidebar-tab-active) .scp-sidebar-tab-badge{background:#4441e5;color:#fff;}
         .scp-notes-only-header{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 24px 32px;background:linear-gradient(135deg,#1a1f4b,#0f1530);text-align:center;color:#fff;min-height:180px;}
         .scp-notes-badge{font-size:.62rem;font-weight:700;background:rgba(245,158,11,.18);color:#f59e0b;padding:1px 5px;border-radius:4px;white-space:nowrap;}
         .scp-lesson-active .scp-notes-badge{background:rgba(255,255,255,.2);color:#fff;}
@@ -3022,12 +3071,67 @@ function CartDrawer({ open, onClose, cart, removeFromCart, onEnrolled }) {
 function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
   const [saving, setSaving]           = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [form, setForm]               = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"" });
+  const [form, setForm]               = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", email:student.email||"" });
   const [successMsg, setSuccessMsg]   = useState("");
   const [errorMsg, setErrorMsg]       = useState("");
   const [hasChanges, setHasChanges]   = useState(false);
   const [avatarSrc, setAvatarSrc]     = useState(student.avatar && !student.avatar.startsWith("data:") ? student.avatar : "");
   const fileRef                       = useRef(null);
+
+  // Change Mobile Number state — phone is the OTP-verified account identity
+  // (used for login & password reset), so it can't be edited directly here.
+  // Changing it requires proving ownership of the new number via OTP.
+  const [showChangeNumber, setShowChangeNumber] = useState(false);
+  const [cnStep, setCnStep]           = useState("input"); // 'input' | 'otp'
+  const [cnPhone, setCnPhone]         = useState("");
+  const [cnOtp, setCnOtp]             = useState("");
+  const [cnSending, setCnSending]     = useState(false);
+  const [cnError, setCnError]         = useState("");
+  const [cnSuccess, setCnSuccess]     = useState("");
+
+  const openChangeNumber = () => {
+    setShowChangeNumber(true); setCnStep("input"); setCnPhone(""); setCnOtp(""); setCnError(""); setCnSuccess("");
+  };
+  const closeChangeNumber = () => setShowChangeNumber(false);
+
+  const handleSendChangeNumberOtp = async () => {
+    setCnError("");
+    if (cnPhone.length !== 10) { setCnError("Enter a valid 10-digit mobile number"); return; }
+    setCnSending(true);
+    try {
+      const token = localStorage.getItem("studentToken");
+      const res = await fetch("/api/auth/send-change-phone-otp", {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ phone: cnPhone }),
+      });
+      const data = await res.json();
+      if (data.success) { setCnStep("otp"); } else { setCnError(data.message || "Failed to send OTP"); }
+    } catch { setCnError("Server error. Please try again."); }
+    setCnSending(false);
+  };
+
+  const handleVerifyChangeNumberOtp = async () => {
+    setCnError("");
+    if (!cnOtp.trim()) { setCnError("Enter the OTP"); return; }
+    setCnSending(true);
+    try {
+      const token = localStorage.getItem("studentToken");
+      const res = await fetch("/api/auth/verify-change-phone-otp", {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ phone: cnPhone, otp: cnOtp }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem("studentToken", data.token);
+        const updated = { ...student, ...data.user };
+        localStorage.setItem("studentInfo", JSON.stringify(updated));
+        setStudent(updated);
+        setCnSuccess("Mobile number updated!");
+        setTimeout(() => { setShowChangeNumber(false); }, 1500);
+      } else { setCnError(data.message || "Incorrect OTP"); }
+    } catch { setCnError("Server error. Please try again."); }
+    setCnSending(false);
+  };
 
   // Change Password state
   const [cpCurrent, setCpCurrent]     = useState("");
@@ -3084,7 +3188,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
       form.name      !== (student.name||"")      ||
       form.className !== (student.className||"") ||
       form.batch     !== (student.batch||"")     ||
-      form.phone     !== (student.phone||"");
+      form.email     !== (student.email||"");
     setHasChanges(changed);
   }, [form, student]);
 
@@ -3097,11 +3201,11 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
       const token = localStorage.getItem("studentToken");
       const res   = await fetch("/api/student/update-profile", {
         method:"PUT", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},
-        body: JSON.stringify({ ...form, email: student.email }),
+        body: JSON.stringify(form),
       });
       const data = await res.json();
       if (data.success) {
-        const updated = { ...student, ...data.student, email: student.email };
+        const updated = { ...student, ...data.student };
         localStorage.setItem("studentInfo", JSON.stringify(updated));
         setStudent(updated);
         setSuccessMsg("Profile updated successfully!");
@@ -3113,7 +3217,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
   };
 
   const handleReset = () => {
-    setForm({ name:student.name||"", className:student.className||"", batch:student.batch||"", phone:student.phone||"" });
+    setForm({ name:student.name||"", className:student.className||"", batch:student.batch||"", email:student.email||"" });
     setErrorMsg(""); setSuccessMsg("");
   };
 
@@ -3197,12 +3301,15 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
             <input type="text" className="sdpr-input" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} placeholder="Your full name"/>
           </div>
           <div className="sdpr-field" style={{margin:0}}>
-            <label className="sdpr-label">Mobile Number</label>
-            <input type="tel" className="sdpr-input" value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value.replace(/\D/g,"").slice(0,10)})} placeholder="10-digit mobile number"/>
+            <label className="sdpr-label">Mobile Number <span style={{background:"#f0fdf4",color:"#16a34a",fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:6,marginLeft:6}}>🔒 Verified</span></label>
+            <input type="tel" className="sdpr-input" value={student.phone ? `+91 ${student.phone}` : ""} readOnly style={{background:"#f9fafb",color:"#6b7280",cursor:"not-allowed"}}/>
+            <div style={{marginTop:6,display:"flex",alignItems:"center",gap:5,cursor:"pointer",color:"#7c3aed",fontSize:12,fontWeight:600}} onClick={openChangeNumber}>
+              <MdArrowForward size={13}/> Change Number
+            </div>
           </div>
           <div className="sdpr-field" style={{margin:0}}>
-            <label className="sdpr-label">Email Address <span style={{background:"#f0fdf4",color:"#16a34a",fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:6,marginLeft:6}}>🔒 Fixed</span></label>
-            <input type="email" className="sdpr-input" value={student.email||""} readOnly style={{background:"#f9fafb",color:"#6b7280",cursor:"not-allowed"}}/>
+            <label className="sdpr-label">Email Address</label>
+            <input type="email" className="sdpr-input" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} placeholder="you@example.com"/>
           </div>
           <div className="sdpr-field" style={{margin:0}}>
             <label className="sdpr-label">Class <span className="sdpr-req">*</span></label>
@@ -3373,6 +3480,56 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
           </div>
         </div>
       </div>
+
+      {/* ── Change Mobile Number modal ── */}
+      {showChangeNumber && (
+        <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(15,23,42,0.5)",display:"flex",alignItems:"center",justifyContent:"center",padding:16}} onClick={closeChangeNumber}>
+          <div className="sdpr-box" style={{maxWidth:380,width:"100%",margin:0}} onClick={(e)=>e.stopPropagation()}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+              <MdPhone size={20} color="#7c3aed"/>
+              <h3 style={{margin:0,fontSize:16,fontWeight:700,color:"#1e1b4b"}}>Change Mobile Number</h3>
+            </div>
+
+            {cnSuccess ? (
+              <div className="sdpr-msg-ok">✅ {cnSuccess}</div>
+            ) : cnStep === "input" ? (
+              <>
+                <p style={{fontSize:12.5,color:"#6b7280",marginTop:0,marginBottom:14}}>
+                  We'll send an OTP to your new number to confirm it's yours before updating your account.
+                </p>
+                {cnError && <div className="sdpr-msg-err" style={{marginBottom:12}}>⚠️ {cnError}</div>}
+                <div className="sdpr-field" style={{margin:0}}>
+                  <label className="sdpr-label">New Mobile Number</label>
+                  <input type="tel" className="sdpr-input" value={cnPhone} onChange={(e)=>setCnPhone(e.target.value.replace(/\D/g,"").slice(0,10))} placeholder="10-digit mobile number" autoFocus/>
+                </div>
+                <div style={{marginTop:16,display:"flex",gap:10}}>
+                  <button className="sdpr-save-btn" onClick={handleSendChangeNumberOtp} disabled={cnSending}>
+                    {cnSending ? <><span className="sdpr-spinner"/>&nbsp;Sending...</> : "Send OTP"}
+                  </button>
+                  <button className="sdpr-reset-btn" onClick={closeChangeNumber}><MdClose size={14}/> Cancel</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p style={{fontSize:12.5,color:"#6b7280",marginTop:0,marginBottom:14}}>
+                  Enter the OTP sent to <b>+91 {cnPhone}</b>.
+                </p>
+                {cnError && <div className="sdpr-msg-err" style={{marginBottom:12}}>⚠️ {cnError}</div>}
+                <div className="sdpr-field" style={{margin:0}}>
+                  <label className="sdpr-label">OTP</label>
+                  <input type="text" className="sdpr-input" value={cnOtp} onChange={(e)=>setCnOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="6-digit OTP" autoFocus/>
+                </div>
+                <div style={{marginTop:16,display:"flex",gap:10}}>
+                  <button className="sdpr-save-btn" onClick={handleVerifyChangeNumberOtp} disabled={cnSending}>
+                    {cnSending ? <><span className="sdpr-spinner"/>&nbsp;Verifying...</> : "Verify & Update"}
+                  </button>
+                  <button className="sdpr-reset-btn" onClick={()=>setCnStep("input")}><MdClose size={14}/> Back</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

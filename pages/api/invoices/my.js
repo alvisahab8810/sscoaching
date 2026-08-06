@@ -8,7 +8,11 @@ import jwt from "jsonwebtoken";
 
 function getStudent(req) {
   try {
-    const token = (req.headers.authorization || "").replace("Bearer ", "");
+    // Header auth (normal API calls) OR a ?token= query param — the mobile
+    // app's PDF download opens this URL in the system browser, which can't
+    // attach an Authorization header, so it passes the student's JWT as a
+    // query param instead. Only ever used for this single GET/PDF route.
+    const token = (req.headers.authorization || "").replace("Bearer ", "") || req.query.token || "";
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch { return null; }
 }

@@ -89,6 +89,16 @@ export default function StudentLogin() {
   const [otpError, setOtpError] = useState("");
   const [cooldown, startCooldown] = useCountdown();
 
+  /* ── FORGOT PASSWORD state ── */
+  const [forgotStep, setForgotStep] = useState(1); // 1=email 2=code 3=password 4=done
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotCode, setForgotCode] = useState("");
+  const [forgotNewPass, setForgotNewPass] = useState("");
+  const [forgotConfirmPass, setForgotConfirmPass] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState("");
+  const [forgotCooldown, startForgotCooldown] = useCountdown();
+
   const saveAndRedirect = (data) => {
     localStorage.setItem("studentToken", data.token);
     localStorage.setItem("studentInfo", JSON.stringify({
@@ -145,6 +155,55 @@ export default function StudentLogin() {
 
   const switchMode = (m) => {
     setMode(m); setLoginError(""); setRegError(""); setOtpError(""); setRegStep(1);
+    setForgotError(""); setForgotStep(1); setForgotEmail(""); setForgotCode("");
+    setForgotNewPass(""); setForgotConfirmPass("");
+  };
+
+  /* ── Forgot password: step 1 — send reset code to email ── */
+  const handleForgotSendCode = async (e) => {
+    e?.preventDefault(); setForgotError("");
+    if (!forgotEmail.trim() || !forgotEmail.includes("@")) {
+      setForgotError("Please enter a valid email address"); return;
+    }
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) { setForgotStep(2); setForgotCode(""); startForgotCooldown(60); }
+      else setForgotError(data.message || "Failed to send reset code");
+    } catch { setForgotError("Server error. Please try again."); }
+    setForgotLoading(false);
+  };
+
+  /* ── Forgot password: step 2 — code is verified on final reset call ── */
+  const handleForgotVerifyCode = (e) => {
+    e?.preventDefault(); setForgotError("");
+    if (forgotCode.length < 6) { setForgotError("Please enter the 6-digit code"); return; }
+    setForgotStep(3);
+  };
+
+  /* ── Forgot password: step 3 — reset password ── */
+  const handleForgotReset = async (e) => {
+    e?.preventDefault(); setForgotError("");
+    if (forgotNewPass.length < 6) { setForgotError("Password must be at least 6 characters"); return; }
+    if (forgotNewPass !== forgotConfirmPass) { setForgotError("Passwords do not match"); return; }
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail.trim(), code: forgotCode.trim(), newPassword: forgotNewPass }),
+      });
+      const data = await res.json();
+      if (data.success) setForgotStep(4);
+      else {
+        setForgotError(data.message || "Failed to reset password");
+        if (data.message?.toLowerCase().includes("code")) setForgotStep(2);
+      }
+    } catch { setForgotError("Server error. Please try again."); }
+    setForgotLoading(false);
   };
 
   /* ─────────────── JSX ─────────────── */
@@ -193,10 +252,12 @@ export default function StudentLogin() {
           <div className="sl-card">
 
             {/* Mode tabs */}
-            <div className="sl-tabs">
-              <button className={`sl-tab ${mode==="login"?"sl-tab-on":""}`} onClick={() => switchMode("login")}>Login</button>
-              <button className={`sl-tab ${mode==="register"?"sl-tab-on":""}`} onClick={() => switchMode("register")}>Register</button>
-            </div>
+            {mode !== "forgot" && (
+              <div className="sl-tabs">
+                <button className={`sl-tab ${mode==="login"?"sl-tab-on":""}`} onClick={() => switchMode("login")}>Login</button>
+                <button className={`sl-tab ${mode==="register"?"sl-tab-on":""}`} onClick={() => switchMode("register")}>Register</button>
+              </div>
+            )}
 
             {/* ══════════════ LOGIN ══════════════ */}
             {mode === "login" && (
@@ -222,6 +283,9 @@ export default function StudentLogin() {
                       <input type="password" className="sl-input" placeholder="Your password"
                         value={loginPass} onChange={e => setLoginPass(e.target.value)} required/>
                     </div>
+                  </div>
+                  <div style={{ textAlign: "right", marginTop: -6, marginBottom: 12 }}>
+                    <button type="button" className="sl-link" style={{ fontSize: 12 }} onClick={() => switchMode("forgot")}>Forgot password?</button>
                   </div>
                   {loginError && <div className="sl-err">{loginError}</div>}
                   <button type="submit" className="sl-btn" disabled={loginLoading}>
@@ -333,6 +397,119 @@ export default function StudentLogin() {
                     </div>
                   </>
                 )}
+              </div>
+            )}
+
+            {/* ══════════════ FORGOT PASSWORD ══════════════ */}
+            {mode === "forgot" && (
+              <div className="sl-pane">
+
+                {/* STEP 1 — enter email */}
+                {forgotStep === 1 && (
+                  <>
+                    <div className="sl-pane-head">
+                      <div className="sl-pane-emoji">🔑</div>
+                      <div className="sl-pane-title">Forgot Password?</div>
+                      <div className="sl-pane-sub">Enter your email to get a reset code</div>
+                    </div>
+                    <form onSubmit={handleForgotSendCode}>
+                      <div className="sl-field">
+                        <label className="sl-label">Email</label>
+                        <div className="sl-iw">
+                          <MdEmail className="sl-ii" size={16}/>
+                          <input type="email" className="sl-input" placeholder="you@example.com"
+                            value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required autoFocus/>
+                        </div>
+                      </div>
+                      {forgotError && <div className="sl-err">{forgotError}</div>}
+                      <button type="submit" className="sl-btn" disabled={forgotLoading}>
+                        {forgotLoading ? <span className="sl-spin"/> : "Send Reset Code →"}
+                      </button>
+                    </form>
+                    <p className="sl-foot">Remembered it? <button className="sl-link" onClick={() => switchMode("login")}>Back to login</button></p>
+                  </>
+                )}
+
+                {/* STEP 2 — enter code */}
+                {forgotStep === 2 && (
+                  <>
+                    <div className="sl-pane-head">
+                      <div className="sl-pane-emoji">📧</div>
+                      <div className="sl-pane-title">Enter Reset Code</div>
+                      <div className="sl-pane-sub">
+                        Code sent to<br/>
+                        <strong style={{ color: "#6c47d4" }}>{forgotEmail}</strong>
+                      </div>
+                    </div>
+                    <form onSubmit={handleForgotVerifyCode}>
+                      <OtpInput value={forgotCode} onChange={setForgotCode}/>
+                      {forgotError && <div className="sl-err" style={{ textAlign: "center" }}>{forgotError}</div>}
+                      <button type="submit" className="sl-btn" disabled={forgotCode.length < 6}>
+                        Continue →
+                      </button>
+                    </form>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, gap: 8 }}>
+                      <button className="sl-back-btn" onClick={() => { setForgotStep(1); setForgotCode(""); setForgotError(""); }}>
+                        <MdArrowBack size={14}/> Edit email
+                      </button>
+                      <button className="sl-resend-btn" onClick={handleForgotSendCode} disabled={forgotCooldown > 0 || forgotLoading}>
+                        <MdRefresh size={14}/>
+                        {forgotCooldown > 0 ? `Resend in ${forgotCooldown}s` : "Resend code"}
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 3 — new password */}
+                {forgotStep === 3 && (
+                  <>
+                    <div className="sl-pane-head">
+                      <div className="sl-pane-emoji">🔒</div>
+                      <div className="sl-pane-title">Set New Password</div>
+                      <div className="sl-pane-sub">Choose a new password for your account</div>
+                    </div>
+                    <form onSubmit={handleForgotReset}>
+                      <div className="sl-field">
+                        <label className="sl-label">New Password</label>
+                        <div className="sl-iw">
+                          <MdLock className="sl-ii" size={16}/>
+                          <input type="password" className="sl-input" placeholder="Min. 6 characters"
+                            value={forgotNewPass} onChange={e => setForgotNewPass(e.target.value)} required minLength={6} autoFocus/>
+                        </div>
+                      </div>
+                      <div className="sl-field">
+                        <label className="sl-label">Confirm Password</label>
+                        <div className="sl-iw">
+                          <MdLock className="sl-ii" size={16}/>
+                          <input type="password" className="sl-input" placeholder="Re-enter password"
+                            value={forgotConfirmPass} onChange={e => setForgotConfirmPass(e.target.value)} required minLength={6}/>
+                        </div>
+                      </div>
+                      {forgotError && <div className="sl-err">{forgotError}</div>}
+                      <button type="submit" className="sl-btn" disabled={forgotLoading}>
+                        {forgotLoading ? <span className="sl-spin"/> : "Reset Password"}
+                      </button>
+                    </form>
+                    <div style={{ marginTop: 14 }}>
+                      <button className="sl-back-btn" onClick={() => { setForgotStep(2); setForgotError(""); }}>
+                        <MdArrowBack size={14}/> Back
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 4 — done */}
+                {forgotStep === 4 && (
+                  <>
+                    <div className="sl-pane-head">
+                      <div className="sl-pane-emoji"><MdCheckCircle color="#16a34a" size={40}/></div>
+                      <div className="sl-pane-title">Password Reset!</div>
+                      <div className="sl-pane-sub">You can now login with your new password</div>
+                    </div>
+                    <button className="sl-btn" onClick={() => switchMode("login")}>Back to Login →</button>
+                  </>
+                )}
+
               </div>
             )}
 

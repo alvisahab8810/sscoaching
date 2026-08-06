@@ -3,9 +3,9 @@ import StudentUser from "@/models/StudentUser";
 import PhoneOTP from "@/models/PhoneOTP";
 import bcrypt from "bcryptjs";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
+import { sendSmsOtp } from "@/lib/msg91";
 
-// MSG91 (temporarily disabled — not registered yet)
-// import { sendSmsOtp } from "@/lib/msg91";
+const MSG91_ENABLED = process.env.MSG91_SMS_OTP_ENABLED === "true";
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || "no-origin";
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
   if (recent)
     return res.status(429).json({ success: false, message: "Please wait a minute before requesting another OTP." });
 
-  // Generate 6-digit OTP
+  // Generate 6-digit OTP (only used for the email channel — MSG91 generates its own)
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   // Hash password and store pending data
@@ -68,7 +68,23 @@ export default async function handler(req, res) {
     expiresAt: new Date(Date.now() + 10 * 60_000),
   });
 
-  // Send OTP via email
+  if (MSG91_ENABLED) {
+    // Send OTP via SMS (MSG91) — MSG91 tracks/verifies the OTP itself
+    console.log(`[SEND-OTP] Sending OTP via MSG91 SMS to: ${normalPhone}`);
+    try {
+      const result = await sendSmsOtp(normalPhone, process.env.MSG91_TEMPLATE_ID);
+      if (result?.type !== "success") {
+        console.error("[SEND-OTP] MSG91 failed:", result);
+        return res.status(500).json({ success: false, message: "Failed to send OTP. Please try again." });
+      }
+    } catch (err) {
+      console.error("[SEND-OTP] MSG91 error:", err?.response?.data || err.message);
+      return res.status(500).json({ success: false, message: "Could not send OTP. Please try again." });
+    }
+    return res.json({ success: true, message: `OTP sent to ${normalPhone}` });
+  }
+
+  // Fallback: send OTP via email (used until MSG91 SMS is switched on)
   console.log(`[SEND-OTP] Sending OTP to email: ${normalEmail}`);
   const result = await sendOtpEmail({ name: name.trim(), email: normalEmail, otp });
   console.log(`[SEND-OTP] Email result:`, result);
@@ -76,17 +92,6 @@ export default async function handler(req, res) {
     console.error(`[SEND-OTP] Email failed:`, result.error);
     return res.status(500).json({ success: false, message: "Failed to send OTP email. Please try again." });
   }
-
-  // MSG91 SMS (disabled — enable after DLT registration)
-  // try {
-  //   const result = await sendSmsOtp(normalPhone);
-  //   if (result?.type !== "success") {
-  //     return res.status(500).json({ success: false, message: "Failed to send OTP. Please try again." });
-  //   }
-  // } catch (err) {
-  //   console.error("MSG91 send error:", err?.response?.data || err.message);
-  //   return res.status(500).json({ success: false, message: "Could not send OTP. Please try again." });
-  // }
 
   return res.json({ success: true, message: `OTP sent to ${normalEmail}` });
 }

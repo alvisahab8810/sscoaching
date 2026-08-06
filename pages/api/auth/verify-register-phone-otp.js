@@ -2,9 +2,9 @@ import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
 import PhoneOTP from "@/models/PhoneOTP";
 import jwt from "jsonwebtoken";
+import { verifySmsOtp } from "@/lib/msg91";
 
-// MSG91 (temporarily disabled — not registered yet)
-// import { verifySmsOtp } from "@/lib/msg91";
+const MSG91_ENABLED = process.env.MSG91_SMS_OTP_ENABLED === "true";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -24,28 +24,30 @@ export default async function handler(req, res) {
     if (record.expiresAt < new Date())
       return res.status(400).json({ success: false, message: "OTP expired. Please request a new one." });
 
-    // Verify OTP from DB
-    if (record.otp !== otp.trim()) {
-      return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
+    if (MSG91_ENABLED) {
+      // MSG91 tracks the real OTP itself — verify against their API
+      try {
+        const result = await verifySmsOtp(digits, otp.trim());
+        if (result?.type !== "success") {
+          return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
+        }
+      } catch (err) {
+        const msg = (err?.response?.data?.message || "").toLowerCase();
+        if (msg.includes("not match") || msg.includes("invalid") || msg.includes("wrong")) {
+          return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
+        }
+        if (msg.includes("expire")) {
+          return res.status(400).json({ success: false, message: "OTP expired. Please request a new one." });
+        }
+        console.error("MSG91 verify error:", err?.response?.data || err.message);
+        return res.status(500).json({ success: false, message: "OTP verification failed. Please try again." });
+      }
+    } else {
+      // Fallback: verify OTP from DB (email channel)
+      if (record.otp !== otp.trim()) {
+        return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
+      }
     }
-
-    // MSG91 OTP verification (disabled — enable after DLT registration)
-    // try {
-    //   const result = await verifySmsOtp(digits, otp);
-    //   if (result?.type !== "success") {
-    //     return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
-    //   }
-    // } catch (err) {
-    //   const msg = (err?.response?.data?.message || "").toLowerCase();
-    //   if (msg.includes("not match") || msg.includes("invalid") || msg.includes("wrong")) {
-    //     return res.status(400).json({ success: false, message: "Incorrect OTP. Please try again." });
-    //   }
-    //   if (msg.includes("expire")) {
-    //     return res.status(400).json({ success: false, message: "OTP expired. Please request a new one." });
-    //   }
-    //   console.error("MSG91 verify error:", err?.response?.data || err.message);
-    //   return res.status(500).json({ success: false, message: "OTP verification failed. Please try again." });
-    // }
 
     const { name, email, password, className } = record.pendingData;
 

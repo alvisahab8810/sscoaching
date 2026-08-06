@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# student/admin uploaded files — live on the server, not in git
+/public/uploads/
+/private_uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
