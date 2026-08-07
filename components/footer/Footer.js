@@ -49,12 +49,7 @@ export default function Footer() {
                 className="ss-footer-logo"
               />
               <p className="ss-footer-about-text">
-                SS Coaching is Lucknow's oldest and most trusted NIOS study centre, 
-                established in 2001. Our mission is to provide every failed or 
-                drop-out student a second chance to qualify their 10th &amp; 12th 
-                board examinations through the National Institute of Open Schooling 
-                (NIOS). We believe no student should be left behind — and we have 
-                been delivering on that promise for over two decades.
+               SS Coaching is one of the oldest and most trusted NIOS Coaching Centres in Lucknow, established in 2001. With over 24 years of experience, we have provided expert guidance for NIOS Admission, Class 10 and 12, and the NIOS On Demand Examination (ODE). Our experienced teachers have helped thousands of failed and dropout students complete their education through the National Institute of Open Schooling (NIOS).
               </p>
               <div className="ss-footer-est">
                 <span className="ss-footer-est-badge">Est. 2001</span>
