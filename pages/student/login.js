@@ -361,7 +361,7 @@ export default function StudentLogin() {
                       </div>
                       {regError && <div className="sl-err">{regError}</div>}
                       <button type="submit" className="sl-btn" disabled={regLoading}>
-                        {regLoading ? <span className="sl-spin"/> : "Send OTP to Email →"}
+                        {regLoading ? <span className="sl-spin"/> : "Send OTP to Phone →"}
                       </button>
                     </form>
                     <p className="sl-foot">Already registered? <button className="sl-link" onClick={() => switchMode("login")}>Login here</button></p>
@@ -372,11 +372,11 @@ export default function StudentLogin() {
                 {regStep === 2 && (
                   <>
                     <div className="sl-pane-head">
-                      <div className="sl-pane-emoji">📧</div>
-                      <div className="sl-pane-title">Verify Your Email</div>
+                      <div className="sl-pane-emoji">📱</div>
+                      <div className="sl-pane-title">Verify Your Phone</div>
                       <div className="sl-pane-sub">
                         OTP sent to<br/>
-                        <strong style={{ color: "#6c47d4" }}>{regEmail}</strong>
+                        <strong style={{ color: "#6c47d4" }}>{regPhone}</strong>
                       </div>
                     </div>
                     <form onSubmit={handleVerifyOtp}>
