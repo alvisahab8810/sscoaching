@@ -30,15 +30,22 @@ async function createFreeInvoiceAndEmail({ student, course, enrollment, couponCo
       status:     "paid",
     });
 
-    // Send email non-blocking
+    // Send email (PDF-attached, falling back to HTML-only) — non-blocking
     if (student.email) {
       try {
-        const { sendInvoiceEmailHtmlOnly } = await import("@/lib/sendInvoiceEmail");
-        const result = await sendInvoiceEmailHtmlOnly({ invoice, studentEmail: student.email });
+        const { sendInvoiceEmail, sendInvoiceEmailHtmlOnly } = await import("@/lib/sendInvoiceEmail");
+        const result = await sendInvoiceEmail({ invoice, studentEmail: student.email });
         if (result.success) {
-          await Invoice.findByIdAndUpdate(invoice._id, { emailSent: true, emailSentAt: new Date() });
+          await Invoice.findByIdAndUpdate(invoice._id, { emailSent: true, emailSentAt: new Date(), pdfGenerated: true });
+        } else {
+          const r2 = await sendInvoiceEmailHtmlOnly({ invoice, studentEmail: student.email });
+          if (r2.success) {
+            await Invoice.findByIdAndUpdate(invoice._id, { emailSent: true, emailSentAt: new Date() });
+          }
         }
-      } catch {}
+      } catch (emailErr) {
+        console.error("Invoice email failed (non-fatal):", emailErr.message);
+      }
     }
 
     return invoice;
