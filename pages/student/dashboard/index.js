@@ -74,30 +74,8 @@ export default function StudentDashboard() {
   const [activeMenu, setActiveMenu]     = useState("dashboard");
   const [heroSlide, setHeroSlide]       = useState(0);
   const [sidebarOpen, setSidebarOpen]   = useState(false);
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen]         = useState(false);
   const [activeCourse, setActiveCourse]   = useState(null);
   const [detailCourseId, setDetailCourseId] = useState(null);
-  const [wishlist, setWishlist] = useState([]);
-
-  const toggleWishlist = async (courseId) => {
-    const token = localStorage.getItem("studentToken");
-    if (!token) return;
-    const already = wishlist.includes(courseId);
-    // Optimistic update
-    setWishlist(prev => already ? prev.filter(id => id !== courseId) : [...prev, courseId]);
-    if (already) toast.info("Removed from wishlist", { icon: "💔" });
-    else toast.success("Added to wishlist!", { icon: "❤️" });
-    try {
-      await fetch("/api/student/wishlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ courseId }),
-      });
-    } catch {
-      setWishlist(prev => already ? [...prev, courseId] : prev.filter(id => id !== courseId));
-    }
-  };
 
   /* ── Auth + init ── */
   useEffect(() => {
@@ -124,17 +102,6 @@ export default function StudentDashboard() {
 
     fetchClasses(token);
     fetchCourses(token);
-    // Load wishlist + cart from DB
-    const headers = { Authorization: `Bearer ${token}` };
-    fetch("/api/student/wishlist", { headers })
-      .then(r => r.json()).then(d => { if (d.success) setWishlist(d.wishlist || []); }).catch(() => {});
-    fetch("/api/student/cart", { headers })
-      .then(r => r.json()).then(d => {
-        if (d.success) {
-          // cart IDs — will be matched against courses once courses load
-          localStorage.setItem("ss_cart_ids", JSON.stringify(d.cart || []));
-        }
-      }).catch(() => {});
   }, []);
 
   /* ── Restore active tab + course from URL on load / refresh ── */
@@ -164,17 +131,7 @@ export default function StudentDashboard() {
     try {
       const res  = await fetch("/api/courses", { headers:{ Authorization:`Bearer ${token}` } });
       const data = await res.json();
-      if (data.success) {
-        setCourses(data.courses);
-        // Reconcile cart: match saved cart IDs with fetched courses
-        try {
-          const cartIds = JSON.parse(localStorage.getItem("ss_cart_ids") || "[]");
-          if (cartIds.length > 0) {
-            const matched = data.courses.filter(c => cartIds.includes(c._id));
-            setCart(matched);
-          }
-        } catch {}
-      }
+      if (data.success) setCourses(data.courses);
     } catch {}
   };
 
@@ -220,36 +177,6 @@ export default function StudentDashboard() {
     return () => clearInterval(t);
   }, [activeMenu]);
 
-  const addToCart = async (course) => {
-    if (cart.find((c) => c._id === course._id)) { setCartOpen(true); return; }
-    // Optimistic update
-    const next = [...cart, course];
-    setCart(next);
-    localStorage.setItem("ss_cart_ids", JSON.stringify(next.map(c => c._id)));
-    setCartOpen(true);
-    const token = localStorage.getItem("studentToken");
-    try {
-      await fetch("/api/student/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ courseId: course._id }),
-      });
-    } catch {}
-  };
-
-  const removeFromCart = async (id) => {
-    const next = cart.filter((c) => c._id !== id);
-    setCart(next);
-    localStorage.setItem("ss_cart_ids", JSON.stringify(next.map(c => c._id)));
-    const token = localStorage.getItem("studentToken");
-    try {
-      await fetch("/api/student/cart", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ courseId: id }),
-      });
-    } catch {}
-  };
   const enrolledCourses = courses.filter((c) => c.isEnrolled);
   const navigate = (menu) => {
     setActiveMenu(menu);
@@ -284,10 +211,6 @@ export default function StudentDashboard() {
               }
               <span>{student.name || "Student"}</span>
             </div>
-            <button className="sd-navbar-cart" onClick={() => setCartOpen(true)}>
-              <MdShoppingCart size={20}/>
-              {cart.length > 0 && <span className="sd-navbar-cart-count">{cart.length}</span>}
-            </button>
           </div>
         </nav>
 
@@ -307,7 +230,6 @@ export default function StudentDashboard() {
               {[
                 { key:"dashboard", Icon:MdDashboard,     label:"Dashboard" },
                 { key:"courses",   Icon:BsCollection,    label:"Courses",          badge: enrolledCourses.length || 0 },
-                { key:"wishlist",  Icon:MdFavorite,      label:"Wishlist",         badge: wishlist.length || 0 },
                 { key:"invoices",  Icon:MdReceipt,       label:"My Invoices" },
                 { key:"live",      Icon:MdLiveTv,        label:"Live Classes",     badge: liveClasses.length || 0 },
                 { key:"upcoming",  Icon:MdCalendarToday, label:"Upcoming Classes" },
@@ -490,14 +412,12 @@ export default function StudentDashboard() {
             {/* COURSES — grid */}
             {activeMenu === "courses" && !activeCourse && !detailCourseId && (
               <CoursesSection
-                courses={courses} cart={cart} addToCart={addToCart}
-                setCartOpen={setCartOpen}
+                courses={courses}
                 onEnrolled={() => fetchCourses(localStorage.getItem("studentToken"))}
                 onOpenCourse={(id) => {
                   setActiveCourse(id);
                   router.replace({ pathname: router.pathname, query: { tab:"courses", courseId:id } }, undefined, { shallow:true });
                 }}
-                wishlist={wishlist} toggleWishlist={toggleWishlist}
                 openDetail={(id) => {
                   setDetailCourseId(id);
                   router.replace({ pathname: router.pathname, query: { tab:"courses", detailId:id } }, undefined, { shallow:true });
@@ -509,8 +429,6 @@ export default function StudentDashboard() {
             {activeMenu === "courses" && !activeCourse && detailCourseId && (
               <CourseDetailPage
                 courseId={detailCourseId}
-                cart={cart}
-                addToCart={addToCart}
                 onEnrolled={() => {
                   fetchCourses(localStorage.getItem("studentToken"));
                   setDetailCourseId(null);
@@ -533,40 +451,6 @@ export default function StudentDashboard() {
                 setActiveCourse(null);
                 router.replace({ pathname: router.pathname, query: { tab:"courses" } }, undefined, { shallow:true });
               }}/>
-            )}
-
-            {/* WISHLIST */}
-            {activeMenu === "wishlist" && (
-              <div>
-                <h1 className="sdlc-page-title">My Wishlist</h1>
-                <p className="sdlc-page-sub">Courses you saved for later</p>
-                {wishlist.length === 0 ? (
-                  <div className="sd-empty">
-                    <MdFavoriteBorder size={52} className="sd-empty-svg"/>
-                    <div className="sd-empty-title">No saved courses yet</div>
-                    <p>Click the ♥ icon on any course to save it here.</p>
-                    <button className="sdc-browse-btn" onClick={() => setActiveMenu("courses")}>Browse Courses</button>
-                  </div>
-                ) : (
-                  <div className="sdc-grid">
-                    {courses.filter((c) => wishlist.includes(c._id)).map((course) => (
-                      <CourseCard
-                        key={course._id} course={course} cart={cart} addToCart={addToCart}
-                        onEnrolled={() => fetchCourses(localStorage.getItem("studentToken"))}
-                        onOpen={() => {
-                          setActiveCourse(course._id); setActiveMenu("courses");
-                          router.replace({ pathname: router.pathname, query: { tab:"courses", courseId:course._id } }, undefined, { shallow:true });
-                        }}
-                        wishlist={wishlist} toggleWishlist={toggleWishlist}
-                        openDetail={(id) => {
-                          setDetailCourseId(id); setActiveMenu("courses");
-                          router.replace({ pathname: router.pathname, query: { tab:"courses", detailId:id } }, undefined, { shallow:true });
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
             )}
 
             {/* ── INVOICES TAB ── */}
@@ -639,26 +523,6 @@ export default function StudentDashboard() {
         </div>
 
         {sidebarOpen && <div className="sd-overlay" onClick={() => setSidebarOpen(false)} />}
-        {cartOpen && <div className="sd-overlay sdc-overlay-top" onClick={() => setCartOpen(false)}/>}
-        <CartDrawer
-          open={cartOpen}
-          onClose={() => setCartOpen(false)}
-          cart={cart}
-          removeFromCart={removeFromCart}
-          onEnrolled={() => {
-            const token = localStorage.getItem("studentToken");
-            fetchCourses(token);
-            setCart([]);
-            localStorage.removeItem("ss_cart_ids");
-            // Clear cart in DB too
-            fetch("/api/student/cart", {
-              method: "DELETE",
-              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-              body: JSON.stringify({}),
-            }).catch(() => {});
-            setCartOpen(false);
-          }}
-        />
 
         {/* ── BOTTOM NAV (mobile only) ── */}
         <nav className="sd-bottom-nav">
@@ -971,7 +835,7 @@ function InvoicesSection() {
 /* ════════════════════════════════════════
    COURSES SECTION
 ════════════════════════════════════════ */
-function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onOpenCourse, wishlist = [], toggleWishlist, openDetail }) {
+function CoursesSection({ courses, onEnrolled, onOpenCourse, openDetail }) {
   const [filter, setFilter]     = useState("all");
   const [search, setSearch]     = useState("");
   const [subject, setSubject]   = useState("");
@@ -1057,7 +921,7 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
       ) : (
         <div className="sdc-grid">
           {filtered.map((course) => (
-            <CourseCard key={course._id} course={course} cart={cart} addToCart={addToCart} onEnrolled={onEnrolled} onOpen={() => onOpenCourse(course._id)} wishlist={wishlist} toggleWishlist={toggleWishlist} openDetail={openDetail}/>
+            <CourseCard key={course._id} course={course} onEnrolled={onEnrolled} onOpen={() => onOpenCourse(course._id)} openDetail={openDetail}/>
           ))}
         </div>
       )}
@@ -1068,22 +932,12 @@ function CoursesSection({ courses, cart, addToCart, setCartOpen, onEnrolled, onO
 /* ════════════════════════════════════════
    COURSE CARD
 ════════════════════════════════════════ */
-function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = [], toggleWishlist, openDetail }) {
+function CourseCard({ course, onEnrolled, onOpen, openDetail }) {
   const [enrolling, setEnrolling] = useState(false);
-  const [heartAnim, setHeartAnim] = useState(false);
-  const inCart = cart.find((c) => c._id === course._id);
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
-  const isWishlisted = wishlist.includes(course._id);
   const isBundle = course.courseType === "bundle";
   const bundledSubs = course.bundledSubjects || [];
   const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
-
-  const handleWishlist = (e) => {
-    e.stopPropagation();
-    setHeartAnim(true);
-    setTimeout(() => setHeartAnim(false), 550);
-    toggleWishlist && toggleWishlist(course._id);
-  };
 
   const handleFreeEnroll = async () => {
     setEnrolling(true);
@@ -1113,21 +967,7 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
       <div
         className={`sdc-card-thumb ${hasImg ? "sdc-thumb-has-img" : thumbClass}`}
         style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}}
-      >
-        <button
-          className={`sdc-fav-btn${isWishlisted ? " sdc-fav-active" : ""}${heartAnim ? " sdc-fav-pop" : ""}`}
-          onClick={handleWishlist}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-            fill={isWishlisted ? "#e11d48" : "none"}
-            stroke={isWishlisted ? "#e11d48" : "white"}
-            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </button>
-      </div>
+      />
 
       {/* Body */}
       <div className="sdc-card-body">
@@ -1185,13 +1025,9 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
           <button className="sdc-btn sdc-btn-free" onClick={(e) => { e.stopPropagation(); handleFreeEnroll(); }} disabled={enrolling}>
             {enrolling ? "Enrolling..." : <><MdCheck size={15}/> Enroll Free</>}
           </button>
-        ) : inCart ? (
-          <button className="sdc-btn sdc-btn-incart" onClick={(e) => { e.stopPropagation(); openDetail && openDetail(course._id); }}>
-            <img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> In Cart
-          </button>
         ) : (
-          <button className="sdc-btn sdc-btn-buy" onClick={(e) => { e.stopPropagation(); openDetail ? openDetail(course._id) : addToCart(course); }}>
-            <img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> Add To Cart &nbsp;₹ {course.price}
+          <button className="sdc-btn sdc-btn-buy" onClick={(e) => { e.stopPropagation(); openDetail && openDetail(course._id); }}>
+            Buy Now &nbsp;₹ {course.price}
           </button>
         )}
       </div>
@@ -1203,13 +1039,14 @@ function CourseCard({ course, cart, addToCart, onEnrolled, onOpen, wishlist = []
 /* ════════════════════════════════════════
    COURSE DETAIL PAGE (pre-purchase)
 ════════════════════════════════════════ */
-function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpenPlayer }) {
+function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
+  const router = useRouter();
   const [course, setCourse]         = useState(null);
   const [loading, setLoading]       = useState(true);
   const [coupon, setCoupon]         = useState("");
   const [couponMsg, setCouponMsg]   = useState("");
   const [enrolling, setEnrolling]   = useState(false);
-  const [openChapters, setOpenChapters] = useState({ 0: true });
+  const [openChapter, setOpenChapter] = useState(0);
   const [showDemo, setShowDemo]     = useState(false);
 
   useEffect(() => {
@@ -1236,7 +1073,6 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
   );
 
   const isBundle     = course.courseType === "bundle";
-  const inCart       = cart?.find((c) => c._id === course._id);
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
   const thumbClass   = getSubjectThumbClass(course.subject);
   const subjectColor = getSubjectColor(course.subject);
@@ -1259,7 +1095,11 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
   const matIcons     = { books:"📚", tma:"📝", assignments:"📋", samplePapers:"📄", notes:"🗒️" };
   const totalMats    = matSections.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
 
-  const handleAddToCart = (e) => { e.stopPropagation(); addToCart(course); setCouponMsg("Added to cart!"); };
+  const handleBuyNow = (e) => {
+    e.stopPropagation();
+    localStorage.setItem("ss_checkout_cart", JSON.stringify([course]));
+    router.push("/student/checkout");
+  };
 
   const handleFreeEnroll = async () => {
     setEnrolling(true);
@@ -1456,8 +1296,8 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
                 </span>
               </div>
               {course.chapters?.map((ch,ci) => (
-                <div key={ch._id||ci} className={`cdp-chapter ${openChapters[ci] ? "cdp-chapter-open" : ""}`}>
-                  <button className="cdp-chapter-hd" onClick={() => setOpenChapters(p=>({...p,[ci]:!p[ci]}))}>
+                <div key={ch._id||ci} className={`cdp-chapter ${openChapter===ci ? "cdp-chapter-open" : ""}`}>
+                  <button className="cdp-chapter-hd" onClick={() => setOpenChapter(p => p===ci ? null : ci)}>
                     <span className="cdp-chapter-title-row">
                       <span className="cdp-chapter-num">{ci+1}</span>
                       <span className="cdp-chapter-title-txt">{ch.title}</span>
@@ -1467,7 +1307,7 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
                       <span className="cdp-chapter-chevron"><MdExpandMore size={16}/></span>
                     </span>
                   </button>
-                  {openChapters[ci] && (
+                  {openChapter===ci && (
                     <div className="cdp-lessons">
                       {ch.lessons.map((les,li) => (
                         <div key={les._id||li} className="cdp-lesson-row">
@@ -1600,10 +1440,8 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
               <button className="cdp-btn-start" onClick={() => onOpenPlayer && onOpenPlayer(course._id)}><MdPlayCircle size={18}/> {isBundle?"Access All Subjects":"Start Learning"}</button>
             ) : course.isFree ? (
               <button className="cdp-btn-enroll" onClick={handleFreeEnroll} disabled={enrolling}>{enrolling?"Enrolling...":<><MdCheck size={16}/> Enroll Free</>}</button>
-            ) : inCart ? (
-              <button className="cdp-btn-incart"><img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> In Cart · ₹{course.price?.toLocaleString("en-IN")}</button>
             ) : (
-              <button className="cdp-btn-cart" onClick={handleAddToCart}><img src="/assets/images/online-classes/icons/cart.svg" alt="" className="sdc-btn-icon"/> Add To Cart &nbsp;₹{course.price?.toLocaleString("en-IN")}</button>
+              <button className="cdp-btn-cart" onClick={handleBuyNow}>Buy Now &nbsp;₹{course.price?.toLocaleString("en-IN")}</button>
             )}
 
             {/* Bundle quick-info in sidebar */}
@@ -1618,7 +1456,8 @@ function CourseDetailPage({ courseId, cart, addToCart, onEnrolled, onBack, onOpe
               </div>
             )}
 
-            {!course.isEnrolled && !course.isFree && (
+            {/* Apply Coupon — hidden for now per request */}
+            {false && !course.isEnrolled && !course.isFree && (
               <div className="cdp-coupon">
                 <span className="cdp-coupon-label">Apply Coupon</span>
                 <div className="cdp-coupon-row">
@@ -2922,150 +2761,6 @@ function LessonInfoPanel({ lesson, course, activeLesson, isCompleted, onToggleCo
 }
 
 /* ════════════════════════════════════════
-   CART DRAWER — navigate to checkout
-════════════════════════════════════════ */
-function CartDrawer({ open, onClose, cart, removeFromCart, onEnrolled }) {
-  const router = useRouter();
-  const [coupon, setCoupon]               = useState("");
-  const [couponApplied, setCouponApplied] = useState(null);
-  const [couponLoading, setCouponLoading] = useState(false);
-  const [couponError, setCouponError]     = useState("");
-  const [enrollingFree, setEnrollingFree] = useState(false);
-
-  const subtotal = cart.reduce((a,c) => a + (c.isFree ? 0 : Number(c.price||0)), 0);
-  const discount = couponApplied
-    ? couponApplied.type==="percent" ? Math.round(subtotal*couponApplied.value/100) : Math.min(couponApplied.value,subtotal)
-    : 0;
-  const total   = Math.max(0, subtotal - discount);
-  const hasPaid = cart.some((c) => !c.isFree);
-  const allFree = cart.every((c) => c.isFree);
-
-  const applyCoupon = async () => {
-    if (!coupon.trim()) return;
-    setCouponLoading(true); setCouponError("");
-    try {
-      const paidCourse = cart.find((c) => !c.isFree);
-      if (!paidCourse) { setCouponError("No paid courses in cart"); setCouponLoading(false); return; }
-      const token = localStorage.getItem("studentToken");
-      const res   = await fetch("/api/courses/enroll", {
-        method:"POST", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},
-        body: JSON.stringify({ courseId:paidCourse._id, couponCode:coupon }),
-      });
-      const data = await res.json();
-      if (data.success && data.type==="paid") setCouponApplied({ code:data.couponCode, discount:data.discount, type:"flat", value:data.discount });
-      else if (data.success && data.type==="free") setCouponApplied({ code:coupon.toUpperCase(), discount:subtotal, type:"flat", value:subtotal });
-      else { setCouponError(data.error||"Invalid coupon"); setCouponApplied(null); }
-    } catch { setCouponError("Network error"); }
-    setCouponLoading(false);
-  };
-
-  const removeCoupon = () => { setCouponApplied(null); setCoupon(""); setCouponError(""); };
-
-  const enrollFreeItems = async () => {
-    setEnrollingFree(true);
-    const token = localStorage.getItem("studentToken");
-    for (const c of cart.filter((c) => c.isFree)) {
-      await fetch("/api/courses/enroll", {
-        method:"POST", headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},
-        body: JSON.stringify({ courseId:c._id }),
-      }).catch(() => {});
-    }
-    setEnrollingFree(false);
-    onEnrolled();
-  };
-
-  const proceedToCheckout = () => {
-    if (cart.length === 0) return;
-    localStorage.setItem("ss_checkout_cart", JSON.stringify(cart));
-    if (couponApplied) localStorage.setItem("ss_checkout_coupon", JSON.stringify({...couponApplied,discount}));
-    else localStorage.removeItem("ss_checkout_coupon");
-    onClose();
-    router.push("/student/checkout");
-  };
-
-  return (
-    <div className={`sdc-cart-drawer ${open?"sdc-cart-open":""}`}>
-      <div className="sdc-cart-header">
-        <div className="sdc-cart-title"><MdShoppingCart size={20}/> My Cart {cart.length>0&&<span className="sdc-cart-badge">{cart.length}</span>}</div>
-        <button className="sdc-cart-close" onClick={onClose}><MdClose size={22}/></button>
-      </div>
-      {cart.length===0 ? (
-        <div className="sdc-cart-empty">
-          <MdShoppingCart size={52} className="sdc-cart-empty-icon"/>
-          <div>Your cart is empty</div>
-          <p>Add a course to get started!</p>
-        </div>
-      ) : (
-        <>
-          <div className="sdc-cart-items">
-            {cart.map((course) => (
-              <div key={course._id} className="sdc-cart-item">
-                <div className="sdc-cart-item-thumb" style={{
-                  background: course.featureImage
-                    ? `url(${course.featureImage}) center/cover no-repeat`
-                    : `linear-gradient(135deg,${getSubjectColor(course.subject)}33,${getSubjectColor(course.subject)}66)`,
-                }}>
-                  {!course.featureImage&&<span style={{fontSize:18}}>{subjectIcons[course.subject]||"📚"}</span>}
-                </div>
-                <div className="sdc-cart-item-info">
-                  <div className="sdc-cart-item-title">{course.title}</div>
-                  <div className="sdc-cart-item-sub">{course.subject} • {course.batch}</div>
-                  <div className="sdc-cart-item-price">
-                    {course.isFree?<span className="sdc-free-tag">FREE</span>:<span><FaRupeeSign size={11}/>{course.price}</span>}
-                  </div>
-                </div>
-                <button className="sdc-cart-remove" onClick={() => removeFromCart(course._id)}><MdDelete size={17}/></button>
-              </div>
-            ))}
-          </div>
-          {hasPaid && (
-            <div className="sdc-coupon-wrap">
-              <div className="sdc-coupon-title"><MdLocalOffer size={14}/> Have a coupon code?</div>
-              {couponApplied ? (
-                <div className="sdc-coupon-applied">
-                  <MdCheck size={15} color="#10b981"/>
-                  <span><strong>{couponApplied.code}</strong> — ₹{discount} off!</span>
-                  <button className="sdc-coupon-remove" onClick={removeCoupon}><MdClose size={14}/></button>
-                </div>
-              ) : (
-                <div className="sdc-coupon-row">
-                  <input className="sdc-coupon-input" placeholder="COUPON CODE" value={coupon}
-                    onChange={(e) => setCoupon(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => e.key==="Enter"&&applyCoupon()}/>
-                  <button className="sdc-coupon-btn" onClick={applyCoupon} disabled={couponLoading}>{couponLoading?"...":"Apply"}</button>
-                </div>
-              )}
-              {couponError&&<div className="sdc-coupon-error">{couponError}</div>}
-            </div>
-          )}
-          <div className="sdc-summary">
-            <div className="sdc-summary-row"><span>Subtotal</span><span>₹{subtotal}</span></div>
-            {couponApplied&&<div className="sdc-summary-row sdc-summary-discount"><span>Discount ({couponApplied.code})</span><span>−₹{discount}</span></div>}
-            <div className="sdc-summary-row sdc-summary-total">
-              <span>Total</span>
-              <span>{total===0?<span style={{color:"#10b981",fontWeight:800}}>FREE 🎉</span>:`₹${total}`}</span>
-            </div>
-          </div>
-          {allFree||total===0 ? (
-            <button className="sdc-checkout-btn" onClick={enrollFreeItems} disabled={enrollingFree}>
-              {enrollingFree?"Enrolling...":<><MdCheck size={18}/> Enroll Now — Free!</>}
-            </button>
-          ) : (
-            <button className="sdc-checkout-btn" onClick={proceedToCheckout}>
-              <MdArrowForward size={17}/> Proceed to Checkout
-            </button>
-          )}
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:10,flexWrap:"wrap"}}>
-            <span style={{fontSize:"0.68rem",fontWeight:700,padding:"3px 9px",borderRadius:100,background:"#d1fae5",color:"#065f46"}}>💵 Cash on Delivery</span>
-            <span style={{fontSize:"0.68rem",fontWeight:700,padding:"3px 9px",borderRadius:100,background:"#f3f4f6",color:"#6b7280"}}>💳 Online — Coming Soon</span>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════
    PROFILE SECTION
 ════════════════════════════════════════ */
 function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
@@ -3866,12 +3561,6 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
           <MdPlayCircle size={42} color="#fff" style={{filter:"drop-shadow(0 2px 6px rgba(0,0,0,0.5))"}}/>
         </div>
       )}
-      {/* Heart */}
-      <button className="sdc-fav-btn" onClick={(e) => e.stopPropagation()} aria-label="Wishlist">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-      </button>
     </div>
   );
 

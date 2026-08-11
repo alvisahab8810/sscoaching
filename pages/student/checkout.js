@@ -276,8 +276,9 @@ export default function CheckoutPage() {
               <MdArrowBack size={18} /> Back
             </button>
             <div className="co-topbar-brand">
-              <div className="co-logo">SS</div>
-              <span>SS Coaching — Checkout</span>
+              <img src="/assets/invoice/logo.svg" alt="SS Coaching" className="co-logo-img" />
+              <span className="co-topbar-divider" />
+              <span className="co-topbar-label">Checkout</span>
             </div>
             <div className="co-topbar-secure">
               <MdLock size={14} /> Secure
@@ -486,8 +487,8 @@ export default function CheckoutPage() {
                       </div>
                       <div className="co-item-info">
                         <div className="co-item-title">{course.title}</div>
-                        <div className="co-item-sub" style={{ color: getColor(course.subject) }}>
-                          {subjectIcons[course.subject]} {course.subject} • {course.batch}
+                        <div className="co-item-sub">
+                          {course.subject} • {course.batch}
                         </div>
                         <div className="co-item-meta">
                           <span><MdFolder size={11} /> {course.chapters?.length || 0} Ch</span>
@@ -526,10 +527,10 @@ export default function CheckoutPage() {
             {/* Contact help */}
             <div className="co-help-card">
               <div className="co-help-title">Need help?</div>
-              <a href="tel:+91XXXXXXXXXX" className="co-help-link">
+              <a href="tel:+919839065533" className="co-help-link">
                 <MdPhone size={14} /> Call us
               </a>
-              <a href="https://wa.me/91XXXXXXXXXX" target="_blank" rel="noreferrer" className="co-help-link co-help-wa">
+              <a href="https://wa.me/919839065533" target="_blank" rel="noreferrer" className="co-help-link co-help-wa">
                 <FaWhatsapp size={14} /> WhatsApp
               </a>
             </div>
@@ -543,11 +544,13 @@ export default function CheckoutPage() {
 
         /* Topbar */
         .co-topbar { background:#fff; border-bottom:1.5px solid #e2e5f8; position:sticky; top:0; z-index:100; }
-        .co-topbar-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:56px; display:flex; align-items:center; justify-content:space-between; }
+        .co-topbar-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:72px; display:flex; align-items:center; justify-content:space-between; }
         .co-back-btn { display:flex; align-items:center; gap:6px; background:none; border:none; color:#6c47d4; font-size:0.85rem; font-weight:700; cursor:pointer; padding:6px 10px; border-radius:7px; }
         .co-back-btn:hover { background:#ede9fe; }
-        .co-topbar-brand { display:flex; align-items:center; gap:9px; font-size:0.9rem; font-weight:700; color:#0f1f3d; }
-        .co-logo { width:32px; height:32px; background:linear-gradient(135deg,#6c47d4,#8b5cf6); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:900; }
+        .co-topbar-brand { display:flex; align-items:center; gap:14px; font-size:0.9rem; font-weight:700; color:#0f1f3d; }
+        .co-logo-img { height:44px; max-height:44px; width:auto; max-width:170px; object-fit:contain; display:block; flex-shrink:0; }
+        .co-topbar-divider { width:1px; height:26px; background:#e2e5f8; display:block; }
+        .co-topbar-label { font-size:0.85rem; font-weight:700; color:#374151; letter-spacing:0.2px; }
         .co-topbar-secure { display:flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:700; color:#10b981; }
 
         /* Body */

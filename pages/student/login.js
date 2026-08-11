@@ -8,24 +8,26 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 
 /* ─── 6-box OTP input ─── */
-function OtpInput({ value, onChange }) {
-  const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
-  const digits = value.split("").concat(Array(6).fill("")).slice(0, 6);
+function OtpInput({ value, onChange, length = 6 }) {
+  // Fixed 6 hook calls (rules-of-hooks safe); only the first `length` are used/rendered.
+  const allRefs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
+  const refs = allRefs.slice(0, length);
+  const digits = value.split("").concat(Array(length).fill("")).slice(0, length);
 
   const handle = (i, e) => {
     const char = e.target.value.replace(/\D/g, "").slice(-1);
     const next = [...digits];
     next[i] = char;
     onChange(next.join(""));
-    if (char && i < 5) refs[i + 1].current?.focus();
+    if (char && i < length - 1) refs[i + 1].current?.focus();
   };
   const onKey = (i, e) => {
     if (e.key === "Backspace" && !digits[i] && i > 0) refs[i - 1].current?.focus();
   };
   const onPaste = (e) => {
-    const text = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-    onChange(text.padEnd(6, "").slice(0, 6));
-    refs[Math.min(text.length, 5)].current?.focus();
+    const text = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
+    onChange(text.padEnd(length, "").slice(0, length));
+    refs[Math.min(text.length, length - 1)].current?.focus();
     e.preventDefault();
   };
 
@@ -90,8 +92,8 @@ export default function StudentLogin() {
   const [cooldown, startCooldown] = useCountdown();
 
   /* ── FORGOT PASSWORD state ── */
-  const [forgotStep, setForgotStep] = useState(1); // 1=email 2=code 3=password 4=done
-  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotStep, setForgotStep] = useState(1); // 1=phone 2=code 3=password 4=done
+  const [forgotPhone, setForgotPhone] = useState("");
   const [forgotCode, setForgotCode] = useState("");
   const [forgotNewPass, setForgotNewPass] = useState("");
   const [forgotConfirmPass, setForgotConfirmPass] = useState("");
@@ -155,21 +157,22 @@ export default function StudentLogin() {
 
   const switchMode = (m) => {
     setMode(m); setLoginError(""); setRegError(""); setOtpError(""); setRegStep(1);
-    setForgotError(""); setForgotStep(1); setForgotEmail(""); setForgotCode("");
+    setForgotError(""); setForgotStep(1); setForgotPhone(""); setForgotCode("");
     setForgotNewPass(""); setForgotConfirmPass("");
   };
 
-  /* ── Forgot password: step 1 — send reset code to email ── */
+  /* ── Forgot password: step 1 — send reset OTP via SMS ── */
   const handleForgotSendCode = async (e) => {
     e?.preventDefault(); setForgotError("");
-    if (!forgotEmail.trim() || !forgotEmail.includes("@")) {
-      setForgotError("Please enter a valid email address"); return;
+    const digits = forgotPhone.replace(/\D/g, "");
+    if (digits.length !== 10) {
+      setForgotError("Please enter a valid 10-digit mobile number"); return;
     }
     setForgotLoading(true);
     try {
-      const res = await fetch("/api/auth/forgot-password", {
+      const res = await fetch("/api/auth/send-forgot-password-phone-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: forgotEmail.trim() }),
+        body: JSON.stringify({ phone: digits }),
       });
       const data = await res.json();
       if (data.success) { setForgotStep(2); setForgotCode(""); startForgotCooldown(60); }
@@ -178,23 +181,23 @@ export default function StudentLogin() {
     setForgotLoading(false);
   };
 
-  /* ── Forgot password: step 2 — code is verified on final reset call ── */
+  /* ── Forgot password: step 2 — OTP is verified together with the reset call ── */
   const handleForgotVerifyCode = (e) => {
     e?.preventDefault(); setForgotError("");
     if (forgotCode.length < 6) { setForgotError("Please enter the 6-digit code"); return; }
     setForgotStep(3);
   };
 
-  /* ── Forgot password: step 3 — reset password ── */
+  /* ── Forgot password: step 3 — verify OTP + reset password (single call) ── */
   const handleForgotReset = async (e) => {
     e?.preventDefault(); setForgotError("");
     if (forgotNewPass.length < 6) { setForgotError("Password must be at least 6 characters"); return; }
     if (forgotNewPass !== forgotConfirmPass) { setForgotError("Passwords do not match"); return; }
     setForgotLoading(true);
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch("/api/auth/verify-forgot-password-phone-otp", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: forgotEmail.trim(), code: forgotCode.trim(), newPassword: forgotNewPass }),
+        body: JSON.stringify({ phone: forgotPhone.replace(/\D/g, ""), otp: forgotCode.trim(), newPassword: forgotNewPass }),
       });
       const data = await res.json();
       if (data.success) setForgotStep(4);
@@ -220,11 +223,7 @@ export default function StudentLogin() {
         <div className="sl-left">
           <div className="sl-left-inner">
             <div className="sl-logo">
-              <div className="sl-logo-icon">SS</div>
-              <div>
-                <div className="sl-logo-name">SS Coaching</div>
-                <div className="sl-logo-tag">Rise From Failure • Estd. 2001</div>
-              </div>
+              <img src="/assets/images/online-classes/online-classes-logo.svg" alt="SS Coaching" className="sl-logo-img"/>
             </div>
             <h1 className="sl-heading">
               Learn from the<br/>
@@ -263,7 +262,6 @@ export default function StudentLogin() {
             {mode === "login" && (
               <div className="sl-pane">
                 <div className="sl-pane-head">
-                  <div className="sl-pane-emoji">👋</div>
                   <div className="sl-pane-title">Welcome Back!</div>
                   <div className="sl-pane-sub">Login to access your courses</div>
                 </div>
@@ -304,7 +302,6 @@ export default function StudentLogin() {
                 {regStep === 1 && (
                   <>
                     <div className="sl-pane-head">
-                      <div className="sl-pane-emoji">🎓</div>
                       <div className="sl-pane-title">Create Account</div>
                       <div className="sl-pane-sub">Join SS Coaching today</div>
                     </div>
@@ -380,9 +377,9 @@ export default function StudentLogin() {
                       </div>
                     </div>
                     <form onSubmit={handleVerifyOtp}>
-                      <OtpInput value={otp} onChange={setOtp}/>
+                      <OtpInput value={otp} onChange={setOtp} length={4}/>
                       {otpError && <div className="sl-err" style={{ textAlign: "center" }}>{otpError}</div>}
-                      <button type="submit" className="sl-btn" disabled={otpLoading || otp.length < 6}>
+                      <button type="submit" className="sl-btn" disabled={otpLoading || otp.length < 4}>
                         {otpLoading ? <span className="sl-spin"/> : <><MdCheckCircle size={16}/> Verify & Create Account</>}
                       </button>
                     </form>
@@ -404,26 +401,26 @@ export default function StudentLogin() {
             {mode === "forgot" && (
               <div className="sl-pane">
 
-                {/* STEP 1 — enter email */}
+                {/* STEP 1 — enter phone */}
                 {forgotStep === 1 && (
                   <>
                     <div className="sl-pane-head">
-                      <div className="sl-pane-emoji">🔑</div>
                       <div className="sl-pane-title">Forgot Password?</div>
-                      <div className="sl-pane-sub">Enter your email to get a reset code</div>
+                      <div className="sl-pane-sub">Enter your registered mobile number to get an OTP</div>
                     </div>
                     <form onSubmit={handleForgotSendCode}>
                       <div className="sl-field">
-                        <label className="sl-label">Email</label>
+                        <label className="sl-label">Phone Number</label>
                         <div className="sl-iw">
-                          <MdEmail className="sl-ii" size={16}/>
-                          <input type="email" className="sl-input" placeholder="you@example.com"
-                            value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required autoFocus/>
+                          <MdPhone className="sl-ii" size={16}/>
+                          <input type="tel" className="sl-input" placeholder="10-digit mobile number"
+                            value={forgotPhone} onChange={e => setForgotPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                            maxLength={10} required autoFocus/>
                         </div>
                       </div>
                       {forgotError && <div className="sl-err">{forgotError}</div>}
                       <button type="submit" className="sl-btn" disabled={forgotLoading}>
-                        {forgotLoading ? <span className="sl-spin"/> : "Send Reset Code →"}
+                        {forgotLoading ? <span className="sl-spin"/> : "Send OTP →"}
                       </button>
                     </form>
                     <p className="sl-foot">Remembered it? <button className="sl-link" onClick={() => switchMode("login")}>Back to login</button></p>
@@ -434,11 +431,10 @@ export default function StudentLogin() {
                 {forgotStep === 2 && (
                   <>
                     <div className="sl-pane-head">
-                      <div className="sl-pane-emoji">📧</div>
-                      <div className="sl-pane-title">Enter Reset Code</div>
+                      <div className="sl-pane-title">Enter OTP</div>
                       <div className="sl-pane-sub">
-                        Code sent to<br/>
-                        <strong style={{ color: "#6c47d4" }}>{forgotEmail}</strong>
+                        Code sent via SMS to<br/>
+                        <strong style={{ color: "#6c47d4" }}>{forgotPhone}</strong>
                       </div>
                     </div>
                     <form onSubmit={handleForgotVerifyCode}>
@@ -450,7 +446,7 @@ export default function StudentLogin() {
                     </form>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, gap: 8 }}>
                       <button className="sl-back-btn" onClick={() => { setForgotStep(1); setForgotCode(""); setForgotError(""); }}>
-                        <MdArrowBack size={14}/> Edit email
+                        <MdArrowBack size={14}/> Edit number
                       </button>
                       <button className="sl-resend-btn" onClick={handleForgotSendCode} disabled={forgotCooldown > 0 || forgotLoading}>
                         <MdRefresh size={14}/>
@@ -544,15 +540,9 @@ export default function StudentLogin() {
           background: rgba(68,65,229,0.12); pointer-events: none;
         }
         .sl-left-inner { position: relative; z-index: 1; max-width: 380px; }
-        .sl-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
-        .sl-logo-icon {
-          width: 48px; height: 48px; border-radius: 12px;
-          background: linear-gradient(135deg, #4441e5, #6b68ff);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 18px; font-weight: 900; color: #fff; flex-shrink: 0;
-        }
-        .sl-logo-name { font-size: 18px; font-weight: 800; color: #fff; }
-        .sl-logo-tag  { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+        .sl-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 40px; }
+        .sl-logo-img { height: 42px; width: auto; max-width: 200px; object-fit: contain; display: block; }
+        .sl-logo-tag { font-size: 11px; color: rgba(255,255,255,0.45); }
         .sl-heading { font-size: 2.1rem; font-weight: 900; color: #fff; line-height: 1.22; margin: 0 0 16px; }
         .sl-heading-hi { color: #a78bfa; }
         .sl-desc { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; margin: 0 0 28px; }
