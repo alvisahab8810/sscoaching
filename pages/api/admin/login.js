@@ -77,8 +77,9 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error("OTP email failed:", err.message, err.code);
-    const detail = process.env.NODE_ENV !== "production" ? ` (${err.message})` : "";
-    return res.status(500).json({ message: `Failed to send OTP. Please try again.${detail}` });
+    // TEMP: showing full error in all environments to diagnose a live SMTP failure — revert to
+    // production-hidden detail once the root cause is found (see NODE_ENV check we removed here).
+    return res.status(500).json({ message: `Failed to send OTP. Please try again. (${err.code || ""} ${err.message})` });
   }
 
   // Issue a short-lived pending token (10 min) — no dashboard access, only for OTP step
