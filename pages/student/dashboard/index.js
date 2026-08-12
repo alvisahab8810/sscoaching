@@ -301,11 +301,11 @@ export default function StudentDashboard() {
                             <div className="sdd-hero-img"/>
                             <div className="sdd-hero-content">
                               {/* <div className="sdd-hero-tag">{slide.tag}</div> */}
-                              <h1>{slide.heading[0]}<br/>{slide.heading[1]}</h1>
+                              {/* <h1>{slide.heading[0]}<br/>{slide.heading[1]}</h1>
                               <p>{slide.sub}</p>
                               <button className="sdd-hero-enroll" onClick={actions[i]}>
                                 {slide.btn}
-                              </button>
+                              </button> */}
                             </div>
                           </div>
                         ))}
@@ -1049,6 +1049,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   const [openChapter, setOpenChapter] = useState(0);
   const [showDemo, setShowDemo]     = useState(false);
   const [detailTab, setDetailTab]   = useState("content");
+  const [openFaq, setOpenFaq]       = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -1382,6 +1383,27 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* FAQs */}
+          {course.faqs?.length > 0 && (
+            <div className="cdp-faqs-box">
+              <h2 className="cdp-faqs-title">FAQs</h2>
+              <div className="cdp-faqs-list">
+                {course.faqs.map((faq, fi) => {
+                  const isOpen = openFaq === fi;
+                  return (
+                    <div key={faq._id||fi} className={`cdp-faq-item ${isOpen ? "cdp-faq-open" : ""}`}>
+                      <button className="cdp-faq-q" onClick={() => setOpenFaq(p => p===fi ? null : fi)}>
+                        <span>{faq.question}</span>
+                        <span className="cdp-faq-chevron">{isOpen ? <MdExpandLess size={18}/> : <MdExpandMore size={18}/>}</span>
+                      </button>
+                      {isOpen && <div className="cdp-faq-a">{faq.answer}</div>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

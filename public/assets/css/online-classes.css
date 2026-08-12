@@ -7360,18 +7360,21 @@
     font-family: 'Outfit', sans-serif !important;
 }
 
-/* Slider wrapper */
+/* Slider wrapper — height follows banner1.webp's real aspect ratio (5017x933)
+   so the baked-in text is always fully visible, never cropped by cover-fit at
+   in-between desktop/tablet widths. */
 .sdd-hero-slider {
   position: relative;
   border-radius: 18px;
   overflow: hidden;
-  height: 230px;
+  aspect-ratio: 5017 / 933;
+  max-height: 320px;
   margin-bottom: 8px;
 }
 
 /* Each slide */
 .sdd-hero {
-  background: url(/assets/images/online-classes/banner1.svg) center / cover no-repeat;
+  background: url(/assets/images/online-classes/banner1.webp) center / cover no-repeat;
   padding: 32px 40px;
   color: #fff;
   position: absolute;
@@ -7385,16 +7388,6 @@
 .sdd-hero.sdd-hero-active {
   opacity: 1;
   pointer-events: auto;
-}
-
-/* Subtle left overlay so text stays readable */
-.sdd-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(58,20,120,0.55) 0%, rgba(58,20,120,0.15) 55%, transparent 100%);
-  pointer-events: none;
-  z-index: 1;
 }
 
 /* Banner image div no longer needed — remove it from display */
@@ -7875,6 +7868,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 .sdc-meta-item {
   display: flex;
@@ -7892,14 +7886,22 @@
   gap: 4px;
   flex-wrap: nowrap;
   justify-content: flex-end;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 .sdc-tag {
   font-size: 8px;
   font-weight: 700;
-  padding: 3px 7px;
+  padding: 3px 4px;
   border-radius: 5px;
   font-family: 'Inter', sans-serif !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 92px;
 }
 .sdc-tag-cls-pill {
   background: #fef3c7;
@@ -7909,6 +7911,8 @@
   padding: 3px 7px;
   border-radius: 5px;
   font-family: 'Inter', sans-serif !important;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Course name below meta */
@@ -9377,6 +9381,28 @@
   border-radius: 20px;
 }
 .cdp-detail-tab-active .cdp-detail-tab-badge { background: #6c47d4; color: #fff; }
+.cdp-faqs-box {
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 24px 26px;
+  background: #fff;
+  box-shadow: 0 2px 14px rgba(76,29,149,.05);
+  margin-top: 24px;
+}
+.cdp-faqs-title { font-size: 1.15rem; font-weight: 800; color: #202244; margin: 0 0 16px; }
+.cdp-faqs-list { display: flex; flex-direction: column; gap: 10px; }
+.cdp-faq-item { border: 1.5px solid #e0e3f5; border-radius: 10px; overflow: hidden; transition: border-color .15s; }
+.cdp-faq-item.cdp-faq-open { border-color: #c7ccf0; background: #fafbff; }
+.cdp-faq-q {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 13px 16px; background: transparent; border: none; text-align: left;
+  font-size: .92rem; font-weight: 700; color: #2d3a5a; cursor: pointer;
+}
+.cdp-faq-chevron { flex-shrink: 0; color: #6c47d4; }
+.cdp-faq-a { padding: 0 16px 14px; font-size: .86rem; color: #5a6485; line-height: 1.55; }
+@media (max-width: 768px) {
+  .cdp-faqs-box { padding: 16px !important; border-radius: 12px !important; margin-top: 16px !important; }
+}
 .cdp-chapter {
   border: 1px solid #ece7fb;
   border-radius: 14px;
