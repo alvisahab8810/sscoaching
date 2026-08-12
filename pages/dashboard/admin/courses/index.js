@@ -908,6 +908,7 @@ const EMPTY_BUNDLE = {
 };
 
 const EMPTY_MATERIAL = { section:"books", title:"", fileUrl:"" };
+const EMPTY_FAQ = { question:"", answer:"" };
 
 const subjectColors = {
   Mathematics:"#6c47d4", Physics:"#0ea5e9", Chemistry:"#f59e0b",
@@ -1105,6 +1106,11 @@ export default function AdminCoursesPage({ admin }) {
   const [activeMatTab, setActiveMatTab]     = useState("books");
   const [uploadingPdf, setUploadingPdf]     = useState(false);
   const [linkedClasses, setLinkedClasses]   = useState([]);
+  // FAQs
+  const [showFaqForm, setShowFaqForm]       = useState(false);
+  const [faqForm, setFaqForm]               = useState(EMPTY_FAQ);
+  const [editingFaqId, setEditingFaqId]     = useState(null);
+  const [editFaqForm, setEditFaqForm]       = useState(EMPTY_FAQ);
   const [editingBundleCourses, setEditingBundleCourses] = useState(false);
   const [bundleCourseEdits, setBundleCourseEdits]       = useState([]);
   // Per-subject content management for bundles
@@ -1769,6 +1775,62 @@ export default function AdminCoursesPage({ admin }) {
         setSelectedCourse(data.course);
         setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
         toast.success("Removed");
+      }
+    } catch { toast.error("Network error"); }
+  };
+
+  /* ── FAQs ── */
+  const handleAddFaq = async () => {
+    if (!faqForm.question.trim() || !faqForm.answer.trim()) { toast.error("Question and answer required"); return; }
+    setSaving(true);
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=add-faq`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ question:faqForm.question, answer:faqForm.answer }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        setFaqForm(EMPTY_FAQ);
+        setShowFaqForm(false);
+        toast.success("FAQ added!");
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setSaving(false); }
+  };
+
+  const handleEditFaq = async (faqId) => {
+    if (!editFaqForm.question.trim() || !editFaqForm.answer.trim()) { toast.error("Question and answer required"); return; }
+    setSaving(true);
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=edit-faq`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ faqId, question:editFaqForm.question, answer:editFaqForm.answer }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        setEditingFaqId(null);
+        toast.success("FAQ updated!");
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setSaving(false); }
+  };
+
+  const handleDeleteFaq = async (faqId) => {
+    if (!confirm("Delete this FAQ?")) return;
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=delete-faq`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ faqId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        toast.success("FAQ deleted");
       }
     } catch { toast.error("Network error"); }
   };
@@ -3136,6 +3198,88 @@ export default function AdminCoursesPage({ admin }) {
                     handleDelete={handleDeleteMaterial}
                     saving={saving}
                   />
+
+                  {/* ── FAQs SECTION ── */}
+                  <div className="cr-chapters-card">
+                    <div className="cr-chapters-header">
+                      <div className="cr-chapters-title">
+                        <MdQuiz size={20} color="#6c47d4"/> FAQs
+                        <span className="cr-chapters-count">{selectedCourse.faqs?.length||0} FAQs</span>
+                      </div>
+                      <button className="cr-add-chapter-btn" onClick={()=>setShowFaqForm(true)}>
+                        <MdAdd size={16}/> Add FAQ
+                      </button>
+                    </div>
+
+                    {showFaqForm && (
+                      <div className="cr-chapter-form">
+                        <div className="cr-chapter-form-title">New FAQ</div>
+                        <input className="cr-input" placeholder="Question"
+                          value={faqForm.question} onChange={e=>setFaqForm({...faqForm,question:e.target.value})}
+                          autoFocus style={{marginBottom:8}}/>
+                        <textarea className="cr-input" placeholder="Answer" rows={3}
+                          value={faqForm.answer} onChange={e=>setFaqForm({...faqForm,answer:e.target.value})}
+                          style={{marginBottom:8,resize:"vertical",fontFamily:"inherit"}}/>
+                        <div className="cr-chapter-form-row">
+                          <button className="cr-primary-btn" onClick={handleAddFaq} disabled={saving}>
+                            {saving?"...":"Add"}
+                          </button>
+                          <button className="cr-cancel-btn" onClick={()=>{setShowFaqForm(false);setFaqForm(EMPTY_FAQ);}}>
+                            <MdClose size={16}/>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {(!selectedCourse.faqs||selectedCourse.faqs.length===0) ? (
+                      <div className="cr-empty cr-chapters-empty">
+                        <MdQuiz size={48} className="cr-empty-icon"/>
+                        <div className="cr-empty-title">No FAQs yet</div>
+                        <p>Click "Add FAQ" to answer common student questions</p>
+                      </div>
+                    ) : (
+                      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                        {selectedCourse.faqs.map((faq, fi) => (
+                          <div key={faq._id} style={{border:"1px solid #e5e7eb",borderRadius:10,padding:12,background:"#fafaff"}}>
+                            {editingFaqId === faq._id ? (
+                              <>
+                                <input className="cr-input" placeholder="Question"
+                                  value={editFaqForm.question} onChange={e=>setEditFaqForm({...editFaqForm,question:e.target.value})}
+                                  style={{marginBottom:8}}/>
+                                <textarea className="cr-input" placeholder="Answer" rows={3}
+                                  value={editFaqForm.answer} onChange={e=>setEditFaqForm({...editFaqForm,answer:e.target.value})}
+                                  style={{marginBottom:8,resize:"vertical",fontFamily:"inherit"}}/>
+                                <div className="cr-chapter-form-row">
+                                  <button className="cr-primary-btn" onClick={()=>handleEditFaq(faq._id)} disabled={saving}>
+                                    {saving?"...":"Save"}
+                                  </button>
+                                  <button className="cr-cancel-btn" onClick={()=>setEditingFaqId(null)}>
+                                    <MdClose size={16}/>
+                                  </button>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div style={{display:"flex",justifyContent:"space-between",gap:8,alignItems:"flex-start"}}>
+                                  <div style={{fontWeight:700,fontSize:13.5,color:"#202244"}}>{fi+1}. {faq.question}</div>
+                                  <div style={{display:"flex",gap:6,flexShrink:0}}>
+                                    <button className="cr-edit-chapter-btn" title="Edit FAQ"
+                                      onClick={()=>{setEditingFaqId(faq._id);setEditFaqForm({question:faq.question,answer:faq.answer});}}>
+                                      <MdEdit size={14}/>
+                                    </button>
+                                    <button className="cr-del-chapter-btn" title="Delete FAQ" onClick={()=>handleDeleteFaq(faq._id)}>
+                                      <MdDelete size={14}/>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div style={{fontSize:13,color:"#64748b",marginTop:6,lineHeight:1.5}}>{faq.answer}</div>
+                              </>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   {/* ── ONLINE CLASSES LINKED TO THIS COURSE ── */}
                   <div style={{background:"#f0f9ff",border:"1.5px solid #bae6fd",borderRadius:12,padding:20}}>

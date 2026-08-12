@@ -271,6 +271,54 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course });
       }
 
+      // FAQs
+      if (action === "add-faq") {
+        const { question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim())
+          return res.status(400).json({ error: "Question and answer required" });
+        course.faqs.push({ question: question.trim(), answer: answer.trim(), order: course.faqs.length + 1 });
+        await course.save();
+        await logActivity(req, { feature: "courses", action: "update", entityId: id, entityType: "Course", description: `Added FAQ to course: "${course.title}"` });
+        return res.status(200).json({ success: true, course });
+      }
+
+      if (action === "edit-faq") {
+        const { faqId, question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim())
+          return res.status(400).json({ error: "Question and answer required" });
+        const faq = course.faqs.id(faqId);
+        if (!faq) return res.status(404).json({ error: "FAQ not found" });
+        faq.question = question.trim();
+        faq.answer = answer.trim();
+        await course.save();
+        await logActivity(req, { feature: "courses", action: "update", entityId: id, entityType: "Course", description: `Edited FAQ on course: "${course.title}"` });
+        return res.status(200).json({ success: true, course });
+      }
+
+      if (action === "delete-faq") {
+        const { faqId } = req.body;
+        course.faqs = course.faqs.filter(f => f._id.toString() !== faqId);
+        await course.save();
+        await logActivity(req, { feature: "courses", action: "update", entityId: id, entityType: "Course", description: `Deleted FAQ from course: "${course.title}"` });
+        return res.status(200).json({ success: true, course });
+      }
+
+      if (action === "reorder-faqs") {
+        const { faqIds } = req.body;
+        if (!Array.isArray(faqIds) || !faqIds.length)
+          return res.status(400).json({ error: "faqIds required" });
+        const byId = new Map(course.faqs.map(f => [f._id.toString(), f]));
+        if (faqIds.length !== byId.size || faqIds.some(fid => !byId.has(fid)))
+          return res.status(400).json({ error: "faqIds must match existing FAQs" });
+        course.faqs = faqIds.map((fid, idx) => {
+          const f = byId.get(fid);
+          f.order = idx + 1;
+          return f;
+        });
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
       // Bundle: update includedCourses list
       if (action === "update-bundle") {
         const { bundledSubjects, includedCourses } = req.body;

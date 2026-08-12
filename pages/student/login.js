@@ -184,7 +184,7 @@ export default function StudentLogin() {
   /* ── Forgot password: step 2 — OTP is verified together with the reset call ── */
   const handleForgotVerifyCode = (e) => {
     e?.preventDefault(); setForgotError("");
-    if (forgotCode.length < 6) { setForgotError("Please enter the 6-digit code"); return; }
+    if (forgotCode.length < 4) { setForgotError("Please enter the 4-digit code"); return; }
     setForgotStep(3);
   };
 
@@ -438,9 +438,9 @@ export default function StudentLogin() {
                       </div>
                     </div>
                     <form onSubmit={handleForgotVerifyCode}>
-                      <OtpInput value={forgotCode} onChange={setForgotCode}/>
+                      <OtpInput value={forgotCode} onChange={setForgotCode} length={4}/>
                       {forgotError && <div className="sl-err" style={{ textAlign: "center" }}>{forgotError}</div>}
-                      <button type="submit" className="sl-btn" disabled={forgotCode.length < 6}>
+                      <button type="submit" className="sl-btn" disabled={forgotCode.length < 4}>
                         Continue →
                       </button>
                     </form>

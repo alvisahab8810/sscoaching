@@ -11,6 +11,12 @@ const LessonNoteSchema = new mongoose.Schema({
   type:    { type: String, enum: ["pdf", "doc", "ppt", "link", "other"], default: "pdf" },
 }, { _id: true });
 
+const FAQSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  answer:   { type: String, required: true },
+  order:    { type: Number, default: 0 },
+}, { _id: true, timestamps: true });
+
 const LessonSchema = new mongoose.Schema({
   title:       { type: String, required: true },
   youtubeLink: { type: String, default: "" },
@@ -58,6 +64,7 @@ const CourseSchema = new mongoose.Schema({
   // Subject course fields
   chapters:     [ChapterSchema],
   materials:    { type: MaterialsSchema, default: () => ({}) },
+  faqs:         { type: [FAQSchema], default: [] },
 
   // Bundle-only fields
   bundledSubjects:   { type: [String], default: [] },

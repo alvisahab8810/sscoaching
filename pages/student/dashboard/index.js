@@ -1048,6 +1048,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   const [enrolling, setEnrolling]   = useState(false);
   const [openChapter, setOpenChapter] = useState(0);
   const [showDemo, setShowDemo]     = useState(false);
+  const [detailTab, setDetailTab]   = useState("content");
 
   useEffect(() => {
     const load = async () => {
@@ -1074,6 +1075,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
 
   const isBundle     = course.courseType === "bundle";
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
+  const hasContent   = (course.chapters?.length || 0) > 0;
   const thumbClass   = getSubjectThumbClass(course.subject);
   const subjectColor = getSubjectColor(course.subject);
   const hasImg       = !!course.featureImage;
@@ -1269,7 +1271,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
 
           {/* What's Included */}
           <div className="cdp-included-box">
-            <h2>What's Included</h2>
+            <h2>This Course Includes :-</h2>
             <div className="cdp-included-grid">
               {INCLUDED.map((item,i) => (
                 <div key={i} className="cdp-included-item">
@@ -1280,90 +1282,104 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
             </div>
           </div>
 
-          {/* Subject course: Course Content chapters */}
-          {!isBundle && (
+          {/* Subject course: Course Content / Study Materials tabs */}
+          {!isBundle && (hasContent || totalMats > 0) && (
             <div className="cdp-content-box">
-              <h2 className="cdp-content-title">Course Content</h2>
-              <div className="cdp-content-meta">
-                <span className="sdc-meta-item">
-                  <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
-                  {course.chapters?.length||0} Chapters
-                </span>
-                <span className="cdp-content-meta-dot">·</span>
-                <span className="sdc-meta-item">
-                  <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
-                  {totalLessons} Topics
-                </span>
-              </div>
-              {course.chapters?.map((ch,ci) => (
-                <div key={ch._id||ci} className={`cdp-chapter ${openChapter===ci ? "cdp-chapter-open" : ""}`}>
-                  <button className="cdp-chapter-hd" onClick={() => setOpenChapter(p => p===ci ? null : ci)}>
-                    <span className="cdp-chapter-title-row">
-                      <span className="cdp-chapter-num">{ci+1}</span>
-                      <span className="cdp-chapter-title-txt">{ch.title}</span>
-                    </span>
-                    <span className="cdp-chapter-right">
-                      <span className="cdp-chapter-count">{ch.lessons.length} Lectures</span>
-                      <span className="cdp-chapter-chevron"><MdExpandMore size={16}/></span>
-                    </span>
+              {hasContent && totalMats > 0 ? (
+                <div className="cdp-detail-tabs">
+                  <button className={`cdp-detail-tab ${detailTab==="content" ? "cdp-detail-tab-active" : ""}`}
+                    onClick={() => setDetailTab("content")}>
+                    Course Content
                   </button>
-                  {openChapter===ci && (
-                    <div className="cdp-lessons">
-                      {ch.lessons.map((les,li) => (
-                        <div key={les._id||li} className="cdp-lesson-row">
-                          <span className="cdp-lesson-icon-wrap"><MdPlayCircle size={14}/></span>
-                          <span className="cdp-lesson-name">{les.title}</span>
-                          {les.duration && <span className="cdp-lesson-dur">{les.duration}</span>}
+                  <button className={`cdp-detail-tab ${detailTab==="materials" ? "cdp-detail-tab-active" : ""}`}
+                    onClick={() => setDetailTab("materials")}>
+                    Study Materials
+                    <span className="cdp-detail-tab-badge">{totalMats}</span>
+                  </button>
+                </div>
+              ) : (
+                <h2 className="cdp-content-title">{hasContent ? "Course Content" : "Study Materials"}</h2>
+              )}
+
+              {hasContent && (detailTab==="content" || totalMats===0) && (
+                <>
+                  <div className="cdp-content-meta">
+                    <span className="sdc-meta-item">
+                      <img src="/assets/images/online-classes/icons/chapter.svg" alt="" className="sdc-meta-icon"/>
+                      {course.chapters?.length||0} Chapters
+                    </span>
+                    <span className="cdp-content-meta-dot">·</span>
+                    <span className="sdc-meta-item">
+                      <img src="/assets/images/online-classes/icons/lesson.svg" alt="" className="sdc-meta-icon"/>
+                      {totalLessons} Topics
+                    </span>
+                  </div>
+                  {course.chapters?.map((ch,ci) => (
+                    <div key={ch._id||ci} className={`cdp-chapter ${openChapter===ci ? "cdp-chapter-open" : ""}`}>
+                      <button className="cdp-chapter-hd" onClick={() => setOpenChapter(p => p===ci ? null : ci)}>
+                        <span className="cdp-chapter-title-row">
+                          <span className="cdp-chapter-num">{ci+1}</span>
+                          <span className="cdp-chapter-title-txt">{ch.title}</span>
+                        </span>
+                        <span className="cdp-chapter-right">
+                          <span className="cdp-chapter-count">{ch.lessons.length} Lectures</span>
+                          <span className="cdp-chapter-chevron"><MdExpandMore size={16}/></span>
+                        </span>
+                      </button>
+                      {openChapter===ci && (
+                        <div className="cdp-lessons">
+                          {ch.lessons.map((les,li) => (
+                            <div key={les._id||li} className="cdp-lesson-row">
+                              <span className="cdp-lesson-icon-wrap"><MdPlayCircle size={14}/></span>
+                              <span className="cdp-lesson-name">{les.title}</span>
+                              {les.duration && <span className="cdp-lesson-dur">{les.duration}</span>}
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {totalMats > 0 && (detailTab==="materials" || !hasContent) && (
+                <div style={{marginTop:6}}>
+                  <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                    {matSections.flatMap(k =>
+                      (course.materials?.[k]||[]).map(mat => ({...mat, secKey:k, icon:matIcons[k], label:matLabels[k]}))
+                    ).map((mat) => (
+                      <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10}}>
+                        <div style={{width:38,height:46,background:"#ede9fe",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                          <span style={{fontSize:20}}>{mat.icon}</span>
+                        </div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{mat.title}</div>
+                          <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
+                        </div>
+                        {course.isEnrolled ? (
+                          <a href={mat.fileUrl} target="_blank" rel="noreferrer"
+                            style={{flexShrink:0,padding:"6px 14px",background:"#6c47d4",color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
+                            onClick={e=>e.stopPropagation()}>
+                            View ↗
+                          </a>
+                        ) : (
+                          <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                            <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                              </svg>
+                            </div>
+                            <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {!course.isEnrolled && (
+                    <div style={{textAlign:"center",padding:"10px 14px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:10,marginTop:8}}>
+                      <span style={{fontSize:13,fontWeight:700,color:"#6c47d4"}}>🔒 Enroll to unlock all materials</span>
                     </div>
                   )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Subject course: material preview */}
-          {!isBundle && totalMats > 0 && (
-            <div className="cdp-content-box">
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-                <h2 className="cdp-content-title" style={{margin:0}}>📁 Study Materials</h2>
-                <span style={{fontSize:12,color:"#6c47d4",fontWeight:700,background:"#ede9fe",padding:"3px 10px",borderRadius:20}}>{totalMats} Files</span>
-              </div>
-              <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {matSections.flatMap(k =>
-                  (course.materials?.[k]||[]).map(mat => ({...mat, secKey:k, icon:matIcons[k], label:matLabels[k]}))
-                ).map((mat) => (
-                  <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10}}>
-                    <div style={{width:38,height:46,background:"#ede9fe",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                      <span style={{fontSize:20}}>{mat.icon}</span>
-                    </div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{mat.title}</div>
-                      <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
-                    </div>
-                    {course.isEnrolled ? (
-                      <a href={mat.fileUrl} target="_blank" rel="noreferrer"
-                        style={{flexShrink:0,padding:"6px 14px",background:"#6c47d4",color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
-                        onClick={e=>e.stopPropagation()}>
-                        View ↗
-                      </a>
-                    ) : (
-                      <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-                        <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                          </svg>
-                        </div>
-                        <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {!course.isEnrolled && (
-                <div style={{textAlign:"center",padding:"10px 14px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:10,marginTop:8}}>
-                  <span style={{fontSize:13,fontWeight:700,color:"#6c47d4"}}>🔒 Enroll to unlock all materials</span>
                 </div>
               )}
             </div>
@@ -1922,7 +1938,7 @@ function BunnyPlayer({ src, videoId, courseId }) {
           {/* quality selector — only meaningful on the hls.js path; native Safari
               HLS has no manual level-switching API */}
           {usingHlsJs && qualityLevels.length > 0 && (
-            <div style={{ position:"absolute", top:10, right:10, zIndex:3 }}>
+            <div style={{ position:"absolute", top:10, right:56, zIndex:3 }}>
               <button
                 onClick={(e) => { e.stopPropagation(); setShowQualityMenu(v => !v); }}
                 style={{
@@ -2137,6 +2153,7 @@ function CoursePlayer({ courseId, onBack }) {
   const [activeLesson, setActiveLesson] = useState(null);
   const [openChapters, setOpenChapters] = useState({});
   const [openSubjects, setOpenSubjects] = useState({});
+  const [openFaq, setOpenFaq]           = useState(null);
   const [viewingMat, setViewingMat]     = useState(null); // { mat, secKey, subject }
   const [mobileSidebar, setMobileSidebar] = useState(false);
   const [linkedClasses, setLinkedClasses] = useState([]);
@@ -2678,7 +2695,36 @@ function CoursePlayer({ courseId, onBack }) {
             )}
           </div>
         </div>
+
+        {/* ── FAQs ── */}
+        {course.faqs?.length > 0 && (
+          <div className="scp-faqs-section">
+            <h2 className="scp-faqs-title">FAQs</h2>
+            <div className="scp-faqs-list">
+              {course.faqs.map((faq, fi) => {
+                const isOpen = openFaq === fi;
+                return (
+                  <div key={faq._id||fi} className={`scp-faq-item ${isOpen ? "scp-faq-open" : ""}`}>
+                    <button className="scp-faq-q" onClick={() => setOpenFaq(p => p===fi ? null : fi)}>
+                      <span>{faq.question}</span>
+                      <span className="scp-faq-chevron">{isOpen ? <MdExpandLess size={18}/> : <MdExpandMore size={18}/>}</span>
+                    </button>
+                    {isOpen && <div className="scp-faq-a">{faq.answer}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       <style jsx>{`
+        .scp-faqs-section{background:#fff;border:1.5px solid #eceefb;border-radius:14px;padding:20px 22px;margin:16px;}
+        .scp-faqs-title{font-size:1.05rem;font-weight:800;color:#202244;margin:0 0 14px;}
+        .scp-faqs-list{display:flex;flex-direction:column;gap:10px;}
+        .scp-faq-item{border:1.5px solid #e0e3f5;border-radius:10px;overflow:hidden;transition:border-color .15s;}
+        .scp-faq-item.scp-faq-open{border-color:#c7ccf0;background:#fafbff;}
+        .scp-faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;background:transparent;border:none;text-align:left;font-size:.88rem;font-weight:700;color:#2d3a5a;cursor:pointer;}
+        .scp-faq-chevron{flex-shrink:0;color:#6c47d4;}
+        .scp-faq-a{padding:0 16px 14px;font-size:.83rem;color:#5a6485;line-height:1.55;}
         .scp-sidebar-tabs{display:flex;gap:8px;padding:14px 16px 12px;background:#fff;position:sticky;top:0;z-index:2;border-bottom:1.5px solid #eceefb;}
         .scp-sidebar-tab{display:flex;align-items:center;justify-content:center;gap:5px;min-height:38px;padding:9px 6px;border:1.5px solid #e0e3f5;border-radius:9px;background:#f8f9ff;color:#5a6485;font-size:.76rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
         .scp-sidebar-tab-videos{flex:0.8;}
@@ -3587,14 +3633,16 @@ function ClassCard({ cls, formatDate, formatTime, getYoutubeId }) {
   /* ── LOCKED (not enrolled in this subject) ── */
   if (isLocked) {
     return (
-      <div className="sdc-card" style={{position:"relative",overflow:"hidden"}}>
-        <div className={`sdc-card-thumb ${thumbClass}`} style={{...thumbStyle,filter:"blur(2px)",opacity:0.5}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.55)",zIndex:2}}>
-          <span style={{fontSize:32,marginBottom:8}}>🔒</span>
-          <div style={{color:"white",fontWeight:700,fontSize:14,textAlign:"center",padding:"0 16px"}}>Purchase {cls.subject} course to unlock</div>
-          <div style={{color:"rgba(255,255,255,0.7)",fontSize:12,marginTop:4}}>{cls.batch}</div>
+      <div className="sdc-card">
+        <div className="sdc-card-thumb" style={{position:"relative",overflow:"hidden"}}>
+          <div className={thumbClass} style={{...thumbStyle,position:"absolute",inset:0,filter:"blur(2px)",opacity:0.5}}/>
+          <div className="clsc-locked-overlay">
+            <span className="clsc-lock-icon">🔒</span>
+            <div className="clsc-lock-text">Purchase {cls.subject} course to unlock</div>
+            <div className="clsc-lock-batch">{cls.batch}</div>
+          </div>
         </div>
-        <div className="sdc-card-body">
+        <div className="sdc-card-body" style={{opacity:0.6}}>
           {meta}
           <div className="sdc-cc-name" style={{color:"#9ca3af"}}>{cls.title}</div>
           <div style={{padding:"6px 12px",background:"#f3f4f6",borderRadius:8,fontSize:12,color:"#6b7280",textAlign:"center"}}>
