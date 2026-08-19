@@ -2190,6 +2190,7 @@ function CoursePlayer({ courseId, onBack }) {
   const [activeLesson, setActiveLesson] = useState(null);
   const [openChapters, setOpenChapters] = useState({});
   const [openSubjects, setOpenSubjects] = useState({});
+  const [openGeneralMats, setOpenGeneralMats] = useState(false); // bundle materials not tagged to any one subject
   const [openFaq, setOpenFaq]           = useState(null);
   const [viewingMat, setViewingMat]     = useState(null); // { mat, secKey, subject }
   const [mobileSidebar, setMobileSidebar] = useState(false);
@@ -2329,6 +2330,15 @@ function CoursePlayer({ courseId, onBack }) {
     MAT_SECTIONS.flatMap(s =>
       (course.materials?.[s.key]||[])
         .filter(m => m.title.startsWith(`${sub} | `))
+        .map(m => ({ ...m, secKey:s.key, Icon:s.Icon, color:s.color, label:s.label }))
+    );
+
+  // Bundle materials not tagged to any bundled subject (e.g. an imported file whose
+  // title didn't match a subject name) — still shown, just outside the subject list.
+  const getGeneralMats = () =>
+    MAT_SECTIONS.flatMap(s =>
+      (course.materials?.[s.key]||[])
+        .filter(m => !bundleSubs.some(sub => m.title.startsWith(`${sub} | `)))
         .map(m => ({ ...m, secKey:s.key, Icon:s.Icon, color:s.color, label:s.label }))
     );
 
@@ -2536,6 +2546,17 @@ function CoursePlayer({ courseId, onBack }) {
                       </button>
                     );
                   })}
+                  {getGeneralMats().length > 0 && (
+                    <button className="bcp-subj-card" style={{"--subj-color":"#64748b"}}
+                      onClick={() => { setOpenGeneralMats(true); setMobileSidebar(true); }}>
+                      <div className="bcp-subj-dot" style={{background:"#64748b"}}/>
+                      <span className="bcp-subj-name">General</span>
+                      <span className="bcp-subj-count" style={{color:"#64748b",background:"#64748b18"}}>
+                        {getGeneralMats().length} files
+                      </span>
+                      <MdChevronRight size={15} color="#64748b"/>
+                    </button>
+                  )}
                 </div>
 
                 {/* Mobile sidebar toggle */}
@@ -2728,6 +2749,51 @@ function CoursePlayer({ courseId, onBack }) {
                     </div>
                   );
                 })}
+
+                {/* General/other bundle materials not tagged to any one subject */}
+                {(() => {
+                  const generalMats = getGeneralMats();
+                  if (!generalMats.length) return null;
+                  const color = "#64748b";
+                  return (
+                    <div className="bcp-sb-subject">
+                      <button
+                        className={`bcp-sb-subj-btn${openGeneralMats ? " bcp-sb-subj-open" : ""}`}
+                        style={{"--sc":color}}
+                        onClick={() => setOpenGeneralMats(v => !v)}
+                      >
+                        <span className="bcp-sb-dot" style={{background:color}}/>
+                        <span className="bcp-sb-subj-name">General</span>
+                        <span className="bcp-sb-badge" style={{color,background:`${color}18`}}>{generalMats.length}</span>
+                        {openGeneralMats ? <MdExpandLess size={16}/> : <MdExpandMore size={16}/>}
+                      </button>
+
+                      {openGeneralMats && (
+                        <div className="bcp-sb-mats">
+                          {generalMats.map(mat => {
+                            const MatIcon = mat.Icon || MdMenuBook;
+                            return (
+                              <button key={mat._id}
+                                className="bcp-sb-mat-row"
+                                style={{"--mc": mat.color || color}}
+                                onClick={() => { openViewer(mat, mat.secKey, null); setMobileSidebar(false); }}
+                              >
+                                <span className="bcp-sb-mat-icon" style={{background:`${mat.color||color}15`}}>
+                                  <MatIcon size={14} color={mat.color||color}/>
+                                </span>
+                                <div className="bcp-sb-mat-info">
+                                  <div className="bcp-sb-mat-title">{mat.title}</div>
+                                  <div className="bcp-sb-mat-type">{mat.label}</div>
+                                </div>
+                                <span className="bcp-sb-mat-view" style={{color:mat.color||color}}>View</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </>
             )}
           </div>

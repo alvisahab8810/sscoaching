@@ -503,6 +503,55 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course: updated, importedCount });
       }
 
+      // Bundle: import materials from ANY standalone course by id, as-is (no subject
+      // prefix). Covers "course-wise" material courses that aren't tied to one subject
+      // — e.g. a "TMA - Class 10th" course whose files are already self-titled per
+      // subject ("TMA - English (Class 10th)"). Generic over section keys, same as
+      // fetch-bsubject-materials above, and safe to click repeatedly (de-duped by
+      // exact title+fileUrl per section, so it only adds what's actually new).
+      if (action === "fetch-course-materials") {
+        const { sourceCourseId } = req.body;
+        if (!sourceCourseId) return res.status(400).json({ error: "sourceCourseId required" });
+        const subCourse = await Course.findOne({ _id: sourceCourseId, courseType: { $ne: "bundle" } }).lean();
+        if (!subCourse) return res.status(404).json({ error: "Source course not found" });
+
+        const raw = await Course.findById(id).lean();
+        const bundleSubjects = raw?.bundledSubjects || [];
+        const srcMaterials = subCourse.materials || {};
+        const bundleMaterials = { ...(raw?.materials || {}) };
+
+        let importedCount = 0;
+        for (const section of Object.keys(srcMaterials)) {
+          const srcList = srcMaterials[section] || [];
+          if (!srcList.length) continue;
+          const existing = bundleMaterials[section] || [];
+          const existingKeys = new Set(existing.map(m => `${m.title}::${m.fileUrl}`));
+          const toAdd = [];
+          for (const m of srcList) {
+            // Auto-detect a matching bundled subject from the item's title (e.g.
+            // "TMA - English (Class 10th)" → matches bundled subject "English"),
+            // and prefix accordingly so it shows up under that subject for students.
+            // Items that don't match any bundled subject fall into the "General" bucket.
+            const matchedSubject = bundleSubjects.find(s => m.title.toLowerCase().includes(s.toLowerCase()));
+            const finalTitle = matchedSubject ? `${matchedSubject} | ${m.title}` : m.title;
+            const key = `${finalTitle}::${m.fileUrl}`;
+            if (existingKeys.has(key)) continue;
+            toAdd.push({ _id: new mongoose.Types.ObjectId(), title: finalTitle, fileUrl: m.fileUrl });
+            existingKeys.add(key);
+          }
+          if (!toAdd.length) continue;
+          bundleMaterials[section] = [...existing, ...toAdd];
+          importedCount += toAdd.length;
+        }
+
+        if (importedCount === 0)
+          return res.status(200).json({ success: true, course: raw, importedCount: 0 });
+
+        await Course.findByIdAndUpdate(id, { $set: { materials: bundleMaterials } }, { strict: false });
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated, importedCount });
+      }
+
       return res.status(400).json({ error: "Unknown action" });
     } catch (err) {
       console.error(err);

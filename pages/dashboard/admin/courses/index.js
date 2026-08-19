@@ -1121,6 +1121,7 @@ export default function AdminCoursesPage({ admin }) {
   const [bsubLessonForm, setBsubLessonForm]             = useState(EMPTY_LESSON);
   const [bsubFetching, setBsubFetching]                 = useState(null); // subject being fetched
   const [bmatFetching, setBmatFetching]                 = useState(null); // subject whose materials are being imported
+  const [bmatCourseFetching, setBmatCourseFetching]     = useState(null); // sourceCourseId being imported (course-wise materials like TMA)
 
   const totalLessons = (c) => c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
 
@@ -1730,6 +1731,31 @@ export default function AdminCoursesPage({ admin }) {
     const ok = await bsubCall("fetch-bsubject-materials", { subject });
     if (ok) toast.success(`Imported study materials from ${subject} course!`);
     setBmatFetching(null);
+  };
+
+  // Some materials (e.g. TMA) aren't uploaded per-subject — they live inside a single
+  // standalone "course-wise" course (e.g. "TMA - Class 10th") that covers every subject
+  // at once. This imports that course's entire materials set into the bundle as-is
+  // (titles are already self-descriptive, e.g. "TMA - English (Class 10th)"), instead
+  // of matching by subject.
+  const handleBmatFetchFromCourse = async (sourceCourseId) => {
+    const src = courses.find(c => c._id === sourceCourseId);
+    if (!src) return;
+    if (!confirm(`Import all study materials from "${src.title}" into this bundle?`)) return;
+    setBmatCourseFetching(sourceCourseId);
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=fetch-course-materials`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ sourceCourseId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        toast.success(data.importedCount>0 ? `Imported ${data.importedCount} file(s) from "${src.title}"!` : `Nothing new to import from "${src.title}" — already up to date.`);
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setBmatCourseFetching(null); }
   };
 
   /* ── Upload PDF for materials ── */
@@ -3210,6 +3236,9 @@ export default function AdminCoursesPage({ admin }) {
                     saving={saving}
                     onFetch={handleBmatFetch}
                     fetching={bmatFetching}
+                    allCourses={courses}
+                    onFetchFromCourse={handleBmatFetchFromCourse}
+                    fetchingFromCourse={bmatCourseFetching}
                   />
 
                   {/* ── FAQs SECTION ── */}
@@ -3360,20 +3389,33 @@ export default function AdminCoursesPage({ admin }) {
 /* ─────────────────────────────────────────
    MATERIALS PANEL
 ───────────────────────────────────────── */
-function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching }) {
+function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching, allCourses, onFetchFromCourse, fetchingFromCourse }) {
   const [openSection, setOpenSection] = useState(null); // "books" | "tma" | etc
   const [inlineForm, setInlineForm]   = useState({ title:"", fileUrl:"" });
   const [localUploading, setLocalUploading] = useState(false);
+  const [importCourseId, setImportCourseId] = useState("");
 
   const isBundle = course.courseType === "bundle";
   const subjects = isBundle ? (course.bundledSubjects || []) : [course.subject || "General"];
+  // Extra pseudo-tab for bundle materials that aren't tagged to any bundled subject —
+  // e.g. TMA files imported wholesale from a "course-wise" course (see below).
+  const ALL_TAB = "All Subjects";
+  const subjectTabs = isBundle ? [...subjects, ALL_TAB] : subjects;
 
-  // activeTab may be a leftover section key ("books") or a subject name — always prefer a known subject
-  const activeSubject = subjects.includes(activeTab) ? activeTab : (subjects[0] || "");
+  // Standalone courses of the same batch that aren't one of the bundle's per-subject
+  // pills — e.g. a "TMA - Class 10th" course covering every subject at once. These
+  // can be imported wholesale via "Import materials from another course" below.
+  const importableCourses = isBundle
+    ? (allCourses||[]).filter(c => c.courseType !== "bundle" && c.batch === course.batch && !subjects.includes(c.subject))
+    : [];
+
+  // activeTab may be a leftover section key ("books") or a subject name — always prefer a known tab
+  const activeSubject = subjectTabs.includes(activeTab) ? activeTab : (subjectTabs[0] || "");
 
   const getMaterials = (sub, sec) => {
     const mats = course.materials?.[sec] || [];
     if (!isBundle) return mats;
+    if (sub === ALL_TAB) return mats.filter(m => !subjects.some(s => m.title.startsWith(`${s} | `)));
     return mats.filter(m => m.title.startsWith(`${sub} | `));
   };
 
@@ -3414,14 +3456,16 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
       {/* Subject pills (bundle) or single subject header */}
       <div style={{padding:"0 16px 12px",display:"flex",flexWrap:"wrap",gap:8,alignItems:"center",justifyContent:"space-between"}}>
         <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-          {subjects.map(sub => {
+          {subjectTabs.map(sub => {
             const cnt = totalForSubject(sub);
             const isSel = sub === activeSubject;
+            const isAllTab = sub === ALL_TAB;
             return (
               <button key={sub} onClick={()=>{ setActiveTab(sub); setOpenSection(null); setInlineForm({title:"",fileUrl:""}); }}
-                style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#6c47d4":"#e5e7eb"}`,
-                  background:isSel?"#6c47d4":"white",color:isSel?"white":"#374151",
-                  fontWeight:700,fontSize:13,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6
+                style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#6c47d4":isAllTab?"#d1d5db":"#e5e7eb"}`,
+                  background:isSel?"#6c47d4":isAllTab?"#f9fafb":"white",color:isSel?"white":"#374151",
+                  fontWeight:700,fontSize:13,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6,
+                  fontStyle:isAllTab?"italic":"normal"
                 }}
               >
                 {sub}
@@ -3433,7 +3477,7 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
         </div>
 
         {/* Bundle: import Books/TMA/Assignments/Sample Papers/Notes from the standalone subject course */}
-        {isBundle && activeSubject && onFetch && (
+        {isBundle && activeSubject && activeSubject!==ALL_TAB && onFetch && (
           <button
             onClick={()=>onFetch(activeSubject)}
             disabled={fetching===activeSubject}
@@ -3445,6 +3489,29 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
           </button>
         )}
       </div>
+
+      {/* Bundle: import materials from a "course-wise" course not tied to one subject (e.g. TMA) */}
+      {isBundle && importableCourses.length > 0 && (
+        <div style={{margin:"0 16px 16px",padding:12,border:"1.5px dashed #d1d5db",borderRadius:10,background:"#fafafa",display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+          <span style={{fontSize:12,color:"#6b7280",fontWeight:600}}>Import materials from another course (e.g. TMA):</span>
+          <select className="cr-input" style={{flex:"1 1 220px",padding:"6px 10px",fontSize:12}}
+            value={importCourseId} onChange={e=>setImportCourseId(e.target.value)}>
+            <option value="">Select course...</option>
+            {importableCourses.map(c => (
+              <option key={c._id} value={c._id}>{c.title} ({c.subject})</option>
+            ))}
+          </select>
+          <button
+            onClick={()=>{ if (importCourseId) onFetchFromCourse(importCourseId); }}
+            disabled={!importCourseId || fetchingFromCourse===importCourseId}
+            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #6c47d4",
+              background:"white",color:"#6c47d4",fontWeight:600,cursor:importCourseId?"pointer":"not-allowed",display:"flex",alignItems:"center",gap:5}}>
+            {fetchingFromCourse===importCourseId
+              ? "Importing..."
+              : <><MdRefresh size={14}/> Import</>}
+          </button>
+        </div>
+      )}
 
       {/* Content-type rows for selected subject */}
       <div style={{padding:"0 16px 16px",display:"flex",flexDirection:"column",gap:10}}>
