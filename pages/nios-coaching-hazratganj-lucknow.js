@@ -226,7 +226,7 @@ export default function HazratganjPage() {
             <a href="tel:+919935035316">+91 99350 35316</a>
             &nbsp;|&nbsp;
             <img src="/assets/icons/footer/gmail.svg" alt="Email" className="contact-icon" />
-            <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+            <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
           </span>
         </div>
       </div>
@@ -793,7 +793,7 @@ export default function HazratganjPage() {
                     ico: <FaEnvelope />,
                     label: "Email",
                     content: (
-                      <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+                      <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
                     ),
                   },
                   {
@@ -1072,7 +1072,7 @@ export default function HazratganjPage() {
 //       <div className="hg-topbar">
 //         <div className="hg-tb-inner">
 //           <span className="d-flex align-items-center"><img className="location-pins" src="/assets/images/contacts/location.svg"/> <strong>Hazratganj Branch</strong> — 3rd Floor, Shree Chamber, Near Basant Cinema, Lucknow – 226001</span>
-//           <span className="d-flex align-items-center"><img src="/assets/icons/footer/call.svg" alt="Phone Icon" className="contact-icon"/> <a href="tel:+09839065533">+91 99350 35316</a> &nbsp;|&nbsp; <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon"></img> <a href="mailto:info@sscoaching.in">info@sscoaching.in</a></span>
+//           <span className="d-flex align-items-center"><img src="/assets/icons/footer/call.svg" alt="Phone Icon" className="contact-icon"/> <a href="tel:+09839065533">+91 99350 35316</a> &nbsp;|&nbsp; <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon"></img> <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a></span>
 //         </div>
 //       </div>
 
@@ -1416,7 +1416,7 @@ export default function HazratganjPage() {
 //     {
 //       ico: <FaEnvelope />,
 //       label: "Email",
-//       content: <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>,
+//       content: <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>,
 //     },
 //     {
 //       ico: <FaClock />,

@@ -139,7 +139,7 @@ export default function AlambaghPage() {
             <a href="tel:+919935035316">+91 99350 35316</a>
             &nbsp;|&nbsp;
             <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon" />
-            <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+            <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
           </span>
         </div>
       </div>
@@ -724,7 +724,7 @@ export default function AlambaghPage() {
                   {
                     ico: <FaEnvelope />,
                     label: "Email",
-                    content: <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>,
+                    content: <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>,
                   },
                   {
                     ico: <FaClock />,
@@ -977,7 +977,7 @@ export default function AlambaghPage() {
 //             <a href="tel:+919839065533">+91 98390 65533</a>
 //             &nbsp;|&nbsp;
 //             <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon" />
-//             <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+//             <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
 //           </span>
 //         </div>
 //       </div>
@@ -1293,7 +1293,7 @@ export default function AlambaghPage() {
 //                   {
 //                     ico: <FaEnvelope />,
 //                     label: "Email",
-//                     content: <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>,
+//                     content: <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>,
 //                   },
 //                   {
 //                     ico: <FaClock />,

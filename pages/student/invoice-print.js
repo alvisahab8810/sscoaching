@@ -18,7 +18,7 @@ import Head from "next/head";
 
 const BUSINESS = {
   name:    "SS Coaching",
-  email:   "info@sscoaching.in",
+  email:   "contact@sscoaching.in",
   gstin:   "09HSCPD0357Q1ZB",
   address: "IIIrd Floor, Shree Chamber, Naza Computer Market, Near Basant Cinema, Hazratganj, Lucknow.",
 };

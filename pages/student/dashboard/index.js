@@ -271,18 +271,24 @@ export default function StudentDashboard() {
                   const slides = [
                     {
                       // tag: "WELCOME BACK",
+                      img: "banner1.webp",
+                      mobileImg: "mobile-banner.webp",
                       heading: ["Welcome,", `${student.name || "Student"}!`],
                       sub: student.className ? `${student.className.toUpperCase()} · NIOS` : "NIOS COACHING",
                       btn: "Explore Courses",
                     },
                     {
                       // tag: "EXPERT FACULTY",
+                      img: "banner2.webp",
+                      mobileImg: "mobile-banner1.webp",
                       heading: ["NIOS Experts", "For Your Success"],
                       sub: "RISE FROM FAILURE · EST. 2001",
                       btn: "View Live Classes",
                     },
                     {
                       // tag: "100% RESULTS",
+                      img: "banner3.webp",
+                      mobileImg: "mobile-banner2.webp",
                       heading: ["Your Learning", "Journey Starts Here"],
                       sub: "CLASS 10 · CLASS 12 · NIOS",
                       btn: "Browse Courses",
@@ -297,7 +303,16 @@ export default function StudentDashboard() {
                     <>
                       <div className="sdd-hero-slider">
                         {slides.map((slide, i) => (
-                          <div key={i} className={`sdd-hero ${heroSlide === i ? "sdd-hero-active" : ""}`}>
+                          <div
+                            key={i}
+                            className={`sdd-hero ${heroSlide === i ? "sdd-hero-active" : ""}`}
+                            style={{
+                              "--sdd-bg-desktop": `url(/assets/images/online-classes/${slide.img})`,
+                              "--sdd-bg-mobile": `url(/assets/images/online-classes/${slide.mobileImg})`,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => navigate("courses")}
+                          >
                             <div className="sdd-hero-img"/>
                             <div className="sdd-hero-content">
                               {/* <div className="sdd-hero-tag">{slide.tag}</div> */}
@@ -496,7 +511,7 @@ export default function StudentDashboard() {
             {activeMenu === "completed" && (
               <div>
                 <h1 className="sdlc-page-title">Completed Classes</h1>
-                <p className="sdlc-page-sub">Download And View All Your Complete Courses</p>
+                <p className="sdlc-page-sub">View All Your Completed Courses</p>
                 {completedClasses.length === 0 ? (
                   <div className="sd-empty">
                     <MdCheckCircle size={52} className="sd-empty-svg"/>
@@ -515,7 +530,7 @@ export default function StudentDashboard() {
 
             {/* PROFILE */}
             {activeMenu === "profile" && (
-              <ProfileSection student={student} setStudent={setStudent} enrolledCourses={enrolledCourses}/>
+              <ProfileSection student={student} setStudent={setStudent} enrolledCourses={enrolledCourses} setActiveCourse={setActiveCourse} navigate={navigate}/>
             )}
 
             </div>
@@ -631,9 +646,9 @@ function InvoicesSection() {
                       <div className="sdinv-date-small">{fmtDate(inv.issuedAt)}</div>
                     </div>
                   </div>
-                  <div className="sdinv-col">{fmtDate(inv.issuedAt)}</div>
-                  <div className="sdinv-col">{inv.paymentMethod || "—"}</div>
-                  <div className="sdinv-amt">{fmtMoney(inv.total)}</div>
+                  <div className="sdinv-col sdinv-col-date">{fmtDate(inv.issuedAt)}</div>
+                  <div className="sdinv-col sdinv-col-pay"><span className="sdinv-mlabel">Payment Method</span>{inv.paymentMethod || "—"}</div>
+                  <div className="sdinv-amt"><span className="sdinv-mlabel">Amount</span>{fmtMoney(inv.total)}</div>
                   <div className="sdinv-actions">
                     <span className={inv.status === "pending" ? "sdinv-pay-pend" : "sdinv-pay-paid"}>{sc.label}</span>
                     <button className="sdinv-icon-btn" title="Download PDF" onClick={() => downloadPdf(inv)}><MdDownload size={16}/></button>
@@ -1155,7 +1170,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
         <div className="cdp-left">
           <div className="cdp-header">
             <h1 className="cdp-title">{course.title}</h1>
-            <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginTop:6}}>
+            <div style={{display:"flex",gap:8,alignItems:"center",justifyContent:"center",flexWrap:"wrap",marginTop:6}}>
               {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>📦 BUNDLE</span>}
               {(course.batch||course.className) && <p className="cdp-class-tag" style={{margin:0}}>{(course.batch||course.className).toUpperCase()}</p>}
               {!isBundle && course.subject && <span style={{background:`${subjectColor}22`,color:subjectColor,fontWeight:700,fontSize:12,padding:"3px 10px",borderRadius:20}}>{course.subject}</span>}
@@ -2831,7 +2846,7 @@ function LessonInfoPanel({ lesson, course, activeLesson, isCompleted, onToggleCo
 /* ════════════════════════════════════════
    PROFILE SECTION
 ════════════════════════════════════════ */
-function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
+function ProfileSection({ student, setStudent, enrolledCourses = [], setActiveCourse, navigate }) {
   const [saving, setSaving]           = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [form, setForm]               = useState({ name:student.name||"", className:student.className||"", batch:student.batch||"", email:student.email||"" });
@@ -3058,7 +3073,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
         </div>
 
         {/* Form grid */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+        <div className="sdpr-form-grid">
           <div className="sdpr-field" style={{margin:0}}>
             <label className="sdpr-label">Full Name <span className="sdpr-req">*</span></label>
             <input type="text" className="sdpr-input" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} placeholder="Your full name"/>
@@ -3107,7 +3122,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
         {cpSuccess && <div className="sdpr-msg-ok" style={{marginBottom:16}}>✅ {cpSuccess}</div>}
         {cpError   && <div className="sdpr-msg-err" style={{marginBottom:16}}>⚠️ {cpError}</div>}
 
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
+        <div className="sdpr-cp-grid">
           {/* Current Password */}
           <div className="sdpr-field" style={{margin:0}}>
             <label className="sdpr-label">Current Password</label>
@@ -3167,8 +3182,8 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
           ))}
         </div>
 
-        <div style={{marginTop:16,display:"flex",gap:10}}>
-          <button className="sdpr-save-btn" onClick={handleChangePassword} disabled={cpSaving} style={{minWidth:160}}>
+        <div className="sdpr-actions" style={{marginTop:16,justifyContent:"flex-start"}}>
+          <button className="sdpr-save-btn" onClick={handleChangePassword} disabled={cpSaving}>
             {cpSaving ? <><span className="sdpr-spinner"/>&nbsp;Updating...</> : <><MdLock size={14}/> Update Password</>}
           </button>
           <button className="sdpr-reset-btn" onClick={()=>{setCpCurrent("");setCpNew("");setCpConfirm("");setCpError("");setCpSuccess("");}}>
@@ -3217,8 +3232,9 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
                 const tc = getSubjectThumbClass(c.subject);
                 const sc = getSubjectColor(c.subject);
                 const totalLessons = c.chapters?.reduce((a,ch)=>a+ch.lessons.length,0)||0;
+                const goToCourse = () => { setActiveCourse && setActiveCourse(c._id); navigate && navigate("courses"); };
                 return (
-                  <div key={c._id} className="sdpr-ccourse">
+                  <div key={c._id} className="sdpr-ccourse" onClick={goToCourse} style={{cursor:"pointer"}}>
                     <div className={`sdpr-ct ${tc}`}>
                       {c.subject ? c.subject.split(" ").slice(0,2).join("\n") : c.title?.split(" ").slice(0,2).join("\n")}
                     </div>
@@ -3235,7 +3251,7 @@ function ProfileSection({ student, setStudent, enrolledCourses = [] }) {
                         {c.batch && <span className="sdc-tag-cls-pill">{c.batch.toUpperCase()}</span>}
                       </div>
                     </div>
-                    <button className="sdpr-btn-watch">▶ Continue</button>
+                    <button className="sdpr-btn-watch" onClick={(e) => { e.stopPropagation(); goToCourse(); }}>▶ Continue</button>
                   </div>
                 );
               })

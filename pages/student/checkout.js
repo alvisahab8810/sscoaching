@@ -569,7 +569,7 @@ export default function CheckoutPage() {
         .co-req { color:#ef4444; }
         .co-optional { color:#9ca3af; font-weight:400; }
         .co-input {
-          padding:10px 12px; border:1.5px solid #e2e5f8; border-radius:8px;
+          width:100%; padding:10px 12px; border:1.5px solid #e2e5f8; border-radius:8px;
           font-size:0.85rem; font-family:inherit; color:#0f1f3d;
           outline:none; transition:border-color 0.14s;
           background:#fff;
@@ -578,9 +578,9 @@ export default function CheckoutPage() {
         .co-input-err { border-color:#ef4444 !important; }
         .co-textarea { min-height:72px; resize:vertical; }
         .co-err { font-size:0.72rem; color:#ef4444; font-weight:600; }
-        .co-phone-wrap { display:flex; }
-        .co-phone-prefix { padding:10px 10px; background:#f4f5ff; border:1.5px solid #e2e5f8; border-right:none; border-radius:8px 0 0 8px; font-size:0.85rem; color:#6b7a99; font-weight:600; white-space:nowrap; }
-        .co-input-phone { border-radius:0 8px 8px 0 !important; }
+        .co-phone-wrap { display:flex; width:100%; }
+        .co-phone-prefix { padding:10px 10px; background:#f4f5ff; border:1.5px solid #e2e5f8; border-right:none; border-radius:8px 0 0 8px; font-size:0.85rem; color:#6b7a99; font-weight:600; white-space:nowrap; flex-shrink:0; }
+        .co-input-phone { flex:1; min-width:0; border-radius:0 8px 8px 0 !important; }
 
         /* Payment options */
         .co-pay-options { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
@@ -677,6 +677,14 @@ export default function CheckoutPage() {
         }
         @media (max-width:480px) {
           .co-form-grid { grid-template-columns:1fr; }
+
+          .co-topbar-inner { padding:0 12px; height:60px; }
+          .co-back-btn { font-size:0.75rem; gap:4px; padding:6px 6px; }
+          .co-back-btn :global(svg) { width:15px; height:15px; }
+          .co-topbar-brand { gap:8px; }
+          .co-logo-img { height:26px; max-width:100px; }
+          .co-topbar-label { font-size:0.72rem; }
+          .co-topbar-secure { font-size:0.65rem; gap:3px; }
         }
       `}</style>
     </>

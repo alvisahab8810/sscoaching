@@ -217,7 +217,7 @@ export default function SSCoachingLucknow() {
               alt="Email"
               className="contact-icon"
             />
-            <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+            <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
           </span>
         </div>
       </div>

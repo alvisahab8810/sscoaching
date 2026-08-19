@@ -139,7 +139,7 @@ export default function IndiraganagarPage() {
             <a href="tel:+919792111121">+91 97921 11121</a>
             &nbsp;|&nbsp;
             <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon" />
-            <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+            <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
           </span>
         </div>
       </div>
@@ -715,7 +715,7 @@ export default function IndiraganagarPage() {
                   {
                     ico: <FaEnvelope />,
                     label: "Email",
-                    content: <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>,
+                    content: <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>,
                   },
                   {
                     ico: <FaClock />,
@@ -939,7 +939,7 @@ export default function IndiraganagarPage() {
 //             <a href="tel:+919839065533">+91 98390 65533</a>
 //             &nbsp;|&nbsp;
 //             <img src="/assets/icons/footer/gmail.svg" alt="Email Icon" className="contact-icon" />
-//             <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>
+//             <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
 //           </span>
 //         </div>
 //       </div>
@@ -1254,7 +1254,7 @@ export default function IndiraganagarPage() {
 //                   {
 //                     ico: <FaEnvelope />,
 //                     label: "Email",
-//                     content: <a href="mailto:info@sscoaching.in">info@sscoaching.in</a>,
+//                     content: <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>,
 //                   },
 //                   {
 //                     ico: <FaClock />,

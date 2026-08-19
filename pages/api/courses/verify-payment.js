@@ -5,6 +5,7 @@ import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
 import Invoice from "@/models/Invoice";
+import StudentUser from "@/models/StudentUser";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
@@ -89,8 +90,19 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   await dbConnect();
 
-  const student = getStudent(req);
-  if (!student) return res.status(401).json({ error: "Unauthorized" });
+  const tokenStudent = getStudent(req);
+  if (!tokenStudent) return res.status(401).json({ error: "Unauthorized" });
+
+  // Some older login/register routes issue JWTs without an `email` field
+  // (phone-only payload) — re-fetch from DB so invoice/email always has the
+  // real, current email regardless of which flow issued this session token.
+  const dbStudent = await StudentUser.findById(tokenStudent.id).lean();
+  const student = {
+    id:    tokenStudent.id,
+    name:  dbStudent?.name  || tokenStudent.name  || "",
+    phone: dbStudent?.phone || tokenStudent.phone || "",
+    email: dbStudent?.email || tokenStudent.email || "",
+  };
 
   const {
     razorpay_order_id,

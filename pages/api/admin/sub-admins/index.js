@@ -17,11 +17,11 @@ function isSuperAdmin(req) {
 
 function createTransporter() {
   return nodemailer.createTransport({
-    host: "smtp.hostinger.com",
+    host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-      user: "info@viralon.in",
+      user: process.env.EMAIL_USER || "contact@sscoaching.in",
       pass: process.env.EMAIL_PASS,
     },
   });
@@ -143,7 +143,7 @@ export default async function handler(req, res) {
     try {
       const transporter = createTransporter();
       await transporter.sendMail({
-        from: `"SS Coaching Admin" <info@viralon.in>`,
+        from: `"SS Coaching Admin" <${process.env.EMAIL_USER || "contact@sscoaching.in"}>`,
         to: subAdmin.email,
         subject: `Your SS Coaching Staff Portal Access`,
         html: buildCredentialsEmail({ name: subAdmin.name, username: subAdmin.username, password, loginUrl }),
