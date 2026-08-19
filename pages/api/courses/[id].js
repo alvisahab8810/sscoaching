@@ -462,6 +462,47 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course: updated });
       }
 
+      // Bundle: import Study Materials (Books/TMA/Assignments/Sample Papers/Notes,
+      // and any section added later) from the standalone subject course.
+      // Generic over section keys so a future material type never needs a code
+      // change here — whatever the standalone course has, gets imported.
+      if (action === "fetch-bsubject-materials") {
+        const { subject } = req.body;
+        if (!subject) return res.status(400).json({ error: "Subject required" });
+        const subCourse = await Course.findOne({
+          courseType: { $ne: "bundle" }, batch: course.batch, subject,
+        }).lean();
+        if (!subCourse) return res.status(404).json({ error: `No individual ${subject} course found for ${course.batch}` });
+
+        const srcMaterials = subCourse.materials || {};
+        const raw = await Course.findById(id).lean();
+        const bundleMaterials = { ...(raw?.materials || {}) };
+
+        let importedCount = 0;
+        for (const section of Object.keys(srcMaterials)) {
+          const srcList = srcMaterials[section] || [];
+          if (!srcList.length) continue;
+          const existing = bundleMaterials[section] || [];
+          // Drop any items previously imported for this subject in this section,
+          // then re-import fresh (mirrors fetch-bsubject-content's "replace" behaviour).
+          const keep = existing.filter(m => !m.title.startsWith(`${subject} | `));
+          const imported = srcList.map(m => ({
+            _id: new mongoose.Types.ObjectId(),
+            title: `${subject} | ${m.title}`,
+            fileUrl: m.fileUrl,
+          }));
+          bundleMaterials[section] = [...keep, ...imported];
+          importedCount += imported.length;
+        }
+
+        if (importedCount === 0)
+          return res.status(404).json({ error: `No study materials found in the individual ${subject} course` });
+
+        await Course.findByIdAndUpdate(id, { $set: { materials: bundleMaterials } }, { strict: false });
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated, importedCount });
+      }
+
       return res.status(400).json({ error: "Unknown action" });
     } catch (err) {
       console.error(err);

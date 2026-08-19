@@ -1120,6 +1120,7 @@ export default function AdminCoursesPage({ admin }) {
   const [bsubShowLessonForm, setBsubShowLessonForm]     = useState(null); // "subject::chapterId"
   const [bsubLessonForm, setBsubLessonForm]             = useState(EMPTY_LESSON);
   const [bsubFetching, setBsubFetching]                 = useState(null); // subject being fetched
+  const [bmatFetching, setBmatFetching]                 = useState(null); // subject whose materials are being imported
 
   const totalLessons = (c) => c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
 
@@ -1719,6 +1720,16 @@ export default function AdminCoursesPage({ admin }) {
     const ok = await bsubCall("fetch-bsubject-content", { subject });
     if (ok) toast.success(`Imported chapters from ${subject} course!`);
     setBsubFetching(null);
+  };
+
+  // Imports Books/TMA/Assignments/Sample Papers/Notes (and any future material
+  // section) from the standalone subject course into this bundle, for one subject.
+  const handleBmatFetch = async (subject) => {
+    if (!confirm(`Fetch study materials (Books, TMA, Assignments, Sample Papers, Notes) from existing ${subject} (${selectedCourse.batch}) course? This will replace previously-imported materials for this subject.`)) return;
+    setBmatFetching(subject);
+    const ok = await bsubCall("fetch-bsubject-materials", { subject });
+    if (ok) toast.success(`Imported study materials from ${subject} course!`);
+    setBmatFetching(null);
   };
 
   /* ── Upload PDF for materials ── */
@@ -3197,6 +3208,8 @@ export default function AdminCoursesPage({ admin }) {
                     handleAdd={handleAddMaterial}
                     handleDelete={handleDeleteMaterial}
                     saving={saving}
+                    onFetch={handleBmatFetch}
+                    fetching={bmatFetching}
                   />
 
                   {/* ── FAQs SECTION ── */}
@@ -3347,7 +3360,7 @@ export default function AdminCoursesPage({ admin }) {
 /* ─────────────────────────────────────────
    MATERIALS PANEL
 ───────────────────────────────────────── */
-function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving }) {
+function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching }) {
   const [openSection, setOpenSection] = useState(null); // "books" | "tma" | etc
   const [inlineForm, setInlineForm]   = useState({ title:"", fileUrl:"" });
   const [localUploading, setLocalUploading] = useState(false);
@@ -3399,23 +3412,38 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
       </div>
 
       {/* Subject pills (bundle) or single subject header */}
-      <div style={{padding:"0 16px 12px",display:"flex",flexWrap:"wrap",gap:8}}>
-        {subjects.map(sub => {
-          const cnt = totalForSubject(sub);
-          const isSel = sub === activeSubject;
-          return (
-            <button key={sub} onClick={()=>{ setActiveTab(sub); setOpenSection(null); setInlineForm({title:"",fileUrl:""}); }}
-              style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#6c47d4":"#e5e7eb"}`,
-                background:isSel?"#6c47d4":"white",color:isSel?"white":"#374151",
-                fontWeight:700,fontSize:13,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6
-              }}
-            >
-              {sub}
-              {cnt>0 && <span style={{background:isSel?"rgba(255,255,255,0.25)":"#ede9fe",color:isSel?"white":"#6c47d4",
-                borderRadius:20,padding:"1px 7px",fontSize:11,fontWeight:700}}>{cnt}</span>}
-            </button>
-          );
-        })}
+      <div style={{padding:"0 16px 12px",display:"flex",flexWrap:"wrap",gap:8,alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+          {subjects.map(sub => {
+            const cnt = totalForSubject(sub);
+            const isSel = sub === activeSubject;
+            return (
+              <button key={sub} onClick={()=>{ setActiveTab(sub); setOpenSection(null); setInlineForm({title:"",fileUrl:""}); }}
+                style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#6c47d4":"#e5e7eb"}`,
+                  background:isSel?"#6c47d4":"white",color:isSel?"white":"#374151",
+                  fontWeight:700,fontSize:13,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6
+                }}
+              >
+                {sub}
+                {cnt>0 && <span style={{background:isSel?"rgba(255,255,255,0.25)":"#ede9fe",color:isSel?"white":"#6c47d4",
+                  borderRadius:20,padding:"1px 7px",fontSize:11,fontWeight:700}}>{cnt}</span>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Bundle: import Books/TMA/Assignments/Sample Papers/Notes from the standalone subject course */}
+        {isBundle && activeSubject && onFetch && (
+          <button
+            onClick={()=>onFetch(activeSubject)}
+            disabled={fetching===activeSubject}
+            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #6c47d4",
+              background:"white",color:"#6c47d4",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>
+            {fetching===activeSubject
+              ? "Importing..."
+              : <><MdRefresh size={14}/> Fetch from existing course</>}
+          </button>
+        )}
       </div>
 
       {/* Content-type rows for selected subject */}
