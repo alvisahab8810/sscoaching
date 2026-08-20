@@ -7121,7 +7121,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  display: flex;
+  display: none; /* mobile-only — shown via the 760px media query below */
   flex-direction: column;
   gap: 5px;
   padding: 6px;
@@ -7733,6 +7733,7 @@
 }
 
 @media (max-width: 760px) {
+  .sd-hamburger { display: flex; }
   .sd-white-sidebar {
     position: fixed;
     top: 0;

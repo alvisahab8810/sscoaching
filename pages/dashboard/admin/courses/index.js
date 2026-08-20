@@ -3402,11 +3402,21 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
   const ALL_TAB = "All Subjects";
   const subjectTabs = isBundle ? [...subjects, ALL_TAB] : subjects;
 
-  // Standalone courses of the same batch that aren't one of the bundle's per-subject
-  // pills — e.g. a "TMA - Class 10th" course covering every subject at once. These
-  // can be imported wholesale via "Import materials from another course" below.
+  // Standalone courses that aren't one of the bundle's per-subject pills — e.g. a
+  // "TMA - Class 10th" course covering every subject at once. These can be imported
+  // wholesale via "Import materials from another course" below. Same-batch courses
+  // are matched normally, but any course titled "TMA - ..." is always offered
+  // regardless of its own batch text — TMA products (TMA - Commerce Class 12th,
+  // TMA - Science Class 12th, TMA - Class 10th, etc.) are separate sellable
+  // products with their own free-typed batch field, which doesn't always match the
+  // bundle's batch string exactly, so a strict batch match was hiding them from
+  // bundles they should be importable into.
   const importableCourses = isBundle
-    ? (allCourses||[]).filter(c => c.courseType !== "bundle" && c.batch === course.batch && !subjects.includes(c.subject))
+    ? (allCourses||[]).filter(c =>
+        c.courseType !== "bundle" &&
+        !subjects.includes(c.subject) &&
+        (c.batch === course.batch || /^tma\b/i.test(c.title || ""))
+      )
     : [];
 
   // activeTab may be a leftover section key ("books") or a subject name — always prefer a known tab

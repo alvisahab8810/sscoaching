@@ -952,7 +952,6 @@ function CourseCard({ course, onEnrolled, onOpen, openDetail }) {
   const totalLessons = course.chapters?.reduce((a,c) => a + c.lessons.length, 0) || 0;
   const isBundle = course.courseType === "bundle";
   const bundledSubs = course.bundledSubjects || [];
-  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
 
   const handleFreeEnroll = async () => {
     setEnrolling(true);
@@ -991,23 +990,12 @@ function CourseCard({ course, onEnrolled, onOpen, openDetail }) {
           <div>
             <div className="sdc-card-meta" style={{marginBottom:6}}>
               <div className="sdc-meta-left">
-                <span style={{background:"#fff7ed",color:"#f59e0b",fontWeight:700,fontSize:11,padding:"2px 8px",borderRadius:20,border:"1px solid #fde68a"}}>📦 BUNDLE</span>
-                <span style={{fontSize:11,color:"#6b7280",fontWeight:600,marginLeft:4}}>{bundledSubs.length} Subjects</span>
+                <span style={{background:"#fff7ed",color:"#f59e0b",fontWeight:700,fontSize:9,padding:"3px 7px",borderRadius:5,border:"1px solid #fde68a"}}>📦 BUNDLE</span>
+                <span style={{fontSize:9.5,color:"#6b7280",fontWeight:600,marginLeft:4}}>{bundledSubs.length} Subjects</span>
               </div>
               <div className="sdc-meta-right">
                 {course.batch && <span className="sdc-tag-cls-pill">{course.batch.toUpperCase()}</span>}
               </div>
-            </div>
-            {/* Subject pills — max 4 visible */}
-            <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:6}}>
-              {bundledSubs.slice(0,4).map((s,i) => (
-                <span key={s} style={{fontSize:10,fontWeight:600,color:SUBJ_COLORS[i%SUBJ_COLORS.length],background:`${SUBJ_COLORS[i%SUBJ_COLORS.length]}15`,padding:"2px 7px",borderRadius:10}}>
-                  {s}
-                </span>
-              ))}
-              {bundledSubs.length > 4 && (
-                <span style={{fontSize:10,color:"#9ca3af",fontWeight:600,padding:"2px 7px"}}>+{bundledSubs.length-4} more</span>
-              )}
             </div>
           </div>
         ) : (
