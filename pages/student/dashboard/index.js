@@ -1065,6 +1065,8 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   const [showDemo, setShowDemo]     = useState(false);
   const [detailTab, setDetailTab]   = useState("content");
   const [openFaq, setOpenFaq]       = useState(null);
+  const [bundleMainTab, setBundleMainTab] = useState("content"); // "content" | "materials" | "tma"
+  const [bundleSubj, setBundleSubj]       = useState(null);      // selected subject pill
 
   useEffect(() => {
     const load = async () => {
@@ -1113,6 +1115,22 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   const matIcons     = { books:"📚", tma:"📝", assignments:"📋", samplePapers:"📄", notes:"🗒️" };
   const totalMats    = matSections.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
 
+  // Bundle: video chapters are stored per-subject in subjectContents, not in course.chapters
+  const bundleSubjectChapters = (sub) => course.subjectContents?.find(sc => sc.subject === sub)?.chapters || [];
+  const bundleTotalLessons = (course.subjectContents || []).reduce(
+    (a, sc) => a + (sc.chapters || []).reduce((b, c) => b + (c.lessons?.length || 0), 0), 0
+  );
+
+  // Bundle: Study Material vs TMA are split into separate tabs — TMA held out of the "materials" section
+  const NON_TMA_SECTIONS = matSections.filter(k => k !== "tma");
+  const totalStudyMats   = NON_TMA_SECTIONS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
+  const totalTmaMats     = course.materials?.tma?.length || 0;
+  const bundleSubjectMatsBySections = (sub, sections) => sections.flatMap(k =>
+    (course.materials?.[k]||[])
+      .filter(m => m.title.startsWith(`${sub} | `))
+      .map(m => ({ ...m, secKey:k, icon:matIcons[k], label:matLabels[k] }))
+  );
+
   const handleBuyNow = (e) => {
     e.stopPropagation();
     localStorage.setItem("ss_checkout_cart", JSON.stringify([course]));
@@ -1148,22 +1166,9 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   ];
   const INCLUDED = isBundle ? INCLUDED_BUNDLE : INCLUDED_SUBJECT;
 
-  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
-
   return (
     <div className="cdp-wrapper">
       <button className="scp-back-btn" onClick={onBack} style={{marginBottom:20}}><MdArrowBack size={18}/> Back to Courses</button>
-
-      {/* Bundle banner */}
-      {isBundle && (
-        <div style={{background:"linear-gradient(135deg,#EFEFFF,#e8e4ff)",border:"2px solid #c5b8f8",borderRadius:16,padding:"16px 24px",marginBottom:20,display:"flex",alignItems:"center",gap:12}}>
-          <span style={{fontSize:28}}>📦</span>
-          <div>
-            <div style={{fontWeight:800,fontSize:16,color:"#4c1d95"}}>Complete Bundle Course</div>
-            <div style={{fontSize:13,color:"#5b21b6",marginTop:2}}>Includes all {bundledSubs.length} subjects — Live classes unlocked automatically for all subjects</div>
-          </div>
-        </div>
-      )}
 
       <div className="cdp-body">
         {/* ── LEFT ── */}
@@ -1171,7 +1176,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
           <div className="cdp-header">
             <h1 className="cdp-title">{course.title}</h1>
             <div style={{display:"flex",gap:8,alignItems:"center",justifyContent:"center",flexWrap:"wrap",marginTop:6}}>
-              {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>📦 BUNDLE</span>}
+              {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>BUNDLE</span>}
               {(course.batch||course.className) && <p className="cdp-class-tag" style={{margin:0}}>{(course.batch||course.className).toUpperCase()}</p>}
               {!isBundle && course.subject && <span style={{background:`${subjectColor}22`,color:subjectColor,fontWeight:700,fontSize:12,padding:"3px 10px",borderRadius:20}}>{course.subject}</span>}
             </div>
@@ -1185,7 +1190,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                 <>
                   <div className="cdp-detail-item"><small>Subjects</small><b>{bundledSubs.length} Subjects</b></div>
                   <div className="cdp-detail-item"><small>BUNDLE FEE</small><b>₹{course.price?.toLocaleString("en-IN")||"—"}</b></div>
-                  <div className="cdp-detail-item"><small>Study Materials</small><b>{totalMats > 0 ? `${totalMats} Files` : "Included"}</b></div>
+                  <div className="cdp-detail-item"><small>Course Content</small><b>{bundleTotalLessons > 0 ? `${bundleTotalLessons} Lessons` : "Included"}</b></div>
                 </>
               ) : (
                 <>
@@ -1197,96 +1202,8 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
             </div>
           </div>
 
-          {/* Bundle: Included subjects */}
-          {isBundle && bundledSubs.length > 0 && (
-            <div className="cdp-content-box" style={{background:"#EFEFFF",border:"1.5px solid #c5b8f8"}}>
-              <h2 className="cdp-content-title" style={{color:"#4c1d95"}}>📚 Subjects Included in this Bundle</h2>
-              <div style={{display:"flex",flexWrap:"wrap",gap:10,marginTop:12}}>
-                {bundledSubs.map((sub,i) => (
-                  <div key={sub} style={{display:"flex",alignItems:"center",gap:8,background:"white",border:`2px solid ${SUBJ_COLORS[i%SUBJ_COLORS.length]}30`,borderRadius:12,padding:"8px 16px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)"}}>
-                    <span style={{width:10,height:10,borderRadius:"50%",background:SUBJ_COLORS[i%SUBJ_COLORS.length],flexShrink:0,display:"inline-block"}}/>
-                    <span style={{fontWeight:700,fontSize:14,color:"#374151"}}>{sub}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{marginTop:14,padding:"10px 14px",background:"#f0fdf4",borderRadius:10,fontSize:13,color:"#166534",fontWeight:600}}>
-                ✓ Purchasing this bundle unlocks Live Classes for ALL subjects automatically
-              </div>
-            </div>
-          )}
-
-          {/* Bundle: Subject-wise material preview */}
-          {isBundle && totalMats > 0 && (
-            <div className="cdp-content-box">
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                <h2 className="cdp-content-title" style={{margin:0}}>📁 Study Materials — Subject Wise</h2>
-                <span style={{fontSize:12,color:"#6c47d4",fontWeight:700,background:"#ede9fe",padding:"3px 10px",borderRadius:20}}>{totalMats} Total Files</span>
-              </div>
-              {bundledSubs.map((sub, si) => {
-                const subMats = matSections.flatMap(k =>
-                  (course.materials?.[k]||[])
-                    .filter(m => m.title.startsWith(`${sub} | `))
-                    .map(m => ({ ...m, secKey: k, icon: matIcons[k], label: matLabels[k] }))
-                );
-                if (subMats.length === 0) return null;
-                const color = SUBJ_COLORS[si % SUBJ_COLORS.length];
-                return (
-                  <div key={sub} style={{marginBottom:16,border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
-                    {/* Subject header */}
-                    <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
-                      <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
-                      <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>{sub}</span>
-                      <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{subMats.length} file{subMats.length>1?"s":""}</span>
-                    </div>
-                    {/* File rows */}
-                    <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8,background:"white"}}>
-                      {subMats.map((mat) => {
-                        const displayTitle = mat.title.replace(`${sub} | `,"");
-                        return (
-                          <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10,position:"relative",overflow:"hidden"}}>
-                            {/* File icon */}
-                            <div style={{width:38,height:46,background:`${color}15`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${color}25`}}>
-                              <span style={{fontSize:20}}>{mat.icon}</span>
-                            </div>
-                            <div style={{flex:1,minWidth:0}}>
-                              <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
-                              <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
-                            </div>
-                            {course.isEnrolled ? (
-                              <a href={mat.fileUrl} target="_blank" rel="noreferrer"
-                                style={{flexShrink:0,padding:"6px 14px",background:color,color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
-                                onClick={e=>e.stopPropagation()}>
-                                View ↗
-                              </a>
-                            ) : (
-                              <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-                                <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                                  </svg>
-                                </div>
-                                <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-              {!course.isEnrolled && (
-                <div style={{textAlign:"center",padding:"12px 16px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:12,marginTop:4}}>
-                  <span style={{fontSize:16}}>🔒</span>
-                  <div style={{fontWeight:700,fontSize:13,color:"#6c47d4",marginTop:4}}>Enroll to unlock all study materials</div>
-                  <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>Books · TMA · Assignments · Sample Papers · Notes</div>
-                </div>
-              )}
-            </div>
-          )}
-
           {/* What's Included */}
-          <div className="cdp-included-box">
+          <div className="cdp-included-box" style={{marginBottom:20}}>
             <h2>This Course Includes :-</h2>
             <div className="cdp-included-grid">
               {INCLUDED.map((item,i) => (
@@ -1297,6 +1214,174 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
               ))}
             </div>
           </div>
+
+          {/* Bundle: Course Content / Study Material / TMA — tabbed, one subject shown at a time */}
+          {isBundle && (bundleTotalLessons > 0 || totalMats > 0) && (
+            <div className="cdp-content-box">
+              {(() => {
+                const tabs = [
+                  { key:"content",   label:"Course Content", Icon: MdPlayCircle, count: bundleTotalLessons, show: bundleTotalLessons > 0 },
+                  { key:"materials", label:"Study Material",  Icon: MdFolder,     count: totalStudyMats,      show: totalStudyMats > 0 },
+                  { key:"tma",       label:"TMA",              Icon: MdAssignment, count: totalTmaMats,        show: totalTmaMats > 0 },
+                ].filter(t => t.show);
+                const activeTab = tabs.some(t => t.key === bundleMainTab) ? bundleMainTab : tabs[0]?.key;
+                const sections  = activeTab === "content" ? null : activeTab === "tma" ? ["tma"] : NON_TMA_SECTIONS;
+
+                const subjectsForTab = bundledSubs.filter(sub =>
+                  activeTab === "content"
+                    ? bundleSubjectChapters(sub).reduce((a,c) => a + (c.lessons?.length||0), 0) > 0
+                    : bundleSubjectMatsBySections(sub, sections).length > 0
+                );
+                const activeSubj = subjectsForTab.includes(bundleSubj) ? bundleSubj : subjectsForTab[0];
+                const color      = "#6c47d4";
+
+                return (
+                  <>
+                    {tabs.length > 1 ? (
+                      <div className="cdp-detail-tabs">
+                        {tabs.map(t => (
+                          <button key={t.key} className={`cdp-detail-tab ${activeTab===t.key ? "cdp-detail-tab-active" : ""}`}
+                            onClick={() => setBundleMainTab(t.key)}>
+                            <t.Icon size={15} style={{marginRight:5,verticalAlign:-2}}/> {t.label}
+                            <span className="cdp-detail-tab-badge">{t.count}</span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (() => {
+                      const SoleIcon = tabs[0]?.Icon;
+                      return (
+                        <h2 className="cdp-content-title" style={{margin:0,marginBottom:14,display:"flex",alignItems:"center",gap:8}}>
+                          {SoleIcon && <SoleIcon size={18}/>} {tabs[0]?.label}
+                        </h2>
+                      );
+                    })()}
+
+                    {/* Subject pills — pick one subject at a time to keep the page short */}
+                    {subjectsForTab.length > 0 && (
+                      <div className="cdp-subject-pills" style={{display:"flex",flexWrap:"wrap",gap:8,margin:"14px 0 22px"}}>
+                        {subjectsForTab.map(sub => {
+                          const c  = "#6c47d4";
+                          const isActive = sub === activeSubj;
+                          return (
+                            <button key={sub} type="button" onClick={() => setBundleSubj(sub)}
+                              style={{
+                                display:"flex",alignItems:"center",gap:6,
+                                padding:"6px 14px",borderRadius:20,cursor:"pointer",
+                                border:`1.5px solid ${isActive?c:c+"35"}`,
+                                background:isActive?c:"white",
+                                color:isActive?"white":c,
+                                fontWeight:700,fontSize:12.5,
+                              }}>
+                              <span style={{width:7,height:7,borderRadius:"50%",background:isActive?"white":c,display:"inline-block"}}/>
+                              {sub}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Active subject's content */}
+                    {activeSubj && activeTab === "content" && (() => {
+                      const chapters = bundleSubjectChapters(activeSubj);
+                      const lessonCount = chapters.reduce((a,c) => a + (c.lessons?.length||0), 0);
+                      return (
+                        <div style={{border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
+                          <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
+                            <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
+                            <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>{activeSubj}</span>
+                            <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{chapters.length} chapter{chapters.length!==1?"s":""} · {lessonCount} topic{lessonCount!==1?"s":""}</span>
+                          </div>
+                          <div style={{padding:"12px 14px",background:"white"}}>
+                            {chapters.map((chapter, ci) => (
+                              <div key={chapter._id||ci} className={`cdp-chapter ${openChapter===ci ? "cdp-chapter-open" : ""}`}>
+                                <button className="cdp-chapter-hd" onClick={() => setOpenChapter(p => p===ci ? null : ci)}>
+                                  <span className="cdp-chapter-title-row">
+                                    <span className="cdp-chapter-num" style={{background:color,backgroundImage:"none"}}>{ci+1}</span>
+                                    <span className="cdp-chapter-title-txt">{chapter.title}</span>
+                                  </span>
+                                  <span className="cdp-chapter-right">
+                                    <span className="cdp-chapter-count" style={{color,background:`${color}15`}}>{chapter.lessons?.length||0} Lectures</span>
+                                    <span className="cdp-chapter-chevron"><MdExpandMore size={16}/></span>
+                                  </span>
+                                </button>
+                                {openChapter===ci && (
+                                  <div className="cdp-lessons">
+                                    {(chapter.lessons||[]).map((les,li) => (
+                                      <div key={les._id||li} className="cdp-lesson-row">
+                                        <span className="cdp-lesson-icon-wrap" style={course.isEnrolled ? {color} : {color:"#9ca3af",background:"#f3f4f6"}}>
+                                          {course.isEnrolled ? <MdPlayCircle size={14}/> : <MdLock size={12}/>}
+                                        </span>
+                                        <span className="cdp-lesson-name">{les.title}</span>
+                                        {les.duration && <span className="cdp-lesson-dur" style={{color}}>{les.duration}</span>}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {activeSubj && activeTab !== "content" && (() => {
+                      const subMats = bundleSubjectMatsBySections(activeSubj, sections);
+                      return (
+                        <div style={{border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
+                          <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
+                            <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
+                            <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>{activeSubj}</span>
+                            <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{subMats.length} file{subMats.length!==1?"s":""}</span>
+                          </div>
+                          <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8,background:"white"}}>
+                            {subMats.map((mat) => {
+                              const displayTitle = mat.title.replace(`${activeSubj} | `,"");
+                              return (
+                                <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10,position:"relative",overflow:"hidden"}}>
+                                  <div style={{width:38,height:46,background:`${color}15`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${color}25`}}>
+                                    <span style={{fontSize:20}}>{mat.icon}</span>
+                                  </div>
+                                  <div style={{flex:1,minWidth:0}}>
+                                    <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
+                                    <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
+                                  </div>
+                                  {course.isEnrolled ? (
+                                    <a href={mat.fileUrl} target="_blank" rel="noreferrer"
+                                      style={{flexShrink:0,padding:"6px 14px",background:color,color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
+                                      onClick={e=>e.stopPropagation()}>
+                                      View ↗
+                                    </a>
+                                  ) : (
+                                    <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                                      <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        </svg>
+                                      </div>
+                                      <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {!course.isEnrolled && (
+                      <div style={{textAlign:"center",padding:"12px 16px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:12,marginTop:14}}>
+                        <span style={{fontSize:16}}>🔒</span>
+                        <div style={{fontWeight:700,fontSize:13,color:"#6c47d4",marginTop:4}}>
+                          Enroll to unlock all {activeTab==="content" ? "video lessons" : activeTab==="tma" ? "TMA files" : "study materials"}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          )}
 
           {/* Subject course: Course Content / Study Materials tabs */}
           {!isBundle && (hasContent || totalMats > 0) && (
@@ -1463,7 +1548,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
             <div className="cdp-price-meta">
               <div className="cdp-meta-left-g">
                 {isBundle ? (
-                  <span style={{fontSize:11,color:"#f59e0b",fontWeight:700,background:"#fff7ed",padding:"2px 8px",borderRadius:10}}>📦 {bundledSubs.length} Subjects</span>
+                  <span style={{fontSize:11,color:"#6c47d4",fontWeight:700,background:"#6c47d415",padding:"4px 8px",borderRadius:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>📦 {bundledSubs.length} Subjects</span>
                 ) : (
                   <>
                     <span className="sdc-meta-item" style={{fontSize:11,color:"#555"}}>
@@ -1478,9 +1563,9 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                 )}
               </div>
               <div className="cdp-meta-right-g">
-                {isBundle && <span style={{background:"#fef3c7",color:"#92400e",fontWeight:700,fontSize:10,padding:"2px 8px",borderRadius:10}}>BUNDLE</span>}
-                {!isBundle && course.subject && <span className="sdc-tag" style={{background:`${subjectColor}22`,color:subjectColor,fontSize:10}}>{course.subject.toUpperCase()}</span>}
-                {(course.batch||course.className) && <span className="sdc-tag-cls-pill" style={{fontSize:10}}>{(course.batch||course.className).toUpperCase()}</span>}
+                {isBundle && <span style={{background:"#6c47d4",color:"white",fontWeight:700,fontSize:10,padding:"4px 8px",borderRadius:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>BUNDLE</span>}
+                {!isBundle && course.subject && <span className="sdc-tag" style={{background:`${subjectColor}22`,color:subjectColor,fontSize:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>{course.subject.toUpperCase()}</span>}
+                {(course.batch||course.className) && <span className="sdc-tag-cls-pill" style={{fontSize:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>{(course.batch||course.className).toUpperCase()}</span>}
               </div>
             </div>
             <div className="cdp-price-title">{course.title}</div>
@@ -1497,17 +1582,6 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
               <button className="cdp-btn-cart" onClick={handleBuyNow}>Buy Now &nbsp;₹{course.price?.toLocaleString("en-IN")}</button>
             )}
 
-            {/* Bundle quick-info in sidebar */}
-            {isBundle && bundledSubs.length > 0 && (
-              <div style={{marginTop:14,padding:"12px",background:"#EFEFFF",borderRadius:10,border:"1px solid #c5b8f8"}}>
-                <div style={{fontSize:11,fontWeight:700,color:"#4c1d95",marginBottom:8}}>SUBJECTS IN THIS BUNDLE</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                  {bundledSubs.map((s,i) => (
-                    <span key={s} style={{fontSize:11,fontWeight:600,color:SUBJ_COLORS[i%SUBJ_COLORS.length],background:`${SUBJ_COLORS[i%SUBJ_COLORS.length]}15`,padding:"2px 8px",borderRadius:12}}>{s}</span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Apply Coupon — hidden for now per request */}
             {false && !course.isEnrolled && !course.isFree && (
@@ -1540,7 +1614,7 @@ const WATERMARK_POSITIONS = [
   { top:"10%",  left:"45%" },
 ];
 
-function BunnyPlayer({ src, videoId, courseId }) {
+function BunnyPlayer({ src, videoId, courseId, compactQuality }) {
   const videoRef    = useRef(null);
   const hlsRef      = useRef(null);
   const hlsAuthRef  = useRef(null); // { token, expires } for signing segment requests
@@ -1975,9 +2049,10 @@ function BunnyPlayer({ src, videoId, courseId }) {
           {/* quality selector — only meaningful on the hls.js path; native Safari
               HLS has no manual level-switching API */}
           {usingHlsJs && qualityLevels.length > 0 && (
-            <div style={{ position:"absolute", top:10, right:56, zIndex:3 }}>
+            <div className={compactQuality ? "bvp-quality bvp-quality-compact" : "bvp-quality"} style={{ position:"absolute", top:10, right:compactQuality ? 10 : 56, zIndex:3 }}>
               <button
                 onClick={(e) => { e.stopPropagation(); setShowQualityMenu(v => !v); }}
+                className="bvp-quality-btn"
                 style={{
                   display:"flex", alignItems:"center", gap:4, background:"rgba(0,0,0,0.55)",
                   color:"#fff", border:"1px solid rgba(255,255,255,0.3)", borderRadius:6,
@@ -1985,9 +2060,11 @@ function BunnyPlayer({ src, videoId, courseId }) {
                 }}
               >
                 <MdSettings size={15}/>
-                {currentQualityIndex === -1
-                  ? `Auto${activeHeight ? ` ${activeHeight}p` : ""}`
-                  : `${qualityLevels.find(l => l.index === currentQualityIndex)?.height}p`}
+                <span className="bvp-quality-label">
+                  {currentQualityIndex === -1
+                    ? `Auto${activeHeight ? ` ${activeHeight}p` : ""}`
+                    : `${qualityLevels.find(l => l.index === currentQualityIndex)?.height}p`}
+                </span>
               </button>
               {showQualityMenu && (
                 <div style={{
@@ -2020,7 +2097,13 @@ function BunnyPlayer({ src, videoId, courseId }) {
           )}
         </div>
       )}
-      <style>{`@keyframes bvpSeekFlash{0%{opacity:1}70%{opacity:1}100%{opacity:0}}`}</style>
+      <style>{`
+        @keyframes bvpSeekFlash{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+        @media (max-width: 640px) {
+          .bvp-quality-compact .bvp-quality-btn { padding: 6px !important; gap: 0 !important; }
+          .bvp-quality-compact .bvp-quality-label { display: none; }
+        }
+      `}</style>
 
       {/* floating watermark */}
       {wmText && (
@@ -2198,6 +2281,8 @@ function CoursePlayer({ courseId, onBack }) {
   const [showLinkedClasses, setShowLinkedClasses] = useState(false);
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [sidebarTab, setSidebarTab] = useState("videos"); // "videos" | "materials"
+  const [bundleSideTab, setBundleSideTab] = useState("content"); // "content" | "materials" | "tma" — top-level sidebar tab
+  const [openBChapters, setOpenBChapters] = useState({}); // keyed by `${subject}::${chapterIdx}`
   const [watchingLinkedId, setWatchingLinkedId] = useState(null); // linked-class _id currently playing in-app
 
   useEffect(() => {
@@ -2257,7 +2342,8 @@ function CoursePlayer({ courseId, onBack }) {
   }, [courseId]);
 
   const toggleChapter = (idx) => setOpenChapters(prev => ({ ...prev, [idx]: !prev[idx] }));
-  const toggleSubject = (idx) => setOpenSubjects(prev => ({ ...prev, [idx]: !prev[idx] }));
+  // Bundle subject accordion: opening one subject closes all others (only one open at a time)
+  const toggleSubject = (idx) => setOpenSubjects(prev => (prev[idx] ? {} : { [idx]: true }));
 
   const savePosition = (les, ci, li) => {
     const token = localStorage.getItem("studentToken");
@@ -2324,25 +2410,53 @@ function CoursePlayer({ courseId, onBack }) {
     {key:"samplePapers",label:"Sample Papers", Icon:MdArticle,     color:"#10b981"},
     {key:"notes",       label:"Notes",         Icon:MdStickyNote2, color:"#f43f5e"},
   ];
-  const SUBJ_COLORS = ["#6c47d4","#f59e0b","#0ea5e9","#10b981","#f43f5e","#8b5cf6","#06b6d4","#84cc16","#f97316","#ec4899","#14b8a6","#a855f7","#ef4444"];
+  const SUBJ_COLORS = ["#6c47d4"]; // brand purple only — bundle subject dots/badges no longer rainbow-coded
 
-  const getSubjectMats = (sub) =>
-    MAT_SECTIONS.flatMap(s =>
+  // sectionKeys optionally restricts which MAT_SECTIONS to pull from (e.g. TMA-only, or everything-but-TMA)
+  const getSubjectMats = (sub, sectionKeys) => {
+    const keys = sectionKeys || MAT_SECTIONS.map(s => s.key);
+    return MAT_SECTIONS.filter(s => keys.includes(s.key)).flatMap(s =>
       (course.materials?.[s.key]||[])
         .filter(m => m.title.startsWith(`${sub} | `))
         .map(m => ({ ...m, secKey:s.key, Icon:s.Icon, color:s.color, label:s.label }))
     );
+  };
 
   // Bundle materials not tagged to any bundled subject (e.g. an imported file whose
   // title didn't match a subject name) — still shown, just outside the subject list.
-  const getGeneralMats = () =>
-    MAT_SECTIONS.flatMap(s =>
+  const getGeneralMats = (sectionKeys) => {
+    const keys = sectionKeys || MAT_SECTIONS.map(s => s.key);
+    return MAT_SECTIONS.filter(s => keys.includes(s.key)).flatMap(s =>
       (course.materials?.[s.key]||[])
         .filter(m => !bundleSubs.some(sub => m.title.startsWith(`${sub} | `)))
         .map(m => ({ ...m, secKey:s.key, Icon:s.Icon, color:s.color, label:s.label }))
     );
+  };
 
   const openViewer = (mat, secKey, subject) => setViewingMat({ mat, secKey, subject });
+
+  // Video chapters for a bundled subject, stored separately from `course.chapters`
+  const getSubjectChapters = (sub) =>
+    course.subjectContents?.find(sc => sc.subject === sub)?.chapters || [];
+
+  // Bundle chapter accordion (per subject): opening a chapter closes other chapters
+  // within the same subject, but leaves other subjects' chapter state untouched.
+  const toggleBChapter = (sub, ci) => {
+    const key = `${sub}::${ci}`;
+    setOpenBChapters(prev => {
+      const willOpen = !prev[key];
+      const next = {};
+      Object.keys(prev).forEach(k => { if (!k.startsWith(`${sub}::`)) next[k] = prev[k]; });
+      if (willOpen) next[key] = true;
+      return next;
+    });
+  };
+
+  // Top-level sidebar tabs: Course Content / Study Material / TMA — same split as the pre-purchase page
+  const NON_TMA_KEYS = MAT_SECTIONS.filter(s => s.key !== "tma").map(s => s.key);
+  const totalBundleLessons  = bundleSubs.reduce((a,sub) => a + getSubjectChapters(sub).reduce((b,c) => b + (c.lessons?.length||0), 0), 0);
+  const totalBundleStudyMats = NON_TMA_KEYS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
+  const totalBundleTmaMats   = course.materials?.tma?.length || 0;
 
   return (
     <>
@@ -2357,15 +2471,13 @@ function CoursePlayer({ courseId, onBack }) {
         />
       )}
 
-      <div className="scp-wrapper">
+      <div className={`scp-wrapper${isBundle ? " bcp-mode" : ""}`}>
         <div className="scp-header">
           <button className="scp-back-btn" onClick={onBack}><MdArrowBack size={18}/> Back to Courses</button>
           <div className="scp-header-info">
             <div className="scp-course-title">{course.title}</div>
             <div className="scp-course-meta">
-              {isBundle ? (
-                <><span style={{color:"#f59e0b"}}>📦 Bundle</span><span>•</span><span>{bundleSubs.length} Subjects</span></>
-              ) : (
+              {!isBundle && (
                 <><span style={{color:getSubjectColor(course.subject)}}>{subjectIcons[course.subject]||"📚"} {course.subject}</span>
                 <span>•</span><span>{course.batch}</span>
                 <span>•</span><span>{course.chapters?.length||0} Chapters</span>
@@ -2459,10 +2571,10 @@ function CoursePlayer({ courseId, onBack }) {
           </div>
         )}
 
-        <div className="scp-body">
+        <div className={`scp-body${isBundle ? " bcp-browse" : ""}`}>
           {/* ── MAIN AREA ── */}
           <div className="scp-video-area">
-            {!isBundle && (
+            {(!isBundle || lesson) && (
               <>
                 {lesson && ytId && (
                   <>
@@ -2471,7 +2583,7 @@ function CoursePlayer({ courseId, onBack }) {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen className="scp-iframe" title={lesson.title}/>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} chapters={isBundle ? getSubjectChapters(activeLesson?.subject) : course.chapters} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={isBundle ? undefined : toggleComplete}/>
                   </>
                 )}
                 {lesson && lesson.videoType==="custom" && lesson.videoUrl && !ytId && (
@@ -2481,13 +2593,13 @@ function CoursePlayer({ courseId, onBack }) {
                         <source src={lesson.videoUrl}/>
                       </video>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} chapters={isBundle ? getSubjectChapters(activeLesson?.subject) : course.chapters} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={isBundle ? undefined : toggleComplete}/>
                   </>
                 )}
                 {lesson && lesson.videoType==="bunny" && lesson.videoUrl && (
                   <>
-                    <div className="scp-video-wrap"><BunnyPlayer key={lesson._id} src={lesson.videoUrl} videoId={String(lesson._id)} courseId={courseId}/></div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
+                    <div className="scp-video-wrap"><BunnyPlayer key={lesson._id} src={lesson.videoUrl} videoId={String(lesson._id)} courseId={courseId} compactQuality={isBundle}/></div>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} chapters={isBundle ? getSubjectChapters(activeLesson?.subject) : course.chapters} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={isBundle ? undefined : toggleComplete}/>
                   </>
                 )}
                 {lesson && !lessonHasVideo(lesson) && lessonHasNotes(lesson) && (
@@ -2497,20 +2609,20 @@ function CoursePlayer({ courseId, onBack }) {
                       <div style={{fontSize:"1.15rem",fontWeight:700,marginBottom:6}}>{lesson.title}</div>
                       <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.48)"}}>Study materials — no video</div>
                     </div>
-                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={toggleComplete}/>
+                    <LessonInfoPanel lesson={lesson} course={course} activeLesson={activeLesson} chapters={isBundle ? getSubjectChapters(activeLesson?.subject) : course.chapters} isCompleted={completedLessons.has(String(lesson._id))} onToggleComplete={isBundle ? undefined : toggleComplete}/>
                   </>
                 )}
                 {lesson && !lessonHasVideo(lesson) && !lessonHasNotes(lesson) && (
                   <div className="scp-locked"><MdOndemandVideo size={48}/><div>No content available yet</div></div>
                 )}
-                {!lesson && (
+                {!lesson && !isBundle && (
                   <div className="scp-no-lesson"><MdOndemandVideo size={64}/><div>Select a topic to start</div></div>
                 )}
               </>
             )}
 
             {/* Bundle: main welcome area */}
-            {isBundle && (
+            {isBundle && !lesson && (
               <div className="bcp-welcome">
                 {/* Hero */}
                 <div className="bcp-hero">
@@ -2528,8 +2640,10 @@ function CoursePlayer({ courseId, onBack }) {
                 <div className="bcp-subjects-label">Subjects Included</div>
                 <div className="bcp-subject-grid">
                   {bundleSubs.map((s, i) => {
-                    const color   = SUBJ_COLORS[i % SUBJ_COLORS.length];
-                    const subMats = getSubjectMats(s);
+                    const color       = SUBJ_COLORS[i % SUBJ_COLORS.length];
+                    const subMats     = getSubjectMats(s);
+                    const subChapters = getSubjectChapters(s);
+                    const subLessons  = subChapters.reduce((a,c) => a + (c.lessons?.length||0), 0);
                     return (
                       <button key={s} className="bcp-subj-card"
                         style={{"--subj-color": color}}
@@ -2537,24 +2651,32 @@ function CoursePlayer({ courseId, onBack }) {
                           toggleSubject(i);
                           setMobileSidebar(true);
                         }}>
-                        <div className="bcp-subj-dot" style={{background:color}}/>
-                        <span className="bcp-subj-name">{s}</span>
-                        <span className="bcp-subj-count" style={{color,background:`${color}18`}}>
-                          {subMats.length > 0 ? `${subMats.length} files` : "No files"}
-                        </span>
-                        <MdChevronRight size={15} color={color}/>
+                        <div className="bcp-subj-top">
+                          <span className="bcp-subj-dot" style={{background:color}}/>
+                          <span className="bcp-subj-name">{s}</span>
+                        </div>
+                        <div className="bcp-subj-bottom">
+                          <span className="bcp-subj-count" style={{color,background:`${color}18`}}>
+                            {subLessons > 0 ? `${subLessons} topics` : subMats.length > 0 ? `${subMats.length} files` : "No content"}
+                          </span>
+                          <MdChevronRight size={15} color={color}/>
+                        </div>
                       </button>
                     );
                   })}
                   {getGeneralMats().length > 0 && (
                     <button className="bcp-subj-card" style={{"--subj-color":"#64748b"}}
                       onClick={() => { setOpenGeneralMats(true); setMobileSidebar(true); }}>
-                      <div className="bcp-subj-dot" style={{background:"#64748b"}}/>
-                      <span className="bcp-subj-name">General</span>
-                      <span className="bcp-subj-count" style={{color:"#64748b",background:"#64748b18"}}>
-                        {getGeneralMats().length} files
-                      </span>
-                      <MdChevronRight size={15} color="#64748b"/>
+                      <div className="bcp-subj-top">
+                        <span className="bcp-subj-dot" style={{background:"#64748b"}}/>
+                        <span className="bcp-subj-name">General</span>
+                      </div>
+                      <div className="bcp-subj-bottom">
+                        <span className="bcp-subj-count" style={{color:"#64748b",background:"#64748b18"}}>
+                          {getGeneralMats().length} files
+                        </span>
+                        <MdChevronRight size={15} color="#64748b"/>
+                      </div>
                     </button>
                   )}
                 </div>
@@ -2703,10 +2825,37 @@ function CoursePlayer({ courseId, onBack }) {
                     <MdClose size={18}/>
                   </button>
                 </div>
+
+                {/* Top-level: Course Content / Study Material / TMA */}
+                {(() => {
+                  const sideTabs = [
+                    { key:"content",   label:"Content",  Icon: MdPlayCircle, count: totalBundleLessons,   show: totalBundleLessons > 0 },
+                    { key:"materials", label:"Material", Icon: MdFolder,     count: totalBundleStudyMats, show: totalBundleStudyMats > 0 },
+                    { key:"tma",       label:"TMA",       Icon: MdAssignment, count: totalBundleTmaMats,   show: totalBundleTmaMats > 0 },
+                  ].filter(t => t.show);
+                  if (sideTabs.length <= 1) return null;
+                  return (
+                    <div className="bcp-sb-toptabs">
+                      {sideTabs.map(t => (
+                        <button key={t.key} type="button"
+                          className={`bcp-sb-toptab ${bundleSideTab===t.key ? "bcp-sb-toptab-active" : ""}`}
+                          onClick={() => setBundleSideTab(t.key)}>
+                          <t.Icon size={13}/> {t.label}
+                          {t.count > 0 && <span className="bcp-sb-toptab-badge">{t.count}</span>}
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()}
+
                 {bundleSubs.map((sub, si) => {
-                  const color   = SUBJ_COLORS[si % SUBJ_COLORS.length];
-                  const subMats = getSubjectMats(sub);
-                  const isOpen  = !!openSubjects[si];
+                  const color       = SUBJ_COLORS[si % SUBJ_COLORS.length];
+                  const subChapters = getSubjectChapters(sub);
+                  const subLessonCount = subChapters.reduce((a,c) => a + (c.lessons?.length||0), 0);
+                  const matSectionKeys = bundleSideTab === "tma" ? ["tma"] : bundleSideTab === "materials" ? NON_TMA_KEYS : [];
+                  const subMats     = matSectionKeys.length ? getSubjectMats(sub, matSectionKeys) : [];
+                  const isOpen      = !!openSubjects[si];
+                  const activeCount = bundleSideTab === "content" ? subLessonCount : subMats.length;
                   return (
                     <div key={sub} className="bcp-sb-subject">
                       <button
@@ -2716,43 +2865,120 @@ function CoursePlayer({ courseId, onBack }) {
                       >
                         <span className="bcp-sb-dot" style={{background:color}}/>
                         <span className="bcp-sb-subj-name">{sub}</span>
-                        {subMats.length > 0
-                          ? <span className="bcp-sb-badge" style={{color,background:`${color}18`}}>{subMats.length}</span>
+                        {activeCount > 0
+                          ? <span className="bcp-sb-badge" style={{color,background:`${color}18`}}>
+                              {bundleSideTab === "content" ? `${activeCount} topics` : `${activeCount} files`}
+                            </span>
                           : <span className="bcp-sb-nofile">No files</span>}
                         {isOpen ? <MdExpandLess size={16}/> : <MdExpandMore size={16}/>}
                       </button>
 
-                      {isOpen && subMats.length > 0 && (
-                        <div className="bcp-sb-mats">
-                          {subMats.map(mat => {
-                            const displayTitle = mat.title.replace(`${sub} | `, "");
-                            const MatIcon = mat.Icon || MdMenuBook;
-                            return (
-                              <button key={mat._id}
-                                className="bcp-sb-mat-row"
-                                style={{"--mc": mat.color || color}}
-                                onClick={() => { openViewer(mat, mat.secKey, sub); setMobileSidebar(false); }}
-                              >
-                                <span className="bcp-sb-mat-icon" style={{background:`${mat.color||color}15`}}>
-                                  <MatIcon size={14} color={mat.color||color}/>
-                                </span>
-                                <div className="bcp-sb-mat-info">
-                                  <div className="bcp-sb-mat-title">{displayTitle}</div>
-                                  <div className="bcp-sb-mat-type">{mat.label}</div>
-                                </div>
-                                <span className="bcp-sb-mat-view" style={{color:mat.color||color}}>View</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                      {isOpen && (
+                        <>
+                          {bundleSideTab === "content" && subLessonCount === 0 && (
+                            <div className="scp-no-content" style={{padding:"10px 16px"}}>No videos yet</div>
+                          )}
+                          {bundleSideTab !== "content" && subMats.length === 0 && (
+                            <div className="scp-no-content" style={{padding:"10px 16px"}}>No {bundleSideTab==="tma"?"TMA files":"materials"} yet</div>
+                          )}
+
+                          {bundleSideTab === "content" && subLessonCount > 0 && (
+                            <div style={{paddingBottom:4}}>
+                              {subChapters.map((chapter, ci) => {
+                                const chKey  = `${sub}::${ci}`;
+                                const chOpen = !!openBChapters[chKey];
+                                return (
+                                  <div key={chapter._id||ci} className="scp-chapter">
+                                    <button className="scp-chapter-header" onClick={() => toggleBChapter(sub, ci)}>
+                                      <div className="scp-chapter-left">
+                                        <span className="scp-chapter-num">Ch {ci+1}</span>
+                                        <span className="scp-chapter-title bcp-sb-chapter-title">{chapter.title}</span>
+                                      </div>
+                                      <div className="scp-chapter-right">
+                                        {(() => {
+                                          const done = chapter.lessons.filter(l => completedLessons.has(String(l._id))).length;
+                                          return (
+                                            <span className="scp-chapter-count" style={done===chapter.lessons.length&&chapter.lessons.length>0?{color:"#10b981",fontWeight:700}:{}}>
+                                              {done > 0 ? `${done}/${chapter.lessons.length}` : `${chapter.lessons.length} topics`}
+                                            </span>
+                                          );
+                                        })()}
+                                        {chOpen?<MdExpandLess size={18}/>:<MdExpandMore size={18}/>}
+                                      </div>
+                                    </button>
+                                    {chOpen && (
+                                      <div className="scp-lessons">
+                                        {chapter.lessons.length===0 && <div className="scp-no-content" style={{padding:"10px 16px"}}>No topics yet</div>}
+                                        {chapter.lessons.map((les, li) => {
+                                          const isActive  = activeLesson?.subject===sub && activeLesson?.chapterIdx===ci && activeLesson?.lessonIdx===li;
+                                          const canOpen   = lessonAccessible(les);
+                                          const hasNotes  = lessonHasNotes(les);
+                                          const isDone    = completedLessons.has(String(les._id));
+                                          return (
+                                            <button key={les._id||li}
+                                              className={`scp-lesson ${isActive?"scp-lesson-active":""} ${!canOpen?"scp-lesson-locked":""}`}
+                                              onClick={() => { if (canOpen) { setActiveLesson({ subject:sub, chapterIdx:ci, lessonIdx:li, lesson:les }); savePosition(les,ci,li); setMobileSidebar(false); } }}
+                                              disabled={!canOpen}>
+                                              <div className="scp-lesson-left">
+                                                {isDone
+                                                  ? <MdCheckCircle size={15} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
+                                                  : les.videoType==="youtube"&&les.youtubeLink ? <FaYoutube size={14} color={isActive?"#fff":"#ef4444"} style={{flexShrink:0}}/>
+                                                  : les.videoType==="custom"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#6c47d4"} style={{flexShrink:0}}/>
+                                                  : les.videoType==="bunny"&&les.videoUrl ? <FaVideo size={13} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
+                                                  : hasNotes ? <MdAttachFile size={15} color={isActive?"#fff":"#f59e0b"} style={{flexShrink:0}}/>
+                                                  : canOpen ? <FaVideo size={13} color={isActive?"#fff":"#10b981"} style={{flexShrink:0}}/>
+                                                  : <MdLock size={13} className="scp-lock-icon" style={{flexShrink:0}}/>}
+                                                <span className="scp-lesson-name" style={isDone&&!isActive?{color:"#10b981"}:{}}>{les.title}</span>
+                                              </div>
+                                              <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
+                                                {hasNotes && <span className="scp-notes-badge">📎{les.notes.length}</span>}
+                                                {les.duration && <span className="scp-lesson-time">{les.duration}</span>}
+                                              </div>
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {bundleSideTab !== "content" && subMats.length > 0 && (
+                            <div className="bcp-sb-mats">
+                              {subMats.map(mat => {
+                                const displayTitle = mat.title.replace(`${sub} | `, "");
+                                const MatIcon = mat.Icon || MdMenuBook;
+                                return (
+                                  <button key={mat._id}
+                                    className="bcp-sb-mat-row"
+                                    style={{"--mc": mat.color || color}}
+                                    onClick={() => { openViewer(mat, mat.secKey, sub); setMobileSidebar(false); }}
+                                  >
+                                    <span className="bcp-sb-mat-icon" style={{background:`${mat.color||color}15`}}>
+                                      <MatIcon size={14} color={mat.color||color}/>
+                                    </span>
+                                    <div className="bcp-sb-mat-info">
+                                      <div className="bcp-sb-mat-title">{displayTitle}</div>
+                                      <div className="bcp-sb-mat-type">{mat.label}</div>
+                                    </div>
+                                    <span className="bcp-sb-mat-view" style={{color:mat.color||color}}>View</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   );
                 })}
 
                 {/* General/other bundle materials not tagged to any one subject */}
-                {(() => {
-                  const generalMats = getGeneralMats();
+                {bundleSideTab !== "content" && (() => {
+                  const generalSectionKeys = bundleSideTab === "tma" ? ["tma"] : NON_TMA_KEYS;
+                  const generalMats = getGeneralMats(generalSectionKeys);
                   if (!generalMats.length) return null;
                   const color = "#64748b";
                   return (
@@ -2855,7 +3081,8 @@ function CoursePlayer({ courseId, onBack }) {
   );
 }
 
-function LessonInfoPanel({ lesson, course, activeLesson, isCompleted, onToggleComplete }) {
+function LessonInfoPanel({ lesson, course, activeLesson, chapters, isCompleted, onToggleComplete }) {
+  const chapterList = chapters || course.chapters;
   return (
     <div className="scp-lesson-info">
       <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
@@ -2884,7 +3111,7 @@ function LessonInfoPanel({ lesson, course, activeLesson, isCompleted, onToggleCo
       </div>
       {activeLesson && (
         <div className="scp-lesson-chapter">
-          Chapter {activeLesson.chapterIdx+1}: {course.chapters[activeLesson.chapterIdx]?.title}
+          Chapter {activeLesson.chapterIdx+1}: {chapterList?.[activeLesson.chapterIdx]?.title}
         </div>
       )}
       {lesson.notes?.length > 0 && (
