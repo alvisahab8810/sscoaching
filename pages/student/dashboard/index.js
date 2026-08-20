@@ -1112,7 +1112,23 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
   // Bundle: Study Material vs TMA are split into separate tabs — TMA held out of the "materials" section
   const NON_TMA_SECTIONS = matSections.filter(k => k !== "tma");
   const totalStudyMats   = NON_TMA_SECTIONS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
-  const totalTmaMats     = course.materials?.tma?.length || 0;
+  // Same TMA file sometimes ends up imported twice (once tagged to a subject, once
+  // generic/untagged) — dedupe by display title (subject prefix stripped) so the
+  // tab badge count matches what the flat TMA list actually shows.
+  const uniqueTmaMats = (() => {
+    const seen = new Set();
+    return (course.materials?.tma || []).filter(m => {
+      const sepIdx = m.title.indexOf(" | ");
+      const raw = sepIdx >= 0 ? m.title.slice(sepIdx + 3) : m.title;
+      // Strip emoji/punctuation too — some duplicate uploads carry a stray emoji
+      // (e.g. "📄 TMA - X") that a plain lowercase/trim compare wouldn't catch.
+      const key = raw.replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  })();
+  const totalTmaMats     = uniqueTmaMats.length;
   const bundleSubjectMatsBySections = (sub, sections) => sections.flatMap(k =>
     (course.materials?.[k]||[])
       .filter(m => m.title.startsWith(`${sub} | `))
@@ -1215,13 +1231,21 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                 const activeTab = tabs.some(t => t.key === bundleMainTab) ? bundleMainTab : tabs[0]?.key;
                 const sections  = activeTab === "content" ? null : activeTab === "tma" ? ["tma"] : NON_TMA_SECTIONS;
 
-                const subjectsForTab = bundledSubs.filter(sub =>
+                // TMA uploads aren't reliably tagged to a bundled subject (often imported
+                // wholesale from a generic TMA product), so subject-wise grouping was
+                // showing wrong/mismatched per-subject counts. TMA instead shows every
+                // file for the bundle as one flat list — no subject pills, no split.
+                const isTmaTab = activeTab === "tma";
+                const subjectsForTab = isTmaTab ? [] : bundledSubs.filter(sub =>
                   activeTab === "content"
                     ? bundleSubjectChapters(sub).reduce((a,c) => a + (c.lessons?.length||0), 0) > 0
                     : bundleSubjectMatsBySections(sub, sections).length > 0
                 );
                 const activeSubj = subjectsForTab.includes(bundleSubj) ? bundleSubj : subjectsForTab[0];
                 const color      = "#6c47d4";
+                const allTmaMats = isTmaTab
+                  ? uniqueTmaMats.map(m => ({ ...m, icon: matIcons.tma, label: matLabels.tma }))
+                  : [];
 
                 return (
                   <>
@@ -1244,8 +1268,8 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                       );
                     })()}
 
-                    {/* Subject pills — pick one subject at a time to keep the page short */}
-                    {subjectsForTab.length > 0 && (
+                    {/* Subject pills — pick one subject at a time to keep the page short (skipped for TMA, shown as a flat list instead) */}
+                    {!isTmaTab && subjectsForTab.length > 0 && (
                       <div className="cdp-subject-pills" style={{display:"flex",flexWrap:"wrap",gap:8,margin:"14px 0 22px"}}>
                         {subjectsForTab.map(sub => {
                           const c  = "#6c47d4";
@@ -1265,6 +1289,50 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                             </button>
                           );
                         })}
+                      </div>
+                    )}
+
+                    {/* TMA: flat list, no subject grouping */}
+                    {isTmaTab && (
+                      <div style={{border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
+                        <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
+                          <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
+                          <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>TMA</span>
+                          <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{allTmaMats.length} file{allTmaMats.length!==1?"s":""}</span>
+                        </div>
+                        <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8,background:"white"}}>
+                          {allTmaMats.map((mat) => {
+                            const sepIdx = mat.title.indexOf(" | ");
+                            const displayTitle = sepIdx >= 0 ? mat.title.slice(sepIdx + 3) : mat.title;
+                            return (
+                              <div key={mat._id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 12px",background:"#fafafa",border:"1.5px solid #e5e7eb",borderRadius:10,position:"relative",overflow:"hidden"}}>
+                                <div style={{width:38,height:46,background:`${color}15`,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:`1px solid ${color}25`}}>
+                                  <span style={{fontSize:20}}>{mat.icon}</span>
+                                </div>
+                                <div style={{flex:1,minWidth:0}}>
+                                  <div style={{fontWeight:700,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
+                                  <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{mat.label}</div>
+                                </div>
+                                {course.isEnrolled ? (
+                                  <a href={mat.fileUrl} target="_blank" rel="noreferrer"
+                                    style={{flexShrink:0,padding:"6px 14px",background:color,color:"white",borderRadius:8,fontSize:12,fontWeight:700,textDecoration:"none"}}
+                                    onClick={e=>e.stopPropagation()}>
+                                    View ↗
+                                  </a>
+                                ) : (
+                                  <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                                    <div style={{width:32,height:32,background:"#f3f4f6",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid #e5e7eb"}}>
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                      </svg>
+                                    </div>
+                                    <span style={{fontSize:9,color:"#9ca3af",fontWeight:600}}>LOCKED</span>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
 
@@ -2444,7 +2512,22 @@ function CoursePlayer({ courseId, onBack }) {
   const NON_TMA_KEYS = MAT_SECTIONS.filter(s => s.key !== "tma").map(s => s.key);
   const totalBundleLessons  = bundleSubs.reduce((a,sub) => a + getSubjectChapters(sub).reduce((b,c) => b + (c.lessons?.length||0), 0), 0);
   const totalBundleStudyMats = NON_TMA_KEYS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
-  const totalBundleTmaMats   = course.materials?.tma?.length || 0;
+  // Same TMA file sometimes ends up imported twice (once tagged to a subject, once
+  // generic/untagged) — dedupe by display title so the tab badge count matches what
+  // the flat TMA list actually shows.
+  const totalBundleTmaMats   = (() => {
+    const seen = new Set();
+    return (course.materials?.tma || []).filter(m => {
+      const sepIdx = m.title.indexOf(" | ");
+      const raw = sepIdx >= 0 ? m.title.slice(sepIdx + 3) : m.title;
+      // Strip emoji/punctuation too — some duplicate uploads carry a stray emoji
+      // (e.g. "📄 TMA - X") that a plain lowercase/trim compare wouldn't catch.
+      const key = raw.replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).length;
+  })();
 
   return (
     <>
@@ -2652,21 +2735,6 @@ function CoursePlayer({ courseId, onBack }) {
                       </button>
                     );
                   })}
-                  {getGeneralMats().length > 0 && (
-                    <button className="bcp-subj-card" style={{"--subj-color":"#64748b"}}
-                      onClick={() => { setOpenGeneralMats(true); setMobileSidebar(true); }}>
-                      <div className="bcp-subj-top">
-                        <span className="bcp-subj-dot" style={{background:"#64748b"}}/>
-                        <span className="bcp-subj-name">General</span>
-                      </div>
-                      <div className="bcp-subj-bottom">
-                        <span className="bcp-subj-count" style={{color:"#64748b",background:"#64748b18"}}>
-                          {getGeneralMats().length} files
-                        </span>
-                        <MdChevronRight size={15} color="#64748b"/>
-                      </div>
-                    </button>
-                  )}
                 </div>
 
                 {/* Mobile sidebar toggle */}
@@ -2836,7 +2904,56 @@ function CoursePlayer({ courseId, onBack }) {
                   );
                 })()}
 
-                {bundleSubs.map((sub, si) => {
+                {bundleSideTab === "tma" ? (() => {
+                  // TMA uploads aren't reliably tagged to a bundled subject (often
+                  // imported wholesale from a generic TMA product), so subject-wise
+                  // grouping was showing wrong/mismatched per-subject counts. The TMA
+                  // tab instead shows every TMA file for the bundle as one flat list —
+                  // no subject accordion, no subject split.
+                  const rawTmaMats = [
+                    ...bundleSubs.flatMap(sub => getSubjectMats(sub, ["tma"]).map(m => ({...m, _origSubject: sub}))),
+                    ...getGeneralMats(["tma"]).map(m => ({...m, _origSubject: null})),
+                  ];
+                  // Same TMA file sometimes ends up imported twice (once tagged to a
+                  // subject, once generic/untagged) — dedupe by display title so it
+                  // doesn't show as two separate rows.
+                  const seenTmaTitles = new Set();
+                  const allTmaMats = rawTmaMats.filter(mat => {
+                    const raw = mat._origSubject ? mat.title.replace(`${mat._origSubject} | `, "") : mat.title;
+                    // Strip emoji/punctuation too — some duplicate uploads carry a stray emoji
+                    // (e.g. "📄 TMA - X") that a plain lowercase/trim compare wouldn't catch.
+                    const key = raw.replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim().toLowerCase();
+                    if (seenTmaTitles.has(key)) return false;
+                    seenTmaTitles.add(key);
+                    return true;
+                  });
+                  if (!allTmaMats.length) return <div className="scp-no-content" style={{padding:"10px 16px"}}>No TMA files yet</div>;
+                  const color = "#6c47d4";
+                  return (
+                    <div className="bcp-sb-mats" style={{paddingTop:4}}>
+                      {allTmaMats.map(mat => {
+                        const displayTitle = mat._origSubject ? mat.title.replace(`${mat._origSubject} | `, "") : mat.title;
+                        const MatIcon = mat.Icon || MdMenuBook;
+                        return (
+                          <button key={mat._id}
+                            className="bcp-sb-mat-row"
+                            style={{"--mc": mat.color || color}}
+                            onClick={() => { openViewer(mat, mat.secKey, mat._origSubject); setMobileSidebar(false); }}
+                          >
+                            <span className="bcp-sb-mat-icon" style={{background:`${mat.color||color}15`}}>
+                              <MatIcon size={14} color={mat.color||color}/>
+                            </span>
+                            <div className="bcp-sb-mat-info">
+                              <div className="bcp-sb-mat-title">{displayTitle}</div>
+                              <div className="bcp-sb-mat-type">{mat.label}</div>
+                            </div>
+                            <span className="bcp-sb-mat-view" style={{color:mat.color||color}}>View</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })() : bundleSubs.map((sub, si) => {
                   const color       = SUBJ_COLORS[si % SUBJ_COLORS.length];
                   const subChapters = getSubjectChapters(sub);
                   const subLessonCount = subChapters.reduce((a,c) => a + (c.lessons?.length||0), 0);
@@ -2963,8 +3080,9 @@ function CoursePlayer({ courseId, onBack }) {
                   );
                 })}
 
-                {/* General/other bundle materials not tagged to any one subject */}
-                {bundleSideTab !== "content" && (() => {
+                {/* General/other bundle materials not tagged to any one subject
+                    — skipped for the TMA tab, which already folds General into the flat list above */}
+                {bundleSideTab !== "content" && bundleSideTab !== "tma" && (() => {
                   const generalSectionKeys = bundleSideTab === "tma" ? ["tma"] : NON_TMA_KEYS;
                   const generalMats = getGeneralMats(generalSectionKeys);
                   if (!generalMats.length) return null;
