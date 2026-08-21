@@ -26,6 +26,9 @@ export default function handler(req, res) {
     #pages{display:flex;flex-direction:column;align-items:center;padding:20px;gap:20px;}
     canvas{display:block;max-width:100%;box-shadow:0 4px 20px rgba(0,0,0,.5);border-radius:2px;}
     #error{color:#fca5a5;text-align:center;padding:40px;font-size:14px;}
+    .pwrap{background:#4a4a4a;border-radius:2px;display:flex;align-items:center;justify-content:center;max-width:100%;}
+    .pspin{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);
+      border-top-color:#a5b4fc;border-radius:50%;animation:spin .8s linear infinite;}
   </style>
 </head>
 <body>
@@ -85,33 +88,61 @@ export default function handler(req, res) {
         const loadTask = pdfjsLib.getDocument(FILE_URL);
         const pdf = await loadTask.promise;
         const pagesEl = document.getElementById('pages');
+
+        // Only fetch page 1's real metadata up front — awaiting getPage()
+        // for every single page before showing anything (the old code) is
+        // what made big documents feel slow: a 40-page PDF meant 40
+        // sequential round-trips before the very first pixel appeared.
+        // Every other page's viewport is assumed equal to page 1's (true
+        // for virtually every course PDF, which use one page size
+        // throughout) so all placeholders can be laid out instantly; each
+        // page's real object is only fetched right when it's about to
+        // render, and the placeholder is corrected on the rare document
+        // where a page's actual size differs.
+        const firstPage = await pdf.getPage(1);
+        const baseVp    = firstPage.getViewport({ scale: 1.8 });
+
         document.getElementById('loader').style.display = 'none';
         pagesEl.style.display = 'flex';
 
         const pageStates = [];
         for (let n = 1; n <= pdf.numPages; n++) {
-          const page = await pdf.getPage(n);
-          const vp   = page.getViewport({ scale: 1.8 });
           const wrap = document.createElement('div');
-          wrap.style.width    = vp.width + 'px';
-          wrap.style.height   = vp.height + 'px';
-          wrap.style.maxWidth = '100%';
-          wrap.dataset.page   = String(n);
+          wrap.className       = 'pwrap';
+          wrap.style.width     = baseVp.width + 'px';
+          wrap.style.height    = baseVp.height + 'px';
+          wrap.dataset.page    = String(n);
+          wrap.innerHTML       = '<div class="pspin"></div>'; // shown until this page's canvas is ready — no more empty gray gaps
           pagesEl.appendChild(wrap);
-          pageStates.push({ page, vp, wrap, canvas: null, rendering: false });
+          pageStates.push({
+            num: n,
+            page: n === 1 ? firstPage : null,
+            vp: n === 1 ? baseVp : null,
+            wrap, canvas: null, rendering: false,
+          });
         }
 
         async function renderPage(state) {
           if (state.canvas || state.rendering) return;
           state.rendering = true;
-          const canvas = document.createElement('canvas');
-          canvas.width  = state.vp.width;
-          canvas.height = state.vp.height;
-          canvas.style.display = 'block';
-          canvas.style.maxWidth = '100%';
-          canvas.style.boxShadow = '0 4px 20px rgba(0,0,0,.5)';
-          canvas.style.borderRadius = '2px';
           try {
+            if (!state.page) {
+              state.page = await pdf.getPage(state.num);
+              state.vp   = state.page.getViewport({ scale: 1.8 });
+              // Correct the placeholder size if this page's real dimensions
+              // differ from the page-1 assumption used to lay it out.
+              if (state.vp.width !== baseVp.width || state.vp.height !== baseVp.height) {
+                state.wrap.style.width  = state.vp.width + 'px';
+                state.wrap.style.height = state.vp.height + 'px';
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width  = state.vp.width;
+            canvas.height = state.vp.height;
+            canvas.style.display = 'block';
+            canvas.style.maxWidth = '100%';
+            canvas.style.boxShadow = '0 4px 20px rgba(0,0,0,.5)';
+            canvas.style.borderRadius = '2px';
             const ctx = canvas.getContext('2d');
             await state.page.render({ canvasContext: ctx, viewport: state.vp }).promise;
             drawWatermark(ctx, state.vp.width, state.vp.height);
@@ -124,7 +155,7 @@ export default function handler(req, res) {
 
         function unrenderPage(state) {
           if (!state.canvas) return;
-          state.wrap.innerHTML = '';
+          state.wrap.innerHTML = '<div class="pspin"></div>';
           state.canvas = null;
         }
 
@@ -140,6 +171,10 @@ export default function handler(req, res) {
         }, { rootMargin: '800px 0px', threshold: 0 });
 
         pageStates.forEach(s => io.observe(s.wrap));
+        // Kick off page 1 immediately instead of waiting for the observer's
+        // first async callback round-trip — the very first thing the
+        // student sees should start rasterizing with zero delay.
+        if (pageStates[0]) renderPage(pageStates[0]);
       } catch (err) {
         document.getElementById('loader').style.display = 'none';
         const el = document.getElementById('error');

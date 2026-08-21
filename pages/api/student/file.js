@@ -75,9 +75,33 @@ export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  // Without this, pdf.js can't fetch byte-ranges for individual pages — it
+  // has to download the ENTIRE PDF before rendering even page 1. That's the
+  // "long wait, then pages pop in with big blank gaps" symptom: a 20MB
+  // notes PDF meant a full 20MB download up front instead of ~a page at a
+  // time. Advertising range support here lets pdf.js request just the bytes
+  // it needs, per page, on demand — first page shows almost instantly.
+  res.setHeader("Accept-Ranges", "bytes");
 
   const stat = fs.statSync(filePath);
-  res.setHeader("Content-Length", stat.size);
+  const range = req.headers.range;
 
-  fs.createReadStream(filePath).pipe(res);
+  if (range) {
+    const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+    const start = match && match[1] ? parseInt(match[1], 10) : 0;
+    const end   = match && match[2] ? parseInt(match[2], 10) : stat.size - 1;
+
+    if (!match || start > end || end >= stat.size) {
+      res.setHeader("Content-Range", `bytes */${stat.size}`);
+      return res.status(416).end();
+    }
+
+    res.status(206);
+    res.setHeader("Content-Range", `bytes ${start}-${end}/${stat.size}`);
+    res.setHeader("Content-Length", end - start + 1);
+    fs.createReadStream(filePath, { start, end }).pipe(res);
+  } else {
+    res.setHeader("Content-Length", stat.size);
+    fs.createReadStream(filePath).pipe(res);
+  }
 }
