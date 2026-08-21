@@ -65,6 +65,21 @@ export default function handler(req, res) {
       ctx.restore();
     }
 
+    // Rendering every page as a full-resolution canvas up front — the old
+    // code — was the actual crash cause: a 50+ page PDF meant 50+ canvases
+    // around ~1500x2100px each (scale 1.8) ALL held in memory at once. A
+    // mobile WebView's renderer process gets a much smaller memory budget
+    // than a real desktop browser tab, so this blew past it and the OS
+    // OOM-killed the WebView — which is exactly the "opened the PDF,
+    // scrolled a bit, app just closed" symptom (and the occasional
+    // freeze-before-crash is the same memory pressure making the WebView's
+    // UI thread briefly unresponsive, so even the back button stops
+    // reacting). Fix: create a lightweight, correctly-sized placeholder for
+    // every page up front (so scroll position/scrollbar stay accurate),
+    // then only actually rasterize a page's canvas once it scrolls near
+    // the viewport, and tear it back down to a placeholder once it scrolls
+    // away — so only a handful of pages are ever resident in memory,
+    // regardless of how long the document is.
     async function render() {
       try {
         const loadTask = pdfjsLib.getDocument(FILE_URL);
@@ -73,17 +88,58 @@ export default function handler(req, res) {
         document.getElementById('loader').style.display = 'none';
         pagesEl.style.display = 'flex';
 
+        const pageStates = [];
         for (let n = 1; n <= pdf.numPages; n++) {
-          const page     = await pdf.getPage(n);
-          const vp       = page.getViewport({ scale: 1.8 });
-          const canvas   = document.createElement('canvas');
-          canvas.width   = vp.width;
-          canvas.height  = vp.height;
-          const ctx      = canvas.getContext('2d');
-          await page.render({ canvasContext: ctx, viewport: vp }).promise;
-          drawWatermark(ctx, vp.width, vp.height);
-          pagesEl.appendChild(canvas);
+          const page = await pdf.getPage(n);
+          const vp   = page.getViewport({ scale: 1.8 });
+          const wrap = document.createElement('div');
+          wrap.style.width    = vp.width + 'px';
+          wrap.style.height   = vp.height + 'px';
+          wrap.style.maxWidth = '100%';
+          wrap.dataset.page   = String(n);
+          pagesEl.appendChild(wrap);
+          pageStates.push({ page, vp, wrap, canvas: null, rendering: false });
         }
+
+        async function renderPage(state) {
+          if (state.canvas || state.rendering) return;
+          state.rendering = true;
+          const canvas = document.createElement('canvas');
+          canvas.width  = state.vp.width;
+          canvas.height = state.vp.height;
+          canvas.style.display = 'block';
+          canvas.style.maxWidth = '100%';
+          canvas.style.boxShadow = '0 4px 20px rgba(0,0,0,.5)';
+          canvas.style.borderRadius = '2px';
+          try {
+            const ctx = canvas.getContext('2d');
+            await state.page.render({ canvasContext: ctx, viewport: state.vp }).promise;
+            drawWatermark(ctx, state.vp.width, state.vp.height);
+            state.wrap.innerHTML = '';
+            state.wrap.appendChild(canvas);
+            state.canvas = canvas;
+          } catch (e) { /* left as placeholder — will retry next time it scrolls into view */ }
+          state.rendering = false;
+        }
+
+        function unrenderPage(state) {
+          if (!state.canvas) return;
+          state.wrap.innerHTML = '';
+          state.canvas = null;
+        }
+
+        // rootMargin keeps roughly a viewport-height of pages pre-rendered
+        // above/below what's on screen (smooth scroll, no visible pop-in),
+        // while still bounding total resident pages to a small constant.
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const state = pageStates[Number(entry.target.dataset.page) - 1];
+            if (entry.isIntersecting) renderPage(state);
+            else unrenderPage(state);
+          });
+        }, { rootMargin: '800px 0px', threshold: 0 });
+
+        pageStates.forEach(s => io.observe(s.wrap));
       } catch (err) {
         document.getElementById('loader').style.display = 'none';
         const el = document.getElementById('error');

@@ -259,6 +259,9 @@ export default function InvoicePrintPage() {
                 </tr>
               </tbody>
             </table>
+            {invoice.total > 0 && (
+              <div style={{ fontSize:10, color:C.gray, margin:"8px 0 0" }}>Inclusive of GST @ 18% (CGST 9% + SGST 9%)</div>
+            )}
           </div>
 
           {/* Amount in words + signature */}

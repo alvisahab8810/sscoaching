@@ -1180,7 +1180,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
           <div className="cdp-header">
             <h1 className="cdp-title">{course.title}</h1>
             <div style={{display:"flex",gap:8,alignItems:"center",justifyContent:"center",flexWrap:"wrap",marginTop:6}}>
-              {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>BUNDLE</span>}
+              {isBundle && <span style={{background:"#702dff",color:"white",fontWeight:800,fontSize:11,padding:"3px 10px",borderRadius:20}}>COURSE</span>}
               {(course.batch||course.className) && <p className="cdp-class-tag" style={{margin:0}}>{(course.batch||course.className).toUpperCase()}</p>}
               {!isBundle && course.subject && <span style={{background:`${subjectColor}22`,color:subjectColor,fontWeight:700,fontSize:12,padding:"3px 10px",borderRadius:20}}>{course.subject}</span>}
             </div>
@@ -1619,7 +1619,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                 )}
               </div>
               <div className="cdp-meta-right-g">
-                {isBundle && <span style={{background:"#6c47d4",color:"white",fontWeight:700,fontSize:10,padding:"4px 8px",borderRadius:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>BUNDLE</span>}
+                {isBundle && <span style={{background:"#6c47d4",color:"white",fontWeight:700,fontSize:10,padding:"4px 8px",borderRadius:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>COURSE</span>}
                 {!isBundle && course.subject && <span className="sdc-tag" style={{background:`${subjectColor}22`,color:subjectColor,fontSize:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>{course.subject.toUpperCase()}</span>}
                 {(course.batch||course.className) && <span className="sdc-tag-cls-pill" style={{fontSize:10,display:"inline-flex",alignItems:"center",lineHeight:1}}>{(course.batch||course.className).toUpperCase()}</span>}
               </div>
@@ -2701,7 +2701,7 @@ function CoursePlayer({ courseId, onBack }) {
                     <MdInventory2 size={32} color="#fff"/>
                   </div>
                   <h1 className="bcp-hero-title">{course.title}</h1>
-                  <p className="bcp-hero-sub">Bundle Course &nbsp;·&nbsp; {bundleSubs.length} Subjects</p>
+                  <p className="bcp-hero-sub">Course &nbsp;·&nbsp; {bundleSubs.length} Subjects</p>
                   <div className="bcp-protected-pill">
                     <MdLock size={11}/> All materials are protected
                   </div>

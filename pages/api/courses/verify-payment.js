@@ -1,83 +1,15 @@
 // pages/api/courses/verify-payment.js
-// UPDATED: Generates invoice + sends email after successful payment
+// Client-triggered enrollment after Razorpay checkout closes successfully.
+// NOTE: this is not the only path that can create the enrollment — see
+// pages/api/webhooks/razorpay.js, which does the same thing server-side as
+// a safety net in case this call never reaches us (app killed / network
+// drop right after payment). Both paths share lib/completeEnrollment.js and
+// are idempotent, so whichever fires first "wins" and the other is a no-op.
 
 import dbConnect from "@/lib/dbConnect";
-import Course from "@/models/CourseModel";
-import Enrollment from "@/models/EnrollmentModel";
-import Invoice from "@/models/Invoice";
-import StudentUser from "@/models/StudentUser";
+import { completeEnrollment } from "@/lib/completeEnrollment";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-
-// ─── Invoice helpers ───────────────────────────────────────────────────────
-// We import lazily so that if puppeteer is not installed yet (local dev),
-// only the email-without-PDF fallback is used.
-async function tryGenerateAndSendInvoice({ enrollment, course, student, invoiceData }) {
-  try {
-    // Create the invoice document
-    const invoice = await Invoice.create({
-      student:    student.id,
-      course:     course._id,
-      enrollment: enrollment._id,
-
-      // Student snapshot
-      studentName:  student.name  || "",
-      studentPhone: student.phone || "",
-      studentEmail: student.email || "",
-
-      // Course snapshot
-      courseTitle:   course.title   || "",
-      courseSubject: course.subject || "",
-      courseBatch:   course.batch   || "",
-
-      // Payment
-      orderId:    invoiceData.orderId,
-      paymentId:  invoiceData.paymentId,
-      paymentMethod: "Razorpay",
-
-      // Amounts
-      subtotal:   invoiceData.subtotal,
-      discount:   invoiceData.discount,
-      couponCode: invoiceData.couponCode,
-      tax:        0,
-      total:      invoiceData.total,
-
-      status: "paid",
-    });
-
-    // Send email (try with PDF first, fallback to HTML-only)
-    if (student.email) {
-      try {
-        const { sendInvoiceEmail } = await import("@/lib/sendInvoiceEmail");
-        const result = await sendInvoiceEmail({ invoice, studentEmail: student.email });
-        if (result.success) {
-          await Invoice.findByIdAndUpdate(invoice._id, {
-            emailSent: true,
-            emailSentAt: new Date(),
-            pdfGenerated: true,
-          });
-        } else {
-          // PDF failed — try HTML-only email
-          const { sendInvoiceEmailHtmlOnly } = await import("@/lib/sendInvoiceEmail");
-          const r2 = await sendInvoiceEmailHtmlOnly({ invoice, studentEmail: student.email });
-          if (r2.success) {
-            await Invoice.findByIdAndUpdate(invoice._id, { emailSent: true, emailSentAt: new Date() });
-          }
-        }
-      } catch (emailErr) {
-        // Email failed — invoice is still saved, student can download from dashboard
-        console.error("Invoice email failed (non-fatal):", emailErr.message);
-      }
-    }
-
-    return invoice;
-  } catch (invoiceErr) {
-    // Invoice generation is non-fatal — enrollment already created, don't fail the request
-    console.error("Invoice creation failed (non-fatal):", invoiceErr.message);
-    return null;
-  }
-}
-// ──────────────────────────────────────────────────────────────────────────
 
 function getStudent(req) {
   try {
@@ -92,17 +24,6 @@ export default async function handler(req, res) {
 
   const tokenStudent = getStudent(req);
   if (!tokenStudent) return res.status(401).json({ error: "Unauthorized" });
-
-  // Some older login/register routes issue JWTs without an `email` field
-  // (phone-only payload) — re-fetch from DB so invoice/email always has the
-  // real, current email regardless of which flow issued this session token.
-  const dbStudent = await StudentUser.findById(tokenStudent.id).lean();
-  const student = {
-    id:    tokenStudent.id,
-    name:  dbStudent?.name  || tokenStudent.name  || "",
-    phone: dbStudent?.phone || tokenStudent.phone || "",
-    email: dbStudent?.email || tokenStudent.email || "",
-  };
 
   const {
     razorpay_order_id,
@@ -125,49 +46,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "No courses to enroll" });
 
   const source = req.headers["x-source"] === "app" ? "app" : "web";
-  const results = [];
 
-  for (const courseId of courseIds) {
-    try {
-      const course = await Course.findById(courseId).lean();
-      if (!course) { results.push({ courseId, success: false, error: "Course not found" }); continue; }
-
-      const coursePrice = Number(course.price || 0);
-
-      // ── Create enrollment ──
-      const enrollment = await Enrollment.create({
-        student:    student.id,
-        course:     courseId,
-        type:       "paid",
-        orderId:    razorpay_order_id,
-        paymentId:  razorpay_payment_id,
-        amountPaid: coursePrice,
-        source,
-      });
-
-      await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
-
-      // ── Generate invoice + send email (non-blocking, non-fatal) ──
-      const invoice = await tryGenerateAndSendInvoice({
-        enrollment,
-        course,
-        student,
-        invoiceData: {
-          orderId:    razorpay_order_id,
-          paymentId:  razorpay_payment_id,
-          subtotal:   coursePrice,
-          discount:   0,
-          couponCode: "",
-          total:      coursePrice,
-        },
-      });
-
-      results.push({ courseId, success: true, invoiceNumber: invoice?.invoiceNumber, emailSent: !!invoice?.emailSent });
-    } catch (err) {
-      if (err.code === 11000) results.push({ courseId, success: false, error: "Already enrolled" });
-      else { console.error(err); results.push({ courseId, success: false, error: "Enrollment failed" }); }
-    }
-  }
+  const results = await completeEnrollment({
+    studentId: tokenStudent.id,
+    courseIds,
+    orderId:   razorpay_order_id,
+    paymentId: razorpay_payment_id,
+    source,
+  });
 
   const anyOk = results.some((r) => r.success);
   if (!anyOk) return res.status(400).json({ error: results[0]?.error || "Enrollment failed after payment" });
