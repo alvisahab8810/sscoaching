@@ -68,21 +68,20 @@ export default function handler(req, res) {
       ctx.restore();
     }
 
-    // Rendering every page as a full-resolution canvas up front — the old
-    // code — was the actual crash cause: a 50+ page PDF meant 50+ canvases
-    // around ~1500x2100px each (scale 1.8) ALL held in memory at once. A
-    // mobile WebView's renderer process gets a much smaller memory budget
-    // than a real desktop browser tab, so this blew past it and the OS
-    // OOM-killed the WebView — which is exactly the "opened the PDF,
-    // scrolled a bit, app just closed" symptom (and the occasional
-    // freeze-before-crash is the same memory pressure making the WebView's
-    // UI thread briefly unresponsive, so even the back button stops
-    // reacting). Fix: create a lightweight, correctly-sized placeholder for
-    // every page up front (so scroll position/scrollbar stay accurate),
-    // then only actually rasterize a page's canvas once it scrolls near
-    // the viewport, and tear it back down to a placeholder once it scrolls
-    // away — so only a handful of pages are ever resident in memory,
-    // regardless of how long the document is.
+    // Rendering every page as a full-resolution canvas up front used to be
+    // the crash cause: a 50+ page PDF meant 50+ canvases around ~1500x2100px
+    // each (scale 1.8) ALL held in memory at once. A mobile WebView's
+    // renderer process gets a much smaller memory budget than a real
+    // desktop browser tab, so this blew past it and the OS OOM-killed the
+    // WebView — the "opened the PDF, scrolled a bit, app just closed"
+    // symptom. Fix: a lightweight, correctly-sized placeholder for every
+    // page up front (so scroll position/scrollbar stay accurate), each
+    // page's canvas rasterized once it scrolls near the viewport — and,
+    // unlike the very first version of this fix, a rendered page is now
+    // KEPT once rendered (no blank pop-in on re-scroll) unless the resident
+    // page count grows past MAX_RESIDENT below, in which case the oldest
+    // off-screen page is recycled first. Short/medium documents never hit
+    // that cap, so in practice they render once and stay fully visible.
     async function render() {
       try {
         const loadTask = pdfjsLib.getDocument(FILE_URL);
@@ -149,26 +148,57 @@ export default function handler(req, res) {
             state.wrap.innerHTML = '';
             state.wrap.appendChild(canvas);
             state.canvas = canvas;
+            resident++;
+            evictIfNeeded();
           } catch (e) { /* left as placeholder — will retry next time it scrolls into view */ }
           state.rendering = false;
         }
 
+        let resident = 0; // how many pages currently have a rendered canvas
         function unrenderPage(state) {
           if (!state.canvas) return;
           state.wrap.innerHTML = '<div class="pspin"></div>';
           state.canvas = null;
+          resident--;
         }
 
-        // rootMargin keeps roughly a viewport-height of pages pre-rendered
-        // above/below what's on screen (smooth scroll, no visible pop-in),
-        // while still bounding total resident pages to a small constant.
+        // Unrendering a page the moment it scrolls off-screen (the old
+        // behaviour) is what caused the visible blank pop-in the student
+        // reported: normal scroll speed easily outran the render, and a
+        // page you'd already seen would blank back out and have to
+        // re-render every time you passed it again. Instead, a page that
+        // scrolls off-screen is only marked *eligible* for eviction — it
+        // keeps its canvas. Eviction only actually runs once MAX_RESIDENT
+        // pages are rendered at once, oldest off-screen page first. Short
+        // and medium documents (assignments, TMAs, sample papers — almost
+        // everything students open) never reach that cap, so once a page
+        // has rendered it stays rendered permanently: zero blank space.
+        // Only genuinely long documents (50+ page books) start recycling
+        // old pages, which is the original OOM-crash protection, preserved.
+        const MAX_RESIDENT = 24;
+        const offscreenQueue = [];
+        function evictIfNeeded() {
+          while (resident > MAX_RESIDENT) {
+            const idx = offscreenQueue.findIndex(s => s.canvas && !s.visible);
+            if (idx === -1) break; // nothing safe to evict right now
+            unrenderPage(offscreenQueue.splice(idx, 1)[0]);
+          }
+        }
+
+        // rootMargin pre-renders roughly two viewport-heights of pages
+        // above/below what's on screen, so pages are ready well before
+        // they're scrolled into view.
         const io = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             const state = pageStates[Number(entry.target.dataset.page) - 1];
-            if (entry.isIntersecting) renderPage(state);
-            else unrenderPage(state);
+            state.visible = entry.isIntersecting;
+            if (entry.isIntersecting) {
+              renderPage(state);
+            } else if (state.canvas && !offscreenQueue.includes(state)) {
+              offscreenQueue.push(state);
+            }
           });
-        }, { rootMargin: '800px 0px', threshold: 0 });
+        }, { rootMargin: '1200px 0px', threshold: 0 });
 
         pageStates.forEach(s => io.observe(s.wrap));
         // Kick off page 1 immediately instead of waiting for the observer's
