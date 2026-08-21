@@ -104,12 +104,44 @@ export default function handler(req, res) {
         document.getElementById('loader').style.display = 'none';
         pagesEl.style.display = 'flex';
 
+        // .pwrap has max-width:100% (so wide PDF pages don't cause
+        // horizontal overflow/scroll on a narrow phone screen) — the
+        // BROWSER shrinks the wrap's displayed WIDTH to fit, but a wrap
+        // sized with an explicit pixel HEIGHT (the old code: raw
+        // baseVp.height / vp.height, never adjusted for that shrink) stays
+        // at its full unscaled height regardless. On any screen narrower
+        // than the PDF's rendered pixel width (every phone: scale 1.8 on a
+        // normal A4/Letter page is ~1000-1100px wide, versus a ~360-430px
+        // CSS-pixel-wide phone viewport) that mismatch is huge — e.g. a
+        // wrap correctly shrunk to 380px wide by CSS but still 1500px
+        // tall, with its canvas centered inside via align-items/
+        // justify-content, leaves ~950px of pure blank space around every
+        // single page's actual (correctly-shrunk) content. That's exactly
+        // the "blank space, then a page's content, then blank space, then
+        // the next page" symptom on real devices — desktop-width Puppeteer/
+        // browser tests never trigger it because there the raw pixel width
+        // is already narrower than the viewport, so max-width:100% never
+        // engages and wrap height/width both stay in their true ratio.
+        //
+        // Fix: compute each placeholder's on-screen size ourselves —
+        // scaled down to fit the actual available width — so width and
+        // height always shrink together in the real aspect ratio, and the
+        // wrap is never taller than the content it will actually hold.
+        const H_PAD = 40; // #pages has padding:20px on all sides
+        function displaySize(vp) {
+          const available = (pagesEl.clientWidth || document.documentElement.clientWidth || vp.width) - H_PAD;
+          const scale = available > 0 ? Math.min(1, available / vp.width) : 1;
+          return { w: Math.round(vp.width * scale), h: Math.round(vp.height * scale) };
+        }
+
+        const baseSize = displaySize(baseVp);
+
         const pageStates = [];
         for (let n = 1; n <= pdf.numPages; n++) {
           const wrap = document.createElement('div');
           wrap.className       = 'pwrap';
-          wrap.style.width     = baseVp.width + 'px';
-          wrap.style.height    = baseVp.height + 'px';
+          wrap.style.width     = baseSize.w + 'px';
+          wrap.style.height    = baseSize.h + 'px';
           wrap.dataset.page    = String(n);
           wrap.innerHTML       = '<div class="pspin"></div>'; // shown until this page's canvas is ready — no more empty gray gaps
           pagesEl.appendChild(wrap);
@@ -128,18 +160,23 @@ export default function handler(req, res) {
             if (!state.page) {
               state.page = await pdf.getPage(state.num);
               state.vp   = state.page.getViewport({ scale: 1.8 });
-              // Correct the placeholder size if this page's real dimensions
-              // differ from the page-1 assumption used to lay it out.
-              if (state.vp.width !== baseVp.width || state.vp.height !== baseVp.height) {
-                state.wrap.style.width  = state.vp.width + 'px';
-                state.wrap.style.height = state.vp.height + 'px';
-              }
             }
+            // Always (re)apply the scaled-to-fit display size before this
+            // page's canvas ever paints — not just when this page's raw
+            // vp differs from page 1's. Every page needs its wrap's width
+            // AND height shrunk together in lockstep with the actual
+            // available screen width, or the wrap ends up taller than the
+            // canvas it holds (see displaySize() comment above).
+            const size = displaySize(state.vp);
+            state.wrap.style.width  = size.w + 'px';
+            state.wrap.style.height = size.h + 'px';
+
             const canvas = document.createElement('canvas');
             canvas.width  = state.vp.width;
             canvas.height = state.vp.height;
             canvas.style.display = 'block';
-            canvas.style.maxWidth = '100%';
+            canvas.style.width  = size.w + 'px';
+            canvas.style.height = size.h + 'px';
             canvas.style.boxShadow = '0 4px 20px rgba(0,0,0,.5)';
             canvas.style.borderRadius = '2px';
             const ctx = canvas.getContext('2d');
