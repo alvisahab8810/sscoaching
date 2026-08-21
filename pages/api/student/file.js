@@ -9,6 +9,38 @@ import Course from "@/models/CourseModel";
 
 export const config = { api: { responseLimit: false } };
 
+// Range loading means pdf.js now issues many small byte-range requests for
+// one document (a chunk per page or so) instead of a single full download.
+// Re-running the JWT verify + Enrollment + Course Mongo lookups on EVERY
+// one of those chunk requests undoes the whole point of range loading —
+// each one was measured taking 400-900ms, almost entirely DB round-trip,
+// so a 10-chunk PDF paid that cost 10 times over instead of once. This
+// caches the "is this student allowed to read this exact file" decision
+// for a few minutes so only the first chunk of a viewing session actually
+// hits the DB; the rest are served straight off disk. A short TTL keeps
+// the security window small — a de-enrolled student loses access again
+// within minutes, not with the next server restart.
+const authCache = new Map(); // `${studentId}:${courseId}:${matId}` -> { filePath, expires }
+const AUTH_CACHE_TTL_MS = 5 * 60 * 1000;
+
+function getCachedFilePath(key) {
+  const hit = authCache.get(key);
+  if (!hit) return null;
+  if (Date.now() > hit.expires) { authCache.delete(key); return null; }
+  return hit.filePath;
+}
+
+function setCachedFilePath(key, filePath) {
+  authCache.set(key, { filePath, expires: Date.now() + AUTH_CACHE_TTL_MS });
+  // Cheap unbounded-growth guard — this endpoint is only ever hit by
+  // logged-in students viewing course material, so traffic is naturally
+  // small, but never let a long-running process accumulate forever.
+  if (authCache.size > 2000) {
+    const oldestKey = authCache.keys().next().value;
+    authCache.delete(oldestKey);
+  }
+}
+
 function resolveFilePath(fileUrl) {
   // New: /private_uploads/filename.ext → outside public
   if (fileUrl.startsWith("/private_uploads/")) {
@@ -35,29 +67,36 @@ export default async function handler(req, res) {
     return res.status(401).send("Unauthorized");
   }
 
-  await dbConnect();
+  const cacheKey = `${studentId}:${courseId}:${matId}`;
+  let filePath = getCachedFilePath(cacheKey);
 
-  const enrolled = await Enrollment.findOne({
-    student: studentId,
-    course: courseId,
-    $or: [{ status: "active" }, { status: { $exists: false } }],
-  }).lean();
-  if (!enrolled) return res.status(403).send("Not enrolled in this course");
+  if (!filePath) {
+    await dbConnect();
 
-  const course = await Course.findById(courseId).lean();
-  if (!course) return res.status(404).send("Course not found");
+    const enrolled = await Enrollment.findOne({
+      student: studentId,
+      course: courseId,
+      $or: [{ status: "active" }, { status: { $exists: false } }],
+    }).lean();
+    if (!enrolled) return res.status(403).send("Not enrolled in this course");
 
-  const SECTIONS = ["books", "tma", "assignments", "samplePapers", "notes"];
-  let fileUrl = null;
-  for (const sec of SECTIONS) {
-    const mat = (course.materials?.[sec] || []).find(m => m._id.toString() === matId);
-    if (mat) { fileUrl = mat.fileUrl; break; }
+    const course = await Course.findById(courseId).lean();
+    if (!course) return res.status(404).send("Course not found");
+
+    const SECTIONS = ["books", "tma", "assignments", "samplePapers", "notes"];
+    let fileUrl = null;
+    for (const sec of SECTIONS) {
+      const mat = (course.materials?.[sec] || []).find(m => m._id.toString() === matId);
+      if (mat) { fileUrl = mat.fileUrl; break; }
+    }
+    if (!fileUrl) return res.status(404).send("File not found");
+
+    filePath = resolveFilePath(fileUrl);
+    if (!filePath || !fs.existsSync(filePath))
+      return res.status(404).send("File missing on server");
+
+    setCachedFilePath(cacheKey, filePath);
   }
-  if (!fileUrl) return res.status(404).send("File not found");
-
-  const filePath = resolveFilePath(fileUrl);
-  if (!filePath || !fs.existsSync(filePath))
-    return res.status(404).send("File missing on server");
 
   const ext = path.extname(filePath).toLowerCase();
   const MIME = {
