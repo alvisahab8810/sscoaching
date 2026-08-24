@@ -36,15 +36,19 @@ export default function DeleteAccountPage() {
             <h3>How to Request Account Deletion</h3>
 
             <p>
-              Send an email to{" "}
+              <strong>Option 1 — Delete directly in the app:</strong> Open the
+              SS Coaching app, go to <strong>Profile → Delete Account</strong>,
+              and confirm the deletion. Your account will be deleted
+              immediately.
+            </p>
+
+            <p>
+              <strong>Option 2 — Request by email:</strong> Send an email to{" "}
               <strong>
                 <a href="mailto:contact@sscoaching.in">contact@sscoaching.in</a>
               </strong>{" "}
               from your registered email address, along with your registered
               mobile number, and mention that you want your account deleted.
-            </p>
-
-            <p>
               We will verify your request and delete your account within{" "}
               <strong>7 days</strong>.
             </p>
