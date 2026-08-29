@@ -14,16 +14,14 @@ function getStudent(req) {
 }
 
 async function isEnrolled(studentId, courseId) {
-  // Direct enrollment
+  // Direct enrollment only. A bundle that includes this course does NOT
+  // grant access to the standalone course's own progress record — that
+  // content is only reachable through the bundle's own player (which always
+  // tracks progress against the bundle's own courseId, never this one). See
+  // pages/api/courses/index.js and [id].js for the matching listing/detail
+  // rule.
   const direct = await Enrollment.findOne({ student: studentId, course: courseId, status: "active" });
-  if (direct) return true;
-  // Bundle enrollment
-  const { default: Course } = await import("@/models/CourseModel");
-  const allEnr = await Enrollment.find({ student: studentId, status: "active" }).select("course").lean();
-  const ids = allEnr.map(e => String(e.course));
-  if (!ids.length) return false;
-  const bundle = await Course.findOne({ _id: { $in: ids }, courseType: "bundle", includedCourses: courseId }).select("_id").lean();
-  return !!bundle;
+  return !!direct;
 }
 
 export default async function handler(req, res) {
@@ -41,6 +39,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       completedLessons: progress?.completedLessons?.map(String) || [],
+      completedMaterials: progress?.completedMaterials?.map(String) || [],
       lastLessonId:   progress?.lastLessonId   ? String(progress.lastLessonId)   : null,
       lastChapterIdx: progress?.lastChapterIdx ?? 0,
       lastLessonIdx:  progress?.lastLessonIdx  ?? 0,
@@ -49,7 +48,7 @@ export default async function handler(req, res) {
 
   /* ── POST — update progress ── */
   if (req.method === "POST") {
-    const { lessonId, chapterIdx, lessonIdx, action } = req.body;
+    const { lessonId, materialId, chapterIdx, lessonIdx, action } = req.body;
     // action: "complete" | "uncomplete" | "position"
 
     const update = {};
@@ -65,6 +64,14 @@ export default async function handler(req, res) {
       update.lastLessonId   = lessonId;
       update.lastChapterIdx = chapterIdx ?? 0;
       update.lastLessonIdx  = lessonIdx  ?? 0;
+    } else if (materialId) {
+      // Study material (book/TMA/assignment/sample paper/note) opened —
+      // counts toward progress the same way a completed lesson does.
+      if (action === "complete") {
+        arrayOps.$addToSet = { completedMaterials: materialId };
+      } else if (action === "uncomplete") {
+        arrayOps.$pull = { completedMaterials: materialId };
+      }
     }
 
     await CourseProgress.findOneAndUpdate(

@@ -17,6 +17,15 @@ function countLessons(course) {
   return (course.chapters || []).reduce((a, c) => a + (c.lessons?.length || 0), 0);
 }
 
+// Study materials (books/TMA/assignments/sample papers/notes) live in one
+// flat `materials` object regardless of courseType — same fields the
+// CourseDetailScreen "Study Material"/"TMA" tabs read from.
+const MATERIAL_KEYS = ["books", "tma", "assignments", "samplePapers", "notes"];
+function countMaterials(course) {
+  if (!course?.materials) return 0;
+  return MATERIAL_KEYS.reduce((sum, k) => sum + (course.materials[k]?.length || 0), 0);
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).end();
   await dbConnect();
@@ -29,7 +38,7 @@ export default async function handler(req, res) {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
 
     const enrollments = await Enrollment.find({ student: id })
-      .populate({ path: "course", select: "title subject featureImage price batch isFree status courseType bundledSubjects chapters subjectContents" })
+      .populate({ path: "course", select: "title subject featureImage price batch isFree status courseType bundledSubjects chapters subjectContents materials" })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -38,18 +47,24 @@ export default async function handler(req, res) {
     // always rendered stuck at 0% no matter how much was watched.
     const courseIds = enrollments.map(e => e.course?._id).filter(Boolean);
     const progressDocs = courseIds.length
-      ? await CourseProgress.find({ student: id, course: { $in: courseIds } }).select("course completedLessons").lean()
+      ? await CourseProgress.find({ student: id, course: { $in: courseIds } }).select("course completedLessons completedMaterials").lean()
       : [];
     const progressByCourse = new Map(progressDocs.map(p => [String(p.course), p]));
 
     const data = enrollments.map(e => {
       const course = e.course || {};
-      const total = countLessons(course);
-      const done = progressByCourse.get(String(course._id))?.completedLessons?.length || 0;
+      const p = progressByCourse.get(String(course._id));
+      // Progress % now spans both video lessons and study materials (books,
+      // TMA, assignments, sample papers, notes) — opening a material counts
+      // the same as completing a lesson, so reading-only courses (or courses
+      // with no videos) can still show real progress instead of staying at 0%.
+      const total = countLessons(course) + countMaterials(course);
+      const done = (p?.completedLessons?.length || 0) + (p?.completedMaterials?.length || 0);
       const progress = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
-      // chapters/subjectContents were only populated to count lessons above —
-      // strip them back out so the response payload stays as light as before.
-      const { chapters, subjectContents, ...courseRest } = course;
+      // chapters/subjectContents/materials were only populated to count
+      // items above — strip them back out so the response payload stays as
+      // light as before.
+      const { chapters, subjectContents, materials, ...courseRest } = course;
       return { ...e, course: courseRest, progress };
     });
 

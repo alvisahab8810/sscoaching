@@ -95,17 +95,14 @@ export default async function handler(req, res) {
 
         const enrolledIds = new Set(enrollments.map(e => String(e.course)));
 
-        // For bundle enrollments, also mark all includedCourses as enrolled
-        const bundleEnrolledIds = new Set();
-        for (const c of _courseCache) {
-          if (c.courseType === "bundle" && enrolledIds.has(String(c._id))) {
-            (c.includedCourses || []).forEach(id => bundleEnrolledIds.add(String(id)));
-          }
-        }
-
+        // Direct enrollment only — a course included in a bundle the student
+        // owns must still show "Buy Now" here, not "Enrolled". That content
+        // is only meant to be reached through the bundle's own player; this
+        // listing is for the standalone product, which is a separate
+        // purchase.
         const courses = _courseCache.map(c => ({
           ...c,
-          isEnrolled: enrolledIds.has(String(c._id)) || bundleEnrolledIds.has(String(c._id)),
+          isEnrolled: enrolledIds.has(String(c._id)),
         }));
 
         return res.status(200).json({ success: true, courses });

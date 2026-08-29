@@ -16,14 +16,10 @@ function getStudent(req) {
 }
 
 async function isEnrolled(studentId, courseId) {
+  // Direct enrollment only — see pages/api/courses/[id]/progress.js for why
+  // bundle-inclusion no longer grants access to the standalone course.
   const direct = await Enrollment.findOne({ student: studentId, course: courseId, status: "active" });
-  if (direct) return true;
-  const { default: Course } = await import("@/models/CourseModel");
-  const allEnr = await Enrollment.find({ student: studentId, status: "active" }).select("course").lean();
-  const ids = allEnr.map(e => String(e.course));
-  if (!ids.length) return false;
-  const bundle = await Course.findOne({ _id: { $in: ids }, courseType: "bundle", includedCourses: courseId }).select("_id").lean();
-  return !!bundle;
+  return !!direct;
 }
 
 export default async function handler(req, res) {

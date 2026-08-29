@@ -42,23 +42,15 @@ export default async function handler(req, res) {
       const studentId = getStudentId(req);
       let isEnrolled = false;
       if (studentId) {
-        // Direct enrollment check
+        // Direct enrollment only — a bundle that happens to include this
+        // course does NOT unlock it here. Bundle owners already have this
+        // exact content inside the bundle's own player (BundlePlayerScreen,
+        // keyed off the bundle's own courseId); this standalone product page
+        // is a separate purchasable listing and must always require its own
+        // payment, never silently show "Enrolled" just because the same
+        // lectures were bought as part of a bundle.
         const enr = await Enrollment.findOne({ student: studentId, course: id, status: "active" });
         isEnrolled = !!enr;
-
-        // Bundle enrollment check — student may have bought a bundle that includes this course
-        if (!isEnrolled) {
-          const allEnrollments = await Enrollment.find({ student: studentId, status: "active" }).select("course").lean();
-          const enrolledCourseIds = allEnrollments.map(e => String(e.course));
-          if (enrolledCourseIds.length > 0) {
-            const bundleWithThisCourse = await Course.findOne({
-              _id: { $in: enrolledCourseIds },
-              courseType: "bundle",
-              includedCourses: id,
-            }).select("_id").lean();
-            isEnrolled = !!bundleWithThisCourse;
-          }
-        }
       }
       if (!isEnrolled) {
         return res.status(200).json({
