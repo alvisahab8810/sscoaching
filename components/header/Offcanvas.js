@@ -452,7 +452,7 @@ export default function Offcanvas() {
                         aria-expanded="false"
                         aria-controls="collapseResults"
                       >
-                        NIOS Results
+                        NIOS Datesheet
                       </button>
                     </h2>
                     <div
@@ -463,11 +463,7 @@ export default function Offcanvas() {
                     >
                       <div className="accordion-body">
                         <ul className="list-unstyled">
-                          <li>
-                            <Link href="/nios-results" className="mb-2">
-                              NIOS Results 2026
-                            </Link>
-                          </li>
+                        
                           <li>
                             <Link href="/nios-class-12th-result" className="mb-2">
                               NIOS Class 12th Result 2026

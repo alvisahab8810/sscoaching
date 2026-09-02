@@ -462,7 +462,7 @@ export default function Header() {
                 <span className="dropdown-toggle">
                   <Link href="/nios-results">
 
-                   NIOS Results <FiChevronDown className="arrow-icon" />
+                   NIOS Datesheet <FiChevronDown className="arrow-icon" />
                   </Link>
                 </span>
                 {openDropdown === "niosresults" && (
