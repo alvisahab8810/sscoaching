@@ -454,25 +454,25 @@ export default function Header() {
               </div>
 
               {/* NIOS Results Dropdown */}
-              <div
+              {/* <div
                 className="nav-item dropdown"
                 onMouseEnter={() => toggleDropdown("niosresults")}
                 onMouseLeave={() => toggleDropdown(null)}
               >
                 <span className="dropdown-toggle">
-                  <Link href="/nios-results">
+                  <Link href="/nios-datesheet">
 
                    NIOS Datesheet <FiChevronDown className="arrow-icon" />
                   </Link>
                 </span>
                 {openDropdown === "niosresults" && (
                   <div className="dropdown-menu">
-                    {/* <Link
+                    <Link
                       href="/nios-results"
                       className={`mb-2 ${isActive("/nios-results") ? "active" : ""}`}
                     >
                       NIOS Results 2026
-                    </Link> */}
+                    </Link>
                     <Link
                       href="/nios-class-12th-result"
                       className={`mb-2 ${isActive("/nios-class-12th-result") ? "active" : ""}`}
@@ -487,7 +487,15 @@ export default function Header() {
                     </Link>
                   </div>
                 )}
-              </div>
+              </div> */}
+
+              
+              <Link
+                href="/nios-datesheet"
+                className={`nav-item ${isActive("/nios-datesheet") ? "active" : ""}`}
+              >
+                NIOS Date Sheet
+              </Link>
 
               <Link
                 href="/faq"

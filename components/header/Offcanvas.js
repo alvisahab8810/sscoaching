@@ -441,7 +441,7 @@ export default function Offcanvas() {
                 </li>
 
                 {/* NIOS Results Accordion */}
-                <li className="nav-item mob-dropdown">
+                {/* <li className="nav-item mob-dropdown">
                   <div className="accordion-item">
                     <h2 className="accordion-header" id="headingResults">
                       <button
@@ -478,8 +478,15 @@ export default function Offcanvas() {
                       </div>
                     </div>
                   </div>
-                </li>
+                </li> */}
               </div>
+
+
+                <li className="nav-item">
+                <Link href="/nios-datesheet" className="nav-link">
+                  NIOS Date Sheet
+                </Link>
+              </li>
 
               {/* Other Static Links */}
               <li className="nav-item">
