@@ -16,7 +16,7 @@ export default function HeroStream2() {
             </div>
 
             <a href="#contact" className="hero-stream2-apply-btn">
-            NIOS Admissions 2026 for Stream 2 is OPEN NOW
+            NIOS Admissions 2026 for Stream 2 is CLOSED
             </a>
           </div>
         </div>
