@@ -17,7 +17,7 @@ const faqData = [
   },
   {
     q: "When are the NIOS practical exams for the October 2026 session?",
-    a: "NIOS practical exams for the October 2026 session are expected to be conducted in four batches between September 12 and September 27, 2026. Science subjects like Physics, Chemistry, and Biology are typically held early in this window (September 12–19), while vocational subjects such as Computer Applications, Web Development, and Beauty & Wellness courses are scheduled in the later batches (September 20–27). Students must clear their practical exams before appearing for the corresponding theory papers.",
+    a: "The NIOS practical exams for the October 2026 session will be conducted from 14 September to 29 September 2026 at designated AI/Practical Examination Centres for Secondary and Senior Secondary students. The practical exams are divided into four batches: 14–17 September, 18–21 September, 22–25 September, and 26–29 September 2026. Students should contact their study centre or examination centre to confirm their allotted practical exam date and batch.",
   },
   {
     q: "What is the exam timing for NIOS October 2026 theory exams?",

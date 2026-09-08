@@ -279,7 +279,7 @@ const nios2026FaqSchemaJSON = `{
       "name": "When are the NIOS practical exams for the October 2026 session?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "NIOS practical exams for the October 2026 session are expected to be conducted in four batches between September 12 and September 27, 2026. Science subjects like Physics, Chemistry, and Biology are typically held early in this window (September 12-19), while vocational subjects such as Computer Applications, Web Development, and Beauty & Wellness courses are scheduled in the later batches (September 20-27). Students must clear their practical exams before appearing for the corresponding theory papers."
+        "text": "The NIOS practical exams for the October 2026 session will be conducted from 14 September to 29 September 2026 at designated AI/Practical Examination Centres for Secondary and Senior Secondary students. The practical exams are divided into four batches: 14-17 September, 18-21 September, 22-25 September, and 26-29 September 2026. Students should contact their study centre or examination centre to confirm their allotted practical exam date and batch."
       }
     },
     {
@@ -722,7 +722,7 @@ export default function NIOSDatesheet2026() {
             </div>
 
             <h3 className="nios-125h-senior-hero-title">
-              NIOS Practical Exam Dates 2026 (October Session – Expected)
+              NIOS Practical Exam Dates 2026 – Official September Practical Exam Schedule
             </h3>
 
             <div className="table-wrapper">
@@ -730,33 +730,68 @@ export default function NIOSDatesheet2026() {
                 <thead>
                   <tr>
                     <th className="date-col">Date Range</th>
-                    <th>Senior Secondary (Class 12)</th>
-                    <th>Secondary (Class 10)</th>
+                    <th>Sr. Secondary</th>
+                    <th>Secondary</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="date-col">Sep 12–15, 2026</td>
-                    <td>Home Science, Biology, Geography, Painting, Computer Science, Mass Communication, ECCE</td>
-                    <td>Science & Technology, Home Science, Carnatic Sangeet, Folk Art</td>
+                    <td className="date-col">14th September to 17th September, 2026</td>
+                    <td>Home Science (321), Biology (314), Geography (316), Painting (332), Computer Science (330), Mass Communication (335), ECCE (376), Entrepreneurship (349)</td>
+                    <td>Science (212), Home Science (216), Carnatic Sangeet (243), Folk Art (244), Physical Education (273)</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Sep 16–19, 2026</td>
-                    <td>Chemistry, Physics, Environmental Science, Physical Education & Yoga, Data Entry Operations, Library Science, Natyakala</td>
-                    <td>Painting, Maths, Hindustani Music, Data Entry Operations, Natyakala</td>
+                    <td className="date-col">18th September to 21st September, 2026</td>
+                    <td>Chemistry (313), Physics (312), Environmental Science (333), Physical Education (373), Data Entry Operations (336), Library & Information Science (339), Natyakala (385)</td>
+                    <td>Painting (225), Maths (211), Hindustani Music (242), Data Entry Operations (229), Natyakala (285)</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Sep 20–23, 2026</td>
-                    <td>Computer & Office Applications, Data Entry Operations, Web Development, IT Essentials, CRM Domestic Voice, Computer Hardware, Yog Assistant</td>
-                    <td>Hair Care & Styling, Hand & Foot Care, Bakery & Confectionery, Basic Computing, Desktop Publishing, Yoga, Indian Sign Language</td>
+                    <td className="date-col">22nd September to 25th September, 2026</td>
+                    <td>Computer & Office Applications (631), Data Entry Operations (632), Web Development (660), IT Essentials (651), CRM Domestic Voice (661), Computer Hardware (663), Yoga Assistant (667)</td>
+                    <td>Hair Care & Styling (641), Hand & Foot Care (642), Bakery & Confectionary (256), Certificate in Basic Computing (608), Certificate in Desktop Publishing (613), Yoga, Indian Sign Language (230)</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Sep 24–27, 2026</td>
-                    <td>Housekeeping, Catering Management, Food Processing, Hotel Front Office, Preservation of Fruits & Vegetables, Web Designing</td>
-                    <td>Cutting & Tailoring, Dress Making, Beauty Culture & Hair Care, Indian Embroidery, Beauty Therapy</td>
+                    <td className="date-col">26th September to 29th September, 2026</td>
+                    <td>House Keeping (356), Catering Management (357), Food Processing (358), Hotel Front Office Operations (360), Preservation of Fruits & Vegetables (363), Web Designing & Development (622), Indian Sign Language (382)</td>
+                    <td>Cutting & Tailoring (605), Dress Making (606), Beauty Culture & Hair Care (612), Certificate in Indian Embroidery (628), Beauty Therapy (640)</td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div className="spacer-area">
+              <p>
+                Note: Students can download the official NIOS Practical Exam Date Sheet 2026 for the September practical examinations by clicking the download button below.
+              </p>
+            </div>
+
+            {/* ===== Practical Date Sheet Download Button ===== */}
+            <div className="no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
+              <a
+                href="/papers/nios-practical-datesheet-for-september-2026.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  backgroundColor: "#1a73e8",
+                  color: "#fff",
+                  padding: "10px 20px",
+                  borderRadius: "6px",
+                  fontWeight: "600",
+                  fontSize: "15px",
+                  textDecoration: "none",
+                  transition: "background 0.2s",
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download Date Sheet
+              </a>
             </div>
 
             <h2>
