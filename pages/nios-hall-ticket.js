@@ -2,20 +2,95 @@ import Footer from "@/components/footer/Footer";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
-import FAQ from "@/components/home/FAQ";
+import NiosHallTicketFAQ from "@/components/home/NiosHallTicketFAQ";
 import Head from "next/head";
 
-export default function NIOSHallTicket2025() {
+const niosHallTicketFaqSchemaJSON = `{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Has the NIOS practical hall ticket for October 2026 been released?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The NIOS practical exam dates for October-November 2026 have been announced, but the practical hall ticket has not been released yet. It is expected shortly before the practical exams begin at your study centre."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will the NIOS theory hall ticket 2026 be released?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The NIOS theory hall ticket for the October-November 2026 session is expected in the last week of September 2026, a few days before theory exams start."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I download the NIOS Hall Ticket 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can download it only from the official NIOS Student Portal at sdmis.nios.ac.in using your enrollment number. NIOS does not send hall tickets by post or email."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What details do I need to download the NIOS hall ticket?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You only need your 12-digit NIOS enrollment number. Your exam fee must be paid and your photograph updated with NIOS for the hall ticket to generate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the NIOS practical hall ticket different from the theory hall ticket?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Students should carry a printed copy of their hall ticket to the examination centre along with the required identification documents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my NIOS hall ticket is not generating?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This usually means your exam fee is unpaid or your photograph is missing from NIOS records. Contact your Regional Centre or study centre immediately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it compulsory to carry the NIOS hall ticket to the exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. NIOS does not permit any candidate to enter the theory or practical exam hall without a printed hall ticket, so carry it along with a valid photo ID."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get my NIOS hall ticket corrected if there is a mistake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. If you notice any discrepancy in your name, subjects, photograph, or exam centre on your hall ticket, report it to your study centre or NIOS Regional Centre immediately for correction before your exam date."
+      }
+    }
+  ]
+}`;
+
+export default function NIOSHallTicket2026() {
   return (
     <>
       <Head>
-        <title>NIOS Hall Ticket April 2026 Exams For Class 10th & 12th | NIOS Admit Card 2026 Direct Download Link</title>
+        <title>NIOS Hall Ticket Oct 2026: Theory & Practical Admit Card</title>
         <meta
           name="description"
-          content="Download NIOS Hall Ticket 2026 for Class 10th & 12th Sep/Oct Exams. Get direct link for NIOS Admit Card 2026 theory and practical exams."
+          content="NIOS Hall Ticket 2026 for Oct/Nov theory & practical exams: release date, direct download link, steps & FAQs. Practical admit card releasing soon."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: niosHallTicketFaqSchemaJSON }}
+        />
       </Head>
 
       <section className="home-page-area syllabus-nios1">
@@ -27,109 +102,65 @@ export default function NIOSHallTicket2025() {
           <div className="container">
 
             <h1 className="nios-125h-senior-hero-title">
-              NIOS Hall Ticket April 2026 Exams For Class 10th & 12th | NIOS Admit Card 2026 Direct Download Link!!!
+              NIOS Hall Ticket 2026 for October Exams — Class 10th & 12th Theory & Practical Admit Card
             </h1>
 
-
-            
-          <div className="d-flex gap-2 top-row-tabs">
+            <div className="d-flex gap-2 top-row-tabs">
               <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
-              Direct Link for NIOS Hall Ticket class 10th
-            </a>
+                Direct Link for NIOS Hall Ticket Class 10th
+              </a>
 
               <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
-              Direct Link for NIOS Hall Ticket class 12th
-            </a>
-          </div>
-
-              <p>
-                The National Institute of Open Schooling (NIOS) Board of Education  have releaseed the NIOS Hall Ticket for the Sep/Oct 2026 Exams. Candidates preparing for the NIOS Class 10 and 12 theory exams can download NIOS Admit Cards for 6 by accessing the official website below.
-              </p>
-
-              <p>
-                Students who are enrolled for the April 2026 NIOS Secondary and Senior Secondary exams, theory and practical, can download their NIOS Hall Tickets 2026 from the official website of the Student Portal of the NIOS website.
-              </p>
-
-         
-            <h4>
-              NIOS Hall Ticket 2026 For Theory Papers
-            </h4>
-
-
-            
+                Direct Link for NIOS Hall Ticket Class 12th
+              </a>
+            </div>
 
             <p>
-              National Institute Of Open Schooling - NIOS Board declared that students can now download their Hall ticket or Admit Card for theory papers for the session Sep/Oct/Nov 2026 Exams by visiting the special portal for Hall Ticket Downloading. The Only Requrement is Student's Enrollment Number, by entering this enrollment number, student can easily download their Hall Ticket for Exams of Oct/Nov 2026. Don't wait, visit now and secure your Hall Ticket NOW!!!. For any help or assistence always contact SS Coaching, the oldest nios centre. SS Coaching will help you to download your NIOS Hall Ticket along with helping in preparation for the NIOS Exams.
+              NIOS Hall Ticket 2026 for the October–November exams is not fully available yet. The practical exam dates have been announced, while the practical hall ticket is awaited. The theory hall ticket is expected in the last week of September 2026. Students will be able to download their admit card from the official NIOS Student Portal using their enrollment number.
             </p>
 
             <h4>
-              NIOS Hall Ticket 2026 For Practical Papers
+              NIOS Practical Hall Ticket 2026 — Not Released Yet
             </h4>
 
             <p>
-              National Institute Of Open Schooling - NIOS Board declared that students can now download their Hall ticket or Admit Card for practical papers for the session Sep/Oct/Nov 2026 Exams by visiting the special portal for Hall Ticket Downloading. The Only Requrement is Student's Enrollment Number, by entering this enrollment number, student can easily download their Hall Ticket for Exams of Oct/Nov 2026. Don't wait, visit now and secure your Hall Ticket NOW!!!. For any help or assistence always contact SS Coaching, the oldest nios centre. SS Coaching will help you to download your NIOS Hall Ticket along with helping in preparation for the NIOS Exams.
+              NIOS has released the practical exam date sheet for the October–November 2026 session, and practical exams for Class 10th and Class 12th students will be conducted at your allotted study centre as per the schedule. However, the practical hall ticket (admit card) has not been issued so far. NIOS usually generates the practical admit card a short time before the practical exams start, so students should expect it any day now.
+            </p>
+
+            <p>
+              Once released, the practical hall ticket will be available on the same student portal used for the theory hall ticket. You will need your enrollment number to download it, and it must be printed and carried to every practical exam session along with your practical file and lab record.
             </p>
 
             <h4>
-              NIOS Hall Ticket April 2026 Examination
+              What to Do While You Wait for the Practical Hall Ticket
             </h4>
-
-            <p>
-              NIOS Hall Ticket for Secondary and Senior Secondary courses for Sep/Oct 2026 Public Exams are available now and students can download it from here.
-            </p>
-
-            <p>
-              NIOS Hall Ticket 2026 is mandatory for every student who is enrolled for NIOS Sep/Oct 2026 Examinations. So students are advised to bring the Hall Ticket to the examination center daily for verification.
-            </p>
-
-            <h3 className="nios-125h-senior-hero-title">
-              How to Download NIOS 10th & 12th Hall Ticket/Admit Card 2026
-            </h3>
-
-            <p>Simple steps to download Student’s NIOS Hall Ticket 2026 for the NIOS Examination held for Sep/Oct Exam 2026 are as follows:</p>
 
             <ul className="chapter-list">
-              <li>First you have to visit the <a className="nios-125h-senior-highlight" href="https://sdmis.nios.ac.in/search" >official website </a> of the Student Portal of NIOS.</li>
-              <li>Now you have to enter your enrollment number which is available to you at the time of admission.</li>
-              <li>Then you have to click on the drop-down menu, labeled “Hall Ticket Type”.</li>
-              <li>Select between Theory and Practical Examinations for the specific Hall Ticket.</li>
-              <li>Click on Submit button to download your Hall Ticket.</li>
+              <li>Check your confirmed practical exam dates on the <a className="nios-125h-senior-highlight" href="/nios-datesheet">NIOS Date Sheet 2026</a>.</li>
+              <li>Make sure your exam fee for the October–November 2026 session has been paid in full — hall tickets are not generated for pending or incomplete fee payments.</li>
+              <li>Verify that your photograph and personal details are correctly updated on the NIOS Student Portal.</li>
+              <li>Keep your practical files, lab records, and enrollment number ready in advance.</li>
+              <li>Contact SS Coaching at <a className="nios-125h-senior-highlight" href="tel:09839065533">09839065533</a> if you face any issue once the hall ticket is released.</li>
             </ul>
 
             <h4>
-              Direct Link to Download NIOS Hall Ticket 2026 for Class 10th Secondary Exams
+              NIOS Theory Hall Ticket 2026 for October/November Exams
             </h4>
 
             <p>
-              You can download your NIOS Hall Ticket (Admit Card) 2026 for class 10th Secondary through the NIOS official website or you can click on the direct link provided below to download your NIOS class 10th Hall Ticket
+              The hall ticket for theory papers of the October–November 2026 NIOS Public Examination is expected to be released in the last week of September 2026, close to the start of the theory exams. Students who are enrolled for the Secondary or Senior Secondary course and who have paid the examination fee for this session will be able to download their theory hall ticket from the official NIOS Student Portal.
             </p>
 
-            <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
-              Direct Link for NIOS Hall Ticket class 10th
-            </a>
-
-            <h4>
-              Direct Link to Download NIOS Hall Ticket 2026 for Class 12th Sr. Secondary Exams
-            </h4>
-
             <p>
-              You can download your NIOS Hall Ticket (Admit Card) 2026 for class 12th Sr. Secondary through the NIOS official website or click on the link below to download your NIOS class 12th Hall Ticket.
+              NIOS Hall Ticket 2026 is mandatory for every student appearing in the October–November 2026 examinations. Candidates must carry a printed copy of the hall ticket to the examination centre on every exam day, along with a valid photo ID, for verification by the invigilator.
             </p>
 
-            <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
-              Direct Link for NIOS Hall Ticket class 12th
-            </a>
-
             <p>
-                Students are also to be informed that the <a href="#" className="nios-125h-senior-highlight">NIOS Datesheet 2026 for class 10th and 12th</a> are also available and Students can Download the direct PDF for Date Sheet From SS Coaching Website. and the Datesheet is also Available on the SS Coaching Website, <a href="#" className="nios-125h-senior-highlight">Click here </a> for NIOS Datesheet 2026
-              </p>
-
-            <div className="spacer-area">
-              
-            </div>
+              As soon as NIOS activates the download link for the theory hall ticket, the direct link and confirmed release date will be updated here.
+            </p>
 
             <h3 className="nios-125h-senior-hero-title">
-              NIOS 10th & 12th Hall Ticket/Admit Card Download 2026 Details
+              NIOS Hall Ticket 2026 Details at a Glance
             </h3>
 
             <div className="table-wrapper">
@@ -141,19 +172,35 @@ export default function NIOSHallTicket2025() {
                   </tr>
                   <tr>
                     <td><strong>Standard</strong></td>
-                    <td>10th & 12th</td>
+                    <td>10th (Secondary) & 12th (Senior Secondary)</td>
                   </tr>
                   <tr>
-                    <td><strong>NIOS Exam Date 2026</strong></td>
-                    <td><a href="/nios-datesheet" className="nios-125h-senior-highlight">Check Here </a> </td>
-                  </tr>
-                  <tr>
-                    <td><strong>NIOS 12th Exam Hall Ticket Status 2026</strong></td>
-                    <td><a href="https://sdmis.nios.ac.in/search/hall-ticket" className="nios-125h-senior-highlight"> Download Now </a></td>
+                    <td><strong>Session</strong></td>
+                    <td>October–November 2026 Public Examination</td>
                   </tr>
                   <tr>
                     <td><strong>Academic Session</strong></td>
-                    <td>2026-27</td>
+                    <td>2026–27</td>
+                  </tr>
+                  <tr>
+                    <td><strong>NIOS Practical Exam Dates</strong></td>
+                    <td><a href="/nios-datesheet" className="nios-125h-senior-highlight">Announced — Check Date Sheet</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>NIOS Practical Hall Ticket</strong></td>
+                    <td>Not yet released, expected soon</td>
+                  </tr>
+                  <tr>
+                    <td><strong>NIOS Theory Hall Ticket</strong></td>
+                    <td>Expected in the last week of September 2026</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mode of Download</strong></td>
+                    <td>Online only</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Login Requirement</strong></td>
+                    <td>12-digit Enrollment Number</td>
                   </tr>
                   <tr>
                     <td><strong>Official Student Portal</strong></td>
@@ -163,19 +210,65 @@ export default function NIOSHallTicket2025() {
               </table>
             </div>
 
+            <h3 className="nios-125h-senior-hero-title">
+              How to Download NIOS Hall Ticket 2026 for Class 10th & 12th
+            </h3>
+
+            <p>Downloading your NIOS hall ticket, whether for theory or practical exams, takes only a few steps once it is released:</p>
+
+            <ul className="chapter-list">
+              <li>Visit the official <a className="nios-125h-senior-highlight" href="https://sdmis.nios.ac.in/search">NIOS Student Portal</a> at sdmis.nios.ac.in.</li>
+              <li>Enter your enrollment number — the 12-digit number provided to you at the time of NIOS admission.</li>
+              <li>Click on the &quot;Hall Ticket Type&quot; dropdown and select either Theory or Practical, depending on which exam you are downloading it for.</li>
+              <li>Click Submit — your hall ticket will open on the screen with your photo, exam centre, and subject-wise schedule.</li>
+              <li>Download and print at least two copies — one to carry to every exam and one to keep safe until your results are declared.</li>
+            </ul>
+
+            <h4>
+              Direct Link to Download NIOS Hall Ticket 2026 for Class 10th Secondary Exams
+            </h4>
+
+            <p>
+              Once released, you can download your NIOS Hall Ticket (Admit Card) for Class 10th Secondary through the official NIOS website, or use the direct link below.
+            </p>
+
+            <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
+              Direct Link for NIOS Hall Ticket Class 10th
+            </a>
+
+            <h4>
+              Direct Link to Download NIOS Hall Ticket 2026 for Class 12th Sr. Secondary Exams
+            </h4>
+
+            <p>
+              Once released, you can download your NIOS Hall Ticket (Admit Card) for Class 12th Sr. Secondary through the official NIOS website, or use the direct link below.
+            </p>
+
+            <a href="https://sdmis.nios.ac.in/search/hall-ticket" className="cta-button cta-button1">
+              Direct Link for NIOS Hall Ticket Class 12th
+            </a>
+
+            <p>
+              Students can also check the complete <a href="/nios-datesheet" className="nios-125h-senior-highlight">NIOS Date Sheet 2026</a> for Class 10th and 12th on the SS Coaching website for the full subject-wise schedule of theory and practical exams.
+            </p>
+
             <div className="spacer-area">
               <p>
-                Note: Students are advised to take out the printout copy from the computer and preserve it from the time their exams are finished till the results are declared.  Please make sure to carry the original copy of the Hall Ticket at the time of the exam to the examination hall.
+                <strong>Important Note for Students:</strong> Preserve a printed copy of your NIOS Hall Ticket from the day it is downloaded until your results are declared — you may need it for verification even after your exams are over. Carry the original printed hall ticket to the examination hall every day; entry without it is not permitted.
               </p>
 
               <p>
-                Candidates who do not know the procedure to get their nios hall ticket 2026 may contact SS Coaching at <a className="nios-125h-senior-highlight" href="tel:9935035316">9935035316</a> and get the solutions for availing hall tickets before appearing for examinations, we will explain the entire procedure of getting the NIOS exam to admit card 6 for Sep/Oct 2026 exams.
+                If you are unable to download your NIOS Hall Ticket 2026, or if you notice any error in your name, subjects, or exam centre, contact SS Coaching at <a className="nios-125h-senior-highlight" href="tel:09839065533">09839065533</a> for immediate assistance. We will guide you through the entire process of downloading your NIOS admit card for the October–November 2026 exams.
               </p>
             </div>
 
           </div>
         </div>
-           <FAQ limit={8} showViewMore={true} />
+
+        <div className="container">
+        <NiosHallTicketFAQ />
+
+        </div>
         <Footer />
       </section>
     </>
