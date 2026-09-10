@@ -87,6 +87,7 @@ export default function NIOSHallTicket2026() {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="canonical" href="https://sscoaching.in/nios-hall-ticket" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: niosHallTicketFaqSchemaJSON }}

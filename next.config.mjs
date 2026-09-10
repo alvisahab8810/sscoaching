@@ -17,6 +17,16 @@ const nextConfig = {
     config.resolve.alias["@"] = path.resolve(__dirname);
     return config;
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/nios-hall-ticket-for-class-10th-12th",
+        destination: "/nios-hall-ticket",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
