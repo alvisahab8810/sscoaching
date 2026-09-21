@@ -15,8 +15,8 @@ export default function CTA2() {
     style={{ display: "none" }}
   />
         <div className="cta-text">
-          <h2 className="cta-title">NIOS Stream 1 Block 2 <br />Admission Open </h2>
-          <p className="cta-subtitle">Admission open for 10th & 12th students with complete coaching support.
+          <h2 className="cta-title">NIOS Stream 1 Block 1 <br />Admission Open </h2>
+          <p className="cta-subtitle">Admission open for 10th & 12th students till 30th September, with complete coaching support.
          </p>
           <a href="#" className="cta-btn">Apply Now</a>
         </div>

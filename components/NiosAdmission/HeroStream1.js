@@ -17,7 +17,7 @@ export default function HeroStream1() {
               <p className="hero-stream1-hero-subtitle">
                 NIOS Admission In Lucknow 2026-2027 Is Now Open For
                 <br />
-                Stream-I Block-2 (10th And 12th Students)
+                Stream-I Block-1 (10th And 12th Students) — Apply Before 30th September
               </p>
             </div>
             <a href="#contact" className="hero-stream1-apply-btn cta-btn">

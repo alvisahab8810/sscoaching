@@ -8,12 +8,13 @@ export default function HeroStream1Mobile() {
           <div className="hero-stream1-hero-content">
             <div className="hero-stream1-hero-text-group">
               <h1 className="hero-stream1-hero-title">
-                NIOS Admission in Lucknow | NIOS <br/> Admission for Oct/Nov 2026 Exam<br/>
+                NIOS Admission in Lucknow | NIOS <br/> Admission for Block-1 Exams<br/>
                 Open For 10th And 12th Students
               </h1>
               <p className="hero-stream1-hero-subtitle">
-                NIOS Admission In Lucknow 2025-2026 Is Now Open For
-                Stream-I Block-2 (10th And 12th Students)
+                NIOS Admission In Lucknow 2026-2027 Is Now Open For
+                Stream-I Block-1 (10th And 12th Students). Last date to apply is
+                30th September 2026.
               </p>
             </div>
             <a href="#contact" className="hero-stream1-apply-btn cta-btn">

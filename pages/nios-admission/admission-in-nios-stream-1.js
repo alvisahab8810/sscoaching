@@ -21,15 +21,15 @@ export default function AdmissionInNiosStream1() {
     <>
      <Head>
         <title>
-           NIOS Admission in Lucknow 2026 | NIOS Stream-1 Admission For 10th And 12th Students (Apply Now)
+           NIOS Admission in Lucknow 2026 | NIOS Stream-1 Block-1 Admission For 10th And 12th Students (Apply Now)
         </title>
         <meta
           name="description"
-          content="SS Coaching is best center for NIOS admission in Lucknow, helps to prepare you for the examination of National Institute of Open Schooling Board (NIOS) in Stream-1. Hurry-Up to save your precious time and take the NIOS admission in SS Coaching. Seats are limited."
+          content="SS Coaching is the best center for NIOS admission in Lucknow, helping students take admission in NIOS Stream-1 Block-1. Admissions are open till 30th September — hurry, seats are limited."
         />
         <meta
           name="keywords"
-          content="NIOS Admission, NIOS Admission 2026, Nios online admission, Nios registration, NIOS admission 2026, NIOS 12th admission, NIOS 10th admission, NIOS late admission 2026-27, NIOS late admission 2026-27, NIOS examination 2026, NIOS examination 2026, nios form, NIOS class 12 admission, NIOS class 12 admission 2026, NIOS class 12 admission 2026, NIOS class 10 admission, open 12th form, NIOS registration 2026, NIOS 12th admission 2026, 12th class open, NIOS online admission 2026, nios online, nios admission form, nios b.ed admission 2026, nios on demand examination, open 10th class form, nios admission dates, Nios registration online, Admission Open, NIOS Admission Stream-1 Block-2, NIOS Admission Stream-1 Block-2, Nios Lucknow, NIOS, Nios Online Admission, Nios Online Admission in Lucknow, NIOS Admission 2026 last date, Nios Admission Last Date, nios admission, nios deled, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios deled admission 2026, nios dled, nios register, NIOS Admission in Lucknow, nios admission in lucknow"
+          content="NIOS Admission, NIOS Admission 2026, Nios online admission, Nios registration, NIOS admission 2026, NIOS 12th admission, NIOS 10th admission, NIOS late admission 2026-27, NIOS late admission 2026-27, NIOS examination 2026, NIOS examination 2026, nios form, NIOS class 12 admission, NIOS class 12 admission 2026, NIOS class 12 admission 2026, NIOS class 10 admission, open 12th form, NIOS registration 2026, NIOS 12th admission 2026, 12th class open, NIOS online admission 2026, nios online, nios admission form, nios b.ed admission 2026, nios on demand examination, open 10th class form, nios admission dates, Nios registration online, Admission Open, NIOS Admission Stream-1 Block-1, NIOS Stream-1 Block-1, NIOS Admission Block-1 last date, NIOS admission till 30 September, NIOS Block-1 registration 2026-27, Nios Lucknow, NIOS, Nios Online Admission, Nios Online Admission in Lucknow, NIOS Admission 2026 last date, Nios Admission Last Date, nios admission, nios deled, nios in admission, nios registration, nios registration in Lucknow, nios online admission, nios 12th admission, nios apply online, nios deled admission 2026, nios dled, nios register, NIOS Admission in Lucknow, nios admission in lucknow"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -75,21 +75,21 @@ export default function AdmissionInNiosStream1() {
                 </div>
                 <div className="admission-table-cell">Admission Date</div>
                 <div className="admission-table-cell">
-                  First Examination in 2026
+                  Examination
                 </div>
               </div>
             </div>
             <div className="admission-table-body">
               <div className="admission-table-row">
-                <div className="admission-table-data">Block 2</div>
+                <div className="admission-table-data">Block 1</div>
                 <div className="admission-table-data">
                   <div className="admission-status-badge">
                     <div className="admission-status-dot"></div>
-                    Admission Open
+                    Open Now — Closes 30th September 2026
                   </div>
                 </div>
                 <div className="admission-table-data">
-                  Examination Month Oct/Nov 2026
+                  As per NIOS Block-1 schedule (2026)
                 </div>
               </div>
             </div>
@@ -248,52 +248,64 @@ export default function AdmissionInNiosStream1() {
       <section className="scrolling-banner recognition-banner recognition-banner-mobile mt-4 ">
         <div className="banner-content recognition-text">
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
           <div className="banner-items">
-            Note: MOS Stream 1 Block 2 registrations are now Open for Oct/Nov
-            2026 , You can apply for NIOS Stream 1 Block 2 Oct/Nov Exams
+            Note: NIOS Stream 1 Block 1 registrations are now Open, Last date to
+            apply is 30th September 2026 , You can apply for NIOS Stream 1 Block
+            1 Admission
           </div>
         </div>
       </section>
@@ -454,19 +466,18 @@ export default function AdmissionInNiosStream1() {
               <div className="last-date-item">
                 <div className="last-date-row">
                   <div className="last-date-text">
-                    1. For learners enrolled in Stream-1, Block-2 for Oct/Nov
-                    2026 Examinations
+                    1. For learners applying under Stream-1, Block-1
                   </div>
-                  <div className="last-date-status">WIll be updated soon</div>
+                  <div className="last-date-status">Last date to apply: 30th September 2026</div>
                 </div>
               </div>
               <div className="last-date-item">
                 <div className="last-date-row">
                   <div className="last-date-text">
-                    2.For eligible learners for examinations prior to NIOS
-                    Oct/Nov 2026 Examinations
+                    2. For eligible learners for examinations before the
+                    current NIOS cycle
                   </div>
-                  <div className="last-date-status">WIll be updated soon</div>
+                  <div className="last-date-status">Will be updated soon</div>
                 </div>
               </div>
               <div className="last-date-item">
@@ -475,24 +486,24 @@ export default function AdmissionInNiosStream1() {
                     3. For all eligible learners as mentioned at Sl. no. 1 and 2
                     above
                   </div>
-                  <div className="last-date-status">WIll be updated soon</div>
+                  <div className="last-date-status">Will be updated soon</div>
                 </div>
               </div>
               <div className="last-date-item">
                 <div className="last-date-row">
                   <div className="last-date-text">
-                    4.Apply for NIOS Admission in Lucknow for Oct/Nov Exam, 2026
+                    4. Apply for NIOS Admission in Lucknow — Stream-1 Block-1
                   </div>
-                  <div className="last-date-status">WIll be updated soon</div>
+                  <div className="last-date-status">Open now, closes 30th September 2026</div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="warning-notice">
-            For the learners registered for Oct/Nov 2026 examinations, the
-            examination fee payment schedule will be notified after the
-            declaration of result.
+            For learners registering under Stream-1 Block-1, the examination
+            fee payment schedule will be notified after the declaration of
+            results.
           </div>
 
           {/* <!-- Why NIOS Section --> */}
@@ -511,7 +522,7 @@ export default function AdmissionInNiosStream1() {
           <div className="documents-section">
             <h2 className="documents-title">
               <span className="highlight">REQUIRED DOCUMENTS</span> FOR
-              ADMISSION IN NIOS STREAM 1 BLOCK 2
+              ADMISSION IN NIOS STREAM 1 BLOCK 1
             </h2>
             <div className="documents-cards">
               <div className="document-card">
