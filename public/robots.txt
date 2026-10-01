@@ -114,3 +114,4 @@ Disallow: /
 # SITEMAP
 # ============================================
 Sitemap: https://sscoaching.in/sitemap.xml
+Sitemap: https://sscoaching.in/blog-sitemap.xml

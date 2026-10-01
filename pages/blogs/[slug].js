@@ -4,9 +4,8 @@ import { Link as ScrollLink, Element, scroller } from "react-scroll";
 
 import parse from "html-react-parser";
 
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/router";
-import { toast } from "sonner";
 import Head from "next/head";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -17,50 +16,61 @@ import Popup from "@/components/home/Popup";
 import Offcanvas from "@/components/header/Offcanvas";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
-export default function BlogDetail() {
+const SITE_URL = "https://sscoaching.in";
+
+// ✅ Decode HTML entities without touching `document`, so this runs the same
+// on the server (during the static render) as it does in the browser.
+const decodeEntities = (str) => {
+  if (!str) return "";
+  return str
+    .replace(/&nbsp;/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(code))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) =>
+      String.fromCharCode(parseInt(code, 16))
+    )
+    .replace(/&amp;/g, "&");
+};
+
+// ✅ Single pass: inject unique heading IDs and collect the matching TOC
+// list together, so the rendered anchors and the TOC links can never
+// drift apart (e.g. from duplicate heading text or formatted headings).
+const processBlogContent = (htmlContent) => {
+  if (!htmlContent) return { html: "", headings: [] };
+
+  const extractedHeadings = [];
+  let counter = 0;
+
+  const html = htmlContent.replace(
+    /<(h2|h3)[^>]*>([\s\S]*?)<\/\1>/g,
+    (match, tag, innerHtml) => {
+      const text = decodeEntities(innerHtml.replace(/<[^>]+>/g, "")).trim();
+      const baseId = text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      const id = `${baseId || "section"}-${counter}`;
+      counter++;
+      extractedHeadings.push({ id, text, level: tag.toUpperCase() });
+      return `<${tag} id="${id}">${innerHtml}</${tag}>`;
+    }
+  );
+
+  return { html, headings: extractedHeadings };
+};
+
+export default function BlogDetail({ blog, relatedBlogs = [] }) {
   const router = useRouter();
-  const { slug } = router.query;
-  const [blog, setBlog] = useState(null);
-  const [relatedBlogs, setRelatedBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const [headings, setHeadings] = useState([]);
-  const [processedHTML, setProcessedHTML] = useState("");
-
-  // ✅ Decode HTML entities (e.g. &nbsp;) so TOC labels/ids don't contain
-  // literal entity text — safe here since this only ever runs client-side.
-  const decodeEntities = (str) => {
-    const el = document.createElement("textarea");
-    el.innerHTML = str;
-    return el.value;
-  };
-
-  // ✅ Single pass: inject unique heading IDs and collect the matching TOC
-  // list together, so the rendered anchors and the TOC links can never
-  // drift apart (e.g. from duplicate heading text or formatted headings).
-  const processBlogContent = (htmlContent) => {
-    if (!htmlContent) return { html: "", headings: [] };
-
-    const extractedHeadings = [];
-    let counter = 0;
-
-    const html = htmlContent.replace(
-      /<(h2|h3)[^>]*>([\s\S]*?)<\/\1>/g,
-      (match, tag, innerHtml) => {
-        const text = decodeEntities(innerHtml.replace(/<[^>]+>/g, "")).trim();
-        const baseId = text
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
-        const id = `${baseId || "section"}-${counter}`;
-        counter++;
-        extractedHeadings.push({ id, text, level: tag.toUpperCase() });
-        return `<${tag} id="${id}">${innerHtml}</${tag}>`;
-      }
-    );
-
-    return { html, headings: extractedHeadings };
-  };
+  // ✅ Derived during render (not in an effect) so the server-rendered HTML
+  // already carries the headings, anchor ids and the full article body.
+  const { html: processedHTML, headings } = useMemo(
+    () => processBlogContent(blog?.content),
+    [blog]
+  );
 
   const renderBlogContent = (htmlContent) => {
     if (!htmlContent) return null;
@@ -79,60 +89,21 @@ export default function BlogDetail() {
     return enhancedContent;
   };
 
-  useEffect(() => {
-    if (blog?.content) {
-      const { html, headings: h } = processBlogContent(blog.content);
-      setProcessedHTML(html);
-      setHeadings(h);
-    }
-  }, [blog]);
-
-  useEffect(() => {
-    if (!slug) return;
-
-    const fetchBlog = async () => {
-      try {
-        const res = await fetch(`/api/blogs/getBySlug?slug=${slug}`);
-        const data = await res.json();
-        if (data.success) {
-          setBlog(data.blog);
-
-          // Fetch related posts (same category, excluding current post)
-          if (data.blog.category) {
-            const relRes = await fetch(
-              `/api/blogs/getAll?status=published&category=${data.blog.category}`
-            );
-            const relData = await relRes.json();
-            if (relData.success) {
-              setRelatedBlogs(
-                relData.data.filter((b) => b._id !== data.blog._id).slice(0, 3)
-              ); // show max 3 related
-            }
-          }
-        } else {
-          toast.error(data.message || "Blog not found");
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Server error while fetching blog");
-      }
-      setLoading(false);
-    };
-
-    fetchBlog();
-  }, [slug]);
-
-  if (loading) return <p className="text-center py-5">Loading...</p>;
+  if (router.isFallback) return <p className="text-center py-5">Loading...</p>;
   if (!blog) return <p className="text-center py-5">Blog not found.</p>;
+
+  const metaTitle = blog.metaTitle || blog.title;
+  const metaDescription = blog.metaDescription || blog.shortDescription || "";
+  const canonicalUrl = `${SITE_URL}/blogs/${blog.slug}`;
 
   return (
     <div className="blogs-details-area">
-      {/* Dynamic meta tags for SEO */}
+      {/* Dynamic meta tags for SEO — rendered server-side */}
       <Head>
-        <title>{blog.metaTitle || blog.title}</title>
+        <title>{metaTitle}</title>
 
-        {blog.metaDescription && (
-          <meta name="description" content={blog.metaDescription} />
+        {metaDescription && (
+          <meta name="description" content={metaDescription} />
         )}
 
         {blog.metaKeywords && (
@@ -144,6 +115,27 @@ export default function BlogDetail() {
                 : blog.metaKeywords // if already string
             }
           />
+        )}
+
+        <link rel="canonical" href={canonicalUrl} />
+
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={metaTitle} />
+        {metaDescription && (
+          <meta property="og:description" content={metaDescription} />
+        )}
+        <meta property="og:url" content={canonicalUrl} />
+        {blog.coverImage && (
+          <meta property="og:image" content={blog.coverImage} />
+        )}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        {metaDescription && (
+          <meta name="twitter:description" content={metaDescription} />
+        )}
+        {blog.coverImage && (
+          <meta name="twitter:image" content={blog.coverImage} />
         )}
       </Head>
 
@@ -354,4 +346,67 @@ export default function BlogDetail() {
       <Popup/>
     </div>
   );
+}
+
+// ✅ Server-side data fetching. Previously the post was fetched in a
+// useEffect, so the HTML Google (and every AI crawler that does not run JS)
+// received was just "Loading..." — no title, description, h1 or body.
+// Fetching here means the full article ships in the initial HTML.
+export async function getStaticPaths() {
+  try {
+    const { default: dbConnect } = await import("@/lib/dbConnect");
+    const { default: Blog } = await import("@/models/Blog");
+
+    await dbConnect();
+    const blogs = await Blog.find({ status: "published" }).select("slug").lean();
+
+    return {
+      paths: blogs.map((b) => ({ params: { slug: b.slug } })),
+      // Posts published after the last build still render on first request.
+      fallback: "blocking",
+    };
+  } catch (err) {
+    console.error("getStaticPaths blogs error:", err.message);
+    return { paths: [], fallback: "blocking" };
+  }
+}
+
+export async function getStaticProps({ params }) {
+  try {
+    const { default: dbConnect } = await import("@/lib/dbConnect");
+    const { default: Blog } = await import("@/models/Blog");
+
+    await dbConnect();
+
+    const blog = await Blog.findOne({
+      slug: params.slug,
+      status: "published",
+    }).lean();
+
+    if (!blog) return { notFound: true, revalidate: 60 };
+
+    let relatedBlogs = [];
+    if (blog.category) {
+      relatedBlogs = await Blog.find({
+        status: "published",
+        category: blog.category,
+        _id: { $ne: blog._id },
+      })
+        .select("-content")
+        .sort({ publishDate: -1 })
+        .limit(3)
+        .lean();
+    }
+
+    return {
+      props: {
+        blog: JSON.parse(JSON.stringify(blog)),
+        relatedBlogs: JSON.parse(JSON.stringify(relatedBlogs)),
+      },
+      revalidate: 60,
+    };
+  } catch (err) {
+    console.error("getStaticProps blog error:", err.message);
+    return { notFound: true, revalidate: 60 };
+  }
 }

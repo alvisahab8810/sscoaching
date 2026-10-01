@@ -8,6 +8,10 @@
 
 
 import path from "path";
+import { fileURLToPath } from "url";
+
+// .mjs ESM config me __dirname available nahi hota — yahan derive kar rahe hain.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

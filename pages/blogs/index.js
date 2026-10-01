@@ -1,6 +1,6 @@
 
 import { withAdminAuth } from "@/lib/withAdminAuth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import Footer from "@/components/footer/Footer";
@@ -12,13 +12,17 @@ import Popup from "@/components/home/Popup";
 import Offcanvas from "@/components/header/Offcanvas";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 
-export default function Blogs() {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+const SITE_URL = "https://sscoaching.in";
+
+export default function Blogs({ initialBlogs = [], initialTotalPages = 1 }) {
+  // ✅ Page 1 aata hai server se (getStaticProps), isliye pehle render mein hi
+  // blog cards HTML mein hote hain — "Loading blogs..." nahi.
+  const [blogs, setBlogs] = useState(initialBlogs);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
 
 
   const fetchBlogs = async (currentPage = 1) => {
@@ -49,7 +53,13 @@ export default function Blogs() {
 };
 
 
+const didMount = useRef(false);
 useEffect(() => {
+  // Pehla render SSR data use karta hai; sirf page badalne par fetch karo.
+  if (!didMount.current) {
+    didMount.current = true;
+    return;
+  }
   fetchBlogs(page);
 }, [page]);
 
@@ -109,12 +119,26 @@ const getPaginationNumbers = () => {
 
   return (
     <div className="blogs-list-area">
+      <Head>
+        <title>NIOS Blogs & Latest Updates | SS Coaching Lucknow</title>
+        <meta name="description" content="Read the latest NIOS news, admission updates, exam datesheets and study tips from SS Coaching, the leading NIOS coaching centre in Lucknow since 2001." />
+        <link rel="canonical" href={`${SITE_URL}/blogs`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="NIOS Blogs & Latest Updates | SS Coaching Lucknow" />
+        <meta property="og:description" content="Read the latest NIOS news, admission updates, exam datesheets and study tips from SS Coaching, the leading NIOS coaching centre in Lucknow since 2001." />
+        <meta property="og:url" content={`${SITE_URL}/blogs`} />
+      </Head>
+
       <Header />
        <Offcanvas />
               <BranchContactCanvas/>
       
       <div className="container py-5">
-        {/* <h2 className="mb-4">Our Blogs</h2> */}
+        <h1 className="mb-2 blogs-page-heading">NIOS Blogs &amp; Latest Updates</h1>
+        <p className="text-muted mb-4">
+          NIOS admission news, exam datesheets, result updates and study
+          guidance from the SS Coaching team.
+        </p>
         {loading ? (
           <p>Loading blogs...</p>
         ) : error ? (
@@ -232,4 +256,34 @@ const getPaginationNumbers = () => {
       <Popup/>
     </div>
   );
+}
+
+// ✅ Pehla page server par render hota hai, taaki Googlebot aur AI crawlers ko
+// raw HTML mein hi blog list mile ("Loading blogs..." ke bajaye).
+export async function getStaticProps() {
+  try {
+    const { default: dbConnect } = await import("@/lib/dbConnect");
+    const { default: Blog } = await import("@/models/Blog");
+
+    await dbConnect();
+
+    const filter = { status: "published" };
+    const total = await Blog.countDocuments(filter);
+    const blogs = await Blog.find(filter)
+      .select("-content")
+      .limit(10)
+      .sort({ publishDate: -1 })
+      .lean();
+
+    return {
+      props: {
+        initialBlogs: JSON.parse(JSON.stringify(blogs)),
+        initialTotalPages: Math.max(1, Math.ceil(total / 10)),
+      },
+      revalidate: 60,
+    };
+  } catch (err) {
+    console.error("getStaticProps blogs list error:", err.message);
+    return { props: { initialBlogs: [], initialTotalPages: 1 }, revalidate: 60 };
+  }
 }
