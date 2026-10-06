@@ -8,7 +8,7 @@ export default function Document() {
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive" />
         <meta name="google-site-verification" content="u4uLVEr7luIqu3vdMVQ_ef5jVyiotOBcVuImXZCthCE" />
         <meta name="google-site-verification" content="QoOhqK5CHWXyjbIZF-iesLPbhUupUkgFqNLc7LgiTvk" />
-        <meta name="google-site-verification" content="Qo0HqK5CHWXyjbiZF-iesLPbhUupUkgFqNLc7LgiTVk" />
+        {/* <meta name="google-site-verification" content="Qo0HqK5CHWXyjbiZF-iesLPbhUupUkgFqNLc7LgiTVk" /> */}
 
         {/* Google Tag Manager */}
         <script
