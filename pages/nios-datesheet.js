@@ -483,7 +483,7 @@ export default function NIOSDatesheet2026() {
             {/* ===== October 2026 Theory Date Sheet Download Button ===== */}
             <div className="no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
               <a
-                href="/uploads/nios-oct-nov-2026-datesheet.pdf"
+                href="/papers/nios-oct-nov-2026-datesheet.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
