@@ -37,8 +37,11 @@ const limit = 10; // records per page
 
 
   const fetchStudents = async (currentPage = page) => {
+  // sort=recent zaroori hai — API default score ke hisaab se sort karti hai
+  // (public website ke toppers ke liye), jisse nayi entry list me kahin
+  // neeche chali jati thi aur page 1 par dikhti hi nahi thi.
   const res = await fetch(
-    `/api/student-success?page=${currentPage}&limit=${limit}`,
+    `/api/student-success?page=${currentPage}&limit=${limit}&sort=recent`,
     { cache: "no-store" }
   );
 
@@ -88,7 +91,10 @@ const handleSubmit = async (e) => {
   formData.append("rollNo", rollNo);
   formData.append("className", className);
   formData.append("year", year);
-  formData.append("score", score);
+  // DB me score hamesha "96.4%" format me store hota hai. Input me user sirf
+  // number type karta hai, % yahan laga dete hain.
+  const cleanScore = String(score).replace(/[^\d.]/g, "");
+  formData.append("score", cleanScore ? `${cleanScore}%` : "");
   formData.append("bgColor", bgColor);
 
   if (imageFile) {
@@ -165,7 +171,8 @@ const handleSubmit = async (e) => {
   setRollNo(item.rollNo);
   setClassName(item.className);
   setYear(item.year);
-  setScore(item.score);
+  // stored "96.4%" -> input me sirf 96.4 dikhega, % suffix alag se render hota hai
+  setScore(String(item.score ?? "").replace(/[^\d.]/g, ""));
   setBgColor(item.bgColor);
   setImage(item.image);
 };
@@ -247,14 +254,23 @@ const resetForm = () => {
 
     <div className="col-md-3">
       <label className="form-label fw-semibold">Class</label>
-      <input
-        type="text"
-        className="form-control"
-        placeholder="10th / 12th / NEET"
+      <select
+        className="form-select"
         value={className}
         required
         onChange={(e) => setClassName(e.target.value)}
-      />
+      >
+        <option value="">Select Class</option>
+        <option value="10th">10th</option>
+        <option value="12th">12th</option>
+
+        {/* Purane records me "12th PCB" jaisi values hain. Edit karte waqt
+            woh option list me na ho to select blank ho jata aur save par
+            value chup-chaap badal jati — isliye yahan add kar dete hain. */}
+        {className && !["10th", "12th"].includes(className) && (
+          <option value={className}>{className}</option>
+        )}
+      </select>
     </div>
 
     {/* ===== ACADEMIC YEAR ===== */}
@@ -280,14 +296,26 @@ const resetForm = () => {
     {/* ===== RESULT INFO ===== */}
     <div className="col-md-3">
       <label className="form-label fw-semibold">Score</label>
-      <input
-        type="text"
-        className="form-control"
-        placeholder="96.4%"
-        value={score}
-        required
-        onChange={(e) => setScore(e.target.value)}
-      />
+      <div className="input-group">
+        <input
+          type="text"
+          inputMode="decimal"
+          className="form-control"
+          placeholder="96.4"
+          value={score}
+          required
+          /* Sirf digits aur ek decimal point allow — % user ko type nahi
+             karna padta, woh suffix me dikhta hai aur save par lag jata hai. */
+          onChange={(e) =>
+            setScore(
+              e.target.value
+                .replace(/[^\d.]/g, "")
+                .replace(/^(\d*\.?\d*).*$/, "$1")
+            )
+          }
+        />
+        <span className="input-group-text">%</span>
+      </div>
     </div>
 
     {/* ===== DESIGN OPTIONS ===== */}

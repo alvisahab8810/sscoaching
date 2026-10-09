@@ -145,7 +145,10 @@ if (req.method === "GET") {
           year: 1,
         }
       )
-        .sort({ score: -1 }) // ⭐ Highest first
+        // sort=recent -> admin list (nayi entry sabse upar).
+        // default score desc -> public website (toppers pehle). Public page
+        // ka behaviour na badle isliye default waisa hi rakha hai.
+        .sort(req.query.sort === "recent" ? { createdAt: -1 } : { score: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
