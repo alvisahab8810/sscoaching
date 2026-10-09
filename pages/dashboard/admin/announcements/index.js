@@ -136,7 +136,9 @@ export default function AnnouncementsAdmin() {
         <Sidebar />
         <AdminOffcanvas />
 
-        <div className="flex-grow-1" style={{ background: "#f5f7fa" }}>
+        {/* min-width: 0 zaroori hai — warna flex child lambe URL ke hisaab se
+            phail jata hai aur right side ke action buttons screen se bahar chale jate hain. */}
+        <div className="flex-grow-1" style={{ background: "#f5f7fa", minWidth: 0 }}>
           <div className="container-fluid p-4">
 
             {/* ── Header ── */}
