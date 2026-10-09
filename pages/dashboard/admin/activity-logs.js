@@ -14,6 +14,7 @@ const ALL_FEATURES = [
   { key: "leads", label: "Leads" }, { key: "student-success", label: "Student Success" },
   { key: "online-classes", label: "Online Classes" }, { key: "invoices", label: "Invoices" },
   { key: "enrollments", label: "Enrollments" },
+  { key: "pages", label: "Pages" },
 ];
 
 const ACTION_COLORS = {
@@ -31,7 +32,7 @@ const FEATURE_COLORS = {
   blogs: "#3b82f6", faqs: "#8b5cf6", students: "#10b981", courses: "#f59e0b",
   admissions: "#ef4444", announcements: "#06b6d4", leads: "#ec4899",
   "student-success": "#14b8a6", "online-classes": "#f97316",
-  invoices: "#6366f1", enrollments: "#84cc16",
+  invoices: "#6366f1", enrollments: "#84cc16", pages: "#0ea5e9",
 };
 
 function timeAgo(seconds) {
@@ -45,7 +46,7 @@ function timeAgo(seconds) {
 const FEATURE_ICONS = {
   blogs: "📝", faqs: "❓", students: "🎓", courses: "📚", admissions: "📋",
   announcements: "📢", leads: "📞", "student-success": "🏆",
-  "online-classes": "🎥", invoices: "🧾", enrollments: "✅", dashboard: "🏠", other: "⚙️",
+  "online-classes": "🎥", invoices: "🧾", enrollments: "✅", pages: "📄", dashboard: "🏠", other: "⚙️",
 };
 
 export default function ActivityLogsPage({ subAdmins }) {

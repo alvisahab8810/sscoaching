@@ -14,6 +14,7 @@ const FEATURE_MAP = {
   "/dashboard/admin/announcements": { feature: "announcements", label: "Announcements" },
   "/dashboard/admin/invoices": { feature: "invoices", label: "Invoices" },
   "/dashboard/admin/enrollments": { feature: "enrollments", label: "Enrollments" },
+  "/dashboard/admin/pages": { feature: "pages", label: "Pages" },
   "/dashboard": { feature: "dashboard", label: "Dashboard" },
 };
 

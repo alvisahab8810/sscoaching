@@ -23,6 +23,7 @@ const ALL_FEATURES = [
   { key: "online-classes", label: "Online Classes", desc: "Live classes" },
   { key: "invoices", label: "Invoices", desc: "Billing" },
   { key: "enrollments", label: "Enrollments", desc: "Enrollments" },
+  { key: "pages", label: "Pages", desc: "Website page content" },
 ];
 
 const ACTION_COLORS = {

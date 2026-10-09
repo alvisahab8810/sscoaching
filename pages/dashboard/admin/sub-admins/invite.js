@@ -20,6 +20,7 @@ const ALL_FEATURES = [
   { key: "online-classes", label: "Online Classes", desc: "Manage live video classes" },
   { key: "invoices", label: "Invoices", desc: "View and manage billing" },
   { key: "enrollments", label: "Enrollments", desc: "Track student enrollments" },
+  { key: "pages", label: "Pages", desc: "Edit website page content" },
 ];
 
 function generatePassword(len = 12) {

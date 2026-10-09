@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiClipboard } from "react-icons/fi";
+import { FiClipboard, FiFileText } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
 import { MdHistory, MdBarChart, MdNotifications } from "react-icons/md";
@@ -19,6 +19,7 @@ const FEATURE_PATHS = {
   announcements: "/dashboard/admin/announcements",
   invoices: "/dashboard/admin/invoices",
   enrollments: "/dashboard/admin/enrollments",
+  pages: "/dashboard/admin/pages",
   analytics: "/dashboard/admin/analytics",
 };
 
@@ -238,6 +239,14 @@ export default function Sidebar() {
           <li style={styles.navItem}>
             <Link href="/dashboard/admin/announcements" style={styles.navLink(pathname?.startsWith("/dashboard/admin/announcements"))}>
               <FiBell style={{ marginRight: "8px", fontSize: "16px" }} /> Announcements
+            </Link>
+          </li>
+        )}
+
+        {canSee("pages") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/pages" style={styles.navLink(pathname?.startsWith("/dashboard/admin/pages"))}>
+              <FiFileText style={{ marginRight: "8px", fontSize: "16px" }} /> Pages
             </Link>
           </li>
         )}
