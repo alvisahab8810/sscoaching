@@ -255,23 +255,23 @@ const nios2026FaqSchemaJSON = `{
       "name": "When will NIOS release the October 2026 theory exam date sheet?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "NIOS is expected to release the official theory exam date sheet for the October 2026 session in September 2026. The board publishes it as a downloadable PDF on its official websites, sdmis.nios.ac.in and nios.ac.in, listing subject-wise dates, exam timings, and reporting instructions for both Class 10 and Class 12 students. Students should keep checking the official portal from early September onward, since the exact release date is announced through a public notice a few days in advance."
+        "text": "NIOS released the official theory exam date sheet for the October 2026 session on 08 October 2026 through Notification No. 63/2026. It is available as a downloadable PDF on the official websites, sdmis.nios.ac.in and nios.ac.in, listing subject-wise dates, exam timings, and reporting instructions for both Class 10th and Class 12th students. The same official schedule is reproduced in the date sheet tables on this page."
       }
     },
     {
       "@type": "Question",
-      "name": "What are the NIOS Class 10 October 2026 exam dates?",
+      "name": "What are the NIOS Class 10th October 2026 exam dates?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The NIOS Class 10 theory exams for the October 2026 session are expected to run from October 14 to November 18, 2026. Major subjects include Hindi on October 24, Mathematics on October 30, Social Science on November 3, and English on November 11. Regional languages such as Bengali, Marathi, Telugu, and Gujarati are scheduled together on October 16. The full subject-wise schedule is listed in the date sheet table above."
+        "text": "As per the official date sheet, the NIOS Class 10th theory exams for the October 2026 session will run from 22 October to 07 December 2026. Major subjects include Psychology on 04 November, Mathematics on 05 November, Science on 06 November, English on 12 November, Business Studies on 17 November, Hindi on 18 November, Economics on 20 November, Social Science on 21 November and Urdu on 26 November 2026. Regional languages such as Bengali, Marathi, Telugu, and Gujarati are scheduled together on 28 October 2026. The full subject-wise schedule is listed in the date sheet table above."
       }
     },
     {
       "@type": "Question",
-      "name": "What are the NIOS Class 12 October 2026 exam dates?",
+      "name": "What are the NIOS Class 12th October 2026 exam dates?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The NIOS Class 12 theory exams for the October 2026 session are expected to run from October 14 to November 18, 2026, similar to Class 10 but with a different subject-date mapping. Key subjects include Geography on October 16, Chemistry on October 29, English on October 31, Physics on November 6, and Mathematics on November 11. Vocational and skill-based subjects such as Housekeeping and Web Development are scheduled on the final exam date, November 18."
+        "text": "As per the official date sheet, the NIOS Class 12th theory exams for the October 2026 session will run from 22 October to 05 December 2026, with a different subject-date mapping from Class 10th. Key subjects include Geography on 24 October, English on 28 October, Mathematics on 31 October, Physics and History on 02 November, Hindi on 04 November, Biology and Accountancy on 05 November, Business Studies on 06 November, Chemistry and Political Science on 17 November and Economics on 21 November 2026. Vocational and skill-based subjects such as House Keeping and Web Development are scheduled on 01 December 2026."
       }
     },
     {
@@ -287,7 +287,7 @@ const nios2026FaqSchemaJSON = `{
       "name": "What is the exam timing for NIOS October 2026 theory exams?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "NIOS theory exams are conducted from 2:15 PM to 5:30 PM. Students get an additional 15 minutes of reading time, generally from 2:15 PM to 2:30 PM, to go through the question paper before they can start writing answers. Candidates are advised to reach the exam centre at least 30 minutes before the reporting time to complete verification and be seated on time."
+        "text": "All NIOS October 2026 theory exams begin at 2:30 PM, with 15 minutes of reading time given before that (generally 2:15 PM to 2:30 PM) to go through the question paper. Most papers run from 2:30 PM to 5:30 PM, while some papers end at 4:00 PM, 4:30 PM or 5:00 PM - the exact end time for each subject is shown in the date sheet tables above. Candidates are advised to reach the exam centre at least 30 minutes before the reporting time to complete verification and be seated on time."
       }
     },
     {
@@ -295,7 +295,7 @@ const nios2026FaqSchemaJSON = `{
       "name": "When will the NIOS admit card for the October 2026 session be released?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The NIOS theory exam admit card for the October 2026 session is expected to be released in October 2026, shortly before the exams begin. The practical exam admit card is released earlier, in September 2026. Students can download both admit cards from the official NIOS student login portal, sdmis.nios.ac.in, using their enrollment number and date of birth."
+        "text": "The NIOS theory exam admit card (Intimation cum Hall Ticket) for the October 2026 session is released in October 2026, shortly before the exams begin on 22 October 2026. The practical exam admit card was released earlier, in September 2026. Students can download both admit cards from the official NIOS student login portal, sdmis.nios.ac.in, using their enrollment number and date of birth."
       }
     },
     {
@@ -311,15 +311,15 @@ const nios2026FaqSchemaJSON = `{
       "name": "When will the NIOS October 2026 exam results be declared?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "NIOS is expected to declare the results for the October-November 2026 session in December 2026. Results for both Class 10 and Class 12 are usually announced on the same day and can be checked on the official results portal, results.nios.ac.in, using the student's roll number. A physical marksheet is issued later through the respective regional NIOS study centre."
+        "text": "NIOS is expected to declare the results for the October-November 2026 session about 7 weeks after the last examination, i.e. around January 2027. Results for both Class 10th and Class 12th are usually announced on the same day and can be checked on the official results portal, results.nios.ac.in, using the student's roll number. A physical marksheet is issued later through the respective regional NIOS study centre."
       }
     },
     {
       "@type": "Question",
-      "name": "Are NIOS Class 10 and Class 12 October exam dates the same?",
+      "name": "Are NIOS Class 10th and Class 12th October exam dates the same?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No, NIOS Class 10 and Class 12 exams follow separate subject-wise date sheets, even though both are conducted within the same overall period from mid-October to mid-November. A subject common to both classes, such as Mathematics or English, is usually scheduled on a different date for Class 10 than for Class 12, so students must check the specific date sheet for their class rather than assuming the schedules match."
+        "text": "No, NIOS Class 10th and Class 12th exams follow separate subject-wise date sheets, even though both are conducted within the same overall period from late October to early December. A subject common to both classes, such as Mathematics or English, is usually scheduled on a different date for Class 10th than for Class 12th, so students must check the specific date sheet for their class rather than assuming the schedules match."
       }
     },
     {
@@ -360,7 +360,7 @@ export default function NIOSDatesheet2026() {
         <title>NIOS Date Sheet 2026 Class 10th & 12th – October/November Exam Dates</title>
         <meta
           name="description"
-          content="NIOS Date Sheet 2026 for Class 10 & 12: Check the latest October/November exam date sheet, theory and practical dates, timings, PDF download and exam updates."
+          content="NIOS Date Sheet 2026 for Class 10th & 12th: Check the latest October/November exam date sheet, theory and practical dates, timings, PDF download and exam updates."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -435,15 +435,15 @@ export default function NIOSDatesheet2026() {
           <div className="container">
 
             <h1 className="nios-125h-senior-hero-title">
-              NIOS Date Sheet 2026 for Class 10 & 12 – October/November Exam Dates
+              NIOS Date Sheet 2026 for Class 10th & 12th – October/November Exam Dates
             </h1>
 
             <div className="spacer-area">
               <p>
-                NIOS students preparing for the October–November 2026 Public Examination need a clear and reliable examination schedule to plan their preparation effectively. The National Institute of Open Schooling (NIOS) conducts Public Examinations for Secondary (Class 10) and Senior Secondary (Class 12) courses in different examination sessions during the year.
+                NIOS students preparing for the October–November 2026 Public Examination need a clear and reliable examination schedule to plan their preparation effectively. The National Institute of Open Schooling (NIOS) conducts Public Examinations for Secondary (Class 10th) and Senior Secondary (Class 12th) courses in different examination sessions during the year.
               </p>
               <p>
-                This page provides the latest information about the NIOS Date Sheet 2026 for Class 10 and Class 12, including the October–November 2026 theory examination schedule, practical examination dates, exam timings, date sheet release status, PDF download information and important instructions for students.
+                This page provides the latest information about the NIOS Date Sheet 2026 for Class 10th and Class 12th, including the October–November 2026 theory examination schedule, practical examination dates, exam timings, date sheet release status, PDF download information and important instructions for students.
               </p>
             </div>
 
@@ -455,17 +455,58 @@ export default function NIOSDatesheet2026() {
 
             <div className="spacer-area">
               <p>
-                The official NIOS October/November 2026 theory examination date sheet for Class 10 and Class 12 has not been released yet.
+                <strong>Official update:</strong> NIOS has released the official
+                theory examination date sheet for the October 2026 Public
+                Examination through Notification No. 63/2026 dated 08 October
+                2026. The schedule below is taken directly from that official
+                notification.
               </p>
               <p>
-                NIOS has already started the examination-related process for the upcoming October 2026 Public Examination. Students can check official notifications regarding examination fee payment, exam centre registration and other examination-related updates through the NIOS website.
+                The October 2026 theory examinations for both Secondary (Class
+                10) and Senior Secondary (Class 12th) will begin on{" "}
+                <strong>22 October 2026</strong> and conclude on{" "}
+                <strong>07 December 2026</strong>. All papers start at{" "}
+                <strong>2:30 P.M.</strong>, with an additional{" "}
+                <strong>15 minutes of reading time</strong> given before writing
+                begins. The end time depends on the paper, as shown in the
+                tables below.
               </p>
               <p>
-                Once NIOS officially releases the October/November 2026 date sheet, this page will be updated with the subject-wise examination dates, examination timings and official PDF download link.
+                NIOS has stated that there will be no change in these
+                examination dates. Students must download their Intimation cum
+                Hall Ticket (admit card) from the official student portal{" "}
+                <strong>sdmis.nios.ac.in</strong> and verify their own
+                subject-wise dates and reporting time before the exam.
               </p>
-              <p>
-                Students should avoid relying on unofficial or unconfirmed exam dates until the official NIOS date sheet is published.
-              </p>
+            </div>
+
+            {/* ===== October 2026 Theory Date Sheet Download Button ===== */}
+            <div className="no-print" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
+              <a
+                href="/uploads/nios-oct-nov-2026-datesheet.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  backgroundColor: "#1a73e8",
+                  color: "#fff",
+                  padding: "10px 20px",
+                  borderRadius: "6px",
+                  fontWeight: "600",
+                  fontSize: "15px",
+                  textDecoration: "none",
+                  transition: "background 0.2s",
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download NIOS October 2026 Theory Date Sheet (PDF)
+              </a>
             </div>
 
             <h3 className="nios-125h-senior-hero-title">
@@ -477,239 +518,420 @@ export default function NIOSDatesheet2026() {
                 <thead>
                   <tr>
                     <th>Event</th>
-                    <th className="date-col">Expected Timeline</th>
+                    <th className="date-col">Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Practical exam timetable release</td>
-                    <td className="date-col">August 2026</td>
-                  </tr>
-                  <tr>
-                    <td>Practical admit card</td>
-                    <td className="date-col">September 2026</td>
-                  </tr>
                   <tr>
                     <td>Practical exams</td>
-                    <td className="date-col">September 2026</td>
+                    <td className="date-col">14 – 29 September 2026 (completed)</td>
                   </tr>
                   <tr>
-                    <td>Theory timetable release</td>
-                    <td className="date-col">September 2026</td>
+                    <td>Theory date sheet released</td>
+                    <td className="date-col">08 October 2026 (Notification 63/2026)</td>
                   </tr>
                   <tr>
-                    <td>Theory admit card</td>
-                    <td className="date-col">October 2026</td>
+                    <td>Theory admit card (Intimation cum Hall Ticket)</td>
+                    <td className="date-col">October 2026 – sdmis.nios.ac.in</td>
                   </tr>
                   <tr>
-                    <td>Class 10 theory exams</td>
-                    <td className="date-col">October–November 2026</td>
+                    <td>Class 10th theory exams</td>
+                    <td className="date-col">22 October – 07 December 2026</td>
                   </tr>
                   <tr>
-                    <td>Class 12 theory exams</td>
-                    <td className="date-col">October–November 2026</td>
+                    <td>Class 12th theory exams</td>
+                    <td className="date-col">22 October – 05 December 2026</td>
                   </tr>
                   <tr>
-                    <td>Result declaration</td>
-                    <td className="date-col">December 2026</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h3 className="nios-125h-senior-hero-title">
-              NIOS Class 10th October Session Theory Exam Date Sheet 2026 (Expected)
-            </h3>
-
-            <div className="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="date-col">Exam Date</th>
-                    <th>Subjects</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="date-col">Oct 14, 2026</td>
-                    <td>Sanskrit Literature, Entrepreneurship</td>
+                    <td>Exam timing</td>
+                    <td className="date-col">2:30 P.M. onwards (+15 min reading time)</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 15, 2026</td>
-                    <td>Bhartiya Darshan</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 16, 2026</td>
-                    <td>Bengali, Marathi, Telugu, Gujarati, Urdu, Kannada, Punjabi, Assamese, Odia, Malayalam, Nepali, Arabic, Persian, Tamil, Sindhi</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 17, 2026</td>
-                    <td>Psychology</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 24, 2026</td>
-                    <td>Hindi</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 25, 2026</td>
-                    <td>Employability Skills</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 29, 2026</td>
-                    <td>Data Entry Operations (IT)</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 30, 2026</td>
-                    <td>Mathematics</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Oct 31, 2026</td>
-                    <td>Business Studies</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 3, 2026</td>
-                    <td>Social Science</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 4, 2026</td>
-                    <td>Economics, Veda Adhyayan</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 6, 2026</td>
-                    <td>Painting</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 7, 2026</td>
-                    <td>Science & Technology</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 8, 2026</td>
-                    <td>Folk Art</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 10, 2026</td>
-                    <td>Urdu, Sanskrit, Indian Sign Language, Bodh Darshan</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 11, 2026</td>
-                    <td>English</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 12, 2026</td>
-                    <td>Bakery & Confectionery, Food Production, Food & Beverage, Housekeeping, Beauty & Health Care</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 13, 2026</td>
-                    <td>Home Science</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 14, 2026</td>
-                    <td>Hindustani Sangeet, Natyakala</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 17, 2026</td>
-                    <td>Indian Culture & Heritage, Carnatic Sangeet</td>
-                  </tr>
-                  <tr>
-                    <td className="date-col">Nov 18, 2026</td>
-                    <td>Accountancy, Sanskrit Vyakaran</td>
+                    <td>Result declaration (expected)</td>
+                    <td className="date-col">Approx. 7 weeks after the last exam</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <h3 className="nios-125h-senior-hero-title">
-              NIOS Class 12th October Session Theory Exam Date Sheet 2026 (Expected)
+              NIOS Class 10th (Secondary) October 2026 Theory Exam Date Sheet – Official
             </h3>
 
             <div className="table-wrapper">
               <table>
                 <thead>
                   <tr>
-                    <th className="date-col">Exam Date</th>
-                    <th>Subjects</th>
+                    <th>DATE</th>
+                    <th>SUBJECT &amp; CODE</th>
+                    <th>TIME</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="date-col">Oct 14, 2026</td>
-                    <td>Early Childhood Care and Education</td>
+                    <td>Thursday, 22nd October, 2026 †</td>
+                    <td>
+                      Folk Art (244)<br />
+                      Veda Adhyayan (245)<br />
+                      Logistics and Supply Chain Management (258)<br />
+                      Warehousing Principles and Inventory Management (259)<br />
+                      Physical Education (273)
+                    </td>
+                    <td>
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.
+                    </td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 15, 2026</td>
-                    <td>Psychology, Sanskrit Vyakaran</td>
+                    <td>Friday, 23rd October, 2026 †</td>
+                    <td>
+                      Accountancy (224)<br />
+                      Indian Sign Language (230)
+                    </td>
+                    <td>
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.
+                    </td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 16, 2026</td>
-                    <td>Geography</td>
+                    <td>Saturday, 24th October, 2026</td>
+                    <td>Painting (225)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 17, 2026</td>
-                    <td>Sanskrit</td>
+                    <td>Wednesday, 28th October, 2026</td>
+                    <td>
+                      Bengali (203), Marathi (204), Telugu (205), Gujarati (207), Kannada (208), Punjabi (210),
+                      Assamese (228), Nepali (231), Malayalam (232), Odia (233), Bhoti Language (234),
+                      Arabic (235), Persian (236), Tamil (237), Sindhi (238)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 24, 2026</td>
-                    <td>Bengali, Tamil, Odia, Gujarati, Punjabi, Arabic, Persian, Malayalam, Sindhi, Bhoti</td>
+                    <td>Thursday, 29th October, 2026</td>
+                    <td>Data Entry Operations (Th) (229)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 25, 2026</td>
-                    <td>Gender Studies</td>
+                    <td>Saturday, 31st October, 2026</td>
+                    <td>Home Science (216)</td>
+                    <td>2.30 P.M. to 5.00 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 29, 2026</td>
-                    <td>Chemistry, Political Science, Mass Communication, Military Studies</td>
+                    <td>Monday, 02nd November, 2026</td>
+                    <td>
+                      Sanskrit (209), Bodh Darshan (241), Employability Skills (250), Military Studies (274)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 30, 2026</td>
-                    <td>Home Science</td>
+                    <td>Wednesday, 04th November, 2026</td>
+                    <td><strong>Psychology (222)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Oct 31, 2026</td>
-                    <td>English</td>
+                    <td>Thursday, 05th November, 2026</td>
+                    <td><strong>Mathematics (211)</strong></td>
+                    <td>2.30 P.M. to 5.00 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 3, 2026</td>
-                    <td>Computer Science, Physical Education, Sociology, Tourism</td>
+                    <td>Friday, 06th November, 2026</td>
+                    <td><strong>Science (212)</strong></td>
+                    <td>2.30 P.M. to 5.00 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 4, 2026</td>
-                    <td>Hindi, Employability Skills & Entrepreneurship</td>
+                    <td>Thursday, 12th November, 2026</td>
+                    <td><strong>English (202)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 6, 2026</td>
-                    <td>Physics, History, Environmental Science, Library & Information Science</td>
+                    <td>Tuesday, 17th November, 2026</td>
+                    <td><strong>Business Studies (215)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 7, 2026</td>
-                    <td>Data Entry Operations (Theory)</td>
+                    <td>Wednesday, 18th November, 2026</td>
+                    <td><strong>Hindi (201)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 10, 2026</td>
-                    <td>Biology, Accountancy, Introduction to Law, Military History</td>
+                    <td>Friday, 20th November, 2026 *</td>
+                    <td>
+                      <strong>Economics (214)</strong><br />
+                      Natyakala (285)
+                    </td>
+                    <td>
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.
+                    </td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 11, 2026</td>
-                    <td>Mathematics, Veda Adhyayan</td>
+                    <td>Saturday, 21st November, 2026</td>
+                    <td><strong>Social Science (213)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 12, 2026</td>
-                    <td>Painting</td>
+                    <td>Wednesday, 25th November, 2026</td>
+                    <td>Indian Culture and Heritage (223)</td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 13, 2026</td>
-                    <td>Business Studies, Sanskrit Sahitya</td>
+                    <td>Thursday, 26th November, 2026</td>
+                    <td><strong>Urdu (206)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 14, 2026</td>
-                    <td>Urdu, Bharatiya Darshan, Natyakala</td>
+                    <td>Saturday, 28th November, 2026</td>
+                    <td>Hindustani Sangeet (242)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 17, 2026</td>
-                    <td>Economics, Bodh Darshan</td>
+                    <td>Tuesday, 01st December, 2026</td>
+                    <td>
+                      Sanskrit Vyakaran (246), Entrepreneurship (249)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                   <tr>
-                    <td className="date-col">Nov 18, 2026</td>
-                    <td>Housekeeping, Catering Management, Food Processing, Hotel Front Office Operations, Preservation of Fruits & Vegetables, Web Designing & Development, Computer & Office Applications, Data Entry Operations, Web Development, CRM Domestic Voice, Computer Hardware Assembly & Maintenance, Yoga Assistant</td>
+                    <td>Wednesday, 02nd December, 2026</td>
+                    <td>
+                      Bakery and Confectionary (256)<br />
+                      Cutting and Tailoring (605)<br />
+                      Dress Making (606)<br />
+                      Certificate in Basic Computing (Theory) (608)<br />
+                      Beauty Culture and Hair Care (612)<br />
+                      Certificate in Desk Top Publishing (613)<br />
+                      Certificate in Yog (614)<br />
+                      Certificate in Indian Embroidery (628)<br />
+                      Beauty Therapy (640)<br />
+                      Hair Care and Styling (641)<br />
+                      Hand and Foot Care (642)
+                    </td>
+                    <td>
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Friday, 04th December, 2026</td>
+                    <td>Carnatic Sangeet (243)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 05th December, 2026</td>
+                    <td>Bharatiya Darshan (247)</td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Monday, 07th December, 2026</td>
+                    <td>Sanskrit Sahitya (248)</td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 className="nios-125h-senior-hero-title">
+              NIOS Class 12th (Senior Secondary) October 2026 Theory Exam Date Sheet – Official
+            </h3>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>SUBJECT &amp; CODE</th>
+                    <th>TIME</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Thursday, 22nd October, 2026 †</td>
+                    <td>
+                      Sanskrit Vyakaran (346), Basics of Transportation (379), Bodh Darshan (381)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Friday, 23rd October, 2026 †</td>
+                    <td>Early Childhood Care and Education (376)</td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 24th October, 2026</td>
+                    <td><strong>Geography (316)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday, 28th October, 2026</td>
+                    <td><strong>English (302)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Thursday, 29th October, 2026</td>
+                    <td>Painting (332)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 31st October, 2026</td>
+                    <td>
+                      <strong>Mathematics (311)</strong>, Transportation and Warehouse Management (377)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Monday, 02nd November, 2026</td>
+                    <td>
+                      <strong>Physics (312)</strong>, <strong>History (315)</strong>, Environmental Science (333),
+                      Library and Information Science (339)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday, 04th November, 2026</td>
+                    <td>
+                      <strong>Hindi (301)</strong>, Employability Skills and Entrepreneurship (350),
+                      Inventory Management (378)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Thursday, 05th November, 2026</td>
+                    <td>
+                      <strong>Biology (314)</strong>, <strong>Accountancy (320)</strong>,
+                      Introduction to Law (338), Military History (375)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Friday, 06th November, 2026</td>
+                    <td><strong>Business Studies (319)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Thursday, 12th November, 2026</td>
+                    <td>
+                      <strong>Computer Science (330)</strong>, <strong>Sociology (331)</strong>,
+                      Tourism (337), Physical Education (373)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Tuesday, 17th November, 2026</td>
+                    <td>
+                      <strong>Chemistry (313)</strong>, <strong>Political Science (317)</strong>,
+                      Mass Communication (335), Military Studies (374)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday, 18th November, 2026</td>
+                    <td>
+                      Bengali (303), Tamil (304), Odia (305), Gujarati (307), Punjabi (310),
+                      Arabic (341), Persian (342), Malayalam (343), Sindhi (344), Bhoti Language (380)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Friday, 20th November, 2026 *</td>
+                    <td>Sanskrit (309)</td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 21st November, 2026</td>
+                    <td><strong>Economics (318)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday, 25th November, 2026</td>
+                    <td><strong>Home Science (321)</strong></td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Thursday, 26th November, 2026</td>
+                    <td>Data Entry Operations (Th) (336)</td>
+                    <td>2.30 P.M. to 4.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 28th November, 2026</td>
+                    <td>
+                      <strong>Psychology (328)</strong><br />
+                      Indian Sign Language (382)
+                    </td>
+                    <td>
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tuesday, 01st December, 2026</td>
+                    <td>
+                      House Keeping (356)<br />
+                      Catering Management (357)<br />
+                      Food Processing (358)<br />
+                      Hotel Front Office Operations (360)<br />
+                      Preservation of Fruits and Vegetables (363)<br />
+                      Web Designing and Development (Th) (622)<br />
+                      Computer and Office Applications (631)<br />
+                      Data Entry Operations (632)<br />
+                      Web Development (660)<br />
+                      CRM Domestic Voice (661)<br />
+                      Computer Hardware Assembly and Maintenance (663)<br />
+                      Yog Assistant (667)
+                    </td>
+                    <td>
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.<br />
+                      2.30 P.M. to 4.00 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Wednesday, 02nd December, 2026</td>
+                    <td>
+                      <strong>Urdu (306)</strong>, Veda Adhyayan (345), Entrepreneurship (349)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
+                  </tr>
+                  <tr>
+                    <td>Friday, 04th December, 2026</td>
+                    <td>
+                      Bharatiya Darshan (347)<br />
+                      Krishi: Production, Processing and Making (383)<br />
+                      Natyakala (385)
+                    </td>
+                    <td>
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 5.30 P.M.<br />
+                      2.30 P.M. to 4.30 P.M.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Saturday, 05th December, 2026</td>
+                    <td>
+                      Gender Studies (340), Sanskrit Sahitya (348)
+                    </td>
+                    <td>2.30 P.M. to 5.30 P.M.</td>
                   </tr>
                 </tbody>
               </table>
@@ -717,7 +939,30 @@ export default function NIOSDatesheet2026() {
 
             <div className="spacer-area">
               <p>
-                Note: This is the expected schedule based on the pattern followed in previous sessions. NIOS usually confirms the final date sheet on its official portals — sdmis.nios.ac.in and nios.ac.in — a few weeks before the exams begin. We&apos;ll update this page the moment the official PDF is out.
+                <strong>* Important for Lucknow students (NIOS Regional Centre Prayagraj):</strong>{" "}
+                The papers scheduled for <strong>20 November 2026</strong> will
+                instead be held on <strong>03 December 2026</strong>. The same
+                change applies to students under Regional Centre Dehradun.
+              </p>
+              <p>
+                <strong>† For Regional Centre Gangtok only:</strong> the papers
+                scheduled for 22 October 2026 will be held on{" "}
+                <strong>27 October 2026</strong>, and the papers scheduled for
+                23 October 2026 will be held on{" "}
+                <strong>03 November 2026</strong>.
+              </p>
+              <p>
+                All examinations begin at <strong>2:30 P.M.</strong> with 15
+                minutes of reading time. Where a date has more than one subject,
+                the time column shows the end time for each paper separately.
+                Main subjects are highlighted in bold.
+              </p>
+              <p>
+                Students must download the Intimation cum Hall Ticket from{" "}
+                <strong>sdmis.nios.ac.in</strong> and cross-check their
+                subject-wise dates. This schedule is reproduced from NIOS
+                Notification No. 63/2026 dated 08 October 2026; NIOS has
+                confirmed there will be no change in the exam dates.
               </p>
             </div>
 
@@ -1300,7 +1545,7 @@ export default function NIOSDatesheet2026() {
               <ul>
                 <li>Reach the exam centre at least 30 minutes before the reporting time.</li>
                 <li>Students get 15 minutes of reading time (usually 2:15 PM to 2:30 PM) to go through the question paper before writing begins.</li>
-                <li>The exam runs from 2:15 PM to 5:30 PM.</li>
+                <li>Most papers run from 2:30 PM to 5:30 PM; some papers end at 4:00 PM, 4:30 PM or 5:00 PM, as shown in the date sheet tables above.</li>
               </ul>
             </div>
 

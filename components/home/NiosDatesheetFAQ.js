@@ -5,15 +5,15 @@ import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 const faqData = [
   {
     q: "When will NIOS release the October 2026 theory exam date sheet?",
-    a: "NIOS is expected to release the official theory exam date sheet for the October 2026 session in September 2026. The board publishes it as a downloadable PDF on its official websites, sdmis.nios.ac.in and nios.ac.in, listing subject-wise dates, exam timings, and reporting instructions for both Class 10 and Class 12 students. Students should keep checking the official portal from early September onward, since the exact release date is announced through a public notice a few days in advance.",
+    a: "NIOS released the official theory exam date sheet for the October 2026 session on 08 October 2026 through Notification No. 63/2026. It is available as a downloadable PDF on the official websites, sdmis.nios.ac.in and nios.ac.in, listing subject-wise dates, exam timings, and reporting instructions for both Class 10th and Class 12th students. The same official schedule is reproduced in the date sheet tables on this page.",
   },
   {
-    q: "What are the NIOS Class 10 October 2026 exam dates?",
-    a: "The NIOS Class 10 theory exams for the October 2026 session are expected to run from October 14 to November 18, 2026. Major subjects include Hindi on October 24, Mathematics on October 30, Social Science on November 3, and English on November 11. Regional languages such as Bengali, Marathi, Telugu, and Gujarati are scheduled together on October 16. The full subject-wise schedule is listed in the date sheet table above.",
+    q: "What are the NIOS Class 10th October 2026 exam dates?",
+    a: "As per the official date sheet, the NIOS Class 10th theory exams for the October 2026 session will run from 22 October to 07 December 2026. Major subjects include Psychology on 04 November, Mathematics on 05 November, Science on 06 November, English on 12 November, Business Studies on 17 November, Hindi on 18 November, Economics on 20 November, Social Science on 21 November and Urdu on 26 November 2026. Regional languages such as Bengali, Marathi, Telugu, and Gujarati are scheduled together on 28 October 2026. The full subject-wise schedule is listed in the date sheet table above.",
   },
   {
-    q: "What are the NIOS Class 12 October 2026 exam dates?",
-    a: "The NIOS Class 12 theory exams for the October 2026 session are expected to run from October 14 to November 18, 2026, similar to Class 10 but with a different subject-date mapping. Key subjects include Geography on October 16, Chemistry on October 29, English on October 31, Physics on November 6, and Mathematics on November 11. Vocational and skill-based subjects such as Housekeeping and Web Development are scheduled on the final exam date, November 18.",
+    q: "What are the NIOS Class 12th October 2026 exam dates?",
+    a: "As per the official date sheet, the NIOS Class 12th theory exams for the October 2026 session will run from 22 October to 05 December 2026, with a different subject-date mapping from Class 10th. Key subjects include Geography on 24 October, English on 28 October, Mathematics on 31 October, Physics and History on 02 November, Hindi on 04 November, Biology and Accountancy on 05 November, Business Studies on 06 November, Chemistry and Political Science on 17 November and Economics on 21 November 2026. Vocational and skill-based subjects such as House Keeping and Web Development are scheduled on 01 December 2026.",
   },
   {
     q: "When are the NIOS practical exams for the October 2026 session?",
@@ -21,11 +21,11 @@ const faqData = [
   },
   {
     q: "What is the exam timing for NIOS October 2026 theory exams?",
-    a: "NIOS theory exams are conducted from 2:15 PM to 5:30 PM. Students get an additional 15 minutes of reading time, generally from 2:15 PM to 2:30 PM, to go through the question paper before they can start writing answers. Candidates are advised to reach the exam centre at least 30 minutes before the reporting time to complete verification and be seated on time.",
+    a: "All NIOS October 2026 theory exams begin at 2:30 PM, with 15 minutes of reading time given before that (generally 2:15 PM to 2:30 PM) to go through the question paper. Most papers run from 2:30 PM to 5:30 PM, while some papers end at 4:00 PM, 4:30 PM or 5:00 PM - the exact end time for each subject is shown in the date sheet tables above. Candidates are advised to reach the exam centre at least 30 minutes before the reporting time to complete verification and be seated on time.",
   },
   {
     q: "When will the NIOS admit card for the October 2026 session be released?",
-    a: "The NIOS theory exam admit card for the October 2026 session is expected to be released in October 2026, shortly before the exams begin. The practical exam admit card is released earlier, in September 2026. Students can download both admit cards from the official NIOS student login portal, sdmis.nios.ac.in, using their enrollment number and date of birth.",
+    a: "The NIOS theory exam admit card (Intimation cum Hall Ticket) for the October 2026 session is released in October 2026, shortly before the exams begin on 22 October 2026. The practical exam admit card was released earlier, in September 2026. Students can download both admit cards from the official NIOS student login portal, sdmis.nios.ac.in, using their enrollment number and date of birth.",
   },
   {
     q: "What is the last date to apply for the NIOS October 2026 session?",
@@ -33,11 +33,11 @@ const faqData = [
   },
   {
     q: "When will the NIOS October 2026 exam results be declared?",
-    a: "NIOS is expected to declare the results for the October–November 2026 session in December 2026. Results for both Class 10 and Class 12 are usually announced on the same day and can be checked on the official results portal, results.nios.ac.in, using the student's roll number. A physical marksheet is issued later through the respective regional NIOS study centre.",
+    a: "NIOS is expected to declare the results for the October–November 2026 session about 7 weeks after the last examination, i.e. around January 2027. Results for both Class 10th and Class 12th are usually announced on the same day and can be checked on the official results portal, results.nios.ac.in, using the student's roll number. A physical marksheet is issued later through the respective regional NIOS study centre.",
   },
   {
-    q: "Are NIOS Class 10 and Class 12 October exam dates the same?",
-    a: "No, NIOS Class 10 and Class 12 exams follow separate subject-wise date sheets, even though both are conducted within the same overall period from mid-October to mid-November. A subject common to both classes, such as Mathematics or English, is usually scheduled on a different date for Class 10 than for Class 12, so students must check the specific date sheet for their class rather than assuming the schedules match.",
+    q: "Are NIOS Class 10th and Class 12th October exam dates the same?",
+    a: "No, NIOS Class 10th and Class 12th exams follow separate subject-wise date sheets, even though both are conducted within the same overall period from late October to early December. A subject common to both classes, such as Mathematics or English, is usually scheduled on a different date for Class 10th than for Class 12th, so students must check the specific date sheet for their class rather than assuming the schedules match.",
   },
   {
     q: "Can NIOS October 2026 exam dates change after the date sheet is released?",

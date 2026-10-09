@@ -3481,3 +3481,35 @@ h1.hg-intro-h1 {
 
 
 
+
+/* ===== Header fix: 1200px - 1399px =====
+   Is range me logo 236px ka rehta tha aur nav ka gap 30px / font 15px,
+   jisse nav links logo ke upar chadh jate the aur "NIOS Date Sheet" do
+   line me toot jata tha. Logo chhota + gap/font kam + nowrap se sab ek
+   line me fit ho jata hai. 1200px se neeche hamburger menu aa jata hai. */
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+
+    .header-content > div:first-child {
+        flex-shrink: 0;
+    }
+
+    .logo {
+        width: clamp(160px, 14vw, 200px);
+        height: auto;
+    }
+
+    .nav-menu {
+        gap: clamp(12px, 1.4vw, 20px);
+        flex-wrap: nowrap;
+    }
+
+    .nav-menu .nav-item {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .nav-menu .dropdown-toggle {
+        white-space: nowrap;
+    }
+
+}
