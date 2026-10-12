@@ -6,6 +6,18 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
 
+// Class 10 has no streams; class 12 is split by stream.
+const CLASS_OPTIONS = [
+  "10th",
+  "12th",
+  "12th PCM",
+  "12th PCB",
+  "12th PCMB",
+  "12th Science",
+  "12th Commerce",
+  "12th Arts",
+];
+
 export default function StudentSuccessAdmin() {
   const [rollNo, setRollNo] = useState("");
   const [className, setClassName] = useState("");
@@ -261,13 +273,16 @@ const resetForm = () => {
         onChange={(e) => setClassName(e.target.value)}
       >
         <option value="">Select Class</option>
-        <option value="10th">10th</option>
-        <option value="12th">12th</option>
+        {CLASS_OPTIONS.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
 
-        {/* Purane records me "12th PCB" jaisi values hain. Edit karte waqt
-            woh option list me na ho to select blank ho jata aur save par
-            value chup-chaap badal jati — isliye yahan add kar dete hain. */}
-        {className && !["10th", "12th"].includes(className) && (
+        {/* Older records may hold a class value that is no longer offered.
+            Without this the select renders blank while editing and the
+            value changes silently on save. */}
+        {className && !CLASS_OPTIONS.includes(className) && (
           <option value={className}>{className}</option>
         )}
       </select>
