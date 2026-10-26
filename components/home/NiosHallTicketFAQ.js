@@ -4,12 +4,12 @@ import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 const faqData = [
   {
-    q: "Has the NIOS practical hall ticket for October 2026 been released?",
-    a: "No. The NIOS practical exam dates for October–November 2026 have been announced, but the practical hall ticket has not been released yet. It is expected shortly before the practical exams begin at your study centre.",
+    q: "Has the NIOS hall ticket for October 2026 been released?",
+    a: "Yes. The NIOS hall ticket for the October–November 2026 public examination has been released. Both the theory hall ticket and the practical hall ticket can now be downloaded from the NIOS Student Portal at sdmis.nios.ac.in using your enrollment number.",
   },
   {
-    q: "When will the NIOS theory hall ticket 2026 be released?",
-    a: "The NIOS theory hall ticket for the October–November 2026 session is expected in the last week of September 2026, a few days before theory exams start.",
+    q: "How do I download the NIOS theory and practical hall ticket 2026?",
+    a: "Open sdmis.nios.ac.in, enter your 12-digit enrollment number, choose either Hall Ticket for Theory Examination or Hall Ticket for Practical Examination from the Hall Ticket Type dropdown, and click Submit. Download and print both hall tickets separately.",
   },
   {
     q: "Where can I download the NIOS Hall Ticket 2026?",
@@ -21,7 +21,7 @@ const faqData = [
   },
   {
     q: "Is the NIOS practical hall ticket different from the theory hall ticket?",
-    a: "Yes. Students should carry a printed copy of their hall ticket to the examination centre along with the required identification documents.",
+    a: "Yes, they are two separate documents on the portal. Select Hall Ticket for Theory Examination for your written papers and Hall Ticket for Practical Examination for your practical exams, and carry a printed copy of each to the respective exam.",
   },
   {
     q: "What if my NIOS hall ticket is not generating?",

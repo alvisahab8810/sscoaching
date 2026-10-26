@@ -16,7 +16,11 @@ export default function Popup() {
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Phone is capped at 10 digits and digits only, so a pasted number
+    // with spaces or a +91 prefix cannot slip past the length check.
+    const cleaned = name === "phone" ? value.replace(/[^0-9]/g, "").slice(0, 10) : value;
+    setForm({ ...form, [name]: cleaned });
   };
 
   const handleClose = () => setShowPopup(false);
@@ -88,6 +92,12 @@ export default function Popup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (form.phone.length !== 10) {
+      toast.error("Please enter a valid 10-digit mobile number");
+      return;
+    }
+
     setLoading(true);
 
     const payload = {
@@ -165,6 +175,12 @@ export default function Popup() {
                 <input
                   type="tel"
                   name="phone"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  minLength={10}
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  title="Please enter a 10-digit mobile number"
                   placeholder="Enter 10-digit mobile number"
                   value={form.phone}
                   onChange={handleChange}

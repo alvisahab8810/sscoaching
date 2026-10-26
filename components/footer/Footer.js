@@ -63,6 +63,7 @@ export default function Footer() {
               <ul className="ss-footer-list">
                 <li><a href="/about-us">About Us</a></li>
                 <li><a href="/faq">FAQ</a></li>
+                <li><a href="/gallery">Gallery</a></li>
                 <li><a href="/blogs">Blogs</a></li>
                <li><a href="/sitemap">Sitemap</a></li>  
 

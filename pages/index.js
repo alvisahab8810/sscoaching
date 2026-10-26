@@ -6,9 +6,9 @@ import Header from "@/components/header/Header";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Offcanvas from "@/components/header/Offcanvas";
 import Hero from "@/components/home/Hero";
-import HeroMobile from "@/components/home/HeroMobile";
+import HeroPeekMobile from "@/components/home/HeroPeekMobile";
 import ChipSection from "@/components/home/ChipSection";
-import MobileQuickInfo from "@/components/home/MobileQuickInfo";
+import QuickInfoMobile from "@/components/home/QuickInfoMobile";
 import ContactStripe from "@/components/home/ContactStripe";
 
 // Below-fold interactive / Swiper / video components — skip SSR to unblock main thread
@@ -39,6 +39,11 @@ const RecongnitionMobile = dynamic(
 );
 const GoogleReview = dynamic(() => import("@/components/home/GoogleReview"));
 const HomeCourses = dynamic(() => import("@/components/home/HomeCourses"), { ssr: false });
+const AppPromo = dynamic(() => import("@/components/home/AppPromo"));
+const ExploreCareers = dynamic(() => import("@/components/home/ExploreCareers"));
+const NiosNotifications = dynamic(() =>
+  import("@/components/home/NiosNotifications")
+);
 const StepProcess = dynamic(() => import("@/components/home/StepProcess"));
 const LearnersNiosMobile = dynamic(
   () => import("@/components/home/LearnersNiosMobile"),
@@ -75,10 +80,10 @@ export default function Home() {
         <link rel="canonical" href="https://sscoaching.in/" />
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
 
         
       </Head>
@@ -88,32 +93,35 @@ export default function Home() {
         <Offcanvas />
         <BranchContactCanvas />
         <Hero />
-        <HeroMobile />
+        <HeroPeekMobile />
         <ChipSection />
-        <MobileQuickInfo />
-        <ContactStripe />
+        <QuickInfoMobile />
+        {/* <ContactStripe /> */}
 
         <StatsSectionMobile />
         <StatsSection />
-        <StudentSuccess />
 
-        <NewsMobile />
+        {/* <NewsMobile /> */}
 
-        <StepProcessMobile />
+        {/* <StepProcessMobile /> */}
 
-        <QueryForm />
-        <News />
+        {/* <QueryForm /> */}
+        {/* <News /> */}
 
-        <RecongnitionMobile />
+        {/* <RecongnitionMobile /> */}
 
-        <LearnersNiosMobile />
+        {/* <LearnersNiosMobile /> */}
         
-
         <GoogleReview />
-        {/* <HomeCourses />  */}
-        <StepProcess />
+
+        <HomeCourses />
+        <StudentSuccess />
+        <AppPromo />
+        <ExploreCareers />
+        <NiosNotifications />
+        {/* <StepProcess /> */}
         {/* PROSPECTUS BANNER */}
-        <section className="prospectus-area">
+        {/* <section className="prospectus-area">
           <div className="hg-reg">
             <div className="hg-reg-in">
               <div className="hg-reg-l">
@@ -154,28 +162,30 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
         <LearnersNios />
         <div className="container">
           <CTA />
         </div>
-        <CoachingStream />
+        {/* <CoachingStream /> */}
 
-        <Recongnition />
-        <Achievements />
-        <div className="container">
+        {/* <Recongnition /> */}
+        <Achievements /> 
+        {/* <div className="container">
           <CTA2 />
-        </div>
+        </div> */}
 
-        <NIOSInfo />
+        {/* <NIOSInfo /> */}
 
-        <BeastFeatures />
+        {/* <BeastFeatures /> */}
 
-        <div className="container">
+        {/* <div className="container">
           <CTA3 />
-        </div>
+        </div> */}
 
-        <QuickLinks />
+        {/* <QuickLinks /> */}
+
+         <QueryForm />
 
         <FAQ limit={8} showViewMore={true} />
 

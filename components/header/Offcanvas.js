@@ -202,8 +202,38 @@
 
 import React from "react";
 import Link from "next/link";
-import { FiDownload } from "react-icons/fi";  
+import { FiDownload } from "react-icons/fi";
+import { FaPhoneAlt, FaSignInAlt } from "react-icons/fa";
+import GoogleTranslate from "../home/Googletranslate";  
 export default function Offcanvas() {
+  // Bootstrap cannot hand over from one offcanvas to another through data
+  // attributes: dismissing this panel tears down the shared backdrop while the
+  // second one is opening, so it flashes and closes again. Chain them by hand.
+  const openBranchContact = async () => {
+    const contactEl = document.getElementById("branchContactCanvas");
+    if (!contactEl) return;
+
+    let bootstrap = window.bootstrap;
+    if (!bootstrap) {
+      const bs = await import("bootstrap/dist/js/bootstrap.bundle.min.js");
+      bootstrap = bs.default || bs;
+      window.bootstrap = bootstrap;
+    }
+    if (!bootstrap || !bootstrap.Offcanvas) return;
+
+    const menuEl = document.getElementById("offcanvasExample");
+    const menu = menuEl && bootstrap.Offcanvas.getInstance(menuEl);
+    const showContact = () =>
+      bootstrap.Offcanvas.getOrCreateInstance(contactEl).show();
+
+    if (menu) {
+      menuEl.addEventListener("hidden.bs.offcanvas", showContact, { once: true });
+      menu.hide();
+    } else {
+      showContact();
+    }
+  };
+
   return (
     <>
       <div
@@ -509,10 +539,37 @@ export default function Offcanvas() {
 
             
 
+              {/* Student login replaces Contact Us in the mobile menu, matching
+                 the header. The old entry is kept below, commented out. */}
               <li className="nav-item">
+                <Link href="/student/login" className="nav-link mob-canvas-login-link">
+                  Login
+                  <FaSignInAlt className="mob-canvas-login-icon" />
+                </Link>
+              </li>
+
+              {/* <li className="nav-item">
                 <Link href="/contact-us" className="nav-link">
                   Contact Us
                 </Link>
+              </li> */}
+
+              {/* Language and branch contact moved here from the mobile header */}
+              <li className="nav-item mob-canvas-tool">
+                <span className="mob-canvas-tool-label">Language</span>
+                <GoogleTranslate />
+              </li>
+
+              <li className="nav-item mob-canvas-tool">
+                <span className="mob-canvas-tool-label">Contact Details</span>
+                <button
+                  type="button"
+                  className="mob-canvas-contact-btn"
+                  onClick={openBranchContact}
+                  aria-label="Open branch contact details"
+                >
+                  <FaPhoneAlt />
+                </button>
               </li>
 
 

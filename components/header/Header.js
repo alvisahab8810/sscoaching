@@ -205,11 +205,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
-import { FaPhoneAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaSignInAlt } from "react-icons/fa";
 import { FiDownload } from "react-icons/fi";
 import GoogleTranslate from "../home/Googletranslate";
 import Breadcrumb from "../home/Breadcrumb";
 import ResultsAnnouncementStrip from "../home/ResultsAnnouncementStrip";
+
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=in.sscoaching.app";
 export default function Header() {
   
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -224,6 +227,18 @@ export default function Header() {
 
   return (
     <>
+    {!pathname.startsWith("/dashboard") && (
+      <a
+        className="app-download-strip"
+        href={PLAY_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="/assets/icons/download-arrow.svg" alt="" aria-hidden="true" />
+        Download SS Coaching App Now
+      </a>
+    )}
+
     <section className="header-area">
       <div className="container">
         <header className="header">
@@ -248,7 +263,7 @@ export default function Header() {
               </Link>
             </div>
 
-            <div className="d-flex gap-3">
+            <div className="d-flex gap-3 header-mobile-actions">
               <div className="phone-btn-mob ">
                 <button
                   className="phone-btn "
@@ -490,26 +505,12 @@ export default function Header() {
               </div> */}
 
               
-              <Link
+              {/* <Link
                 href="/nios-datesheet"
                 className={`nav-item ${isActive("/nios-datesheet") ? "active" : ""}`}
               >
                 NIOS Date Sheet
-              </Link>
-
-              <Link
-                href="/faq"
-                className={`nav-item ${isActive("/faq") ? "active" : ""}`}
-              >
-                FAQ
-              </Link>
-
-              <Link
-                href="/gallery"
-                className={`nav-item ${isActive("/gallery") ? "active" : ""}`}
-              >
-                Gallery
-              </Link>
+              </Link> */}
 
               {/* <Link
                 href="/blogs"
@@ -517,13 +518,31 @@ export default function Header() {
               >
                 Blogs
               </Link> */}
+            </nav>
 
-              <Link
-                href="/contact-us"
-                className={`nav-item ${isActive("/contact-us") ? "active" : ""}`}
+            <div className="header-actions mobile-none">
+              <GoogleTranslate />
+
+              {/* Student login replaces the contact button in the header.
+                 The old Contact Us button is kept below, commented out, so it
+                 can be restored without rebuilding the markup. */}
+              <Link href="/student/login" className="header-download-btn">
+                Login
+                <span className="header-contact-btn__icon">
+                  <FaSignInAlt />
+                </span>
+              </Link>
+
+              {/* <button
+                className="header-contact-btn"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#branchContactCanvas"
               >
                 Contact Us
-              </Link>
+                <span className="header-contact-btn__icon">
+                  <FaPhoneAlt />
+                </span>
+              </button> */}
 
               {/* <a
   href="/assets/images/others/prospectus.pdf"
@@ -536,16 +555,15 @@ export default function Header() {
   Download Prospectus
 </a> */}
 
-              <button
-                className="phone-btn"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#branchContactCanvas"
+              <a
+                className="header-contact-btn"
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <FaPhoneAlt />
-              </button>
-
-              <GoogleTranslate />
-            </nav>
+                Download App
+              </a>
+            </div>
           </div>
         </header>
       </div>

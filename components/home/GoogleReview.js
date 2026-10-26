@@ -16,15 +16,15 @@ export default function GoogleReview() {
           <Swiper
             modules={[Autoplay]}
             spaceBetween={10}
-            slidesPerView={4.2}
-              breakpoints={{
-              240: { slidesPerView: 1.2, spaceBetween: 10, centeredSlides: true },
-              768: { slidesPerView: 3, spaceBetween: 10 },
-              1024: { slidesPerView: 3, spaceBetween: 10 },
+            slidesPerView={4.5}
+            breakpoints={{
+              240: { slidesPerView: 1.15, spaceBetween: 10, centeredSlides: false },
+              768: { slidesPerView: 2.5, spaceBetween: 10, centeredSlides: false },
+              1024: { slidesPerView: 3.5, spaceBetween: 10, centeredSlides: false },
+              1200: { slidesPerView: 4.5, spaceBetween: 10, centeredSlides: false },
             }}
             grabCursor={true}
-            
-            centeredSlides={true}
+            centeredSlides={false}
             loop={true}
             speed={3000}
             autoplay={{
@@ -131,7 +131,7 @@ export default function GoogleReview() {
                     className="reviewer-avatar"
                   />
                   <div className="reviewer-info">
-                    <h4>AR Rehman</h4>
+                    <h4>Rehman</h4>
                     <p>5 months ago</p>
                   </div>
            

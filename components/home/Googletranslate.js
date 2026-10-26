@@ -210,10 +210,10 @@ export default function GoogleTranslate() {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          background: #f7f8ff;
-          border: 1.5px solid rgba(68, 65, 229, 0.22);
+          background: transparent;
+          border: none;
           border-radius: 8px;
-          padding: 7px 11px;
+          padding: 7px 4px;
           cursor: pointer;
           font-family: inherit;
           font-size: 0.82rem;
@@ -227,9 +227,8 @@ export default function GoogleTranslate() {
 
         .gt-trigger:hover,
         .gt-trigger--open {
-          border-color: #4441e5;
-          background: #fff;
-          box-shadow: 0 0 0 3px rgba(68, 65, 229, 0.1);
+          background: transparent;
+          box-shadow: none;
           color: #4441e5;
         }
 
@@ -243,6 +242,7 @@ export default function GoogleTranslate() {
           max-width: 76px;
           overflow: hidden;
           text-overflow: ellipsis;
+          line-height: 1.5;
         }
 
         .gt-chevron {

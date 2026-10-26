@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import React, { useState } from "react";
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 const faqData = [
   {
@@ -117,7 +117,7 @@ export default function FAQ() {
         />
       </Head>
 
-      <section className="faq-section" id="faq-section">
+      <section className="faq-section faq-section--v2" id="faq-section">
         <div className="container">
           <div className="faq-container">
             <h2 className="faq-title">
@@ -138,12 +138,17 @@ export default function FAQ() {
                     onClick={() => toggle(index)}
                     style={{ cursor: "pointer" }}
                   >
-                    <div className="faq-question-text">{item.q}</div>
+                    <div className="faq-question-text">
+                      <span className="faq-number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span>{item.q}</span>
+                    </div>
                     <div className="faq-icon">
                       {openIndex === index ? (
-                        <AiOutlineClose size={26} />
+                        <FiChevronUp size={22} />
                       ) : (
-                        <AiOutlinePlus size={26} />
+                        <FiChevronDown size={22} />
                       )}
                     </div>
                   </div>
@@ -156,7 +161,7 @@ export default function FAQ() {
 
             <div className="text-center mt-4">
               <Link href="/faq" className="view-more-btn">
-                View All FAQs →
+                View All FAQs 
               </Link>
             </div>
           </div>

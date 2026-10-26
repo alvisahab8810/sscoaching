@@ -6,7 +6,7 @@ import { Autoplay, Loop } from "swiper/modules";
 
 export default function LearnersNios() {
   return (
-    <section className="reviews-section mobile-none">
+    <section className="successful-nios-learners reviews-section">
       <div className="container">
         <h2 className="section-title">
           Successfull Learners of  <span className="highlight"> NIOS Board</span>
@@ -17,6 +17,13 @@ export default function LearnersNios() {
             modules={[Autoplay]}
             spaceBetween={10}
             slidesPerView={7}
+            // phones show a little over two cards, like the Figma mobile layout
+            breakpoints={{
+              0: { slidesPerView: 2.4, spaceBetween: 10 },
+              576: { slidesPerView: 3.5, spaceBetween: 10 },
+              768: { slidesPerView: 5, spaceBetween: 10 },
+              992: { slidesPerView: 7, spaceBetween: 10 },
+            }}
             grabCursor={true}
             // centeredSlides={true}
             loop={true}

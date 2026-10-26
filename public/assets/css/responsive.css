@@ -605,6 +605,9 @@
 }
 /* 📱 Mobile (portrait) — small phones */
 @media only screen and (max-width: 768px) {
+    .hc-head {
+    margin-bottom: 20px;
+}
 
     .sd-brand-img {
     height: 32px;
@@ -2207,15 +2210,15 @@
     .cta-bg-2 {
         top: 0;
         left: 0;
-        width: 70px;
-        height: 70px;
+            width: 175px;
+        height: 135px;
     }
 
     .cta-bg-1 {
         bottom: 0;
         right: 0;
-        width: 72px;
-        height: 72px;
+             width: 175px;
+        height: 135px;
         top: unset;
     }
 
@@ -2299,7 +2302,7 @@
     }
 
     .achievements-section {
-        padding: 30px 0;
+        padding: 50px 0;
     }
 
     .achievements-header {
@@ -2474,7 +2477,7 @@
     }
 
     .faq-section {
-        padding-bottom: 30px;
+        padding-bottom: 50px;
     }
 
     .footer {
@@ -2625,7 +2628,8 @@
     }
 
     .registration-card {
-        margin-top: 30px;
+        margin-top: 0px;
+        margin-bottom: 50px;
     }
 
     form.query_form input {
@@ -3512,4 +3516,831 @@ h1.hg-intro-h1 {
         white-space: nowrap;
     }
 
+}
+
+/* ===========================================================
+   HOME COURSES — responsive
+   =========================================================== */
+
+@media only screen and (max-width: 1024px) {
+  .hc-panel {
+    padding: 24px 20px;
+    gap: 18px;
+  }
+
+  .hc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .hc-features {
+    flex-wrap: wrap;
+  }
+
+  .hc-feature {
+    flex: 1 1 calc(25% - 10px);
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .hc-section {
+    padding: 30px 0 40px;
+  }
+
+  .hc-head .hc-head-title {
+    font-size: 20px;
+  }
+
+  .hc-view-all {
+    font-size: 13px;
+  }
+
+  .hc-panel {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+
+  .hc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-feature {
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+
+/* ===========================================================
+   APP PROMO — responsive
+   =========================================================== */
+
+@media only screen and (max-width: 1024px) {
+  .app-promo {
+    min-height: 0;
+    padding: 35px;
+    gap: 20px;
+  }
+
+  .app-promo-visual {
+    right: 20px;
+    bottom: -18px;
+    width: 38%;
+  }
+
+  .app-promo .app-promo-title {
+    font-size: 26px;
+  }
+
+  .app-promo-features {
+    column-gap: 24px;
+    row-gap: 18px;
+    margin-bottom: 26px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .app-promo-section {
+    padding: 20px 0 35px;
+  }
+
+  /* on phones the phone mockup sits inside the panel, next to the feature list */
+  .app-promo {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    padding: 22px 20px 20px;
+    border-radius: 20px;
+    text-align: left;
+  }
+
+  .app-promo-content {
+    max-width: 100%;
+  }
+
+  /* the eyebrow line is desktop only in the design */
+  .app-promo-eyebrow {
+    display: none;
+  }
+
+  .app-promo .app-promo-title {
+    margin-bottom: 18px;
+    font-size: 28px;
+    line-height: 30px;
+  }
+
+  .app-promo-title br{
+    display: none;
+  }
+
+  /* one feature per row, icon beside the label */
+  .app-promo-features {
+    grid-template-columns: 1fr;
+    width: 56%;
+    column-gap: 0;
+    row-gap: 11px;
+    margin-bottom: 20px;
+  }
+
+  .app-promo-feature {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .app-promo-feature img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .app-promo-feature span {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .app-promo-btn {
+    padding: 12px 22px;
+    font-size: 13px;
+    line-height: 16px;
+    border-radius: 8px;
+  }
+
+  .app-promo-visual {
+        position: absolute;
+        right: -13px;
+        bottom: 25px;
+        max-width: none;
+        margin: 0;
+        width: 56%;
+  }
+  .nios-notif-title br{
+    /* display: none; */
+  }
+}
+
+/* ===========================================================
+   EXPLORE CAREERS — responsive
+   =========================================================== */
+
+@media only screen and (max-width: 991px) {
+  .career-card {
+    height: 340px;
+  }
+
+  .career-card-thumb {
+    height: 225px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .careers-section {
+    padding: 20px 0 35px;
+  }
+
+  .career-card {
+    height: 320px;
+  }
+
+  .career-card-thumb {
+    height: 210px;
+  }
+}
+
+/* ============================
+   NIOS NOTIFICATIONS - responsive
+   ============================ */
+@media (max-width: 1199px) {
+  .nios-notif-panel {
+    height: auto;
+    gap: 30px;
+    padding: 30px 35px;
+  }
+  .nios-notif-panel .nios-notif-title {
+    font-size: 44px;
+    line-height: 52px;
+    margin-bottom: 16px;
+  }
+  .nios-notif-item {
+    font-size: 15px;
+    line-height: 23px;
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .nios-notif-section {
+    padding: 20px 0 35px;
+  }
+  .nios-notif-panel {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+  .nios-notif-panel .nios-notif-title {
+    font-size: 30px;
+    line-height: 38px;
+    margin-bottom: 12px;
+  }
+  .nios-notif-view-all {
+    font-size: 16px;
+  }
+  .nios-notif-list {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .nios-notif-item {
+    font-size: 14px;
+    line-height: 21px;
+    gap: 10px;
+  }
+  .nios-notif-item img {
+    width: 24px;
+    height: 22px;
+  }
+}
+
+/* ============================
+   CTA - APP DOWNLOAD - responsive
+   ============================ */
+@media (max-width: 1199px) {
+  .cta-content--app {
+    min-height: 0;
+    padding: 35px 35px 0;
+    gap: 20px;
+  }
+  .cta-content--app .cta-title {
+    font-size: 30px;
+    line-height: 38px;
+    margin-bottom: 18px;
+  }
+  .cta-download-label {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .cta-store-badge {
+    height: 38px;
+  }
+  .cta-visual {
+    width: 38%;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .cta-content--app {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    /* the phone is cropped by the panel edge, as in the design */
+    overflow: hidden;
+    padding: 26px 22px 0;
+    border-radius: 20px;
+  }
+  .cta-content--app .cta-text {
+    max-width: 100%;
+  }
+  .cta-content--app .cta-title {
+          font-size: 38px;
+        line-height: 44px;
+        margin-bottom: 14px;
+  }
+  .cta-download-label {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .cta-stores {
+    gap: 10px;
+  }
+  .cta-store-badge {
+    height: 36px;
+  }
+  .cta-visual {
+    /* on desktop it is pinned to the panel corner; on phones it flows
+       under the text instead, otherwise it covers the heading */
+    position: static;
+    align-self: stretch;
+    display: flex;
+    justify-content: flex-end;
+    width: auto;
+    max-width: none;
+    /* cancels the panel padding so the phone touches the right edge */
+    margin: 18px -22px 0 0;
+  }
+  .cta-visual img {
+    width: auto;
+    height: 169px;
+  }
+  /* the lime shapes peek out at the top left and bottom right */
+  .cta-section--app .cta-bg-shape {
+    display: block;
+  }
+}
+
+/* ============================
+   FAQ - HOMEPAGE (v2) - responsive
+   ============================ */
+@media (max-width: 767px) {
+  .faq-section--v2 .faq-question {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  .faq-section--v2 .faq-question-text {
+    font-size: 15px;
+    gap: 10px;
+  }
+  .faq-section--v2 .faq-answer {
+    padding: 0 16px 16px 42px;
+    font-size: 14px;
+    line-height: 23px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE HEADER - logo left, burger right
+   ========================================================= */
+@media (max-width: 1199px) {
+
+    /* logo keeps the left edge, the burger moves to the far right.
+       The extra .header selector is needed because bootstrap marks
+       .d-flex as !important, so a single class would lose to it. */
+    .header .header-content > .d-flex.gap-2 {
+        width: 100%;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* language and contact now live in the sidebar menu */
+    .header .header-content .header-mobile-actions,
+    .header .header-content .header-mobile-actions .phone-btn-mob,
+    .header .header-content .header-mobile-actions .mob-translate {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+
+    /* the download strip is desktop only */
+    .app-download-strip {
+        display: none !important;
+    }
+}
+
+
+/* ===========================================================
+   HOME COURSES - mobile (horizontal card strip)
+   =========================================================== */
+@media only screen and (max-width: 767px) {
+
+    .hc-block + .hc-block {
+    margin-top: 50px;
+}
+
+    /* on phones the heading link is replaced by the pill inside the panel */
+    .hc-head .hc-view-all {
+        display: none;
+    }
+
+    .hc-head {
+        margin-bottom: 14px;
+    }
+
+    /* no right padding, so the next card is cut off by the panel edge */
+    .hc-panel {
+        padding: 16px 0 18px 16px;
+        border-radius: 12px;
+        gap: 16px;
+    }
+
+    /* cards scroll sideways: one full card plus a peek of the next one */
+    .hc-grid {
+        display: flex;
+        grid-template-columns: none;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-right: 16px;
+    }
+
+    .hc-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* each card hugs its own content instead of stretching to the tallest */
+    .hc-grid {
+        align-items: start;
+    }
+
+    .hc-card {
+        /* 1.3 cards per view: one full card plus a third of the next */
+        flex: 0 0 calc(77% - 9px);
+        scroll-snap-align: start;
+        /* fixed card height from the design */
+        height: 250px;
+        overflow: hidden;
+        gap: 5px;
+        padding: 8px 8px 10px;
+        border-radius: 10.56px;
+    }
+
+    .hc-thumb {
+        /* fixed thumbnail height from the design, so every card lines up */
+        height: 96px;
+        aspect-ratio: auto;
+        border-radius: 6.6px;
+        flex-shrink: 0;
+    }
+
+    /* both badges stay on one line inside the narrow card */
+    .hc-tags {
+        flex-wrap: nowrap;
+        gap: 5px;
+        overflow: hidden;
+    }
+
+    .hc-tag {
+        font-size: 9.5px;
+        letter-spacing: 0.02em;
+        padding: 3px 5px;
+        border-radius: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* two lines always fit inside the 250px card, nothing gets clipped */
+    .hc-card .hc-title {
+        margin: 3px 0 2px;
+        font-size: 15px;
+        line-height: 1.3;
+        min-height: 34px;
+    }
+
+    /* rating and the chapter/topic counts stay on one line */
+    .hc-meta {
+        flex-wrap: nowrap;
+        margin-bottom: 5px;
+        gap: 6px;
+    }
+
+    .hc-meta-item {
+        font-size: 9.5px;
+    }
+
+    .hc-meta-right {
+        gap: 6px;
+    }
+
+    .hc-meta-item img {
+        width: 10px;
+        height: 10px;
+    }
+
+    .hc-buy {
+        font-size: 12.5px;
+        padding: 8px 0;
+        border-radius: 7px;
+    }
+
+    .hc-view-all--mobile {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        gap: 8px;
+        margin-right: 16px;
+        padding: 10px 24px;
+        border: 1px solid #ffffff;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .hc-view-all--mobile:hover {
+        color: #ffffff;
+    }
+
+    /* four chips in the first row, the remaining three centered below */
+    .hc-features {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-right: 16px;
+    }
+
+    .hc-feature {
+        flex: 0 0 calc(25% - 6px);
+        gap: 6px;
+        padding: 8px 4px;
+        border-radius: 12px;
+    }
+
+    .hc-feature img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .hc-feature span {
+        font-size: 9px;
+        line-height: 13px;
+    }
+}
+
+
+/* ===========================================================
+   MEET OUR STARS - mobile
+   =========================================================== */
+@media only screen and (max-width: 767px) {
+
+    .careers-section .careers-head {
+        margin-bottom: 16px;
+    }
+
+    .careers-view-all {
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    /* two full cards plus a peek of the next one */
+    .career-card {
+        height: 232px;
+        border-radius: 10px;
+    }
+
+    .career-card-thumb {
+        height: 132px;
+    }
+
+    .career-card-body {
+        gap: 4px;
+        padding: 8px 8px 12px;
+    }
+
+    .career-card .career-card-name {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .career-card-desc {
+        font-size: 9.5px;
+        line-height: 13px;
+        -webkit-line-clamp: 4;
+    }
+}
+
+
+/* ===========================================================
+   NIOS NOTIFICATIONS - mobile (title on top, link at the bottom)
+   =========================================================== */
+@media only screen and (max-width: 767px) {
+
+    .nios-notif-panel {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        gap: 14px;
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    /* the title and the link become direct children, so the link can sit last */
+    .nios-notif-left {
+        display: contents;
+    }
+
+    .nios-notif-panel .nios-notif-title {
+        order: 1;
+        margin: 0;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    .nios-notif-list {
+        order: 2;
+        flex: 1 1 auto;
+        gap: 10px;
+    }
+
+    .nios-notif-item {
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .nios-notif-item img {
+        width: 16px;
+        height: 15px;
+    }
+
+    .nios-notif-view-all {
+        order: 3;
+        align-self: flex-end;
+        gap: 8px;
+        font-size: 14px;
+    }
+}
+
+
+/* ===========================================================
+   GOOGLE REVIEWS - mobile
+   =========================================================== */
+@media only screen and (max-width: 767px) {
+
+    .reviews-section {
+        padding: 25px 0 30px;
+    }
+
+    .review-card {
+        height: 185px;
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .reviewer-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+    }
+
+    .reviewer-info h4 {
+        font-size: 14px !important;
+        line-height: 18px;
+    }
+
+    .reviewer-info p {
+        font-size: 11px;
+    }
+
+    /* the stars are part of the card in the design */
+    .rating-stars {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .rating-stars img {
+        height: 14px;
+        width: auto;
+    }
+
+    .review-text {
+        font-size: 12.5px !important;
+        line-height: 18px;
+    }
+}
+
+
+/* ===========================================================
+   SUCCESSFUL LEARNERS OF NIOS BOARD - mobile (Figma)
+   =========================================================== */
+@media only screen and (max-width: 767px) {
+    .faq-section {
+    padding-top: 0px;
+}
+  .successful-nios-learners {
+    padding: 20px 0px 50px 0px !important;
+  }
+
+  .successful-nios-learners .section-title {
+    font-size: 22px;
+    line-height: 28px;
+    margin-bottom: 18px;
+  }
+
+  /* the blue part always starts on its own line, as in the design */
+  .successful-nios-learners .section-title .highlight {
+    display: block;
+  }
+
+  .successful-nios-learners .learners-nios img {
+    width: 100%;
+    height: 180px;
+    border-radius: 10px;
+  }
+}
+
+
+/* ===========================================================
+   OFFCANVAS - Language / Contact Details rows (phones + tablets)
+   =========================================================== */
+@media (max-width: 1199px) {
+  /* the social strip is pinned to the bottom of the panel, so the list
+     needs room underneath it or the last rows sit behind it */
+  .mob-canvas .offcanvas-body {
+    padding-bottom: 70px;
+  }
+
+  .mob-canvas .mob-menus ul.nav.nav-pills > li.mob-canvas-tool {
+    padding: 4px 0;
+    min-height: 44px;
+  }
+
+  /* match the label to the other menu entries */
+  .mob-canvas .mob-canvas-tool-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #373737;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mob-canvas .mob-canvas-tool .gt-wrap,
+  .mob-canvas .mob-canvas-tool .gt-trigger {
+    margin: 0;
+  }
+
+  .mob-canvas .mob-canvas-tool .gt-trigger {
+    font-size: 13px;
+    color: #373737;
+  }
+
+  /* the row sits low in the panel, so the language list opens upwards */
+  .mob-canvas .mob-canvas-tool .gt-dropdown {
+    top: auto;
+    bottom: calc(100% + 8px);
+  }
+
+  .mob-canvas .mob-canvas-tool .mob-canvas-contact-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+}
+
+/* ===========================================================
+   TABLET / PHABLET - 768px to 1240px (iPad portrait & landscape)
+   Below 768px the phone layout runs, above 1240px the desktop one.
+   In between the desktop markup is shown, scaled down to fit.
+   =========================================================== */
+@media only screen and (min-width: 768px) and (max-width: 1240px) {
+  /* The phone hero was still set to display:block up to 1024px while the
+     desktop hero is only hidden below 768px, so a tablet showed the banner
+     strip twice. Only the desktop strip runs here, with its wide artwork. */
+  .mobile-hero-section {
+    display: none !important;
+  }
+
+  /* HOME COURSES - four cards are unreadable on a tablet */
+  .hc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .hc-panel {
+    padding: 24px 20px;
+    gap: 18px;
+  }
+
+  .hc-features {
+    flex-wrap: wrap;
+  }
+
+  /* APP PROMO - the phone mockup is absolutely positioned, so the panel
+     needs to give up its fixed height before the text runs under it */
+  .app-promo {
+    min-height: 0;
+    padding: 35px;
+    gap: 20px;
+  }
+
+  .app-promo-visual {
+    right: 20px;
+    bottom: -18px;
+    width: 38%;
+  }
+
+  .app-promo .app-promo-title {
+    font-size: 28px;
+  }
+
+  .app-promo-features {
+    column-gap: 24px;
+    row-gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  /* NIOS NOTIFICATIONS - 384px frame and a 72px heading do not fit */
+  .nios-notif-panel {
+    height: auto;
+    gap: 30px;
+    padding: 30px 35px;
+  }
+
+  .nios-notif-panel .nios-notif-title {
+    font-size: 44px;
+    line-height: 52px;
+    margin-bottom: 16px;
+  }
+
+  .nios-notif-item {
+    font-size: 15px;
+    line-height: 23px;
+    padding: 12px 16px;
+  }
 }

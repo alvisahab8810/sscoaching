@@ -353,9 +353,9 @@ export default function Instagram() {
         <div className="container">
           <div className="achievements-header">
             <h2 className="achievements-title">
-              Our students{" "}
+              Our Insta{" "}
               <span className="highlight">
-                achievements, and learning moments.
+                Stories
               </span>
             </h2>
 

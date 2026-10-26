@@ -367,7 +367,7 @@
 
   /* Reviews Section */
   .reviews-section {
-    padding: 80px 0;
+    padding: 80px 0px;
     background-color: #ffffff;
   }
 
@@ -396,10 +396,10 @@
 
   .review-card {
     /* width: 370px; */
-    background-color: #ffffff;
+    background-color: #f5f5fc;
     border-radius: 16px;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: none;
     flex-shrink: 0;
     /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
     height: 220px;
@@ -413,14 +413,14 @@
   }
 
   .reviewer-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
     object-fit: cover;
   }
 
   .reviewer-info h4 {
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'DM Sans', Arial, sans-serif;
     font-weight: 600;
     color: black;
@@ -428,7 +428,7 @@
   }
 
   .reviewer-info p {
-    font-size: 13px;
+    font-size: 12px;
     font-family: 'DM Sans', Arial, sans-serif;
     font-weight: 400;
     color: #0000007f;
@@ -445,7 +445,8 @@
     display: flex;
     gap: 4px;
     margin-bottom: 14px;
-    justify-content: center;
+    width:108px;
+    justify-content: flex-start;
   }
 
   .star {
@@ -456,11 +457,17 @@
   }
 
   .review-text {
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'DM Sans', Arial, sans-serif;
     font-weight: 400;
     line-height: 20px;
     color: #293347;
+    /* keeps every card the same height no matter how long the review is */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0;
   }
 
   /* Process Section */
@@ -530,7 +537,7 @@
     margin-bottom: 0;
   }
     .review-text {
-      font-size: 16px;
+      font-size: 14px;
       font-family: 'DM Sans', Arial, sans-serif;
       font-weight: 400;
       line-height: 20px;
@@ -1182,6 +1189,7 @@
   /* FAQ Section */
   .faq-section {
     padding-bottom: 80px;
+    padding-top: 80px;
   }
 
   .faq-container {
@@ -10727,3 +10735,875 @@
       object-fit: cover;
       border-radius: 10px;
   }
+/* ===========================================================
+   HOME COURSES — 10th / 12th NIOS online course sections
+   =========================================================== */
+
+.hc-section {
+  padding: 40px 0 80px;
+}
+
+.hc-block + .hc-block {
+  margin-top: 80px;
+}
+
+/* ── Section heading ── */
+.hc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.hc-head .hc-head-title {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 40px;
+  color: #101010;
+}
+
+.hc-head .hc-head-title span {
+  color: #4441e5;
+}
+
+.hc-view-all {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4441e5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hc-view-all:hover {
+  color: #302ec9;
+  text-decoration: none;
+}
+
+/* ── Gradient panel ── */
+.hc-panel {
+  background: linear-gradient(180deg, #7e7cff 0%, #4441e5 100%);
+  border-radius: 24px;
+  padding: 35px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.hc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+/* ── Course card ── */
+.hc-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(16, 16, 16, 0.18);
+}
+
+.hc-thumb {
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #eef0ff;
+}
+
+.hc-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.hc-tag--class {
+    background: #EFEAFB;
+    color: #6634C5;
+    font-weight: bold;
+}
+
+.hc-tag {
+    font-family: 'Inter';
+    font-size: 10.26px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.hc-tag--subject {
+  background: #ececff;
+  color: #4441e5;
+}
+
+.hc-tag--bundle {
+  background: #fff3d6;
+  color: #b97309;
+}
+
+.hc-tag--class {
+  background: #f1f2f6;
+  color: #5b6276;
+}
+
+.hc-card .hc-title {
+  margin: 10px 0px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #101010;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* min-height: 39px; */
+}
+
+.hc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+/* Rating stays left, chapter/topic counts group to the right */
+.hc-meta-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hc-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: 'DM Sans';
+    font-size: 12px;
+    font-weight: 500;
+    color: #687486;
+    white-space: nowrap;
+}
+.hc-meta-item img {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.hc-star {
+  color: #f5a623;
+  font-size: 11px;
+}
+
+.hc-buy {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background: #beff1d;
+    color: #5451EC;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 11px 0;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.hc-buy:hover {
+  filter: brightness(0.94);
+}
+
+/* ── Feature strip ── */
+.hc-features {
+  display: flex;
+  gap: 10px;
+}
+
+.hc-feature {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 6px;
+  border-radius: 15px;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 122, 254, 0.5) 0%,
+    rgba(83, 80, 236, 0) 100%
+  );
+  text-align: center;
+}
+
+.hc-feature img {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.hc-feature span {
+    font-family: 'DM Sans';
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    color: #ffffff;
+}
+/* ===========================================================
+   APP PROMO — "Join 1 Lakh+ Students On SS Coaching App"
+   =========================================================== */
+
+.app-promo-section {
+    padding: 80px 0px 80px 0px;
+}
+
+.app-promo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 526px;
+  border-radius: 23px;
+  padding: 50px 50px 50px 80px;
+  background: linear-gradient(90deg, #4441e5 13%, #7466fb 100%);
+  /* the phone mockup deliberately hangs past the panel's bottom edge */
+  overflow: visible;
+}
+
+.app-promo-content {
+  flex: 1 1 auto;
+  /* wide enough that the 50px heading keeps its two intended lines */
+  max-width: 700px;
+}
+
+.app-promo-eyebrow {
+  margin: 0 0 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.app-promo .app-promo-title {
+  margin: 0 0 30px;
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 57px;
+  color: #ffffff;
+}
+
+/* ── Feature grid: 3 per row ── */
+.app-promo-features {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  column-gap: 40px;
+  row-gap: 22px;
+  margin-bottom: 32px;
+}
+
+.app-promo-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.app-promo-feature img {
+  width: 33px;
+  height: 33px;
+  flex-shrink: 0;
+}
+
+.app-promo-feature span {
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 18px;
+  color: #ffffff;
+}
+
+/* ── Download button ── */
+.app-promo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 11.5px 28px;
+  background: #beff1d;
+  color: #2b2bb3;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+
+.app-promo-btn:hover {
+  background: #beff1d;
+  color: #2b2bb3;
+  text-decoration: none;
+  filter: brightness(0.94);
+}
+
+/* ── Phone screenshot ── */
+/* Pinned rather than laid out in the flex row: its height would otherwise
+   stretch the panel well past the 526px the design calls for. */
+.app-promo-visual {
+    position: absolute;
+    right: 30px;
+    bottom: -78px;
+    width: 538px;
+}
+
+.app-promo-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ===========================================================
+   EXPLORE CAREERS — teacher / career cards slider
+   =========================================================== */
+.careers-section {
+    padding: 0px 0 80px;
+}
+
+.careers-section .careers-title {
+  margin-bottom: 30px;
+}
+
+.careers-swiper {
+  padding-bottom: 4px;
+}
+
+.career-card {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  background: #f5f5fc;
+  /* border: 1px solid #c1cbdb; */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.career-card-thumb {
+  flex: 0 0 auto;
+  height: 258px;
+  background: #0b2a52;
+}
+
+.career-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.career-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px 22px;
+  text-align: center;
+}
+
+.career-card .career-card-name {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.05px;
+  color: #0d0f12;
+}
+
+.career-card-desc {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.6px;
+  color: #48546e;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================
+   NIOS NOTIFICATIONS
+   ============================ */
+.nios-notif-section {
+    /* padding: 0px 0 80px; */
+    padding-bottom: 80px;
+}
+
+.nios-notif-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  /* fixed frame height from the design: 384px tall, 20px top/bottom padding */
+  height: 384px;
+  padding: 20px 75px;
+  border-radius: 23px;
+  background: linear-gradient(90deg, #4441e5 13%, #7466fb 100%);
+}
+
+.nios-notif-left {
+  flex: 0 0 auto;
+}
+
+.nios-notif-panel .nios-notif-title {
+  margin: 0 0 22px;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 82px;
+  color: #fff;
+}
+
+.nios-notif-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #beff1d;
+  text-decoration: none;
+}
+
+.nios-notif-view-all:hover {
+  color: #beff1d;
+  opacity: 0.85;
+}
+
+.nios-notif-list {
+  flex: 0 1 695px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+
+.nios-notif-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: #7b78f6;
+  font-family: "DM Sans", sans-serif;
+  font-size: 17.28px;
+  font-weight: 400;
+  line-height: 27.6px;
+  color: #fff;
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+
+.nios-notif-item:hover {
+  color: #fff;
+  filter: brightness(1.06);
+}
+
+.nios-notif-item img {
+  width: 29px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+/* titles come straight from NIOS and some of them run very long */
+.nios-notif-item span {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================
+   CTA - APP DOWNLOAD
+   ============================ */
+.cta-section--app .cta-bg-shape {
+  background-color: #beff1d;
+}
+
+.cta-content--app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 376px;
+  padding: 45px 60px;
+  /* the phone artwork is cropped by the panel edge, as in the design */
+  overflow: hidden;
+  background-color: #1e276c;
+  background-image: none;
+  border-radius: 20px;
+}
+
+.cta-content--app .cta-text {
+  max-width: 55%;
+  margin: 0;
+}
+
+.cta-content--app .cta-title {
+  margin-bottom: 26px;
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 54px;
+  color: #fff;
+}
+
+.cta-content--app .cta-title strong {
+  font-weight: 700;
+}
+
+/* the first line sits lighter than the line below it */
+.cta-title-light {
+  font-weight: 300;
+}
+
+.cta-download-label {
+  margin-bottom: 18px;
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.cta-stores {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cta-store-badge {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.cta-store-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.cta-visual {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: 452px;
+  margin-bottom: -45px;
+  position: absolute;
+  right: 0;
+}
+
+.cta-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.successful-nios-learners{
+  padding-top: 0px!important;
+}
+
+/* ============================
+   FAQ - HOMEPAGE (v2)
+   scoped to .faq-section--v2 so the other FAQ blocks keep their old look
+   ============================ */
+.faq-section--v2 .faq-list {
+  gap: 0;
+}
+
+.faq-section--v2 .faq-item {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ebe9f5;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.faq-section--v2 .faq-item.expanded {
+  background-color: #f1f0fb;
+  border-bottom-color: transparent;
+}
+
+.faq-section--v2 .faq-question {
+  padding: 18px 24px;
+  gap: 16px;
+}
+
+.faq-section--v2 .faq-question:hover {
+  background-color: transparent;
+}
+
+.faq-section--v2 .faq-question-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 135%;
+  color: #262626;
+}
+
+/* the question turns blue only while it is open; the number always is */
+.faq-section--v2 .faq-item.expanded .faq-question-text {
+  color: #4a3aff;
+}
+
+.faq-section--v2 .faq-number {
+  flex-shrink: 0;
+  color: #4a3aff;
+}
+
+.faq-section--v2 .faq-icon {
+  width: auto;
+  height: auto;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  color: #a0a3bd;
+}
+
+.faq-section--v2 .faq-item.expanded .faq-icon {
+  padding: 0;
+  background-color: transparent;
+  transform: none;
+  color: #4a3aff;
+}
+
+.faq-section--v2 .faq-answer {
+  /* lines up with the question text, past the number column */
+  padding: 0 24px 20px 62px;
+  font-size: 16px;
+  line-height: 26px;
+  color: #4c4c4c;
+}
+
+
+/* =========================================================
+   MOBILE HERO - peek carousel (same banners as desktop)
+   ========================================================= */
+/* .container is capped at 1368px with !important globally, so the override
+   has to shout back to let the strip run from edge to edge on a phone. */
+.hero-wrapper .hero-mobile-peek-container {
+  max-width: 100% !important;
+  width: 100%;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0;
+}
+
+.hero-mobile-peek-swiper {
+  /* keeps the strip inside the container, so every snap shows one full
+     banner plus the peek of the next one */
+  overflow: hidden;
+}
+
+/* constant speed, so the strip drifts instead of easing in and out */
+.hero-mobile-peek-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+.hero-mobile-peek-card {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.hero-mobile-peek-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* =========================================================
+   MOBILE QUICK INFO - cards inside the purple panel
+   ========================================================= */
+.quickinfo-mob {
+  padding: 20px 0 12px;
+}
+
+.quickinfo-mob-panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #7472fa;
+}
+
+.quickinfo-mob-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 6px 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.quickinfo-mob-card img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.quickinfo-mob-card p {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 600;
+  color: #343471;
+}
+
+.quickinfo-mob-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+  border: 1px solid #a7a5ff;
+  border-radius: 999px;
+  background: linear-gradient(0deg, #6f6cf6 0%, #4441e5 100%);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 100%;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.quickinfo-mob-btn:hover {
+  color: #ffffff;
+}
+
+/* =========================================================
+   OFFCANVAS - language and contact rows moved from the header
+   ========================================================= */
+.mob-canvas .mob-canvas-tool {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* The login entry sits in the plain text nav list, so the icon has to be
+   pulled inline with the label instead of sitting on its own line. */
+.mob-canvas-login-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mob-canvas-login-icon {
+  font-size: 16px;
+}
+
+.mob-canvas .mob-canvas-tool-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+}
+
+/* inside the sidebar there is room for the current language name */
+.mob-canvas .mob-canvas-tool .gt-label {
+  display: block;
+}
+
+.mob-canvas-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #4441e5;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+
+/* the panel "View all" pill is a phone-only duplicate of the heading link */
+.hc-view-all--mobile {
+  display: none;
+}
+
+
+/* ── Meet Our Stars heading row ── */
+.careers-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.careers-head .careers-title {
+  margin-bottom: 0;
+}
+
+.careers-section .careers-head {
+  margin-bottom: 30px;
+}
+
+.careers-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4441e5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.careers-view-all:hover {
+  color: #302ec9;
+  text-decoration: none;
+}

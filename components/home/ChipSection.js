@@ -179,6 +179,32 @@ export default function ChipSection() {
         }
 
         /* ===== RESPONSIVE ===== */
+        /* tablets keep the three cards side by side, so everything inside
+           them has to come down a size or the headings wrap badly */
+        @media (min-width: 769px) and (max-width: 1240px) {
+          .ss-feature-cards {
+            gap: 14px;
+          }
+          .ss-feature-cards .ss-card {
+            padding: 18px 18px 20px;
+          }
+          .ss-card-d-flex {
+            gap: 12px;
+            margin-bottom: 16px;
+          }
+          .ss-feature-cards .ss-icon {
+            height: 36px;
+          }
+          .ss-feature-cards h3 {
+            font-size: 18px;
+            line-height: 22px;
+          }
+          .ss-feature-cards button {
+            height: 40px;
+            font-size: 16px;
+          }
+        }
+
         @media (max-width: 768px) {
           .ss-feature-cards {
             flex-direction: column;

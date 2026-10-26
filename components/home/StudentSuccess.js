@@ -172,14 +172,11 @@ export default function StudentSuccess() {
       <div className="container">
         <div className="hazratgn d-flex justify-content-between align-items-center mb-3">
           <h2 className="section-title">
-            Student <span className="highlight">Success</span>
+            Meet Our <span className="highlight">Stars</span>
           </h2>
 
-          <Link
-            href="/student-success"
-            className="btn btn-sm btn-outline-primary"
-          >
-            View All
+          <Link href="/student-success" className="hc-view-all">
+            View all 
           </Link>
         </div>
 

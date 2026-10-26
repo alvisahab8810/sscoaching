@@ -59,3 +59,138 @@ ul, li, a, p, h5, h6, h3, h4{
 
 
 
+
+/* ===== Top app-download strip ===== */
+.app-download-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'DM Sans', Arial, sans-serif;
+  background: #000000;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0 16px;
+  text-align: center;
+}
+
+.app-download-strip:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.app-download-strip img {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ===== Header action buttons ===== */
+.header-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: #0056d2;
+  border: 1px solid #0056d2;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'DM Sans', Arial, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: 0.3s ease;
+}
+
+.header-contact-btn:hover {
+  background: #ffffff;
+  color: #0056d2;
+  text-decoration: none;
+}
+
+.header-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #0056d2;
+  color: #0056d2;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'DM Sans', Arial, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: 0.3s ease;
+}
+
+.header-download-btn:hover {
+  background: #0056d2;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Phone icon that sits inside the Contact Us button */
+.header-contact-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0056d2;
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: 0.3s ease;
+}
+
+.header-contact-btn:hover .header-contact-btn__icon {
+  background: #0056d2;
+  color: #ffffff;
+}
+
+/* The login button now wears the outlined white style, so its icon circle
+   has to invert: solid blue on white, and white on blue once hovered. */
+.header-download-btn .header-contact-btn__icon {
+  background: #0056d2;
+  color: #ffffff;
+}
+
+.header-download-btn:hover .header-contact-btn__icon {
+  background: #ffffff;
+  color: #0056d2;
+}
+
+/* Keep multi-word nav items on a single line */
+.nav-menu .nav-item {
+  white-space: nowrap;
+}
+
+/* ===== Header splits into three groups: logo | nav | actions ===== */
+.header-actions {
+  display: none;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .header-actions {
+    display: flex;
+  }
+
+  /* phone + language shortcuts are mobile-only; on desktop they would
+     otherwise sit in the layout as an empty fourth group */
+  .header-mobile-actions {
+    display: none !important;
+  }
+}

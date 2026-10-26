@@ -363,99 +363,129 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, FreeMode } from "swiper/modules";
+
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=in.sscoaching.app";
+
+// Each banner is a single flat image, so the whole card is the link target.
+// That keeps the in-image button clickable without hard-coding hotspot
+// coordinates that would drift the moment a banner is re-exported.
+const BANNERS = [
+  {
+    src: "/assets/images/home/b1.webp",
+    href: PLAY_STORE_URL,
+    external: true,
+    alt: "Join 1 Lakh+ students on the SS Coaching app for NIOS 10th and 12th online courses",
+    title: "Join 1 Lakh+ Students On SS Coaching App Today",
+  },
+  {
+    src: "/assets/images/home/b2.webp",
+    href: "/nios-admission",
+    external: false,
+    alt: "SS Coaching faculty team offering expert support for NIOS students in Lucknow",
+    title: "NIOS Experts Committed for Student Success",
+  },
+  {
+    src: "/assets/images/home/b3.webp",
+    href: PLAY_STORE_URL,
+    external: true,
+    alt: "Watch a free demo class with SS Coaching expert teachers",
+    title: "Watch Free Demo - 25+ Years of Experience with Expert Teachers",
+  },
+];
+
+// Swiper needs more slides than it shows for a seamless loop; with only three
+// banners the duplicated set keeps every snap at "two full cards + a peek".
+const SLIDES = [...BANNERS, ...BANNERS];
 
 export default function Hero() {
   return (
     <section className="hero-desktop-section">
-          <section className="hero-wrapper mobile-none">
-      <div className="container">
+      <section className="hero-wrapper mobile-none">
+        {/* full-bleed on purpose: a marquee that stops at the container edge
+            looks like a chopped card instead of a moving strip */}
+        <div className="container hero-peek-container">
+          {/* delay 0 + a long speed turns the step-by-step slide into one
+              continuous marquee-style drift; the linear timing function is set
+              in the CSS below, otherwise every cycle eases in and out */}
           <Swiper
-          slidesPerView={1}
-          loop={true}                 // ✅ infinite loop
-          allowTouchMove={true}       // ✅ swipe enabled
-          autoplay={{
-            delay: 3000,              // ⏱️ 3 seconds
-            disableOnInteraction: false, // ✅ keeps autoplay after swipe
-          }}
-          modules={[Autoplay]}        // ✅ IMPORTANT
-        >
+            className="hero-peek-swiper"
+            slidesPerView={2.5}
+            spaceBetween={20}
+            /* on a tablet two and a half banners shrink to the point where
+               the text inside them is unreadable, so fewer are shown */
+            breakpoints={{
+              768: { slidesPerView: 1.6, spaceBetween: 16 },
+              1025: { slidesPerView: 2.1, spaceBetween: 18 },
+              1241: { slidesPerView: 2.5, spaceBetween: 20 },
+            }}
+            slidesPerGroup={1}
+            loop={true}
+            loopAdditionalSlides={3}
+            allowTouchMove={true}
+            speed={6000}
+            autoplay={{
+              delay: 0,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            freeMode={{ enabled: true, momentum: false }}
+            modules={[Autoplay, FreeMode]}
+          >
+            {SLIDES.map((banner, index) => (
+              <SwiperSlide key={`${banner.src}-${index}`}>
+                <a
+                  className="hero-peek-card"
+                  href={banner.href}
+                  {...(banner.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  <img src={banner.src} alt={banner.alt} title={banner.title} />
+                </a>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </section>
 
+      <style jsx global>{`
+        /* .container is capped at 1368px with !important globally, so the
+           override has to shout back to let the strip reach both edges */
+        .hero-wrapper .hero-peek-container {
+          max-width: 100% !important;
+          width: 100%;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          margin: 0;
+        }
 
-          <SwiperSlide>
-              <a href="/student/login">
-            <div className="hero-card3"></div>
-            </a>
-          </SwiperSlide>
+        .hero-peek-swiper {
+          /* keeps the strip inside the container, so each snap shows exactly
+             two full banners plus the peek of the next one */
+          overflow: hidden;
+        }
 
-             <SwiperSlide>
-           <div
-  className="hero-card2"
-  title="NIOS Experts Committed to Student Success | SS Coaching Lucknow"
-  aria-label="SS Coaching faculty team offering expert support for NIOS students in Lucknow"
-></div>
-          </SwiperSlide>
-          <SwiperSlide>
-              <div
-    className="hero-card1"
-    title="A Moment of Honour and Recognition in Lucknow"
-    aria-label="Honouring education excellence with chief guest Dr Jawaid Alam Khan in Lucknow"
-  ></div>
-          </SwiperSlide>
-          {/* SINGLE SLIDE ONLY */}
-          <SwiperSlide>
-            <div className="hero-card">
-              <div className="hero-left">
-                {/* <h1>
-                  India’s Most Trusted <br />
-                  <span>NIOS Coaching</span>
-                </h1> */}
+        .hero-peek-swiper .swiper-wrapper {
+          align-items: stretch;
+          /* constant speed, no easing at the start and end of each cycle */
+          transition-timing-function: linear !important;
+        }
 
-                 <h1>
-                  Lucknow’s Best <br />
-                  <span>NIOS Coaching</span>
-                </h1>
-                <p>Helping students since 2001</p>
-              </div>
+        .hero-peek-card {
+          display: block;
+          border-radius: 16px;
+          overflow: hidden;
+          line-height: 0;
+        }
 
-              <div className="hero-right">
-                <img
-                  src="/assets/images/home/personal.png"
-                   alt="SS Coaching providing NIOS education support in Lucknow since 2001"
-                  title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
-                  priority
-                />
-              </div>
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <div className="hero-card1"></div>
-          </SwiperSlide>
-          {/* SINGLE SLIDE ONLY */}
-          <SwiperSlide>
-            <div className="hero-card">
-              <div className="hero-left">
-                <h1>
-                  India’s Most Trusted <br />
-                  <span>NIOS Coaching</span>
-                </h1>
-                <p>Helping students since 2001</p>
-              </div>
-
-              <div className="hero-right">
-                <img
-                  src="/assets/images/home/personal.png"
-                   alt="SS Coaching providing NIOS education support in Lucknow since 2001"
-                   title="Lucknow’s Best NIOS Coaching Helping Students Since 2001"
-                  priority
-                />
-              </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-    </section>
+        .hero-peek-card img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      `}</style>
     </section>
   );
 }
