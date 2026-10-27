@@ -34,11 +34,17 @@ export default async function handler(req, res) {
     const finalPrice = courses.reduce((sum, c) => sum + Number(c.price || 0), 0);
     if (finalPrice <= 0) return res.status(400).json({ error: "Nothing to pay for" });
 
+    // Both the website and the mobile app create orders here. The source is
+    // stored in the order notes because the Razorpay webhook runs on Razorpay's
+    // servers and never sees this request's headers — without it the webhook
+    // has no way to tell an app purchase from a website one.
+    const source = req.headers["x-source"] === "app" ? "app" : "web";
+
     const order = await razorpay.orders.create({
       amount:   finalPrice * 100,  // paise
       currency: "INR",
       receipt:  `sscoach_${Date.now()}`,
-      notes:    { courseIds: courseIds.join(","), studentId: student.id },
+      notes:    { courseIds: courseIds.join(","), studentId: student.id, source },
     });
 
     return res.status(200).json({

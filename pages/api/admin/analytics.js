@@ -25,6 +25,17 @@ function getLast6Months() {
   return months;
 }
 
+/**
+ * Students who deleted their account are anonymised, not removed (see
+ * pages/api/auth/delete-account.js), so the record stays for the enrollment
+ * history. They must not be counted as students any more.
+ *
+ * The field is declared with a null default, so it is present on every
+ * document -- matching null (which also covers a missing field) is the only
+ * filter that works here.
+ */
+const NOT_DELETED = { deletedAt: null };
+
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).end();
   await dbConnect();
@@ -86,14 +97,14 @@ export default async function handler(req, res) {
     ]),
 
     // Total students
-    StudentUser.countDocuments(),
+    StudentUser.countDocuments(NOT_DELETED),
 
     // New students this month
-    StudentUser.countDocuments({ createdAt: { $gte: startOfMonth } }),
+    StudentUser.countDocuments({ ...NOT_DELETED, createdAt: { $gte: startOfMonth } }),
 
     // Student registrations last 6 months
     StudentUser.aggregate([
-      { $match: { createdAt: { $gte: sixMonthsAgo } } },
+      { $match: { ...NOT_DELETED, createdAt: { $gte: sixMonthsAgo } } },
       { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, count: { $sum: 1 } } },
     ]),
 
@@ -123,8 +134,10 @@ export default async function handler(req, res) {
       return { label: m.label, value: found ? found[key] : 0 };
     });
 
-  // Enrollment type breakdown
-  const typeMap = { free: 0, paid: 0, cod: 0 };
+  // Enrollment type breakdown. Cash on delivery was discontinued, so only
+  // the live types are reported; historical cod rows are left out instead of
+  // being shown as a payment method the platform no longer offers.
+  const typeMap = { free: 0, paid: 0 };
   enrollmentsByType.forEach(t => { if (t._id in typeMap) typeMap[t._id] = t.count; });
 
   return res.json({

@@ -2,13 +2,24 @@
 import dbConnect from "@/lib/dbConnect";
 import Enrollment from "@/models/EnrollmentModel";
 import StudentUser from "@/models/StudentUser";   // ← correct model name
+import Course from "@/models/CourseModel";
+import Invoice from "@/models/Invoice";
+import { requireAdminApi } from "@/lib/requireAdminApi";
+import { logActivity } from "@/lib/logActivity";
 import mongoose from "mongoose";
 
 export default async function handler(req, res) {
-  if (req.method !== "GET")
+  if (req.method !== "GET" && req.method !== "DELETE")
     return res.status(405).json({ error: "Method not allowed" });
 
+  // This route hands out student names and phone numbers and can delete
+  // enrollment records, so it is admin only.
+  const session = requireAdminApi(req, "enrollments");
+  if (!session) return res.status(401).json({ error: "Not authenticated" });
+
   await dbConnect();
+
+  if (req.method === "DELETE") return handleDelete(req, res);
 
   try {
     const {
@@ -49,7 +60,7 @@ export default async function handler(req, res) {
     // model: "StudentUser" matches the registered model name exactly
     const allEnrollments = await Enrollment
       .find(filter)
-      .populate({ path: "student", model: "StudentUser", select: "name phone className batch" })
+      .populate({ path: "student", model: "StudentUser", select: "name phone email className batch" })
       .populate({ path: "course",  model: "Course",      select: "title subject batch price" })
       .sort(sortObj)
       .lean();
@@ -151,5 +162,99 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("Enrollments API error:", err);
     return res.status(500).json({ error: "Failed to fetch enrollments" });
+  }
+}
+
+/**
+ * Removes one enrollment. Meant for clearing out test and duplicate rows.
+ *
+ * The course's enrolledCount is decremented and any invoice raised for the
+ * enrollment is removed with it, otherwise a deleted test purchase keeps
+ * inflating the course's enrollment count and the revenue totals on the
+ * analytics page.
+ */
+/** Guards against a runaway request wiping the collection in one call. */
+const MAX_BULK_DELETE = 200;
+
+async function handleDelete(req, res) {
+  try {
+    // ?id=... deletes one row, ?ids=a,b,c deletes a selection. Both paths
+    // run through the same cleanup so a bulk delete can never leave behind
+    // invoices or a wrong enrolledCount.
+    const raw = req.query.ids
+      ? String(req.query.ids).split(",")
+      : req.query.id
+      ? [String(req.query.id)]
+      : [];
+
+    const ids = [...new Set(raw.map((s) => s.trim()).filter(Boolean))];
+
+    if (!ids.length)
+      return res.status(400).json({ error: "No enrollment id provided" });
+
+    if (ids.some((id) => !mongoose.isValidObjectId(id)))
+      return res.status(400).json({ error: "Invalid enrollment id" });
+
+    if (ids.length > MAX_BULK_DELETE)
+      return res
+        .status(400)
+        .json({ error: `Cannot delete more than ${MAX_BULK_DELETE} enrollments at once` });
+
+    const enrollments = await Enrollment.find({ _id: { $in: ids } }).lean();
+    if (!enrollments.length)
+      return res.status(404).json({ error: "Enrollment not found" });
+
+    const foundIds = enrollments.map((e) => e._id);
+
+    await Enrollment.deleteMany({ _id: { $in: foundIds } });
+
+    const invoiceResult = await Invoice.deleteMany({ enrollment: { $in: foundIds } });
+
+    // Two rows can point at the same course, so the decrement is grouped --
+    // one update per course, by how many of its enrollments just went.
+    const perCourse = new Map();
+    for (const enr of enrollments) {
+      if (!enr.course) continue;
+      const key = String(enr.course);
+      perCourse.set(key, (perCourse.get(key) || 0) + 1);
+    }
+
+    if (perCourse.size) {
+      await Course.bulkWrite(
+        [...perCourse].map(([courseId, count]) => ({
+          updateOne: {
+            // Guarded so a count that is already low cannot be pushed negative.
+            filter: { _id: courseId, enrolledCount: { $gte: count } },
+            update: { $inc: { enrolledCount: -count } },
+          },
+        }))
+      );
+    }
+
+    const isBulk = enrollments.length > 1;
+
+    await logActivity(req, {
+      feature:     "enrollments",
+      action:      "delete",
+      entityId:    foundIds[0],
+      entityType:  "Enrollment",
+      description: isBulk
+        ? `Deleted ${enrollments.length} enrollments in bulk (total amount paid: ${enrollments.reduce((s, e) => s + (e.amountPaid || 0), 0)})`
+        : `Deleted enrollment (type: ${enrollments[0].type || "—"}, amount paid: ${enrollments[0].amountPaid || 0})`,
+      before:      isBulk ? enrollments : enrollments[0],
+    });
+
+    const noun = isBulk ? `${enrollments.length} enrollments` : "Enrollment";
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: enrollments.length,
+      message: invoiceResult.deletedCount
+        ? `${noun} and ${invoiceResult.deletedCount} linked invoice(s) deleted`
+        : `${noun} deleted`,
+    });
+  } catch (err) {
+    console.error("Enrollment delete error:", err);
+    return res.status(500).json({ error: "Failed to delete enrollment" });
   }
 }

@@ -167,8 +167,10 @@ export default function PageEditor() {
     setSections((list) =>
       list.map((s, i) => {
         if (i !== idx) return s;
-        // a new row copies the columns' className (date-col etc.)
-        const blank = s.columns.map((col) => ({
+        // a new row copies the columns' className (date-col etc.). Key/value
+        // tables have no columns, so there the existing rows define the shape.
+        const template = s.columns?.length ? s.columns : s.rows?.[0] || [];
+        const blank = template.map((col) => ({
           html: "",
           className: col.className || "",
         }));

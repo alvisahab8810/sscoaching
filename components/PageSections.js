@@ -68,18 +68,25 @@ function Section({ section }) {
     const columns = Array.isArray(section.columns) ? section.columns : [];
     const rows = Array.isArray(section.rows) ? section.rows : [];
 
+    // Key/value tables (e.g. the hall ticket "at a glance" table) have no
+    // header row at all. Rendering an empty <thead> there would add a blank
+    // bordered row to the top of the table.
+    const hasHeader = columns.some((col) => col?.label);
+
     return (
       <div className={className || "table-wrapper"} style={css}>
         <table>
-          <thead>
-            <tr>
-              {columns.map((col, i) => (
-                <th key={i} className={col?.className || undefined}>
-                  {col?.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
+          {hasHeader && (
+            <thead>
+              <tr>
+                {columns.map((col, i) => (
+                  <th key={i} className={col?.className || undefined}>
+                    {col?.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
           <tbody>
             {rows.map((row, r) => (
               <tr key={r}>

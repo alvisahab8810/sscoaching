@@ -7,6 +7,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  // One-time seeder for the first admin account. It is disabled by default:
+  // it creates a login from a hardcoded email and password, and it only
+  // refused to run while an admin with that exact email already existed. Once
+  // the real admin is renamed, an open endpoint here would let anyone create a
+  // working admin account. Set ALLOW_ADMIN_SEED=true in the environment only
+  // for the moment the seeder actually needs to run.
+  if (process.env.ALLOW_ADMIN_SEED !== "true") {
+    return res.status(404).json({ message: "Not found" });
+  }
+
   await dbConnect();
 
   const email = "admin@sscoaching.in";

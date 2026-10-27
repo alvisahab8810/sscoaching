@@ -12,9 +12,11 @@ import {
   MdCalendarToday, MdArrowBack, MdOpenInNew, MdReceipt,
   MdLocalOffer, MdPerson, MdExpandMore, MdExpandLess,
   MdMonetizationOn, MdFreeBreakfast, MdDesktopMac, MdPhoneAndroid,
+  MdDeleteOutline,
 } from "react-icons/md";
 import { FaRupeeSign, FaGraduationCap } from "react-icons/fa";
 import { BsCollection, BsPersonCheck } from "react-icons/bs";
+import { toast } from "sonner";
 
 /* ─── helpers ─── */
 function fmt(n) {
@@ -72,6 +74,13 @@ export default function AdminEnrollmentsPage({ admin }) {
   const [selected, setSelected]     = useState(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
+  /* row being deleted */
+  const [deletingId, setDeletingId] = useState(null);
+
+  /* bulk selection (ids of checked rows on the current page) */
+  const [selectedIds, setSelectedIds]   = useState([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   /* ── fetch ── */
   const fetchEnrollments = useCallback(async (page = 1) => {
     setLoading(true);
@@ -88,6 +97,9 @@ export default function AdminEnrollmentsPage({ admin }) {
       const data = await res.json();
       if (data.success) {
         setEnrollments(data.enrollments);
+        // Ticks belong to the rows that were on screen -- changing page or
+        // filter would otherwise delete rows the admin can no longer see.
+        setSelectedIds([]);
         setPagination(data.pagination);
         setStats(data.stats || {});
         setTopCourses(data.topCourses || []);
@@ -106,6 +118,87 @@ export default function AdminEnrollmentsPage({ admin }) {
   const switchTab = (tab) => { setSourceTab(tab); };
 
   const openDetail = (enr) => { setSelected(enr); setDetailOpen(true); };
+
+  /* ── delete (for test and duplicate rows) ── */
+  const handleDelete = async (enr) => {
+    const warning =
+      `Delete this enrollment?\n\n` +
+      `Student: ${enr.studentName}\n` +
+      `Course: ${enr.courseTitle || "—"}\n` +
+      `Amount: ${enr.amountPaid > 0 ? fmt(enr.amountPaid) : "Free"}\n\n` +
+      `The student loses access to this course. Any invoice raised for it is ` +
+      `deleted too, so it no longer counts towards revenue. This cannot be undone.`;
+    if (!confirm(warning)) return;
+
+    setDeletingId(enr._id);
+    try {
+      const res  = await fetch(`/api/enrollments?id=${enr._id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || "Enrollment deleted");
+        // Close the detail panel if it is showing the row that just went away.
+        if (selected?._id === enr._id) { setDetailOpen(false); setSelected(null); }
+        fetchEnrollments(pagination.page);
+      } else {
+        toast.error(data.error || "Failed to delete enrollment");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Server error while deleting enrollment");
+    }
+    setDeletingId(null);
+  };
+
+  /* ── bulk selection ── */
+  const allOnPageSelected =
+    enrollments.length > 0 && selectedIds.length === enrollments.length;
+
+  const toggleOne = (id) =>
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+
+  const toggleAllOnPage = () =>
+    setSelectedIds(allOnPageSelected ? [] : enrollments.map((e) => e._id));
+
+  const handleBulkDelete = async () => {
+    const rows  = enrollments.filter((e) => selectedIds.includes(e._id));
+    const paid  = rows.filter((e) => e.amountPaid > 0);
+    const total = rows.reduce((sum, e) => sum + (e.amountPaid || 0), 0);
+
+    const warning =
+      `Delete ${rows.length} enrollment${rows.length > 1 ? "s" : ""}?\n\n` +
+      (paid.length
+        ? `${paid.length} of them are paid, worth ${fmt(total)} in total.\n\n`
+        : "") +
+      `Those students lose access to their courses. Any invoices raised for ` +
+      `these enrollments are deleted too, so they no longer count towards ` +
+      `revenue. This cannot be undone.`;
+    if (!confirm(warning)) return;
+
+    setBulkDeleting(true);
+    try {
+      const res  = await fetch(`/api/enrollments?ids=${selectedIds.join(",")}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || "Enrollments deleted");
+        if (selected && selectedIds.includes(selected._id)) {
+          setDetailOpen(false);
+          setSelected(null);
+        }
+        setSelectedIds([]);
+        fetchEnrollments(pagination.page);
+      } else {
+        toast.error(data.error || "Failed to delete enrollments");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Server error while deleting enrollments");
+    }
+    setBulkDeleting(false);
+  };
 
   /* ── stat cards ── */
   const statCards = [
@@ -263,6 +356,29 @@ export default function AdminEnrollmentsPage({ admin }) {
                      "All Enrollments"}
                     <span className="en-table-count">{pagination.total} total</span>
                   </div>
+
+                  {selectedIds.length > 0 && (
+                    <div className="en-bulk-bar">
+                      <span className="en-bulk-count">
+                        {selectedIds.length} selected
+                      </span>
+                      <button
+                        className="en-bulk-clear"
+                        onClick={() => setSelectedIds([])}
+                        disabled={bulkDeleting}
+                      >
+                        Clear
+                      </button>
+                      <button
+                        className="en-bulk-delete"
+                        onClick={handleBulkDelete}
+                        disabled={bulkDeleting}
+                      >
+                        <MdDeleteOutline size={15}/>
+                        {bulkDeleting ? "Deleting..." : "Delete Selected"}
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {loading ? (
@@ -277,6 +393,15 @@ export default function AdminEnrollmentsPage({ admin }) {
                   <table className="en-table">
                     <thead>
                       <tr>
+                        <th className="en-th-check">
+                          <input
+                            type="checkbox"
+                            className="en-check"
+                            checked={allOnPageSelected}
+                            onChange={toggleAllOnPage}
+                            title="Select all rows on this page"
+                          />
+                        </th>
                         <th>#</th>
                         <th>Student</th>
                         <th>Course</th>
@@ -292,7 +417,19 @@ export default function AdminEnrollmentsPage({ admin }) {
                         const tc = TYPE_CONFIG[enr.type] || TYPE_CONFIG.free;
                         const rowNum = (pagination.page - 1) * 20 + idx + 1;
                         return (
-                          <tr key={enr._id} className="en-row" onClick={() => openDetail(enr)}>
+                          <tr
+                            key={enr._id}
+                            className={`en-row${selectedIds.includes(enr._id) ? " is-selected" : ""}`}
+                            onClick={() => openDetail(enr)}
+                          >
+                            <td className="en-td-check" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="checkbox"
+                                className="en-check"
+                                checked={selectedIds.includes(enr._id)}
+                                onChange={() => toggleOne(enr._id)}
+                              />
+                            </td>
                             <td className="en-td-num">{rowNum}</td>
                             <td>
                               <div className="en-student-row">
@@ -341,9 +478,19 @@ export default function AdminEnrollmentsPage({ admin }) {
                             </td>
                             <td className="en-date">{fmtDate(enr.createdAt)}</td>
                             <td onClick={(e) => e.stopPropagation()}>
-                              <button className="en-view-btn" onClick={() => openDetail(enr)} title="View Details">
-                                <MdOpenInNew size={15}/>
-                              </button>
+                              <div className="en-actions">
+                                <button className="en-view-btn" onClick={() => openDetail(enr)} title="View Details">
+                                  <MdOpenInNew size={15}/>
+                                </button>
+                                <button
+                                  className="en-delete-btn"
+                                  onClick={() => handleDelete(enr)}
+                                  disabled={deletingId === enr._id}
+                                  title="Delete Enrollment"
+                                >
+                                  <MdDeleteOutline size={16}/>
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );
@@ -582,12 +729,26 @@ export default function AdminEnrollmentsPage({ admin }) {
         .en-table-title  { font-size:0.9rem; font-weight:800; color:#0f1f3d; display:flex; align-items:center; gap:10px; }
         .en-table-count  { font-size:0.72rem; font-weight:700; background:#ede9fe; color:#6c47d4; padding:2px 9px; border-radius:100px; }
 
+        .en-bulk-bar     { display:flex; align-items:center; gap:10px; }
+        .en-bulk-count   { font-size:0.74rem; font-weight:800; color:#6c47d4; }
+        .en-bulk-clear   { background:none; border:none; font-size:0.74rem; font-weight:700; color:#64748b; cursor:pointer; padding:4px 6px; }
+        .en-bulk-clear:hover:not(:disabled) { color:#0f1f3d; }
+        .en-bulk-delete  { display:inline-flex; align-items:center; gap:6px; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:0.74rem; font-weight:800; cursor:pointer; transition:background .15s; }
+        .en-bulk-delete:hover:not(:disabled) { background:#dc2626; }
+        .en-bulk-clear:disabled, .en-bulk-delete:disabled { opacity:0.55; cursor:not-allowed; }
+
+        .en-check        { width:15px; height:15px; accent-color:#6c47d4; cursor:pointer; vertical-align:middle; }
+        .en-th-check,
+        .en-td-check     { width:38px; padding-right:0 !important; }
+
         .en-table { width:100%; border-collapse:collapse; min-width:760px; }
         .en-table thead tr { background:#f4f5ff; }
         .en-table thead th { padding:10px 14px; text-align:left; font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#6c47d4; white-space:nowrap; }
         .en-row { border-bottom:1px solid #f0f1fa; cursor:pointer; transition:background 0.12s; }
         .en-row:hover { background:#fafbff; }
         .en-row:last-child { border-bottom:none; }
+        .en-row.is-selected { background:#f3f0ff; }
+        .en-row.is-selected:hover { background:#ede9fe; }
         .en-table tbody td { padding:12px 14px; font-size:0.82rem; vertical-align:middle; }
 
         .en-td-num { color:#8491a8; font-size:0.75rem; font-weight:600; }
@@ -609,8 +770,12 @@ export default function AdminEnrollmentsPage({ admin }) {
 
         .en-date { color:#6b7a99; font-size:0.78rem; white-space:nowrap; }
 
+        .en-actions { display:flex; align-items:center; gap:6px; }
         .en-view-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; border:1.5px solid #e2e5f8; background:#fff; cursor:pointer; color:#6c47d4; transition:all 0.12s; }
         .en-view-btn:hover { background:#ede9fe; border-color:#6c47d4; }
+        .en-delete-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:7px; border:1.5px solid #fbd5d5; background:#fff; cursor:pointer; color:#dc2626; transition:all 0.12s; }
+        .en-delete-btn:hover { background:#fee2e2; border-color:#dc2626; }
+        .en-delete-btn:disabled { opacity:0.45; cursor:not-allowed; }
 
         /* Loading / empty */
         .en-loading { display:flex; align-items:center; justify-content:center; gap:12px; padding:56px; color:#8491a8; font-size:0.9rem; }

@@ -110,7 +110,12 @@ export default async function handler(req, res) {
       courseIds,
       orderId:   payment.order_id,
       paymentId: payment.id,
-      source:    "web", // unknown from webhook alone — verify-payment.js's client call sets the real source when it lands
+      // Read back from the order notes set in courses/payment.js. This used to
+      // be hardcoded to "web" on the assumption that the client's verify-payment
+      // call would correct it later, but completeEnrollment() is idempotent and
+      // whichever path lands first wins — so every app purchase whose webhook
+      // arrived first was permanently recorded as a website purchase.
+      source:    notes.source === "app" ? "app" : "web",
     });
 
     return res.status(200).json({ received: true, results });

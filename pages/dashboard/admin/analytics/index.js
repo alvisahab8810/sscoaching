@@ -60,7 +60,6 @@ function BarChart({ data, color, formatValue }) {
 function TypeBreakdown({ data, total }) {
   const items = [
     { key: "paid",  label: "Online Payment", color: "#4441e5" },
-    { key: "cod",   label: "Cash on Delivery", color: "#f59e0b" },
     { key: "free",  label: "Free / Coupon", color: "#10b981" },
   ];
   return (
@@ -109,7 +108,17 @@ export default function AnalyticsDashboard() {
   useEffect(() => { load(); }, []);
 
   const kpi = data?.kpi || {};
-  const totalEnroll = (data?.enrollmentsByType?.paid || 0) + (data?.enrollmentsByType?.cod || 0) + (data?.enrollmentsByType?.free || 0);
+  const paidEnroll = data?.enrollmentsByType?.paid || 0;
+  const totalEnroll = paidEnroll + (data?.enrollmentsByType?.free || 0);
+
+  // The three bar charts cover the last six months, so their headers are
+  // summed from the plotted values. They used to print the all-time figure,
+  // which did not match the bars underneath it.
+  const sumSeries = (series) =>
+    (series || []).reduce((acc, point) => acc + (point.value || 0), 0);
+  const revenue6m = sumSeries(data?.revenueMonthly);
+  const enrollments6m = sumSeries(data?.enrollmentsMonthly);
+  const students6m = sumSeries(data?.studentsMonthly);
 
   return (
     <>
@@ -181,9 +190,9 @@ export default function AnalyticsDashboard() {
                   />
                   <KpiCard
                     icon={<MdTrendingUp size={22} />}
-                    label="Avg. Revenue / Enrollment"
-                    value={kpi.totalEnrollments > 0 ? fmt(Math.round(kpi.totalRevenue / kpi.totalEnrollments)) : "₹0"}
-                    sub="across all paid enrollments"
+                    label="Avg. Revenue / Paid Enrollment"
+                    value={paidEnroll > 0 ? fmt(Math.round(kpi.totalRevenue / paidEnroll)) : "₹0"}
+                    sub={`across ${paidEnroll} paid enrollments`}
                     color="#e11d48" bg="#fff1f2"
                   />
                 </div>
@@ -193,7 +202,7 @@ export default function AnalyticsDashboard() {
                   <div className="an-chart-card">
                     <div className="an-chart-header">
                       <span className="an-chart-title">Revenue (Last 6 Months)</span>
-                      <span className="an-chart-total">{fmtFull(kpi.totalRevenue)} total</span>
+                      <span className="an-chart-total">{fmtFull(revenue6m)} in this period</span>
                     </div>
                     <BarChart
                       data={data.revenueMonthly}
@@ -205,7 +214,7 @@ export default function AnalyticsDashboard() {
                   <div className="an-chart-card">
                     <div className="an-chart-header">
                       <span className="an-chart-title">Enrollments (Last 6 Months)</span>
-                      <span className="an-chart-total">{kpi.totalEnrollments} total</span>
+                      <span className="an-chart-total">{enrollments6m} in this period</span>
                     </div>
                     <BarChart
                       data={data.enrollmentsMonthly}
@@ -228,7 +237,7 @@ export default function AnalyticsDashboard() {
                   <div className="an-chart-card">
                     <div className="an-chart-header">
                       <span className="an-chart-title">New Students (Last 6 Months)</span>
-                      <span className="an-chart-total">{kpi.totalStudents} total</span>
+                      <span className="an-chart-total">{students6m} in this period</span>
                     </div>
                     <BarChart
                       data={data.studentsMonthly}

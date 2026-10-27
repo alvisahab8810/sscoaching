@@ -15,10 +15,17 @@ import {
   FaFolder,
 } from "react-icons/fa";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+// Exported blog links have to work outside the dashboard, so they are built
+// against the live domain instead of whatever host the admin is browsing from.
+const SITE_URL = "https://sscoaching.in";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -46,6 +53,74 @@ export default function BlogList() {
       toast.error("Server error while fetching blogs");
     }
     setLoading(false);
+  };
+
+  // The list is paginated server side, so the export re-fetches every blog
+  // matching the current filters rather than exporting only the visible page.
+  const exportExcel = async () => {
+    setExporting(true);
+    try {
+      const query = new URLSearchParams({
+        search: filters.search,
+        category: filters.category,
+        status: filters.status,
+        author: filters.author,
+        page: 1,
+        limit: 10000,
+      }).toString();
+      const res = await fetch(`/api/blogs/getAll?${query}`);
+      const data = await res.json();
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to export blogs");
+        return;
+      }
+      if (!data.data.length) {
+        toast.error("There are no blogs to export");
+        return;
+      }
+
+      const rows = data.data.map((blog) => ({
+        // A few older blogs were saved with a leading slash on the slug,
+        // which would otherwise produce a broken //blogs//slug link.
+        "Blog URL": `${SITE_URL}/blogs/${String(blog.slug || "").replace(
+          /^\/+/,
+          ""
+        )}`,
+        Title: blog.title || "",
+        Description: blog.shortDescription || blog.metaDescription || "",
+        Author: blog.authorName || "",
+        Date: blog.publishDate
+          ? new Date(blog.publishDate).toLocaleDateString("en-GB")
+          : "",
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      // Without explicit widths every column collapses to the default size and
+      // the URLs and titles are unreadable when the sheet is opened.
+      worksheet["!cols"] = [
+        { wch: 60 },
+        { wch: 50 },
+        { wch: 60 },
+        { wch: 20 },
+        { wch: 14 },
+      ];
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Blogs");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      saveAs(
+        new Blob([excelBuffer], { type: "application/octet-stream" }),
+        "blogs.xlsx"
+      );
+      toast.success(`Exported ${rows.length} blogs`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error while exporting blogs");
+    }
+    setExporting(false);
   };
 
   useEffect(() => {
@@ -92,13 +167,24 @@ export default function BlogList() {
             <div className="admin-row">
               <h4 className="fw-bold">Blog List</h4>
 
-              <a
-                href="/dashboard/admin/blogs/create"
-                className="d-flex add-new-blogs"
-              >
-                <img src="/assets/icons/add-new.svg" className="me-2" /> Add New
-                Blog
-              </a>
+              <div className="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={exportExcel}
+                  disabled={exporting}
+                >
+                  {exporting ? "Exporting..." : "Export Excel"}
+                </button>
+
+                <a
+                  href="/dashboard/admin/blogs/create"
+                  className="d-flex add-new-blogs"
+                >
+                  <img src="/assets/icons/add-new.svg" className="me-2" /> Add
+                  New Blog
+                </a>
+              </div>
             </div>
 
             {/* Filters */}

@@ -6,7 +6,11 @@ import Topbar from "@/components/dashboard/Topbar";
 import React, { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ blogs: 0, faqs: 0 });
+  const emptyCounts = { total: 0, published: 0, draft: 0 };
+  const [stats, setStats] = useState({
+    blogs: emptyCounts,
+    faqs: emptyCounts,
+  });
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -23,15 +27,17 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [blogRes, faqRes] = await Promise.all([
-          fetch("/api/blogs/getAll"),
-          fetch("/api/faqs/"),
-        ]);
-        const [blogData, faqData] = await Promise.all([blogRes.json(), faqRes.json()]);
-        setStats({
-          blogs: blogData?.data?.length || 0,
-          faqs: faqData?.data?.length || 0,
-        });
+        // Counts come from a dedicated endpoint that queries the database.
+        // Reading the length of the blog list response reported only the
+        // first page of results, not the real total.
+        const res = await fetch("/api/admin/stats");
+        const data = await res.json();
+        if (data?.success) {
+          setStats({
+            blogs: data.blogs || emptyCounts,
+            faqs: data.faqs || emptyCounts,
+          });
+        }
       } catch (err) {
         console.error("Error loading stats:", err);
       }
@@ -62,9 +68,12 @@ export default function Dashboard() {
                       <div className="stats-card stats-card-green">
                         <div className="stats-card-header">
                           <h6 className="stats-title">Total Blogs</h6>
-                          <span className="stats-number">{stats.blogs}</span>
+                          <span className="stats-number">{stats.blogs.total}</span>
                         </div>
-                        <p className="stats-subtext mobile-none">{stats.blogs} this month</p>
+                        <p className="stats-subtext mobile-none">
+                          {stats.blogs.published} published &middot;{" "}
+                          {stats.blogs.draft} draft
+                        </p>
                         <div className="desktop-none blogs-mob-btn">
                           <a href="/dashboard/admin/blogs/create" className="d-flex add-new-blogs">
                             <img src="/assets/icons/add-new.svg" className="me-2" /> Add New Blog
@@ -79,9 +88,12 @@ export default function Dashboard() {
                       <div className="stats-card stats-card-blue">
                         <div className="stats-card-header">
                           <h6 className="stats-title">Total FAQs</h6>
-                          <span className="stats-number">{stats.faqs}</span>
+                          <span className="stats-number">{stats.faqs.total}</span>
                         </div>
-                        <p className="stats-subtext mobile-none">{stats.faqs} this month</p>
+                        <p className="stats-subtext mobile-none">
+                          {stats.faqs.published} published &middot;{" "}
+                          {stats.faqs.draft} draft
+                        </p>
                         <div className="desktop-none faqs-mob-btn">
                           <a href="/dashboard/admin/faqs/" className="d-flex add-new-blogs">
                             <img src="/assets/icons/add-new.svg" className="me-2" /> Add New FAQ

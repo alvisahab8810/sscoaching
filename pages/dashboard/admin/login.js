@@ -55,7 +55,7 @@ export default function AdminLogin() {
               <input
                 type="email"
                 className="form-control"
-                placeholder="admin@sscoaching.in"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
