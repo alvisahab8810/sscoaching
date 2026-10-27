@@ -29,6 +29,8 @@ const BlockSchema = new mongoose.Schema(
         "table",    // columns + rows
         "cards",    // plain content cards, optionally linked
         "quote",    // pull quote / testimonial
+        "notice",   // scrolling announcement strip
+        "linklist", // coloured link pills, the "important links" row
       ],
       required: true,
     },
@@ -60,6 +62,12 @@ const BlockSchema = new mongoose.Schema(
     imageAlt: { type: String, default: "" },
     caption: { type: String, default: "" },
     videoUrl: { type: String, default: "" },
+
+    // steps -> the process photo pair and the floating "50K + students" card
+    image2: { type: String, default: "" },
+    image2Alt: { type: String, default: "" },
+    statValue: { type: String, default: "" },
+    statLabel: { type: String, default: "" },
 
     // ---- repeatable items ----
     // features / cards -> { image, imageAlt, title, text, url }

@@ -65,7 +65,7 @@ const SECTIONS = {
   steps: {
     label: "Process Steps",
     hint: "Numbered steps. Ideal for an admission or application process.",
-    fields: ["heading", "subheading", "items", "layout"],
+    fields: ["heading", "subheading", "items", "image", "image2", "stat", "layout"],
     itemFields: ["title", "text"],
     itemLabel: "Step",
     defaults: { headingLevel: "h2", background: "light", align: "center" },
@@ -115,6 +115,20 @@ const SECTIONS = {
     hint: "A highlighted quote with the name of the person below it.",
     fields: ["html", "caption", "layout"],
     defaults: { headingLevel: "h2", background: "light", align: "center" },
+  },
+  notice: {
+    label: "Scrolling Notice",
+    hint: "The blue strip that scrolls one line of text, for deadlines and alerts.",
+    fields: ["heading", "layout"],
+    defaults: { headingLevel: "h2", background: "white", align: "left" },
+  },
+  linklist: {
+    label: "Important Links",
+    hint: "The row of coloured link pills used on the admission pages.",
+    fields: ["heading", "items", "layout"],
+    itemFields: ["title", "url"],
+    itemLabel: "Link",
+    defaults: { headingLevel: "h2", background: "white", align: "left" },
   },
 };
 
@@ -725,6 +739,52 @@ function BlockEditor({ block, index, total, open, onToggleOpen, onPatch, onMove,
                 </Field>
               ) : null}
             </>
+          )}
+
+          {has("image2") && (
+            <>
+              <Field
+                label="Second Image"
+                hint="The process section shows two photos side by side."
+              >
+                <ImagePicker value={block.image2} onChange={(v) => onPatch({ image2: v })} />
+              </Field>
+              {block.image2 ? (
+                <Field
+                  label="Second Image Alt Text"
+                  hint="Required for SEO. Describe what the image shows."
+                >
+                  <input
+                    className="form-control"
+                    value={block.image2Alt || ""}
+                    onChange={(e) => onPatch({ image2Alt: e.target.value })}
+                  />
+                </Field>
+              ) : null}
+            </>
+          )}
+
+          {has("stat") && (
+            <div className="row g-2">
+              <div className="col-md-6">
+                <Field label="Stat Number" hint="Shown on the floating card, e.g. 50K +">
+                  <input
+                    className="form-control"
+                    value={block.statValue || ""}
+                    onChange={(e) => onPatch({ statValue: e.target.value })}
+                  />
+                </Field>
+              </div>
+              <div className="col-md-6">
+                <Field label="Stat Label" hint="e.g. Students passed">
+                  <input
+                    className="form-control"
+                    value={block.statLabel || ""}
+                    onChange={(e) => onPatch({ statLabel: e.target.value })}
+                  />
+                </Field>
+              </div>
+            </div>
           )}
 
           {has("video") && (

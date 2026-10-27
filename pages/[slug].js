@@ -3,6 +3,7 @@ import Header from "@/components/header/Header";
 import Offcanvas from "@/components/header/Offcanvas";
 import BranchContactCanvas from "@/components/header/BranchContactCanvas";
 import Footer from "@/components/footer/Footer";
+import Popup from "@/components/home/Popup";
 import SeoPageBlocks from "@/components/SeoPageBlocks";
 import { buildSchemas, absoluteUrl } from "@/lib/seoPageSchema";
 
@@ -88,6 +89,12 @@ export default function SeoPage({ page, schemas }) {
         <SeoPageBlocks blocks={page.blocks} />
 
         <Footer />
+
+        {/* The same enquiry popup the hand-built admission pages use. It
+            binds itself to every .cta-btn on the page, so the hero button
+            and the call-to-action bands open the form instead of
+            navigating away. */}
+        <Popup />
       </section>
     </>
   );

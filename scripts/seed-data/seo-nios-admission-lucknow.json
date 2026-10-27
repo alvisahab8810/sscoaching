@@ -1,16 +1,16 @@
 {
   "slug": "nios-admission-lucknow",
   "title": "NIOS Admission in Lucknow",
-  "metaTitle": "NIOS Admission in Lucknow 2026 | Class 10th & 12th | SS Coaching",
-  "metaDescription": "NIOS admission in Lucknow for Class 10th and 12th. Get stream 1 and stream 2 admission, last dates, fees, eligibility and full exam support from SS Coaching.",
-  "metaKeywords": "nios admission lucknow, nios admission in lucknow, nios class 10 admission, nios class 12 admission, nios coaching lucknow, nios last date",
+  "metaTitle": "NIOS Admission in Lucknow 2026-27 | Class 10th & 12th | SS Coaching",
+  "metaDescription": "Apply for NIOS admission in Lucknow for Class 10th and 12th. Check eligibility, last date, fees, documents and the full admission process with SS Coaching.",
+  "metaKeywords": "nios admission lucknow, nios admission in lucknow, nios class 10 admission lucknow, nios class 12 admission lucknow, nios centre lucknow, nios coaching lucknow, nios admission last date, nios stream 1 admission, nios fees lucknow",
   "focusKeyword": "nios admission lucknow",
   "canonicalUrl": "",
   "indexable": true,
   "followLinks": true,
-  "ogTitle": "NIOS Admission in Lucknow 2026 - Class 10th & 12th",
-  "ogDescription": "Complete NIOS admission support in Lucknow. Eligibility, fees, last dates, subject selection and exam preparation under one roof.",
-  "ogImage": "/assets/images/home/new-banner.webp",
+  "ogTitle": "NIOS Admission in Lucknow 2026-27 - Class 10th & 12th",
+  "ogDescription": "Complete NIOS admission support in Lucknow: eligibility, fees, last dates, subject selection, TMA help and exam preparation under one roof.",
+  "ogImage": "/assets/images/nios-admission/hero.png",
   "ogType": "website",
   "authorName": "SS Coaching",
   "schemaTypes": [
@@ -26,325 +26,351 @@
   "blocks": [
     {
       "type": "hero",
-      "heading": "NIOS Admission in Lucknow for Class 10th and 12th",
+      "heading": "NIOS Admission in Lucknow for Class 10th & 12th",
       "headingLevel": "h1",
-      "headingHighlight": "NIOS Admission",
-      "subheading": "Open school admission with full guidance on eligibility, subject selection, fees and exams - handled start to finish by SS Coaching, Lucknow.",
-      "html": "<p>The National Institute of Open Schooling lets you complete Class 10th or 12th without attending a regular school. If you have dropped a year, failed a subject, or need to study alongside a job, NIOS is the recognised route back. Our Lucknow centre completes your admission, picks the right stream for your situation, and prepares you for the TMA and theory exams.</p>",
-      "buttonText": "Apply For Admission",
+      "headingHighlight": "",
+      "subheading": "Government-recognised open schooling with flexible exams, free subject choice and complete coaching support — admission handled end to end by SS Coaching, Lucknow.",
+      "html": "",
+      "buttonText": "Apply Now",
+      "buttonUrl": "#enquiry",
+      "button2Text": "",
+      "button2Url": "",
+      "image": "/assets/images/nios-admission/hero.png",
+      "imageAlt": "Students attending a NIOS admission counselling session in Lucknow",
+      "background": "white",
+      "align": "center",
+      "isActive": true
+    },
+    {
+      "type": "table",
+      "heading": "NIOS Stream 1 Admission Dates in Lucknow",
+      "headingLevel": "h2",
+      "subheading": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true,
+      "columns": [
+        {
+          "label": "Block in NIOS Stream 1"
+        },
+        {
+          "label": "Admission Window"
+        },
+        {
+          "label": "Examination"
+        }
+      ],
+      "rows": [
+        [
+          {
+            "html": "Block 1"
+          },
+          {
+            "html": "March to September"
+          },
+          {
+            "html": "April public examination"
+          }
+        ],
+        [
+          {
+            "html": "Block 2"
+          },
+          {
+            "html": "September to February"
+          },
+          {
+            "html": "October public examination"
+          }
+        ]
+      ]
+    },
+    {
+      "type": "image",
+      "heading": "What Is NIOS and Who Should Take Admission in Lucknow",
+      "headingLevel": "h2",
+      "headingHighlight": "NIOS",
+      "caption": "",
+      "html": "<p>The National Institute of Open Schooling is an autonomous board set up by the Ministry of Education, Government of India. It awards Secondary and Senior Secondary certificates that carry exactly the same weight as CBSE, ICSE or the UP Board — the difference is only in how you study, not in what you earn at the end.</p><p>NIOS admission in Lucknow makes the most sense if you are in one of these situations:</p><ul><li>You failed one or more subjects in Class 10 or Class 12 and do not want to lose a full year</li><li>You left school because of family, health or financial reasons and want to restart</li><li>You are working, preparing for a competitive exam or training in sport and cannot attend school daily</li><li>You need a specific subject combination that your school could not offer</li><li>You are an adult learner who wants to complete school qualification for a job or promotion</li></ul><p>There is no attendance requirement, you choose your own subjects, and you can spread your papers across more than one examination session. For most students in Lucknow this is the shortest honest route back into formal education.</p>",
+      "image": "/assets/images/nios-admission/stream1-about.png",
+      "imageAlt": "Student who completed NIOS Class 12 admission in Lucknow",
+      "buttonText": "Contact Us For Help",
       "buttonUrl": "/contact-us",
-      "button2Text": "Talk To A Counsellor",
-      "button2Url": "/contact-us",
-      "image": "/assets/images/home/new-banner.webp",
-      "imageAlt": "Students enrolled for NIOS admission at SS Coaching Lucknow",
+      "button2Text": "",
+      "button2Url": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
+      "type": "image",
+      "heading": "NIOS 10th & 12th Admission in Lucknow",
+      "headingLevel": "h2",
+      "headingHighlight": "Lucknow",
+      "caption": "",
+      "html": "<p><strong>Secondary Course (Class 10):</strong> open to anyone aged 14 or above. You study five subjects — one or two languages plus your choice from Mathematics, Science, Social Science, Economics, Business Studies, Home Science, Psychology and more. No previous mark sheet is needed, only proof of age.</p><p><strong>Senior Secondary Course (Class 12):</strong> open to anyone aged 15 or above who has passed Class 10 from a recognised board. You build your own stream — Science, Commerce, Arts or a mix — instead of being locked into one.</p><p>Both courses give you five years and nine examination chances to clear your papers. Credits already earned stay with you, so you only ever reappear for what is left. With guidance from a NIOS admission centre in Lucknow you get the subject combination right the first time, which is where most students lose a session. You can also <a href=\"/nios-admission/admission-in-nios-stream-1\">read the full Stream 1 admission guide</a> before you apply.</p>",
+      "image": "/assets/images/nios-admission/stream1-info.png",
+      "imageAlt": "NIOS 10th and 12th student studying online in Lucknow",
+      "buttonText": "Contact Us For Help",
+      "buttonUrl": "/contact-us",
+      "button2Text": "",
+      "button2Url": "",
       "background": "light",
       "align": "left",
       "isActive": true
     },
     {
+      "type": "notice",
+      "heading": "NIOS admission in Lucknow is open for Class 10th and 12th — call SS Coaching to check which block you are eligible for before the window closes.",
+      "headingLevel": "h2",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
+      "type": "cta",
+      "heading": "NIOS Admission Open in Lucknow",
+      "headingLevel": "h2",
+      "subheading": "Class 10th and 12th enrolment with live classes, study material and TMA support included.",
+      "buttonText": "Apply Now",
+      "buttonUrl": "#enquiry",
+      "button2Text": "",
+      "button2Url": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
       "type": "richtext",
-      "heading": "What Is NIOS and Who Should Take It",
+      "heading": "How to Apply for NIOS Admission in Lucknow?",
+      "headingLevel": "h2",
+      "headingHighlight": "",
+      "html": "<p>NIOS registration happens online on the official SDMIS portal, and it looks simple until you reach the subject selection screen. A wrong subject code, a date of birth that does not match your certificate, or a photograph in the wrong dimensions will hold up your enrolment for weeks. We complete the whole application with you in one sitting so nothing comes back for correction.</p>",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
+      "type": "steps",
+      "heading": "NIOS Admission Process in Lucknow – 5 Simple Steps",
+      "headingLevel": "h2",
+      "headingHighlight": "5 Simple Steps",
+      "subheading": "From your first phone call to your enrolment number, SS Coaching handles every step with you.",
+      "background": "white",
+      "align": "left",
+      "isActive": true,
+      "items": [
+        {
+          "title": "Counselling & Course Selection",
+          "text": "<p>Tell us your marks, your age and what you want to do next. We tell you whether Stream 1 or Stream 2 fits, which block to target and which subject combination keeps your options open.</p>"
+        },
+        {
+          "title": "Document Verification",
+          "text": "<p>Bring your mark sheet, ID proof, address proof and photographs. We check names, spellings and dates against each other before anything is uploaded — this is where most rejections start.</p>"
+        },
+        {
+          "title": "Online Registration",
+          "text": "<p>We fill your NIOS admission form on the official SDMIS portal, pick the correct study centre in Lucknow and upload documents in the exact format the portal accepts.</p>"
+        },
+        {
+          "title": "Fee Payment",
+          "text": "<p>The NIOS fee depends on your course, number of subjects and category. We show you the exact amount before you pay, and the payment receipt is saved for your records.</p>"
+        },
+        {
+          "title": "Admission Confirmation",
+          "text": "<p>NIOS issues your enrolment number and identity card. From that day your live classes, study material, TMA help and doubt sessions at SS Coaching begin.</p>"
+        }
+      ],
+      "image": "/assets/images/home/steps-process/photo1.svg",
+      "imageAlt": "Counsellor guiding a student through NIOS admission in Lucknow",
+      "image2": "/assets/images/home/steps-process/photo.svg",
+      "image2Alt": "Student filling the NIOS 10th admission form online in Lucknow",
+      "statValue": "50K +",
+      "statLabel": "Students passed"
+    },
+    {
+      "type": "table",
+      "heading": "NIOS Admission Last Date",
+      "headingLevel": "h2",
+      "subheading": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true,
+      "columns": [
+        {
+          "label": ""
+        },
+        {
+          "label": ""
+        }
+      ],
+      "rows": [
+        [
+          {
+            "html": "1. Stream 1, Block 1 — admission without late fee"
+          },
+          {
+            "html": "Closes 31st July"
+          }
+        ],
+        [
+          {
+            "html": "2. Stream 1, Block 1 — admission with late fee"
+          },
+          {
+            "html": "Closes 30th September"
+          }
+        ],
+        [
+          {
+            "html": "3. Stream 1, Block 2 — admission without late fee"
+          },
+          {
+            "html": "Closes 31st January"
+          }
+        ],
+        [
+          {
+            "html": "4. Stream 1, Block 2 — admission with late fee"
+          },
+          {
+            "html": "Closes 28th February"
+          }
+        ]
+      ]
+    },
+    {
+      "type": "quote",
+      "html": "<p>Dates follow the NIOS national schedule and can be extended by the board. Call SS Coaching on the number in the footer to confirm the live deadline for your block before you pay any fee.</p>",
+      "caption": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
+      "type": "richtext",
+      "heading": "Why Should You Apply for Enrollment in NIOS?",
       "headingLevel": "h2",
       "headingHighlight": "NIOS",
-      "html": "<p>NIOS is a national board under the Ministry of Education, and its Class 10th and 12th certificates carry the same recognition as CBSE for higher education, government jobs and competitive exams.</p><p>NIOS admission in Lucknow is usually the right choice if you:</p><ul><li>failed one or more subjects in CBSE, ICSE or UP Board and do not want to repeat the whole year</li><li>left school earlier and want to complete Class 10th or 12th now</li><li>are preparing for NEET, JEE or a government exam and need a lighter school schedule</li><li>are working, or cannot attend a regular school every day</li><li>want to change your subject combination, for example moving to a science stream</li></ul><p>There is no upper age limit for Class 10th, and the minimum age is 14 years. For Class 12th the minimum age is 15 years, and you need a passed Class 10th certificate from a recognised board.</p>",
+      "html": "<p><strong>No year is wasted.</strong> If you failed one or two subjects, you carry forward the ones you passed and reappear only for the rest — your Class 10 or Class 12 can be complete within months, not a full academic year.</p><p><strong>The certificate is fully recognised.</strong> NIOS is a board of the Ministry of Education. Its certificates are accepted by universities, by the UPSC and state commissions, by the armed forces and by private employers. For admission to a degree course in Lucknow, a NIOS mark sheet is treated exactly like any other board's.</p><p><strong>You study on your own schedule.</strong> There is no attendance register. Students who work, run a shop, train in a sport or care for family at home can prepare at the hours that actually suit them.</p><p><strong>You choose your own subjects.</strong> Commerce with Maths, Science without Biology, Psychology with Economics — combinations that a regular school would refuse are standard at NIOS.</p><p><strong>Nine chances across five years.</strong> You are not reduced to one attempt a year. Papers can be spread across sessions until the course is complete.</p>",
       "background": "white",
       "align": "left",
       "isActive": true
     },
     {
       "type": "features",
-      "heading": "Why Students Choose Our Lucknow Centre",
+      "heading": "Documents Required for NIOS Admission in Lucknow",
       "headingLevel": "h2",
-      "headingHighlight": "Lucknow Centre",
-      "subheading": "Admission is only the first step. The support that follows is what gets you the certificate.",
-      "background": "white",
-      "align": "center",
-      "isActive": true,
-      "items": [
-        {
-          "image": "/assets/images/home/icons/live-classes.svg",
-          "imageAlt": "Live online classes icon",
-          "title": "Live Classes",
-          "text": "<p>Daily live classes for every NIOS subject, with recordings you can watch again before the exam.</p>",
-          "url": "/online-classes-time-table"
-        },
-        {
-          "image": "/assets/images/home/icons/solved-tmas.svg",
-          "imageAlt": "Solved TMA assignments icon",
-          "title": "Solved TMAs",
-          "text": "<p>Your Tutor Marked Assignments carry 20% of the marks. We prepare and submit them correctly and on time.</p>",
-          "url": ""
-        },
-        {
-          "image": "/assets/images/home/icons/question-bank.svg",
-          "imageAlt": "Question bank icon",
-          "title": "Question Bank",
-          "text": "<p>Ten years of previous NIOS papers, sorted by chapter, with marking schemes.</p>",
-          "url": "/question-papers"
-        },
-        {
-          "image": "/assets/images/home/icons/experienced-teachers.svg",
-          "imageAlt": "Experienced teachers icon",
-          "title": "Experienced Teachers",
-          "text": "<p>Teachers who work with the NIOS syllabus every day and know how the papers are set.</p>",
-          "url": ""
-        },
-        {
-          "image": "/assets/images/home/icons/doubt-clearing-sessions.svg",
-          "imageAlt": "Doubt clearing sessions icon",
-          "title": "Doubt Sessions",
-          "text": "<p>Open doubt-clearing slots every week, plus one-to-one help before the practical exams.</p>",
-          "url": ""
-        },
-        {
-          "image": "/assets/images/home/icons/study-materials.svg",
-          "imageAlt": "Study material icon",
-          "title": "Study Material",
-          "text": "<p>Printed and digital notes written for the NIOS pattern, not generic board notes.</p>",
-          "url": ""
-        }
-      ]
-    },
-    {
-      "type": "steps",
-      "heading": "NIOS Admission Process Step By Step",
-      "headingLevel": "h2",
-      "headingHighlight": "Admission Process",
-      "subheading": "Bring your documents to the centre and we complete the rest with you in a single sitting.",
-      "background": "light",
-      "align": "center",
-      "isActive": true,
-      "items": [
-        {
-          "title": "Free Counselling",
-          "text": "<p>We check your marksheets and decide whether stream 1 or stream 2 suits you, and which subjects to take.</p>"
-        },
-        {
-          "title": "Document Collection",
-          "text": "<p>Aadhaar card, previous marksheet, passport photograph and signature. For stream 2, the failed-subject marksheet as well.</p>"
-        },
-        {
-          "title": "Online Registration",
-          "text": "<p>Your application is filed on the NIOS portal with the correct regional centre and study centre code.</p>"
-        },
-        {
-          "title": "Fee Payment",
-          "text": "<p>The NIOS board fee is paid online and you get the payment receipt the same day.</p>"
-        },
-        {
-          "title": "Enrolment Number",
-          "text": "<p>NIOS issues your enrolment number and identity card. Keep it safe - every exam form needs it.</p>"
-        },
-        {
-          "title": "Classes And TMAs",
-          "text": "<p>Classes begin immediately. Your TMAs are completed and submitted at the study centre well before the deadline.</p>"
-        },
-        {
-          "title": "Exam And Result",
-          "text": "<p>We fill your exam form, help you download the hall ticket, and track your result when it is declared.</p>"
-        }
-      ]
-    },
-    {
-      "type": "table",
-      "heading": "Streams, Eligibility and Last Dates",
-      "headingLevel": "h2",
-      "subheading": "NIOS runs two admission blocks each year. The stream decides when you can appear for the exam.",
+      "headingHighlight": "Documents Required",
+      "subheading": "Keep clear scanned copies ready. Names and dates must match across every document.",
       "background": "white",
       "align": "left",
       "isActive": true,
-      "columns": [
-        {
-          "label": "Stream"
-        },
-        {
-          "label": "Who It Is For"
-        },
-        {
-          "label": "Admission Window"
-        },
-        {
-          "label": "Exam Appears In"
-        }
-      ],
-      "rows": [
-        [
-          {
-            "html": "Stream 1 (Block 1)"
-          },
-          {
-            "html": "Fresh admission for Class 10th or 12th"
-          },
-          {
-            "html": "March to July"
-          },
-          {
-            "html": "April exam of the next year"
-          }
-        ],
-        [
-          {
-            "html": "Stream 1 (Block 2)"
-          },
-          {
-            "html": "Fresh admission for Class 10th or 12th"
-          },
-          {
-            "html": "September to January"
-          },
-          {
-            "html": "October exam of the next year"
-          }
-        ],
-        [
-          {
-            "html": "Stream 2"
-          },
-          {
-            "html": "Failed students of CBSE, ICSE or State Board"
-          },
-          {
-            "html": "August to September"
-          },
-          {
-            "html": "April exam of the same cycle"
-          }
-        ],
-        [
-          {
-            "html": "Stream 3 and 4"
-          },
-          {
-            "html": "On-demand examination for specific subjects"
-          },
-          {
-            "html": "Open through the year"
-          },
-          {
-            "html": "On-demand slot"
-          }
-        ]
-      ]
-    },
-    {
-      "type": "stats",
-      "heading": "Our Record With NIOS Students",
-      "headingLevel": "h2",
-      "background": "purple",
-      "align": "center",
-      "isActive": true,
       "items": [
         {
-          "title": "12,000+",
-          "text": "<p>Students enrolled through our centre</p>"
+          "title": "For Class 10th (Secondary)",
+          "text": "<ul><li>Proof of date of birth — birth certificate, Aadhaar card or any government photo ID</li><li>Transfer certificate or Class 5 / Class 8 pass certificate, if available</li><li>4 recent passport-size colour photographs</li><li>Address proof of the student or guardian (driving licence not accepted)</li><li>Caste or disability certificate, if claiming a fee concession</li></ul>"
         },
         {
-          "title": "96%",
-          "text": "<p>Pass rate in the last exam cycle</p>"
-        },
-        {
-          "title": "15+",
-          "text": "<p>Years of NIOS coaching in Lucknow</p>"
-        },
-        {
-          "title": "40+",
-          "text": "<p>Subjects taught across Class 10th and 12th</p>"
-        }
-      ]
-    },
-    {
-      "type": "cards",
-      "heading": "Popular Subject Combinations",
-      "headingLevel": "h2",
-      "headingHighlight": "Subject Combinations",
-      "subheading": "You must take five subjects, including at least one language. These combinations are the ones our students choose most.",
-      "background": "white",
-      "align": "center",
-      "isActive": true,
-      "items": [
-        {
-          "image": "/assets/images/home/b1.webp",
-          "imageAlt": "NIOS science stream subjects",
-          "title": "Science With Practicals",
-          "text": "<p>Physics, Chemistry, Biology or Maths with English. The route for students heading to NEET or JEE.</p>",
-          "url": "/subject"
-        },
-        {
-          "image": "/assets/images/home/b2.webp",
-          "imageAlt": "NIOS commerce stream subjects",
-          "title": "Commerce",
-          "text": "<p>Accountancy, Business Studies and Economics with English. Suited to B.Com and CA aspirants.</p>",
-          "url": "/subject"
-        },
-        {
-          "image": "/assets/images/home/b3.webp",
-          "imageAlt": "NIOS arts stream subjects",
-          "title": "Arts And Humanities",
-          "text": "<p>Political Science, History, Sociology and Psychology. The lightest load for students preparing for government exams.</p>",
-          "url": "/subject"
-        }
-      ]
-    },
-    {
-      "type": "quote",
-      "html": "<p>I failed two subjects in Class 12th and thought my year was gone. SS Coaching put me into NIOS stream 2 in September and I passed in the April exam with the same batch as my friends.</p>",
-      "caption": "Aman Verma, NIOS Class 12th, Lucknow",
-      "background": "light",
-      "align": "center",
-      "isActive": true
-    },
-    {
-      "type": "faq",
-      "heading": "Frequently Asked Questions About NIOS Admission",
-      "headingLevel": "h2",
-      "headingHighlight": "Frequently Asked Questions",
-      "subheading": "The questions parents and students ask us most often at the Lucknow centre.",
-      "background": "light",
-      "align": "left",
-      "isActive": true,
-      "items": [
-        {
-          "title": "Is the NIOS certificate valid for government jobs and college admission?",
-          "text": "<p>Yes. NIOS is a national board recognised by the Ministry of Education, the Association of Indian Universities and the UGC. Its Class 10th and 12th certificates are accepted for college admission, government jobs and competitive exams exactly like a CBSE certificate.</p>"
-        },
-        {
-          "title": "What is the last date for NIOS admission in Lucknow?",
-          "text": "<p>Stream 1 block 1 usually closes in July and block 2 in January, while stream 2 for failed students runs from August to September. NIOS extends these dates with a late fee most years, so contact the centre before assuming you have missed the window.</p>"
-        },
-        {
-          "title": "How much does NIOS admission cost?",
-          "text": "<p>The NIOS board fee depends on your class, the number of subjects and whether any subject has a practical. Coaching, study material and TMA support are charged separately. We give you the complete breakdown in writing during counselling, before anything is paid.</p>"
-        },
-        {
-          "title": "Can I take NIOS admission after failing in CBSE or UP Board?",
-          "text": "<p>Yes, and you do not lose the subjects you already passed. Under NIOS transfer of credit you can carry forward up to two passed subjects and only appear for the rest, which is why stream 2 students often finish in a single exam cycle.</p>"
-        },
-        {
-          "title": "Are TMAs compulsory in NIOS?",
-          "text": "<p>Yes. Tutor Marked Assignments carry 20% of the marks in each subject and must be submitted to your study centre. Skipping them means you cannot pass even with a good theory paper, so we prepare and submit them for every student.</p>"
-        },
-        {
-          "title": "Do I have to attend classes at the centre?",
-          "text": "<p>No. NIOS itself does not require daily attendance, and our classes run both online and at the Lucknow centre. Practical subjects are the exception - those sessions have to be attended in person.</p>"
-        },
-        {
-          "title": "Can I appear for NEET or JEE with a NIOS certificate?",
-          "text": "<p>Yes. NTA accepts NIOS Class 12th for both NEET and JEE, provided you have taken the required subjects with practicals. Make sure Physics, Chemistry and Biology or Maths are in your combination at the time of admission.</p>"
+          "title": "For Class 12th (Senior Secondary)",
+          "text": "<ul><li>Class 10 mark sheet and passing certificate from a recognised board</li><li>Aadhaar card or any government photo ID</li><li>4 recent passport-size colour photographs</li><li>Address proof of the student or guardian (driving licence not accepted)</li><li>TOC or migration certificate, if transferring credits from another board</li></ul>"
         }
       ]
     },
     {
       "type": "cta",
-      "heading": "Start Your NIOS Admission Today",
+      "heading": "Not Sure Which Stream You Qualify For?",
       "headingLevel": "h2",
-      "subheading": "Speak to a counsellor, check which stream you qualify for, and complete your admission in one visit.",
-      "buttonText": "Apply For Admission",
-      "buttonUrl": "/contact-us",
-      "button2Text": "Call The Centre",
-      "button2Url": "/contact-us",
-      "background": "purple",
-      "align": "center",
+      "subheading": "Share your marks and your age — our counsellors in Lucknow will tell you the right stream, block and subject combination in one call.",
+      "buttonText": "Talk To A Counsellor",
+      "buttonUrl": "#enquiry",
+      "button2Text": "",
+      "button2Url": "",
+      "background": "white",
+      "align": "left",
       "isActive": true
+    },
+    {
+      "type": "linklist",
+      "heading": "Some Important Links in NIOS Admission",
+      "headingLevel": "h2",
+      "headingHighlight": "Important Links",
+      "subheading": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true,
+      "items": [
+        {
+          "title": "Form for NIOS Admission 2026-27",
+          "url": "/contact-us"
+        },
+        {
+          "title": "NIOS Subjects for 10th and 12th",
+          "url": "/subject/subject-list"
+        },
+        {
+          "title": "NIOS Admission for Stream 2",
+          "url": "/nios-admission/admission-in-nios-stream-2"
+        },
+        {
+          "title": "NIOS Admission for Stream 3 & 4",
+          "url": "/nios-admission/admission-in-nios-stream-3-4"
+        },
+        {
+          "title": "NIOS Question Papers",
+          "url": "/question-papers"
+        },
+        {
+          "title": "NIOS Hall Ticket 2026-27",
+          "url": "/nios-hall-ticket"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "heading": "Why Choose SS Coaching as Your NIOS Admission Center in Lucknow?",
+      "headingLevel": "h2",
+      "headingHighlight": "NIOS Admission Center in Lucknow",
+      "html": "<p>Plenty of places in Lucknow will fill your NIOS form and then stop. The form is the easy part — passing the board is not. Here is what you get when the admission and the teaching sit under one roof.</p><p><strong>Admission done correctly the first time.</strong> Over two decades of NIOS enrolments means we already know which subject codes clash, which documents the portal rejects and how to fix a name mismatch before it becomes a six-week delay.</p><p><strong>Teachers who know the NIOS paper.</strong> The NIOS syllabus and marking scheme are not the same as the UP Board or CBSE. Our faculty teach to the NIOS pattern, from the question structure to the practical and the viva.</p><p><strong>TMA support that actually counts.</strong> Tutor Marked Assignments carry 20% of your final marks and are the easiest marks on offer. We walk you through every assignment and make sure it is submitted on time at the right study centre.</p><p><strong>Live classes plus recordings.</strong> Attend live if your schedule allows, watch the recording if it does not. Study material, previous question papers and doubt sessions come with it.</p><p><strong>Support until the result.</strong> Hall ticket download, exam centre details, practical dates, re-evaluation — you are not left to chase NIOS alone once the fee is paid.</p><p>If you are looking for NIOS admission in Lucknow with teaching included rather than paperwork alone, this is the difference worth paying for.</p>",
+      "background": "white",
+      "align": "left",
+      "isActive": true
+    },
+    {
+      "type": "faq",
+      "heading": "FAQs:",
+      "headingLevel": "h2",
+      "headingHighlight": "FAQs:",
+      "subheading": "",
+      "background": "white",
+      "align": "left",
+      "isActive": true,
+      "items": [
+        {
+          "title": "Is NIOS valid for government jobs?",
+          "text": "<p>Yes. NIOS is a national board under the Ministry of Education and its Secondary and Senior Secondary certificates are accepted for government jobs, defence recruitment, higher education and competitive examinations on the same footing as CBSE or any state board.</p>"
+        },
+        {
+          "title": "Who can apply for NIOS admission in Lucknow?",
+          "text": "<p>For Class 10 you need to be at least 14 years old — no previous mark sheet is required. For Class 12 you need to be at least 15 and must have passed Class 10 from a recognised board. School dropouts, students who failed a board exam, working adults and sportspersons are all eligible.</p>"
+        },
+        {
+          "title": "What is the NIOS admission fee?",
+          "text": "<p>The fee depends on your course, the number of subjects you take and your category, and concessions apply for SC, ST, female and differently-abled learners. Admission after the regular deadline attracts a late fee. We calculate the exact amount for your case before you pay anything.</p>"
+        },
+        {
+          "title": "How long does NIOS admission take?",
+          "text": "<p>Once your documents are ready, the online registration and fee payment are completed the same day. NIOS then issues the enrolment number and identity card, which generally takes a few weeks.</p>"
+        },
+        {
+          "title": "Can I take coaching along with NIOS admission?",
+          "text": "<p>Yes, and you should. SS Coaching in Lucknow provides live classes, recorded lectures, study material, TMA assistance and doubt-solving sessions alongside your NIOS admission, so you are prepared for both the theory and the practical examinations.</p>"
+        },
+        {
+          "title": "Is NIOS easier than regular school?",
+          "text": "<p>NIOS is more flexible, not easier. There is no attendance pressure, you pick your own subject combination and you can spread papers across sessions — but the syllabus and the examination standard stay at board level, which is exactly why the certificate holds its value.</p>"
+        }
+      ]
     }
   ]
 }
