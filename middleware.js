@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { redirectsMap } from "./utils/redirects";
 
 const LOGIN_PAGE = "/dashboard/admin/login";
-const EXCLUDED_PATHS = ["/dashboard/admin/login", "/dashboard/subadmin/login"];
+const TEACHER_LOGIN_PAGE = "/dashboard/teacher/login";
+const TEACHER_HOME = "/dashboard/teacher";
+const EXCLUDED_PATHS = [
+  "/dashboard/admin/login",
+  "/dashboard/subadmin/login",
+  "/dashboard/teacher/login",
+];
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -23,7 +29,18 @@ export function middleware(request) {
   if (pathname.startsWith("/dashboard") && !EXCLUDED_PATHS.some(p => pathname.startsWith(p))) {
     const adminToken = request.cookies.get("admin_token");
     const subAdminToken = request.cookies.get("subadmin_token");
-    if (!adminToken && !subAdminToken) {
+    const teacherToken = request.cookies.get("teacher_token");
+
+    // The teacher portal is its own area: only a teacher session opens it,
+    // and a teacher session opens nothing else.
+    if (pathname.startsWith(TEACHER_HOME)) {
+      if (!teacherToken) {
+        return NextResponse.redirect(new URL(TEACHER_LOGIN_PAGE, request.url));
+      }
+    } else if (!adminToken && !subAdminToken) {
+      if (teacherToken) {
+        return NextResponse.redirect(new URL(TEACHER_HOME, request.url));
+      }
       return NextResponse.redirect(new URL(LOGIN_PAGE, request.url));
     }
   }

@@ -100,6 +100,27 @@ const LiveClassSchema = new mongoose.Schema(
       ref: "Course",
       default: null,
     },
+
+    // Who scheduled this class. Classes created before teacher accounts
+    // existed keep the defaults below, so nothing that already works
+    // changes -- the admin screens just show "Admin" for them.
+    createdByTeacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher",
+      default: null,
+    },
+
+    createdByName: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    createdByRole: {
+      type: String,
+      enum: ["admin", "subadmin", "teacher"],
+      default: "admin",
+    },
   },
   {
     timestamps: true,

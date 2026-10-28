@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { FiClipboard, FiFileText, FiSearch } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
-import { MdHistory, MdBarChart, MdNotifications } from "react-icons/md";
+import { MdHistory, MdBarChart, MdNotifications, MdSchool } from "react-icons/md";
 
 const FEATURE_PATHS = {
   blogs: "/dashboard/admin/blogs",
@@ -284,6 +284,11 @@ export default function Sidebar() {
             <li style={styles.navItem}>
               <Link href="/dashboard/admin/sub-admins" style={styles.navLink(pathname?.startsWith("/dashboard/admin/sub-admins"))}>
                 <BsShieldLock style={{ marginRight: "8px" }} size={16} /> Sub-Admins
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/teachers" style={styles.navLink(pathname?.startsWith("/dashboard/admin/teachers"))}>
+                <MdSchool style={{ marginRight: "8px" }} size={16} /> Teachers
               </Link>
             </li>
             <li style={styles.navItem}>
