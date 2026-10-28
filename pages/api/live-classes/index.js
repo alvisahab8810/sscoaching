@@ -1,5 +1,11 @@
 import dbConnect from "@/lib/dbConnect";
 import LiveClass from "@/models/LiveClassModel";
+import {
+  getStudentIdFromReq,
+  isAuthenticatedAdmin,
+  getStudentAccess,
+  sanitizeClassForStudent,
+} from "@/lib/liveClassAccess";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).end();
@@ -17,11 +23,23 @@ export default async function handler(req, res) {
       LiveClass.countDocuments(filter),
     ]);
 
-    return res.status(200).json({
-      success: true,
-      data,
-      pagination: { total, page: Number(page), limit: Number(limit), totalPages: Math.ceil(total / Number(limit)) },
-    });
+    const pagination = {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / Number(limit)),
+    };
+
+    // Admins see everything, including stream links.
+    if (isAuthenticatedAdmin(req)) {
+      return res.status(200).json({ success: true, data, pagination });
+    }
+
+    // Everyone else only gets the stream link for classes they have paid for.
+    const access = await getStudentAccess(getStudentIdFromReq(req));
+    const safeData = data.map((cls) => sanitizeClassForStudent(cls, access));
+
+    return res.status(200).json({ success: true, data: safeData, pagination });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message || "Server error" });
   }
