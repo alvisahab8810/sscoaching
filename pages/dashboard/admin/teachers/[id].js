@@ -7,6 +7,7 @@ import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
+import { CLASS_OPTIONS } from "@/lib/classOptions";
 import {
   MdArrowBack, MdRefresh, MdSchool, MdEventNote, MdCheckCircle, MdSchedule,
   MdLiveTv, MdAccessTime, MdBarChart, MdMenuBook, MdHistory, MdSave,
@@ -43,7 +44,9 @@ export default function TeacherDetailPage() {
         email: data.data.email || "",
         phone: data.data.phone || "",
         qualification: data.data.qualification || "",
+        username: data.data.username || "",
         subjects: (data.data.subjects || []).join(", "),
+        classes: data.data.classes || [],
         status: data.data.status || "active",
         password: "",
       });
@@ -62,6 +65,7 @@ export default function TeacherDetailPage() {
       const body = {
         ...edit,
         subjects: edit.subjects.split(",").map((s) => s.trim()).filter(Boolean),
+        classes: edit.classes || [],
       };
       if (!body.password) delete body.password;
 
@@ -134,6 +138,9 @@ export default function TeacherDetailPage() {
                           </span>
                           {(teacher.subjects || []).map((s) => (
                             <span key={s} style={{ background: "#eef0ff", color: "#5641CE", borderRadius: 99, padding: "3px 10px", fontSize: "0.74rem", fontWeight: 600 }}>{s}</span>
+                          ))}
+                          {(teacher.classes || []).map((c) => (
+                            <span key={c} style={{ background: "#e8f6ef", color: "#0f9d58", borderRadius: 99, padding: "3px 10px", fontSize: "0.74rem", fontWeight: 600 }}>{c}</span>
                           ))}
                         </div>
                       </div>
@@ -298,6 +305,17 @@ export default function TeacherDetailPage() {
                           </Field>
                         </div>
                         <div style={gridTwo}>
+                          <Field label="Username">
+                            <input style={inputStyle} value={edit.username} autoComplete="off"
+                              onChange={(e) => setEdit((f) => ({ ...f, username: e.target.value }))} />
+                          </Field>
+                          <Field label="Reset Password (leave blank to keep)">
+                            <input style={inputStyle} value={edit.password} autoComplete="new-password"
+                              placeholder="New password"
+                              onChange={(e) => setEdit((f) => ({ ...f, password: e.target.value }))} />
+                          </Field>
+                        </div>
+                        <div style={gridTwo}>
                           <Field label="Phone">
                             <input style={inputStyle} value={edit.phone}
                               onChange={(e) => setEdit((f) => ({ ...f, phone: e.target.value }))} />
@@ -311,6 +329,12 @@ export default function TeacherDetailPage() {
                           <input style={inputStyle} value={edit.subjects}
                             onChange={(e) => setEdit((f) => ({ ...f, subjects: e.target.value }))} />
                         </Field>
+                        <Field label="Class (select one or more)">
+                          <ClassPicker
+                            selected={edit.classes || []}
+                            onChange={(next) => setEdit((f) => ({ ...f, classes: next }))}
+                          />
+                        </Field>
                         <div style={gridTwo}>
                           <Field label="Status">
                             <select style={inputStyle} value={edit.status}
@@ -319,14 +343,10 @@ export default function TeacherDetailPage() {
                               <option value="inactive">Inactive — cannot log in</option>
                             </select>
                           </Field>
-                          <Field label="Reset Password (leave blank to keep)">
-                            <input style={inputStyle} value={edit.password} autoComplete="new-password"
-                              placeholder="New password"
-                              onChange={(e) => setEdit((f) => ({ ...f, password: e.target.value }))} />
-                          </Field>
                         </div>
                         <p style={{ color: "#9ca3af", fontSize: "0.78rem", margin: "0 0 1rem" }}>
-                          Username (@{teacher.username}) cannot be changed. Teachers only have access to online classes.
+                          Changing the username or password does not sign the teacher out, but they must use the
+                          new ones next time. Teachers only have access to online classes.
                         </p>
                         <button type="submit" disabled={saving} style={{ ...btnStyle("#5641CE"), opacity: saving ? 0.6 : 1 }}>
                           <MdSave size={17} /> {saving ? "Saving…" : "Save Changes"}
@@ -378,6 +398,40 @@ function StatusPill({ status }) {
     </span>
   );
 }
+
+// Multi-select for the classes a teacher is assigned to. The values match the
+// batch names used when scheduling a live class, so they line up exactly.
+const ClassPicker = ({ selected = [], onChange }) => {
+  const toggle = (cls) =>
+    onChange(selected.includes(cls) ? selected.filter((c) => c !== cls) : [...selected, cls]);
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+      {CLASS_OPTIONS.map((cls) => {
+        const on = selected.includes(cls);
+        return (
+          <button
+            key={cls}
+            type="button"
+            onClick={() => toggle(cls)}
+            style={{
+              padding: "6px 13px",
+              borderRadius: 99,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              border: `1.5px solid ${on ? "#5641CE" : "#e3e6f0"}`,
+              background: on ? "#5641CE" : "#fff",
+              color: on ? "#fff" : "#6b7a99",
+            }}
+          >
+            {cls}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 const Field = ({ label, children }) => (
   <div style={{ marginBottom: 12 }}>

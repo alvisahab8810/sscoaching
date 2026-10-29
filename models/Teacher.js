@@ -26,6 +26,11 @@ const TeacherSchema = new mongoose.Schema(
     // to pre-fill the subject field when they schedule a class.
     subjects: { type: [String], default: [] },
 
+    // Classes/batches this teacher is assigned to (e.g. "Class 10"). Same
+    // values as the batch on a live class, so the batch field can be
+    // pre-filled when they schedule one.
+    classes: { type: [String], default: [] },
+
     qualification: { type: String, default: "", trim: true },
 
     status: { type: String, enum: ["active", "inactive"], default: "active" },

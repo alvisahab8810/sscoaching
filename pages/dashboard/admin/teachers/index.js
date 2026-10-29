@@ -6,15 +6,16 @@ import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
+import { CLASS_OPTIONS } from "@/lib/classOptions";
 import {
   MdPersonAdd, MdSearch, MdRefresh, MdSchool, MdCheckCircle, MdBlock,
   MdDelete, MdVisibility, MdToggleOn, MdToggleOff, MdClose, MdVideoCall,
-  MdVisibilityOff,
+  MdVisibilityOff, MdEdit,
 } from "react-icons/md";
 
 const EMPTY_INVITE = {
   name: "", email: "", username: "", password: "",
-  phone: "", subjects: "", qualification: "",
+  phone: "", subjects: "", qualification: "", classes: [],
 };
 
 export default function TeachersPage() {
@@ -30,6 +31,11 @@ export default function TeachersPage() {
   const [invite, setInvite] = useState(EMPTY_INVITE);
   const [showPwd, setShowPwd] = useState(false);
   const [inviting, setInviting] = useState(false);
+
+  const [editing, setEditing] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const [showEditPwd, setShowEditPwd] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const fetchTeachers = useCallback(async () => {
     setLoading(true);
@@ -70,6 +76,7 @@ export default function TeachersPage() {
         body: JSON.stringify({
           ...invite,
           subjects: invite.subjects.split(",").map((s) => s.trim()).filter(Boolean),
+          classes: invite.classes,
         }),
       });
       const data = await res.json();
@@ -87,6 +94,60 @@ export default function TeachersPage() {
       toast.error(err.message || "Could not invite teacher");
     }
     setInviting(false);
+  };
+
+  const openEdit = (t) => {
+    setEditing(t);
+    setShowEditPwd(false);
+    setEditForm({
+      name: t.name || "",
+      email: t.email || "",
+      username: t.username || "",
+      phone: t.phone || "",
+      qualification: t.qualification || "",
+      subjects: (t.subjects || []).join(", "),
+      classes: t.classes || [],
+      status: t.status || "active",
+      password: "",
+    });
+  };
+
+  const handleEditSave = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/teachers/${editing._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editForm.name,
+          email: editForm.email,
+          username: editForm.username,
+          phone: editForm.phone,
+          qualification: editForm.qualification,
+          subjects: editForm.subjects.split(",").map((x) => x.trim()).filter(Boolean),
+          classes: editForm.classes,
+          status: editForm.status,
+          // Left blank the password is not sent, so the current one stays.
+          ...(editForm.password.trim() ? { password: editForm.password } : {}),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || "Could not save changes");
+      toast.success(`${editForm.name} updated`);
+      setEditing(null);
+      setEditForm(null);
+      fetchTeachers();
+    } catch (err) {
+      toast.error(err.message || "Could not save changes");
+    }
+    setSaving(false);
+  };
+
+  const closeEdit = () => {
+    if (saving) return;
+    setEditing(null);
+    setEditForm(null);
   };
 
   const toggleStatus = async (t) => {
@@ -212,7 +273,7 @@ export default function TeachersPage() {
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.88rem" }}>
                       <thead>
                         <tr style={{ background: "#f8f9ff" }}>
-                          {["Teacher", "Subjects", "Classes", "Completed", "Upcoming", "Last Class", "Status", "Actions"].map((h) => (
+                          {["Teacher", "Subjects", "Class", "Total Classes", "Completed", "Upcoming", "Last Class", "Status", "Actions"].map((h) => (
                             <th key={h} style={thStyle}>{h}</th>
                           ))}
                         </tr>
@@ -234,6 +295,15 @@ export default function TeachersPage() {
                                 </div>
                               ) : "—"}
                             </td>
+                            <td style={tdStyle}>
+                              {t.classes?.length ? (
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                                  {t.classes.map((c) => (
+                                    <span key={c} style={{ background: "#e8f6ef", color: "#0f9d58", borderRadius: 6, padding: "2px 7px", fontSize: "0.73rem", fontWeight: 600 }}>{c}</span>
+                                  ))}
+                                </div>
+                              ) : "—"}
+                            </td>
                             <td style={{ ...tdStyle, fontWeight: 700, color: "#0f1f3d" }}>{t.totalClasses || 0}</td>
                             <td style={tdStyle}>{t.completedClasses || 0}</td>
                             <td style={tdStyle}>{t.upcomingClasses || 0}</td>
@@ -251,6 +321,9 @@ export default function TeachersPage() {
                               <Link href={`/dashboard/admin/teachers/${t._id}`} style={{ ...iconBtn("#5641CE"), textDecoration: "none" }} title="View report">
                                 <MdVisibility size={17} />
                               </Link>
+                              <button onClick={() => openEdit(t)} style={iconBtn("#0ea5e9")} title="Edit details & credentials">
+                                <MdEdit size={17} />
+                              </button>
                               <button
                                 onClick={() => toggleStatus(t)}
                                 disabled={toggling === t._id}
@@ -333,11 +406,99 @@ export default function TeachersPage() {
                 <input style={inputStyle} value={invite.subjects} placeholder="Physics, Chemistry"
                   onChange={(e) => setInvite((f) => ({ ...f, subjects: e.target.value }))} />
               </Field>
+              <Field label="Class (select one or more)">
+                <ClassPicker
+                  selected={invite.classes}
+                  onChange={(next) => setInvite((f) => ({ ...f, classes: next }))}
+                />
+              </Field>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: "1.3rem" }}>
                 <button type="button" onClick={() => setShowInvite(false)} style={btnStyle("#6b7a99")}>Cancel</button>
                 <button type="submit" disabled={inviting} style={{ ...btnStyle("#5641CE"), opacity: inviting ? 0.6 : 1 }}>
                   {inviting ? "Sending…" : "Invite & Send Credentials"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit modal */}
+      {editing && editForm && (
+        <div style={overlayStyle} onClick={closeEdit}>
+          <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f1f3d", margin: 0 }}>Edit {editing.name}</h3>
+              <button onClick={closeEdit} style={{ background: "none", border: "none", cursor: "pointer", color: "#6b7a99", display: "flex" }}>
+                <MdClose size={22} />
+              </button>
+            </div>
+            <p style={{ color: "#6b7a99", fontSize: "0.85rem", margin: "0 0 1.2rem" }}>
+              Changing the username or password does not sign the teacher out, but they must use the new ones
+              next time they log in. Share them with the teacher yourself — nothing is emailed from here.
+            </p>
+
+            <form onSubmit={handleEditSave}>
+              <div style={gridTwo}>
+                <Field label="Full Name *">
+                  <input style={inputStyle} value={editForm.name} required
+                    onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} />
+                </Field>
+                <Field label="Email *">
+                  <input type="email" style={inputStyle} value={editForm.email} required
+                    onChange={(e) => setEditForm((f) => ({ ...f, email: e.target.value }))} />
+                </Field>
+              </div>
+              <div style={gridTwo}>
+                <Field label="Username *">
+                  <input style={inputStyle} value={editForm.username} required autoComplete="off"
+                    onChange={(e) => setEditForm((f) => ({ ...f, username: e.target.value }))} />
+                </Field>
+                <Field label="New Password (leave blank to keep)">
+                  <div style={{ position: "relative" }}>
+                    <input type={showEditPwd ? "text" : "password"} style={{ ...inputStyle, paddingRight: "2.6rem" }}
+                      value={editForm.password} minLength={6} autoComplete="new-password" placeholder="Unchanged"
+                      onChange={(e) => setEditForm((f) => ({ ...f, password: e.target.value }))} />
+                    <button type="button" onClick={() => setShowEditPwd((p) => !p)}
+                      style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#6b7a99", display: "flex" }}>
+                      {showEditPwd ? <MdVisibilityOff size={19} /> : <MdVisibility size={19} />}
+                    </button>
+                  </div>
+                </Field>
+              </div>
+              <div style={gridTwo}>
+                <Field label="Phone">
+                  <input style={inputStyle} value={editForm.phone}
+                    onChange={(e) => setEditForm((f) => ({ ...f, phone: e.target.value }))} />
+                </Field>
+                <Field label="Qualification">
+                  <input style={inputStyle} value={editForm.qualification} placeholder="M.Sc. Physics"
+                    onChange={(e) => setEditForm((f) => ({ ...f, qualification: e.target.value }))} />
+                </Field>
+              </div>
+              <Field label="Subjects (comma separated)">
+                <input style={inputStyle} value={editForm.subjects} placeholder="Physics, Chemistry"
+                  onChange={(e) => setEditForm((f) => ({ ...f, subjects: e.target.value }))} />
+              </Field>
+              <Field label="Class (select one or more)">
+                <ClassPicker
+                  selected={editForm.classes}
+                  onChange={(next) => setEditForm((f) => ({ ...f, classes: next }))}
+                />
+              </Field>
+              <Field label="Status">
+                <select style={inputStyle} value={editForm.status}
+                  onChange={(e) => setEditForm((f) => ({ ...f, status: e.target.value }))}>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive — cannot log in</option>
+                </select>
+              </Field>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: "1.3rem" }}>
+                <button type="button" onClick={closeEdit} style={btnStyle("#6b7a99")}>Cancel</button>
+                <button type="submit" disabled={saving} style={{ ...btnStyle("#5641CE"), opacity: saving ? 0.6 : 1 }}>
+                  {saving ? "Saving…" : "Save Changes"}
                 </button>
               </div>
             </form>
@@ -364,6 +525,40 @@ export default function TeachersPage() {
     </>
   );
 }
+
+// Multi-select for the classes a teacher is assigned to. The values match the
+// batch names used when scheduling a live class, so they line up exactly.
+const ClassPicker = ({ selected = [], onChange }) => {
+  const toggle = (cls) =>
+    onChange(selected.includes(cls) ? selected.filter((c) => c !== cls) : [...selected, cls]);
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+      {CLASS_OPTIONS.map((cls) => {
+        const on = selected.includes(cls);
+        return (
+          <button
+            key={cls}
+            type="button"
+            onClick={() => toggle(cls)}
+            style={{
+              padding: "6px 13px",
+              borderRadius: 99,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              border: `1.5px solid ${on ? "#5641CE" : "#e3e6f0"}`,
+              background: on ? "#5641CE" : "#fff",
+              color: on ? "#fff" : "#6b7a99",
+            }}
+          >
+            {cls}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 const Field = ({ label, children }) => (
   <div style={{ marginBottom: 12 }}>

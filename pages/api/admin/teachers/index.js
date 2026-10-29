@@ -145,7 +145,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { name, email, username, password, phone, subjects, qualification, status } = req.body;
+    const { name, email, username, password, phone, subjects, classes, qualification, status } = req.body;
 
     if (!name?.trim() || !email?.trim() || !username?.trim() || !password?.trim()) {
       return res.status(400).json({ message: "Name, email, username, and password are required" });
@@ -174,6 +174,7 @@ export default async function handler(req, res) {
       passwordHash,
       phone: phone?.trim() || "",
       subjects: Array.isArray(subjects) ? subjects.filter(Boolean) : [],
+      classes: Array.isArray(classes) ? classes.filter(Boolean) : [],
       qualification: qualification?.trim() || "",
       status: status || "active",
     });

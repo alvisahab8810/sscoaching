@@ -6664,9 +6664,10 @@
   cursor: pointer; color: #6b7280;
 }
 
-/* Top-level Content/Material/TMA tabs, sidebar-scaled version of .cdp-detail-tabs */
+/* Top-level Content/Material/TMA/Question Bank tabs, sidebar-scaled version of .cdp-detail-tabs */
 .bcp-sb-toptabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 3px;
   margin: 10px 12px 4px;
   background: #f5f3fc;
@@ -9582,6 +9583,7 @@
 .cdp-content-meta-dot { color: #ddd; font-size: 14px; }
 .cdp-detail-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 20px;
   background: #f5f3fc;

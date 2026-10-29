@@ -56,13 +56,14 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PATCH") {
-    const { name, email, phone, subjects, qualification, status, password } = req.body;
+    const { name, email, username, phone, subjects, classes, qualification, status, password } = req.body;
     const update = {};
 
     if (name?.trim()) update.name = name.trim();
     if (phone !== undefined) update.phone = phone?.trim() || "";
     if (qualification !== undefined) update.qualification = qualification?.trim() || "";
     if (Array.isArray(subjects)) update.subjects = subjects.filter(Boolean);
+    if (Array.isArray(classes)) update.classes = classes.filter(Boolean);
     if (status === "active" || status === "inactive") update.status = status;
 
     if (email?.trim()) {
@@ -70,6 +71,18 @@ export default async function handler(req, res) {
       const clash = await Teacher.findOne({ email: cleanEmail, _id: { $ne: id } });
       if (clash) return res.status(409).json({ message: "Email already in use" });
       update.email = cleanEmail;
+    }
+
+    if (username?.trim()) {
+      const cleanUsername = username.trim();
+      // Matched case-insensitively, the same way login looks a teacher up,
+      // so two accounts can never differ by case alone.
+      const clash = await Teacher.findOne({
+        username: { $regex: `^${cleanUsername.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, $options: "i" },
+        _id: { $ne: id },
+      });
+      if (clash) return res.status(409).json({ message: "Username already taken" });
+      update.username = cleanUsername;
     }
 
     if (password?.trim()) {

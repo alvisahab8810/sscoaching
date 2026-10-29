@@ -897,7 +897,7 @@ const MATERIAL_SECTIONS = [
   { key:"books",        label:"Books",         icon:"📚", color:"#6c47d4" },
   { key:"tma",          label:"TMA",           icon:"📝", color:"#f59e0b" },
   { key:"assignments",  label:"Assignments",   icon:"📋", color:"#0ea5e9" },
-  { key:"samplePapers", label:"Sample Papers", icon:"📄", color:"#10b981" },
+  { key:"samplePapers", label:"Question Bank", icon:"📄", color:"#10b981" },
   { key:"notes",        label:"Notes",         icon:"🗒️", color:"#f43f5e" },
 ];
 
@@ -1726,7 +1726,7 @@ export default function AdminCoursesPage({ admin }) {
   // Imports Books/TMA/Assignments/Sample Papers/Notes (and any future material
   // section) from the standalone subject course into this bundle, for one subject.
   const handleBmatFetch = async (subject) => {
-    if (!confirm(`Fetch study materials (Books, TMA, Assignments, Sample Papers, Notes) from existing ${subject} (${selectedCourse.batch}) course? This will replace previously-imported materials for this subject.`)) return;
+    if (!confirm(`Fetch study materials (Books, TMA, Assignments, Question Bank, Notes) from existing ${subject} (${selectedCourse.batch}) course? This will replace previously-imported materials for this subject.`)) return;
     setBmatFetching(subject);
     const ok = await bsubCall("fetch-bsubject-materials", { subject });
     if (ok) toast.success(`Imported study materials from ${subject} course!`);

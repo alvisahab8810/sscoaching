@@ -70,8 +70,9 @@ export default function TeacherDashboard({ teacher }) {
     setEditing(null);
     setForm({
       ...EMPTY_FORM,
-      // Pre-fill the subject when the admin recorded only one for this teacher.
+      // Pre-fill the subject and batch when the admin recorded only one for this teacher.
       subject: profile?.subjects?.length === 1 ? profile.subjects[0] : "",
+      batch: profile?.classes?.length === 1 ? profile.classes[0] : "",
     });
     setShowForm(true);
   };
@@ -269,6 +270,7 @@ export default function TeacherDashboard({ teacher }) {
                 <InfoRow label="Phone" value={profile?.phone || "—"} />
                 <InfoRow label="Qualification" value={profile?.qualification || "—"} />
                 <InfoRow label="Subjects" value={profile?.subjects?.length ? profile.subjects.join(", ") : "—"} />
+                <InfoRow label="Class" value={profile?.classes?.length ? profile.classes.join(", ") : "—"} />
                 <InfoRow label="Joined" value={formatDate(profile?.createdAt)} />
               </div>
             </div>
@@ -305,8 +307,11 @@ export default function TeacherDashboard({ teacher }) {
                   </datalist>
                 </Field>
                 <Field label="Batch *">
-                  <input style={inputStyle} value={form.batch} required
+                  <input style={inputStyle} value={form.batch} required list="teacher-classes"
                     onChange={(e) => setForm((f) => ({ ...f, batch: e.target.value }))} />
+                  <datalist id="teacher-classes">
+                    {(profile?.classes || []).map((c) => <option key={c} value={c} />)}
+                  </datalist>
                 </Field>
               </Row>
               <Row>

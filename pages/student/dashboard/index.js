@@ -1099,7 +1099,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
 
   // Count total materials across all sections
   const matSections  = ["books","tma","assignments","samplePapers","notes"];
-  const matLabels    = { books:"Books", tma:"TMA", assignments:"Assignments", samplePapers:"Sample Papers", notes:"Notes" };
+  const matLabels    = { books:"Books", tma:"TMA", assignments:"Assignments", samplePapers:"Question Bank", notes:"Notes" };
   const matIcons     = { books:"📚", tma:"📝", assignments:"📋", samplePapers:"📄", notes:"🗒️" };
   const totalMats    = matSections.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
 
@@ -1109,15 +1109,17 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
     (a, sc) => a + (sc.chapters || []).reduce((b, c) => b + (c.lessons?.length || 0), 0), 0
   );
 
-  // Bundle: Study Material vs TMA are split into separate tabs — TMA held out of the "materials" section
-  const NON_TMA_SECTIONS = matSections.filter(k => k !== "tma");
-  const totalStudyMats   = NON_TMA_SECTIONS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
+  // Bundle: TMA and Question Bank each get their own tab, so both are held out of
+  // the "materials" section — otherwise the same file would be listed twice.
+  const FLAT_SECTIONS    = ["tma", "samplePapers"];
+  const STUDY_SECTIONS   = matSections.filter(k => !FLAT_SECTIONS.includes(k));
+  const totalStudyMats   = STUDY_SECTIONS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
   // Same TMA file sometimes ends up imported twice (once tagged to a subject, once
   // generic/untagged) — dedupe by display title (subject prefix stripped) so the
   // tab badge count matches what the flat TMA list actually shows.
-  const uniqueTmaMats = (() => {
+  const uniqueFlatMats = (secKey) => {
     const seen = new Set();
-    return (course.materials?.tma || []).filter(m => {
+    return (course.materials?.[secKey] || []).filter(m => {
       const sepIdx = m.title.indexOf(" | ");
       const raw = sepIdx >= 0 ? m.title.slice(sepIdx + 3) : m.title;
       // Strip emoji/punctuation too — some duplicate uploads carry a stray emoji
@@ -1127,8 +1129,11 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
       seen.add(key);
       return true;
     });
-  })();
+  };
+  const uniqueTmaMats    = uniqueFlatMats("tma");
+  const uniqueQbMats     = uniqueFlatMats("samplePapers");
   const totalTmaMats     = uniqueTmaMats.length;
+  const totalQbMats      = uniqueQbMats.length;
   const bundleSubjectMatsBySections = (sub, sections) => sections.flatMap(k =>
     (course.materials?.[k]||[])
       .filter(m => m.title.startsWith(`${sub} | `))
@@ -1158,13 +1163,13 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
 
   const INCLUDED_SUBJECT = [
     "Live Video Classes","Chapter-wise Study Notes",
-    "TMA & Practice Tests","Sample Papers (Previous Year)",
+    "TMA & Practice Tests","Question Bank (Previous Year)",
     "Assignments & Worksheets","1:1 Doubt Support",
     "Student Performance Dashboard","Online & Offline Tests",
   ];
   const INCLUDED_BUNDLE = [
     `All ${bundledSubs.length} Subjects Covered`,"Live Classes For Every Subject",
-    "Books, Notes & Study Material","TMA, Assignments & Sample Papers",
+    "Books, Notes & Study Material","TMA, Assignments & Question Bank",
     "1:1 Live Doubt Support (48Hrs/Week)","Student Performance Dashboard & Insights",
     "Premium SS Coaching Content","Online & Offline Tests",
   ];
@@ -1227,15 +1232,16 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                   { key:"content",   label:"Course Content", Icon: MdPlayCircle, count: bundleTotalLessons, show: bundleTotalLessons > 0 },
                   { key:"materials", label:"Study Material",  Icon: MdFolder,     count: totalStudyMats,      show: totalStudyMats > 0 },
                   { key:"tma",       label:"TMA",              Icon: MdAssignment, count: totalTmaMats,        show: totalTmaMats > 0 },
+                  { key:"samplePapers", label:"Question Bank", Icon: MdArticle,    count: totalQbMats,         show: totalQbMats > 0 },
                 ].filter(t => t.show);
                 const activeTab = tabs.some(t => t.key === bundleMainTab) ? bundleMainTab : tabs[0]?.key;
-                const sections  = activeTab === "content" ? null : activeTab === "tma" ? ["tma"] : NON_TMA_SECTIONS;
+                const sections  = activeTab === "content" ? null : FLAT_SECTIONS.includes(activeTab) ? [activeTab] : STUDY_SECTIONS;
 
-                // TMA uploads aren't reliably tagged to a bundled subject (often imported
-                // wholesale from a generic TMA product), so subject-wise grouping was
-                // showing wrong/mismatched per-subject counts. TMA instead shows every
-                // file for the bundle as one flat list — no subject pills, no split.
-                const isTmaTab = activeTab === "tma";
+                // TMA and Question Bank uploads aren't reliably tagged to a bundled subject
+                // (often imported wholesale from a generic product), so subject-wise grouping
+                // was showing wrong/mismatched per-subject counts. Both tabs instead show
+                // every file for the bundle as one flat list — no subject pills, no split.
+                const isTmaTab = FLAT_SECTIONS.includes(activeTab);
                 const subjectsForTab = isTmaTab ? [] : bundledSubs.filter(sub =>
                   activeTab === "content"
                     ? bundleSubjectChapters(sub).reduce((a,c) => a + (c.lessons?.length||0), 0) > 0
@@ -1244,7 +1250,8 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                 const activeSubj = subjectsForTab.includes(bundleSubj) ? bundleSubj : subjectsForTab[0];
                 const color      = "#6c47d4";
                 const allTmaMats = isTmaTab
-                  ? uniqueTmaMats.map(m => ({ ...m, icon: matIcons.tma, label: matLabels.tma }))
+                  ? (activeTab === "tma" ? uniqueTmaMats : uniqueQbMats)
+                      .map(m => ({ ...m, icon: matIcons[activeTab], label: matLabels[activeTab] }))
                   : [];
 
                 return (
@@ -1268,7 +1275,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                       );
                     })()}
 
-                    {/* Subject pills — pick one subject at a time to keep the page short (skipped for TMA, shown as a flat list instead) */}
+                    {/* Subject pills — pick one subject at a time to keep the page short (skipped for TMA / Question Bank, shown as a flat list instead) */}
                     {!isTmaTab && subjectsForTab.length > 0 && (
                       <div className="cdp-subject-pills" style={{display:"flex",flexWrap:"wrap",gap:8,margin:"14px 0 22px"}}>
                         {subjectsForTab.map(sub => {
@@ -1292,12 +1299,12 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                       </div>
                     )}
 
-                    {/* TMA: flat list, no subject grouping */}
+                    {/* TMA / Question Bank: flat list, no subject grouping */}
                     {isTmaTab && (
                       <div style={{border:`1.5px solid ${color}30`,borderRadius:14,overflow:"hidden"}}>
                         <div style={{background:`${color}12`,padding:"10px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${color}20`}}>
                           <span style={{width:10,height:10,borderRadius:"50%",background:color,flexShrink:0,display:"inline-block"}}/>
-                          <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>TMA</span>
+                          <span style={{fontWeight:800,fontSize:14,color:"#1f2937"}}>{matLabels[activeTab]}</span>
                           <span style={{fontSize:11,color:color,fontWeight:600,background:`${color}15`,padding:"1px 8px",borderRadius:12,marginLeft:"auto"}}>{allTmaMats.length} file{allTmaMats.length!==1?"s":""}</span>
                         </div>
                         <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:8,background:"white"}}>
@@ -1429,7 +1436,7 @@ function CourseDetailPage({ courseId, onEnrolled, onBack, onOpenPlayer }) {
                       <div style={{textAlign:"center",padding:"12px 16px",background:"#f8f7ff",border:"1.5px dashed #c4b5fd",borderRadius:12,marginTop:14}}>
                         <span style={{fontSize:16}}>🔒</span>
                         <div style={{fontWeight:700,fontSize:13,color:"#6c47d4",marginTop:4}}>
-                          Enroll to unlock all {activeTab==="content" ? "video lessons" : activeTab==="tma" ? "TMA files" : "study materials"}
+                          Enroll to unlock all {activeTab==="content" ? "video lessons" : isTmaTab ? `${matLabels[activeTab]} files` : "study materials"}
                         </div>
                       </div>
                     )}
@@ -2463,7 +2470,7 @@ function CoursePlayer({ courseId, onBack }) {
     {key:"books",       label:"Books",         Icon:MdMenuBook,    color:"#6c47d4"},
     {key:"tma",         label:"TMA",           Icon:MdInventory2,  color:"#f59e0b"},
     {key:"assignments", label:"Assignments",   Icon:MdAssignment,  color:"#0ea5e9"},
-    {key:"samplePapers",label:"Sample Papers", Icon:MdArticle,     color:"#10b981"},
+    {key:"samplePapers",label:"Question Bank", Icon:MdArticle,     color:"#10b981"},
     {key:"notes",       label:"Notes",         Icon:MdStickyNote2, color:"#f43f5e"},
   ];
   const SUBJ_COLORS = ["#6c47d4"]; // brand purple only — bundle subject dots/badges no longer rainbow-coded
@@ -2508,16 +2515,20 @@ function CoursePlayer({ courseId, onBack }) {
     });
   };
 
-  // Top-level sidebar tabs: Course Content / Study Material / TMA — same split as the pre-purchase page
-  const NON_TMA_KEYS = MAT_SECTIONS.filter(s => s.key !== "tma").map(s => s.key);
+  // Top-level sidebar tabs: Course Content / Study Material / TMA / Question Bank —
+  // same split as the pre-purchase page. TMA and Question Bank are flat lists of
+  // their own, so they are held out of the Study Material section.
+  const FLAT_KEYS  = ["tma", "samplePapers"];
+  const STUDY_KEYS = MAT_SECTIONS.filter(s => !FLAT_KEYS.includes(s.key)).map(s => s.key);
+  const flatKeyLabel = (key) => MAT_SECTIONS.find(x => x.key === key)?.label || "";
   const totalBundleLessons  = bundleSubs.reduce((a,sub) => a + getSubjectChapters(sub).reduce((b,c) => b + (c.lessons?.length||0), 0), 0);
-  const totalBundleStudyMats = NON_TMA_KEYS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
+  const totalBundleStudyMats = STUDY_KEYS.reduce((a,k) => a + (course.materials?.[k]?.length||0), 0);
   // Same TMA file sometimes ends up imported twice (once tagged to a subject, once
   // generic/untagged) — dedupe by display title so the tab badge count matches what
   // the flat TMA list actually shows.
-  const totalBundleTmaMats   = (() => {
+  const countUniqueFlatMats = (secKey) => {
     const seen = new Set();
-    return (course.materials?.tma || []).filter(m => {
+    return (course.materials?.[secKey] || []).filter(m => {
       const sepIdx = m.title.indexOf(" | ");
       const raw = sepIdx >= 0 ? m.title.slice(sepIdx + 3) : m.title;
       // Strip emoji/punctuation too — some duplicate uploads carry a stray emoji
@@ -2527,7 +2538,9 @@ function CoursePlayer({ courseId, onBack }) {
       seen.add(key);
       return true;
     }).length;
-  })();
+  };
+  const totalBundleTmaMats = countUniqueFlatMats("tma");
+  const totalBundleQbMats  = countUniqueFlatMats("samplePapers");
 
   return (
     <>
@@ -2888,6 +2901,7 @@ function CoursePlayer({ courseId, onBack }) {
                     { key:"content",   label:"Content",  Icon: MdPlayCircle, count: totalBundleLessons,   show: totalBundleLessons > 0 },
                     { key:"materials", label:"Material", Icon: MdFolder,     count: totalBundleStudyMats, show: totalBundleStudyMats > 0 },
                     { key:"tma",       label:"TMA",       Icon: MdAssignment, count: totalBundleTmaMats,   show: totalBundleTmaMats > 0 },
+                    { key:"samplePapers", label:"Question Bank", Icon: MdArticle, count: totalBundleQbMats, show: totalBundleQbMats > 0 },
                   ].filter(t => t.show);
                   if (sideTabs.length <= 1) return null;
                   return (
@@ -2904,15 +2918,15 @@ function CoursePlayer({ courseId, onBack }) {
                   );
                 })()}
 
-                {bundleSideTab === "tma" ? (() => {
-                  // TMA uploads aren't reliably tagged to a bundled subject (often
-                  // imported wholesale from a generic TMA product), so subject-wise
-                  // grouping was showing wrong/mismatched per-subject counts. The TMA
-                  // tab instead shows every TMA file for the bundle as one flat list —
-                  // no subject accordion, no subject split.
+                {FLAT_KEYS.includes(bundleSideTab) ? (() => {
+                  // TMA and Question Bank uploads aren't reliably tagged to a bundled
+                  // subject (often imported wholesale from a generic product), so
+                  // subject-wise grouping was showing wrong/mismatched per-subject
+                  // counts. These tabs instead show every file for the bundle as one
+                  // flat list — no subject accordion, no subject split.
                   const rawTmaMats = [
-                    ...bundleSubs.flatMap(sub => getSubjectMats(sub, ["tma"]).map(m => ({...m, _origSubject: sub}))),
-                    ...getGeneralMats(["tma"]).map(m => ({...m, _origSubject: null})),
+                    ...bundleSubs.flatMap(sub => getSubjectMats(sub, [bundleSideTab]).map(m => ({...m, _origSubject: sub}))),
+                    ...getGeneralMats([bundleSideTab]).map(m => ({...m, _origSubject: null})),
                   ];
                   // Same TMA file sometimes ends up imported twice (once tagged to a
                   // subject, once generic/untagged) — dedupe by display title so it
@@ -2927,7 +2941,7 @@ function CoursePlayer({ courseId, onBack }) {
                     seenTmaTitles.add(key);
                     return true;
                   });
-                  if (!allTmaMats.length) return <div className="scp-no-content" style={{padding:"10px 16px"}}>No TMA files yet</div>;
+                  if (!allTmaMats.length) return <div className="scp-no-content" style={{padding:"10px 16px"}}>No {flatKeyLabel(bundleSideTab)} files yet</div>;
                   const color = "#6c47d4";
                   return (
                     <div className="bcp-sb-mats" style={{paddingTop:4}}>
@@ -2957,7 +2971,7 @@ function CoursePlayer({ courseId, onBack }) {
                   const color       = SUBJ_COLORS[si % SUBJ_COLORS.length];
                   const subChapters = getSubjectChapters(sub);
                   const subLessonCount = subChapters.reduce((a,c) => a + (c.lessons?.length||0), 0);
-                  const matSectionKeys = bundleSideTab === "tma" ? ["tma"] : bundleSideTab === "materials" ? NON_TMA_KEYS : [];
+                  const matSectionKeys = bundleSideTab === "materials" ? STUDY_KEYS : [];
                   const subMats     = matSectionKeys.length ? getSubjectMats(sub, matSectionKeys) : [];
                   const isOpen      = !!openSubjects[si];
                   const activeCount = bundleSideTab === "content" ? subLessonCount : subMats.length;
@@ -2984,7 +2998,7 @@ function CoursePlayer({ courseId, onBack }) {
                             <div className="scp-no-content" style={{padding:"10px 16px"}}>No videos yet</div>
                           )}
                           {bundleSideTab !== "content" && subMats.length === 0 && (
-                            <div className="scp-no-content" style={{padding:"10px 16px"}}>No {bundleSideTab==="tma"?"TMA files":"materials"} yet</div>
+                            <div className="scp-no-content" style={{padding:"10px 16px"}}>No materials yet</div>
                           )}
 
                           {bundleSideTab === "content" && subLessonCount > 0 && (
@@ -3081,9 +3095,10 @@ function CoursePlayer({ courseId, onBack }) {
                 })}
 
                 {/* General/other bundle materials not tagged to any one subject
-                    — skipped for the TMA tab, which already folds General into the flat list above */}
-                {bundleSideTab !== "content" && bundleSideTab !== "tma" && (() => {
-                  const generalSectionKeys = bundleSideTab === "tma" ? ["tma"] : NON_TMA_KEYS;
+                    — skipped for the TMA and Question Bank tabs, which already fold
+                    General into the flat list above */}
+                {bundleSideTab !== "content" && !FLAT_KEYS.includes(bundleSideTab) && (() => {
+                  const generalSectionKeys = STUDY_KEYS;
                   const generalMats = getGeneralMats(generalSectionKeys);
                   if (!generalMats.length) return null;
                   const color = "#64748b";
