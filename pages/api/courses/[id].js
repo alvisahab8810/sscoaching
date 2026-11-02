@@ -544,6 +544,53 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course: updated, importedCount });
       }
 
+      // Imports one material section (e.g. Question Bank) from another course.
+      // Same copy rules as fetch-course-materials, but limited to a single
+      // section, so a subject course can pull just its Question Bank from the
+      // standalone Question Bank product without dragging in everything else.
+      if (action === "fetch-section-materials") {
+        const { sourceCourseId, section } = req.body;
+        if (!sourceCourseId || !section)
+          return res.status(400).json({ error: "sourceCourseId and section required" });
+
+        const srcCourse = await Course.findOne({ _id: sourceCourseId }).lean();
+        if (!srcCourse) return res.status(404).json({ error: "Source course not found" });
+        if (String(srcCourse._id) === String(id))
+          return res.status(400).json({ error: "Pick a different course to import from" });
+
+        const raw = await Course.findById(id).lean();
+        if (!raw) return res.status(404).json({ error: "Course not found" });
+
+        const srcList = srcCourse.materials?.[section] || [];
+        if (!srcList.length)
+          return res.status(200).json({ success: true, course: raw, importedCount: 0 });
+
+        // A bundle keeps its "Subject | title" prefix convention; a plain
+        // subject course stores the title exactly as the source had it.
+        const bundleSubjects = raw.courseType === "bundle" ? (raw.bundledSubjects || []) : [];
+        const materials = { ...(raw.materials || {}) };
+        const existing = materials[section] || [];
+        const existingKeys = new Set(existing.map(m => `${m.title}::${m.fileUrl}`));
+
+        const toAdd = [];
+        for (const m of srcList) {
+          const matchedSubject = bundleSubjects.find(s => m.title.toLowerCase().includes(s.toLowerCase()));
+          const finalTitle = matchedSubject ? `${matchedSubject} | ${m.title}` : m.title;
+          const key = `${finalTitle}::${m.fileUrl}`;
+          if (existingKeys.has(key)) continue;
+          toAdd.push({ _id: new mongoose.Types.ObjectId(), title: finalTitle, fileUrl: m.fileUrl });
+          existingKeys.add(key);
+        }
+
+        if (!toAdd.length)
+          return res.status(200).json({ success: true, course: raw, importedCount: 0 });
+
+        materials[section] = [...existing, ...toAdd];
+        await Course.findByIdAndUpdate(id, { $set: { materials } }, { strict: false });
+        const updated = await Course.findById(id).lean();
+        return res.status(200).json({ success: true, course: updated, importedCount: toAdd.length });
+      }
+
       return res.status(400).json({ error: "Unknown action" });
     } catch (err) {
       console.error(err);

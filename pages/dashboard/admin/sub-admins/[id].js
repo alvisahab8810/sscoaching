@@ -20,7 +20,7 @@ const ALL_FEATURES = [
   { key: "announcements", label: "Announcements", desc: "Announcements" },
   { key: "leads", label: "Leads", desc: "Lead tracking" },
   { key: "student-success", label: "Student Success", desc: "Success stories" },
-  { key: "online-classes", label: "Online Classes", desc: "Live classes" },
+  { key: "online-classes", label: "Live Classes", desc: "Live classes" },
   { key: "invoices", label: "Invoices", desc: "Billing" },
   { key: "enrollments", label: "Enrollments", desc: "Enrollments" },
   { key: "pages", label: "Pages", desc: "Website page content" },

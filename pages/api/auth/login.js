@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { DISABLED_MESSAGE } from "@/lib/studentAuth";
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || "no-origin";
@@ -37,9 +38,9 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    if (!student.isActive) {
+    if (!student.isActive || student.deletedAt) {
       console.log(`[LOGIN] Account disabled: ${student._id}`);
-      return res.status(403).json({ success: false, message: "Account disabled. Contact support." });
+      return res.status(403).json({ success: false, message: DISABLED_MESSAGE });
     }
 
     const token = jwt.sign(

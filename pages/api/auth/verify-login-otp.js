@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
+import { DISABLED_MESSAGE } from "@/lib/studentAuth";
 import EmailOTP from "@/models/EmailOTP";
 import jwt from "jsonwebtoken";
 
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
     if (!student)
       return res.status(404).json({ success: false, message: "Account not found." });
     if (!student.isActive)
-      return res.status(403).json({ success: false, message: "Account disabled. Contact support." });
+      return res.status(403).json({ success: false, message: DISABLED_MESSAGE });
 
     const record = await EmailOTP.findOne({ email: student.email, purpose: "login", isUsed: false });
     if (!record)

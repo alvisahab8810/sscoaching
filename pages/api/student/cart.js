@@ -1,21 +1,17 @@
 import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
 import Course from "@/models/CourseModel";
-import jwt from "jsonwebtoken";
+import { requireActiveStudent } from "@/lib/studentAuth";
 
-function getStudentId(req) {
-  try {
-    const token = (req.headers.authorization || "").replace("Bearer ", "").trim();
-    if (!token) return null;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id || decoded._id || null;
-  } catch { return null; }
-}
 
 export default async function handler(req, res) {
   await dbConnect();
-  const studentId = getStudentId(req);
-  if (!studentId) return res.status(401).json({ success: false, message: "Unauthorized" });
+  // Checks the account is still active, so deactivating a student ends
+  // their session here too and not only at the next app launch.
+  const session = await requireActiveStudent(req);
+  if (!session.ok)
+    return res.status(session.status).json({ success: false, message: session.message });
+  const studentId = session.id;
 
   // GET — return cart with full course data (not just IDs)
   if (req.method === "GET") {

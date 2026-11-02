@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Enrollment from "@/models/EnrollmentModel";
 import CourseProgress from "@/models/CourseProgress";
-import jwt from "jsonwebtoken";
+import { requireActiveStudent } from "@/lib/studentAuth";
 
 // Bundles keep their lessons under per-subject subjectContents, subject
 // courses keep them directly under chapters — same distinction the player
@@ -30,12 +30,15 @@ export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).end();
   await dbConnect();
 
-  const token = (req.headers.authorization || "").replace("Bearer ", "");
-  if (!token)
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+  // Deactivated and deleted accounts are turned away here as well, so a
+  // student already inside the app loses access without waiting for a
+  // relaunch.
+  const session = await requireActiveStudent(req);
+  if (!session.ok)
+    return res.status(session.status).json({ success: false, message: session.message });
 
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const id = session.id;
 
     const enrollments = await Enrollment.find({ student: id })
       .populate({ path: "course", select: "title subject featureImage price batch isFree status courseType bundledSubjects chapters subjectContents materials" })

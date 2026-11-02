@@ -868,6 +868,7 @@ import {
   MdAttachFile, MdPictureAsPdf, MdOndemandVideo, MdYoutubeSearchedFor,
   MdLibraryBooks, MdAssignment, MdDescription, MdMenuBook, MdQuiz,
   MdPackage, MdLocalOffer, MdDragIndicator,
+  MdSearch, MdGridView, MdViewList,
 } from "react-icons/md";
 import { FaRupeeSign, FaYoutube, FaVideo } from "react-icons/fa";
 import { BiSolidBookContent } from "react-icons/bi";
@@ -894,11 +895,11 @@ function saveCustomSubject(name) {
 }
 
 const MATERIAL_SECTIONS = [
-  { key:"books",        label:"Books",         icon:"📚", color:"#6c47d4" },
-  { key:"tma",          label:"TMA",           icon:"📝", color:"#f59e0b" },
-  { key:"assignments",  label:"Assignments",   icon:"📋", color:"#0ea5e9" },
-  { key:"samplePapers", label:"Question Bank", icon:"📄", color:"#10b981" },
-  { key:"notes",        label:"Notes",         icon:"🗒️", color:"#f43f5e" },
+  { key:"books",        label:"Books",         Icon:MdMenuBook },
+  { key:"tma",          label:"TMA",           Icon:MdAssignment },
+  { key:"assignments",  label:"Assignments",   Icon:MdDescription },
+  { key:"samplePapers", label:"Question Bank", Icon:MdQuiz },
+  { key:"notes",        label:"Notes",         Icon:MdLibraryBooks },
 ];
 
 const EMPTY_BUNDLE = {
@@ -910,26 +911,16 @@ const EMPTY_BUNDLE = {
 const EMPTY_MATERIAL = { section:"books", title:"", fileUrl:"" };
 const EMPTY_FAQ = { question:"", answer:"" };
 
-const subjectColors = {
-  Mathematics:"#6c47d4", Physics:"#0ea5e9", Chemistry:"#f59e0b",
-  Biology:"#10b981", English:"#f43f5e", Hindi:"#8b5cf6",
-  "Social Science":"#64748b", "Computer Science":"#06b6d4",
-  Accountancy:"#0d9488", "Business Studies":"#d97706",
-};
-const subjectIcons = {
-  Mathematics:"📐", Physics:"⚛️", Chemistry:"🧪",
-  Biology:"🧬", English:"📖", Hindi:"🪔",
-  "Social Science":"🌍", "Computer Science":"💻",
-  Accountancy:"📒", "Business Studies":"💼",
-};
-const getColor = (s) => subjectColors[s] || "#6c47d4";
+// One accent for the whole screen. Subjects used to each get their own
+// colour and emoji, which made every panel look different for no reason.
+const ACCENT = "#5641ce";
 
 const NOTE_TYPES = [
-  { val:"pdf",   label:"PDF",      icon:"📄" },
-  { val:"doc",   label:"Word Doc", icon:"📝" },
-  { val:"ppt",   label:"PPT",      icon:"📊" },
-  { val:"link",  label:"Link",     icon:"🔗" },
-  { val:"other", label:"Other",    icon:"📁" },
+  { val:"pdf",   label:"PDF",      Icon:MdPictureAsPdf },
+  { val:"doc",   label:"Word Doc", Icon:MdDescription },
+  { val:"ppt",   label:"PPT",      Icon:MdLibraryBooks },
+  { val:"link",  label:"Link",     Icon:MdLink },
+  { val:"other", label:"Other",    Icon:MdAttachFile },
 ];
 
 const EMPTY_FORM = {
@@ -1025,7 +1016,7 @@ function ImageUploader({ value, onChange }) {
           <div className="cr-img-preview-overlay">
             <button className="cr-img-remove-btn" onClick={clear}><MdClose size={14}/> Remove</button>
           </div>
-          <div className="cr-img-preview-label"><MdCheckCircle size={13} color="#10b981"/> Image ready</div>
+          <div className="cr-img-preview-label"><MdCheckCircle size={13} color="#5641ce"/> Image ready</div>
           <div className="cr-img-switch-hint">
             Want a different image?
             <button className="cr-img-switch-btn" onClick={clear}>Choose another</button>
@@ -1055,7 +1046,7 @@ function ImageUploader({ value, onChange }) {
               onBlur={handleUrlBlur} onKeyDown={e=>e.key==="Enter"&&handleUrlBlur()}/>
           </div>
           <div className="cr-img-url-hint">
-            💡 Upload to <strong>Google Drive</strong> or <strong>Imgur</strong> → copy direct link → paste here
+            Upload to <strong>Google Drive</strong> or <strong>Imgur</strong> → copy direct link → paste here
           </div>
         </div>
       )}
@@ -1122,8 +1113,47 @@ export default function AdminCoursesPage({ admin }) {
   const [bsubFetching, setBsubFetching]                 = useState(null); // subject being fetched
   const [bmatFetching, setBmatFetching]                 = useState(null); // subject whose materials are being imported
   const [bmatCourseFetching, setBmatCourseFetching]     = useState(null); // sourceCourseId being imported (course-wise materials like TMA)
+  const [matSectionFetching, setMatSectionFetching]     = useState(null); // "<section>::<sourceCourseId>" being imported
 
   const totalLessons = (c) => c.chapters?.reduce((a, ch) => a + ch.lessons.length, 0) || 0;
+
+  /* ── List view: search, class filter, card/table layout ── */
+  const [search, setSearch]           = useState("");
+  const [classFilter, setClassFilter] = useState("");
+  const [listLayout, setListLayout]   = useState("card");
+
+  // The chosen layout is remembered per browser, the same way the blogs
+  // page does it. Anything other than the two known values is ignored.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("adminCoursesView");
+      if (saved === "table" || saved === "card") setListLayout(saved);
+    } catch {}
+  }, []);
+
+  const changeListLayout = (next) => {
+    setListLayout(next);
+    try { localStorage.setItem("adminCoursesView", next); } catch {}
+  };
+
+  const typeCourses = courses.filter((c) =>
+    courseTypeTab === "bundle" ? c.courseType === "bundle" : c.courseType !== "bundle"
+  );
+
+  // The class dropdown lists only the classes that courses actually use,
+  // so it never offers an option that would return nothing.
+  const classOptions = [...new Set(courses.map((c) => c.batch).filter(Boolean))].sort();
+
+  const query = search.trim().toLowerCase();
+  const visibleCourses = typeCourses.filter((c) => {
+    if (classFilter && c.batch !== classFilter) return false;
+    if (!query) return true;
+    return [c.title, c.subject, c.batch, ...(c.bundledSubjects || [])]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase()
+      .includes(query);
+  });
 
   /* ── Fetch courses ── */
   const fetchCourses = useCallback(async () => {
@@ -1758,6 +1788,32 @@ export default function AdminCoursesPage({ admin }) {
     finally { setBmatCourseFetching(null); }
   };
 
+  // Pulls one section's files (e.g. Question Bank) out of another course into
+  // this one. Lets a subject course reuse the files already uploaded on the
+  // standalone product instead of re-uploading them one by one.
+  const handleMatFetchSection = async (sourceCourseId, section, sectionLabel) => {
+    const src = courses.find(c => c._id === sourceCourseId);
+    if (!src) return;
+    if (!confirm(`Import ${sectionLabel} files from "${src.title}" into this course? Files already here are skipped.`)) return;
+    const busyKey = `${section}::${sourceCourseId}`;
+    setMatSectionFetching(busyKey);
+    try {
+      const res = await fetch(`/api/courses/${selectedCourse._id}?action=fetch-section-materials`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ sourceCourseId, section }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+        toast.success(data.importedCount>0
+          ? `Imported ${data.importedCount} ${sectionLabel} file(s) from "${src.title}"!`
+          : `Nothing new to import from "${src.title}" — already up to date.`);
+      } else { toast.error(data.error||"Failed"); }
+    } catch { toast.error("Network error"); }
+    finally { setMatSectionFetching(null); }
+  };
+
   /* ── Upload PDF for materials ── */
   const handlePdfUpload = async (file, onUrl) => {
     if (!file) return;
@@ -1922,7 +1978,7 @@ export default function AdminCoursesPage({ admin }) {
                         <MdAdd size={18}/> New Subject Course
                       </button>
                     ) : (
-                      <button className="cr-primary-btn" style={{background:"#f59e0b"}} onClick={()=>{setBundleForm(EMPTY_BUNDLE);setView("create-bundle");}}>
+                      <button className="cr-primary-btn" onClick={()=>{setBundleForm(EMPTY_BUNDLE);setView("create-bundle");}}>
                         <BsBoxSeam size={16}/> New Full Bundle
                       </button>
                     )}
@@ -1934,29 +1990,32 @@ export default function AdminCoursesPage({ admin }) {
               {view==="list" && (
                 <div>
                   {/* Type tabs */}
-                  <div style={{display:"flex",gap:8,marginBottom:20}}>
-                    {[{key:"subject",label:"📘 Subject Courses"},{key:"bundle",label:"📦 Full Bundles"}].map(t=>(
+                  <div className="crx-tabs">
+                    {[
+                      { key:"subject", label:"Subject Courses", Icon:MdMenuBook },
+                      { key:"bundle",  label:"Full Bundles",    Icon:BsBoxSeam },
+                    ].map(t=>(
                       <button key={t.key}
+                        className={`crx-tab ${courseTypeTab===t.key?"is-active":""}`}
                         onClick={()=>setCourseTypeTab(t.key)}
-                        style={{padding:"8px 20px",borderRadius:8,border:"2px solid",fontWeight:600,fontSize:14,cursor:"pointer",transition:"all 0.2s",
-                          borderColor:courseTypeTab===t.key?"#6c47d4":"#e5e7eb",
-                          background:courseTypeTab===t.key?"#6c47d4":"white",
-                          color:courseTypeTab===t.key?"white":"#6b7280"
-                        }}
-                      >{t.label}</button>
+                      >
+                        <t.Icon size={14}/> {t.label}
+                        <span className="crx-tab-count">
+                          {courses.filter(c=>t.key==="bundle"?c.courseType==="bundle":c.courseType!=="bundle").length}
+                        </span>
+                      </button>
                     ))}
                   </div>
+
                   <div className="cr-stats-row">
                     {[
-                      {label:"Total Courses",  value:courses.length,                               color:"#6c47d4", Icon:BsCollection},
-                      {label:"Published",      value:courses.filter(c=>c.status==="published").length, color:"#10b981", Icon:MdCheckCircle},
-                      {label:"Drafts",         value:courses.filter(c=>c.status==="draft").length, color:"#f59e0b", Icon:MdDrafts},
-                      {label:"Total Enrolled", value:courses.reduce((a,c)=>a+c.enrolledCount,0),   color:"#0ea5e9", Icon:MdPeople},
+                      {label:"Total Courses",  value:courses.length,                                   Icon:BsCollection},
+                      {label:"Published",      value:courses.filter(c=>c.status==="published").length, Icon:MdCheckCircle},
+                      {label:"Drafts",         value:courses.filter(c=>c.status==="draft").length,     Icon:MdDrafts},
+                      {label:"Total Enrolled", value:courses.reduce((a,c)=>a+(c.enrolledCount||0),0),  Icon:MdPeople},
                     ].map(s=>(
                       <div key={s.label} className="cr-stat-card">
-                        <div className="cr-stat-icon" style={{background:s.color+"18"}}>
-                          <s.Icon size={22} color={s.color}/>
-                        </div>
+                        <div className="cr-stat-icon"><s.Icon size={20}/></div>
                         <div>
                           <div className="cr-stat-num">{s.value}</div>
                           <div className="cr-stat-label">{s.label}</div>
@@ -1965,64 +2024,190 @@ export default function AdminCoursesPage({ admin }) {
                     ))}
                   </div>
 
-                  {loading ? (
-                    <div className="cr-loading"><div className="cr-spinner"/><span>Loading courses...</span></div>
-                  ) : courses.length===0 ? (
-                    <div className="cr-empty">
-                      <MdFolderOpen size={52} className="cr-empty-icon"/>
-                      <div className="cr-empty-title">No Courses Yet</div>
-                      <p>Click "New Course" to create your first course.</p>
-                      <button className="cr-primary-btn" onClick={()=>setView("create")}>
-                        <MdAdd size={16}/> Create First Course
+                  {/* Search, class filter and layout toggle */}
+                  <div className="crx-toolbar">
+                    <div className="crx-search">
+                      <MdSearch size={17} className="crx-search-icon"/>
+                      <input className="crx-search-input"
+                        placeholder="Search by title, subject or class"
+                        value={search}
+                        onChange={e=>setSearch(e.target.value)}
+                      />
+                      {search && (
+                        <button className="crx-search-clear" onClick={()=>setSearch("")} aria-label="Clear search">
+                          <MdClose size={14}/>
+                        </button>
+                      )}
+                    </div>
+
+                    <select className="crx-select" value={classFilter} onChange={e=>setClassFilter(e.target.value)}>
+                      <option value="">All Classes</option>
+                      {classOptions.map(b=>(
+                        <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+
+                    <div className="crx-views" role="group" aria-label="View mode">
+                      <button className={`crx-view ${listLayout==="card"?"is-active":""}`}
+                        aria-pressed={listLayout==="card"} onClick={()=>changeListLayout("card")}>
+                        <MdGridView size={15}/> Cards
+                      </button>
+                      <button className={`crx-view ${listLayout==="table"?"is-active":""}`}
+                        aria-pressed={listLayout==="table"} onClick={()=>changeListLayout("table")}>
+                        <MdViewList size={16}/> List
                       </button>
                     </div>
+                  </div>
+
+                  {loading ? (
+                    <div className="cr-loading"><div className="cr-spinner"/><span>Loading courses...</span></div>
+                  ) : visibleCourses.length===0 ? (
+                    <div className="cr-empty">
+                      <MdFolderOpen size={52} className="cr-empty-icon"/>
+                      <div className="cr-empty-title">
+                        {query || classFilter
+                          ? "No courses match this search"
+                          : courseTypeTab==="bundle" ? "No Bundles Yet" : "No Subject Courses Yet"}
+                      </div>
+                      <p>
+                        {query || classFilter
+                          ? "Try a different keyword, or pick another class."
+                          : courseTypeTab==="bundle"
+                            ? "Create a Full Bundle to sell multiple subjects together."
+                            : "Create individual subject courses with chapters and videos."}
+                      </p>
+                      {(query || classFilter) ? (
+                        <button className="cr-cancel-btn" onClick={()=>{setSearch("");setClassFilter("");}}>
+                          <MdClose size={15}/> Clear filters
+                        </button>
+                      ) : (
+                        <button className="cr-primary-btn" onClick={()=>{
+                          if (courseTypeTab==="bundle") { setBundleForm(EMPTY_BUNDLE); setView("create-bundle"); }
+                          else { setForm(EMPTY_FORM); setView("create"); }
+                        }}>
+                          <MdAdd size={16}/> {courseTypeTab==="bundle"?"Create First Bundle":"Create First Course"}
+                        </button>
+                      )}
+                    </div>
+                  ) : listLayout==="table" ? (
+
+                    /* ── List layout ── */
+                    <div className="crx-table-wrap">
+                      <div className="crx-table-scroll">
+                        <table className="crx-table">
+                          <thead>
+                            <tr>
+                              <th>Course</th>
+                              <th>Class</th>
+                              <th>{courseTypeTab==="bundle"?"Subjects":"Content"}</th>
+                              <th>Enrolled</th>
+                              <th>Price</th>
+                              <th>Status</th>
+                              <th className="crx-th-actions">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {visibleCourses.map(course=>(
+                              <tr key={course._id}>
+                                <td>
+                                  <div className="crx-course-cell">
+                                    <div className="crx-course-thumb">
+                                      {course.featureImage
+                                        ? <img src={course.featureImage} alt=""/>
+                                        : course.courseType==="bundle" ? <BsBoxSeam size={15}/> : <MdMenuBook size={16}/>}
+                                    </div>
+                                    <div className="crx-course-text">
+                                      <div className="crx-course-title">{course.title}</div>
+                                      <div className="crx-course-sub">
+                                        {course.courseType==="bundle" ? "Full Bundle" : (course.subject || "—")}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td><span className="crx-pill">{course.batch || "—"}</span></td>
+                                <td>
+                                  {course.courseType==="bundle" ? (
+                                    <span className="crx-pill">{course.bundledSubjects?.length||0} subjects</span>
+                                  ) : (
+                                    <span className="crx-pill">
+                                      {course.chapters?.length||0} chapters • {totalLessons(course)} topics
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="crx-num">{course.enrolledCount||0}</td>
+                                <td>
+                                  {course.isFree
+                                    ? <span className="crx-pill">Free</span>
+                                    : <span className="crx-price"><FaRupeeSign size={10}/>{course.price}</span>}
+                                </td>
+                                <td>
+                                  <span className={`crx-status ${course.status==="published"?"is-published":"is-draft"}`}>
+                                    {course.status==="published"?"Published":"Draft"}
+                                  </span>
+                                </td>
+                                <td className="crx-th-actions">
+                                  <div className="crx-row-actions">
+                                    <button className="crx-row-btn" onClick={()=>openManage(course)}>
+                                      <MdEdit size={14}/> Manage
+                                    </button>
+                                    <button className="crx-row-btn" onClick={()=>handleTogglePublish(course)}>
+                                      {course.status==="published"?<><MdUnpublished size={14}/> Unpublish</>:<><MdPublish size={14}/> Publish</>}
+                                    </button>
+                                    <button className="crx-row-btn is-danger" onClick={()=>handleDelete(course._id)} aria-label="Delete course">
+                                      <MdDelete size={14}/>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
                   ) : (
                     <div className="cr-cards-grid">
-                      {courses
-                        .filter(c => courseTypeTab==="bundle" ? c.courseType==="bundle" : c.courseType!=="bundle")
-                        .map(course=>(
+                      {visibleCourses.map(course=>(
                         <div key={course._id} className={`cr-course-card ${course.status==="draft"?"cr-card-draft":""}`}>
-                          <div className="cr-card-thumb" style={{
-                            background:course.featureImage
-                              ?`url(${course.featureImage}) center/cover no-repeat`
-                              :course.courseType==="bundle"
-                                ?"linear-gradient(135deg,#f59e0b22,#f59e0b55)"
-                                :`linear-gradient(135deg,${getColor(course.subject)}22,${getColor(course.subject)}55)`
-                          }}>
+                          <div className="cr-card-thumb" style={course.featureImage
+                            ? {background:`url(${course.featureImage}) center/cover no-repeat`}
+                            : undefined}>
                             {!course.featureImage && (
                               <span className="cr-card-thumb-icon">
-                                {course.courseType==="bundle" ? "📦" : (subjectIcons[course.subject]||"📚")}
+                                {course.courseType==="bundle" ? <BsBoxSeam size={30}/> : <MdMenuBook size={32}/>}
                               </span>
                             )}
                             {course.courseType==="bundle" && (
-                              <span style={{position:"absolute",top:8,left:8,background:"#f59e0b",color:"white",fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20}}>
-                                BUNDLE
-                              </span>
+                              <span className="crx-type-badge">Bundle</span>
                             )}
                             <span className={`cr-status-badge ${course.status==="published"?"cr-badge-published":"cr-badge-draft"}`}>
                               {course.status==="published"?<><MdCheckCircle size={11}/> Published</>:<><MdDrafts size={11}/> Draft</>}
                             </span>
                             <span className={`cr-price-badge ${course.isFree?"cr-badge-free":"cr-badge-paid"}`}>
-                              {course.isFree?"FREE":<><FaRupeeSign size={10}/>{course.price}</>}
+                              {course.isFree?"Free":<><FaRupeeSign size={10}/>{course.price}</>}
                             </span>
                           </div>
                           <div className="cr-card-body">
-                            <div className="cr-card-subject" style={{color:course.courseType==="bundle"?"#f59e0b":getColor(course.subject)}}>
+                            <div className="cr-card-subject">
                               {course.courseType==="bundle"
                                 ? <><BsBoxSeam size={13}/> {course.batch} • {course.bundledSubjects?.length||0} Subjects</>
                                 : <><MdSchool size={13}/> {course.subject} • {course.batch}</>
                               }
                             </div>
                             <div className="cr-card-title">{course.title}</div>
-                            {course.courseType==="bundle" && (
-                              <div style={{display:"flex",flexWrap:"wrap",gap:4,margin:"6px 0"}}>
-                                {(course.bundledSubjects||[]).slice(0,4).map(s=>(
-                                  <span key={s} style={{fontSize:10,padding:"2px 6px",background:"#f59e0b18",color:"#b45309",borderRadius:20,fontWeight:600}}>{s}</span>
+                            {course.courseType==="bundle" && (course.bundledSubjects||[]).length>0 && (
+                              <div className="crx-chip-row">
+                                {(course.bundledSubjects||[]).slice(0,4).map(sub=>(
+                                  <span key={sub} className="crx-chip">{sub}</span>
                                 ))}
-                                {(course.bundledSubjects||[]).length>4 && <span style={{fontSize:10,color:"#9ca3af"}}>+{course.bundledSubjects.length-4} more</span>}
+                                {(course.bundledSubjects||[]).length>4 && (
+                                  <span className="crx-chip-more">+{course.bundledSubjects.length-4} more</span>
+                                )}
                               </div>
                             )}
-                            <div className="cr-card-desc">{(course.description||"No description").slice(0,72)}...</div>
+                            <div className="cr-card-desc">
+                              {course.description ? course.description.slice(0,90) : "No description"}
+                            </div>
                             <div className="cr-card-meta">
                               {course.courseType==="bundle" ? (
                                 <span className="cr-meta-tag"><BsBoxSeam size={13}/> {course.bundledSubjects?.length||0} Subjects</span>
@@ -2042,20 +2227,13 @@ export default function AdminCoursesPage({ admin }) {
                               >
                                 {course.status==="published"?<><MdUnpublished size={15}/> Unpublish</>:<><MdPublish size={15}/> Publish</>}
                               </button>
-                              <button className="cr-action-delete" onClick={()=>handleDelete(course._id)}>
+                              <button className="cr-action-delete" onClick={()=>handleDelete(course._id)} aria-label="Delete course">
                                 <MdDelete size={16}/>
                               </button>
                             </div>
                           </div>
                         </div>
                       ))}
-                      {courses.filter(c => courseTypeTab==="bundle" ? c.courseType==="bundle" : c.courseType!=="bundle").length===0 && (
-                        <div className="cr-empty" style={{gridColumn:"1/-1"}}>
-                          <span style={{fontSize:40}}>{courseTypeTab==="bundle"?"📦":"📘"}</span>
-                          <div className="cr-empty-title">{courseTypeTab==="bundle"?"No Bundles Yet":"No Subject Courses Yet"}</div>
-                          <p>{courseTypeTab==="bundle"?"Create a Full Bundle to sell multiple subjects together.":"Create individual subject courses."}</p>
-                        </div>
-                      )}
                     </div>
                   )}
                 </div>
@@ -2066,7 +2244,7 @@ export default function AdminCoursesPage({ admin }) {
                 <div className="cr-form-wrap">
                   <div className="cr-form-card">
                     <div className="cr-form-card-title">
-                      <BiSolidBookContent size={20} color="#6c47d4"/> Course Details
+                      <BiSolidBookContent size={20} color="#5641ce"/> Course Details
                     </div>
                     <CourseFormFields form={form} setForm={setForm}/>
                     <div className="cr-form-footer">
@@ -2088,7 +2266,7 @@ export default function AdminCoursesPage({ admin }) {
               {view==="create-bundle" && (
                 <div className="cr-form-wrap">
                   <div className="cr-form-card">
-                    <div className="cr-form-card-title" style={{color:"#f59e0b"}}>
+                    <div className="cr-form-card-title" style={{color:"#5641ce"}}>
                       <BsBoxSeam size={20}/> Full Bundle Details
                     </div>
 
@@ -2142,8 +2320,8 @@ export default function AdminCoursesPage({ admin }) {
                           return (
                             <button key={sub} type="button"
                               onClick={()=>toggleBundleSubject(sub)}
-                              style={{padding:"6px 14px",borderRadius:20,border:`2px solid ${sel?"#6c47d4":"#e5e7eb"}`,
-                                background:sel?"#6c47d4":"white",color:sel?"white":"#374151",
+                              style={{padding:"6px 14px",borderRadius:20,border:`2px solid ${sel?"#5641ce":"#e5e7eb"}`,
+                                background:sel?"#5641ce":"white",color:sel?"white":"#374151",
                                 fontWeight:600,fontSize:13,cursor:"pointer",transition:"all 0.15s"
                               }}
                             >{sub}</button>
@@ -2151,8 +2329,8 @@ export default function AdminCoursesPage({ admin }) {
                         })}
                       </div>
                       {bundleForm.bundledSubjects.length>0 && (
-                        <div style={{marginTop:8,fontSize:12,color:"#6c47d4",fontWeight:600}}>
-                          ✓ Selected: {bundleForm.bundledSubjects.join(", ")}
+                        <div style={{marginTop:8,fontSize:12,color:"#5641ce",fontWeight:600}}>
+                          Selected: {bundleForm.bundledSubjects.join(", ")}
                         </div>
                       )}
                     </div>
@@ -2166,7 +2344,7 @@ export default function AdminCoursesPage({ admin }) {
                       return (
                         <div className="cr-field-group">
                           <label className="cr-label" style={{display:"flex",alignItems:"center",gap:8}}>
-                            📚 Auto-import Videos &amp; Chapters
+                            Auto-import Videos &amp; Chapters
                             <span style={{fontWeight:400,color:"#9ca3af",fontSize:12}}>
                               ({matchedCourses.length} course{matchedCourses.length!==1?"s":""} found for {bundleForm.batch})
                             </span>
@@ -2186,7 +2364,7 @@ export default function AdminCoursesPage({ admin }) {
                                 const topicCount = c.chapters?.reduce((a,ch)=>a+(ch.lessons?.length||0),0)||0;
                                 return (
                                   <label key={c._id} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",
-                                    borderRadius:10,border:`2px solid ${isSel?"#6c47d4":"#e5e7eb"}`,
+                                    borderRadius:10,border:`2px solid ${isSel?"#5641ce":"#e5e7eb"}`,
                                     background:isSel?"#f5f3ff":"#fafafa",cursor:"pointer",transition:"all 0.15s"}}>
                                     <input type="checkbox" checked={isSel}
                                       onChange={()=>setBundleForm(prev=>({
@@ -2195,16 +2373,16 @@ export default function AdminCoursesPage({ admin }) {
                                           ? prev.includedCourses.filter(id=>id!==c._id)
                                           : [...prev.includedCourses, c._id]
                                       }))}
-                                      style={{marginTop:3,accentColor:"#6c47d4"}}/>
+                                      style={{marginTop:3,accentColor:"#5641ce"}}/>
                                     <div style={{flex:1}}>
                                       <div style={{fontWeight:700,fontSize:14,color:"#1f2937"}}>{c.title}</div>
                                       <div style={{fontSize:12,color:"#6b7280",marginTop:3,display:"flex",gap:12,flexWrap:"wrap"}}>
-                                        <span>📘 {c.subject||"—"}</span>
-                                        <span>📂 {chCount} chapter{chCount!==1?"s":""}</span>
-                                        <span>🎬 {topicCount} topic{topicCount!==1?"s":""}</span>
+                                        <span>{c.subject||"—"}</span>
+                                        <span>{chCount} chapter{chCount!==1?"s":""}</span>
+                                        <span>{topicCount} topic{topicCount!==1?"s":""}</span>
                                         <span style={{padding:"1px 8px",borderRadius:20,fontSize:11,fontWeight:600,
-                                          background:c.status==="published"?"#d1fae5":"#fef3c7",
-                                          color:c.status==="published"?"#065f46":"#92400e"}}>
+                                          background:c.status==="published"?"#f1eefc":"#f1f5f9",
+                                          color:c.status==="published"?"#5641ce":"#475569"}}>
                                           {c.status}
                                         </span>
                                       </div>
@@ -2212,8 +2390,8 @@ export default function AdminCoursesPage({ admin }) {
                                   </label>
                                 );
                               })}
-                              <div style={{fontSize:12,color:"#6c47d4",fontWeight:600,marginTop:2}}>
-                                ✓ {bundleForm.includedCourses.filter(id=>matchedCourses.some(c=>c._id===id)).length} of {matchedCourses.length} courses selected
+                              <div style={{fontSize:12,color:"#5641ce",fontWeight:600,marginTop:2}}>
+                                {bundleForm.includedCourses.filter(id=>matchedCourses.some(c=>c._id===id)).length} of {matchedCourses.length} courses selected
                               </div>
                             </div>
                           )}
@@ -2233,7 +2411,7 @@ export default function AdminCoursesPage({ admin }) {
                         <button className="cr-cancel-btn" onClick={()=>{setView("list");setBundleForm(EMPTY_BUNDLE);}}>
                           <MdClose size={15}/> Cancel
                         </button>
-                        <button className="cr-primary-btn" style={{background:"#f59e0b"}} onClick={handleCreateBundle} disabled={saving}>
+                        <button className="cr-primary-btn" style={{background:"#5641ce"}} onClick={handleCreateBundle} disabled={saving}>
                           {saving?"Creating...":<><BsBoxSeam size={15}/> Create Bundle →</>}
                         </button>
                       </div>
@@ -2277,7 +2455,7 @@ export default function AdminCoursesPage({ admin }) {
                               onError={e=>e.target.style.display="none"}/>
                           </div>
                         )}
-                        <div className="cr-info-subject" style={{color:getColor(selectedCourse.subject)}}>
+                        <div className="cr-info-subject">
                           <MdSchool size={13}/> {selectedCourse.subject} • {selectedCourse.batch}
                         </div>
                         <div className="cr-info-title">{selectedCourse.title}</div>
@@ -2299,7 +2477,7 @@ export default function AdminCoursesPage({ admin }) {
                             {Icon:MdPeople,       label:"Enrolled", val:selectedCourse.enrolledCount||0},
                           ].map(m=>(
                             <div key={m.label} className="cr-info-stat">
-                              <m.Icon size={18} color="#6c47d4"/>
+                              <m.Icon size={18} color="#5641ce"/>
                               <div className="cr-info-stat-num">{m.val}</div>
                               <div className="cr-info-stat-label">{m.label}</div>
                             </div>
@@ -2333,7 +2511,7 @@ export default function AdminCoursesPage({ admin }) {
                   {selectedCourse.courseType !== "bundle" && <div className="cr-chapters-card">
                     <div className="cr-chapters-header">
                       <div className="cr-chapters-title">
-                        <MdFolder size={20} color="#6c47d4"/> Course Content
+                        <MdFolder size={20} color="#5641ce"/> Course Content
                         <span className="cr-chapters-count">{selectedCourse.chapters?.length||0} chapters</span>
                       </div>
                       <button className="cr-add-chapter-btn" onClick={()=>setShowChapterForm(true)}>
@@ -2451,7 +2629,7 @@ export default function AdminCoursesPage({ admin }) {
                                     {lesson.videoType==="youtube"
                                       ? <FaYoutube size={15} color="#ef4444"/>
                                       : lesson.videoType==="custom"
-                                        ? <FaVideo size={14} color="#6c47d4"/>
+                                        ? <FaVideo size={14} color="#5641ce"/>
                                         : <MdVideoLibrary size={15} color="#9ca3af"/>
                                     }
                                     <span className="cr-lesson-title">{lesson.title}</span>
@@ -2526,7 +2704,7 @@ export default function AdminCoursesPage({ admin }) {
                                   {editingLessonId===lesson._id && (
                                     <div className="cr-lesson-form">
                                       <div className="cr-lesson-form-title">
-                                        <MdEdit size={15} color="#6c47d4"/> Edit Topic
+                                        <MdEdit size={15} color="#5641ce"/> Edit Topic
                                       </div>
 
                                       <input className="cr-input" placeholder="Topic title"
@@ -2540,7 +2718,7 @@ export default function AdminCoursesPage({ admin }) {
                                           onClick={()=>setLessonForm({...lessonForm,videoType:"bunny",youtubeLink:"",videoUrl:""})}
                                           disabled={uploading}
                                         >
-                                          <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/> Upload
+                                          <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#5641ce"}/> Upload
                                         </button>
                                         <button
                                           className={`cr-video-type-btn ${lessonForm.videoType==="youtube"?"cr-video-type-active":""}`}
@@ -2552,13 +2730,13 @@ export default function AdminCoursesPage({ admin }) {
                                           className={`cr-video-type-btn ${lessonForm.videoType==="custom"?"cr-video-type-active":""}`}
                                           onClick={()=>setLessonForm({...lessonForm,videoType:"custom",youtubeLink:""})}
                                         >
-                                          <FaVideo size={13} color={lessonForm.videoType==="custom"?"#fff":"#6c47d4"}/> Custom URL
+                                          <FaVideo size={13} color={lessonForm.videoType==="custom"?"#fff":"#5641ce"}/> Custom URL
                                         </button>
                                         <button
                                           className={`cr-video-type-btn ${lessonForm.videoType==="none"?"cr-video-type-active":""}`}
                                           onClick={()=>setLessonForm({...lessonForm,videoType:"none",youtubeLink:"",videoUrl:""})}
                                         >
-                                          📄 No Video
+                                          No Video
                                         </button>
                                       </div>
 
@@ -2580,7 +2758,7 @@ export default function AdminCoursesPage({ admin }) {
                                           />
                                           {lessonForm.videoUrl ? (
                                             <div className="cr-bunny-success">
-                                              <MdCheckCircle size={16} color="#10b981"/>
+                                              <MdCheckCircle size={16} color="#5641ce"/>
                                               <span>Video uploaded to Bunny Stream</span>
                                               <button className="cr-bunny-change-btn"
                                                 onClick={()=>setLessonForm(prev=>({...prev,videoUrl:""}))}>
@@ -2603,7 +2781,7 @@ export default function AdminCoursesPage({ admin }) {
                                                 </div>
                                               )}
                                               <div className="cr-video-url-hint">
-                                                💡 Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
+                                                Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
                                               </div>
                                             </>
                                           )}
@@ -2617,7 +2795,7 @@ export default function AdminCoursesPage({ admin }) {
                                             value={lessonForm.videoUrl}
                                             onChange={e=>setLessonForm({...lessonForm,videoUrl:e.target.value})}/>
                                           <div className="cr-video-url-hint">
-                                            💡 Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
+                                            Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
                                           </div>
                                         </>
                                       )}
@@ -2646,7 +2824,7 @@ export default function AdminCoursesPage({ admin }) {
                                         const nt = NOTE_TYPES.find(t=>t.val===note.type)||NOTE_TYPES[0];
                                         return (
                                           <div key={note._id} className="cr-note-row">
-                                            <span className="cr-note-icon">{nt.icon}</span>
+                                            <span className="cr-note-icon"><nt.Icon size={14}/></span>
                                             <a href={note.fileUrl} target="_blank" rel="noreferrer"
                                               className="cr-note-title">{note.title}</a>
                                             <span className="cr-note-type-tag">{nt.label}</span>
@@ -2664,7 +2842,7 @@ export default function AdminCoursesPage({ admin }) {
                                   {showNoteForm===lesson._id && (
                                     <div className="cr-note-form">
                                       <div className="cr-note-form-title">
-                                        <MdAttachFile size={15} color="#6c47d4"/> Add Study Material
+                                        <MdAttachFile size={15} color="#5641ce"/> Add Study Material
                                       </div>
                                       <input className="cr-input" placeholder="Title e.g. Chapter 1 Notes"
                                         value={noteForm.noteTitle}
@@ -2680,12 +2858,12 @@ export default function AdminCoursesPage({ admin }) {
                                             className={`cr-note-type-btn ${noteForm.type===t.val?"cr-note-type-active":""}`}
                                             onClick={()=>setNoteForm({...noteForm,type:t.val})}
                                           >
-                                            {t.icon} {t.label}
+                                            <t.Icon size={13}/> {t.label}
                                           </button>
                                         ))}
                                       </div>
                                       <div className="cr-note-url-hint">
-                                        💡 Upload PDF to <strong>Google Drive</strong> → Share → <em>Anyone with link</em> → copy URL
+                                        Upload PDF to <strong>Google Drive</strong> → Share → <em>Anyone with link</em> → copy URL
                                       </div>
                                       <div className="cr-lesson-form-btns">
                                         <button className="cr-primary-btn" style={{flex:1,justifyContent:"center"}}
@@ -2706,7 +2884,7 @@ export default function AdminCoursesPage({ admin }) {
                               {showLessonForm===chapter._id ? (
                                 <div className="cr-lesson-form">
                                   <div className="cr-lesson-form-title">
-                                    <MdVideoLibrary size={15} color="#6c47d4"/> Add New Topic
+                                    <MdVideoLibrary size={15} color="#5641ce"/> Add New Topic
                                   </div>
 
                                   {/* Lesson title */}
@@ -2722,7 +2900,7 @@ export default function AdminCoursesPage({ admin }) {
                                       onClick={()=>setLessonForm({...lessonForm,videoType:"bunny",youtubeLink:"",videoUrl:""})}
                                       disabled={uploading}
                                     >
-                                      <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/> Upload
+                                      <MdCloudUpload size={14} color={lessonForm.videoType==="bunny"?"#fff":"#5641ce"}/> Upload
                                     </button>
                                     <button
                                       className={`cr-video-type-btn ${lessonForm.videoType==="youtube"?"cr-video-type-active":""}`}
@@ -2734,13 +2912,13 @@ export default function AdminCoursesPage({ admin }) {
                                       className={`cr-video-type-btn ${lessonForm.videoType==="custom"?"cr-video-type-active":""}`}
                                       onClick={()=>setLessonForm({...lessonForm,videoType:"custom",youtubeLink:""})}
                                     >
-                                      <FaVideo size={13} color={lessonForm.videoType==="custom"?"#fff":"#6c47d4"}/> Custom URL
+                                      <FaVideo size={13} color={lessonForm.videoType==="custom"?"#fff":"#5641ce"}/> Custom URL
                                     </button>
                                     <button
                                       className={`cr-video-type-btn ${lessonForm.videoType==="none"?"cr-video-type-active":""}`}
                                       onClick={()=>setLessonForm({...lessonForm,videoType:"none",youtubeLink:"",videoUrl:""})}
                                     >
-                                      📄 No Video
+                                      No Video
                                     </button>
                                   </div>
 
@@ -2764,7 +2942,7 @@ export default function AdminCoursesPage({ admin }) {
                                       />
                                       {lessonForm.videoUrl ? (
                                         <div className="cr-bunny-success">
-                                          <MdCheckCircle size={16} color="#10b981"/>
+                                          <MdCheckCircle size={16} color="#5641ce"/>
                                           <span>Video uploaded to Bunny Stream</span>
                                           <button className="cr-bunny-change-btn"
                                             onClick={()=>setLessonForm(prev=>({...prev,videoUrl:""}))}>
@@ -2787,7 +2965,7 @@ export default function AdminCoursesPage({ admin }) {
                                             </div>
                                           )}
                                           <div className="cr-video-url-hint">
-                                            💡 Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
+                                            Video will be encoded automatically and streamed via <strong>Bunny CDN</strong> (HLS adaptive quality).
                                           </div>
                                         </>
                                       )}
@@ -2802,7 +2980,7 @@ export default function AdminCoursesPage({ admin }) {
                                         value={lessonForm.videoUrl}
                                         onChange={e=>setLessonForm({...lessonForm,videoUrl:e.target.value})}/>
                                       <div className="cr-video-url-hint">
-                                        💡 Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
+                                        Paste a direct video URL from <strong>Vimeo</strong>, <strong>Google Drive</strong> (Share → Anyone with link) or <strong>S3</strong>.
                                       </div>
                                     </>
                                   )}
@@ -2840,8 +3018,8 @@ export default function AdminCoursesPage({ admin }) {
                     <div className="cr-chapters-card">
                       <div className="cr-chapters-header">
                         <div className="cr-chapters-title">
-                          <BsBoxSeam size={18} color="#f59e0b"/> Bundle Course Content
-                          <span className="cr-chapters-count" style={{background:"#fef3c7",color:"#92400e"}}>
+                          <BsBoxSeam size={18} color="#5641ce"/> Bundle Course Content
+                          <span className="cr-chapters-count" style={{background:"#f1f5f9",color:"#475569"}}>
                             {(selectedCourse.bundledSubjects||[]).length} subjects
                           </span>
                         </div>
@@ -2849,7 +3027,7 @@ export default function AdminCoursesPage({ admin }) {
 
                       {(selectedCourse.bundledSubjects||[]).length===0 ? (
                         <div className="cr-empty cr-chapters-empty">
-                          <span style={{fontSize:40}}>📦</span>
+                          <BsBoxSeam size={38} color="#cbd5e1"/>
                           <div className="cr-empty-title">No subjects in this bundle</div>
                           <p>Edit bundle info to add subjects first.</p>
                         </div>
@@ -2861,10 +3039,10 @@ export default function AdminCoursesPage({ admin }) {
                         return (
                           <div key={subject} style={{border:"1.5px solid #fde68a",borderRadius:12,marginBottom:12,overflow:"hidden"}}>
                             {/* Subject header */}
-                            <div style={{background:"#fffbeb",padding:"12px 16px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-                              <span style={{fontSize:18}}>{subjectIcons[subject]||"📚"}</span>
+                            <div style={{background:"#f8fafc",padding:"12px 16px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                              <MdMenuBook size={18} color={ACCENT}/>
                               <div style={{flex:1}}>
-                                <div style={{fontWeight:700,fontSize:14,color:"#92400e"}}>{subject}</div>
+                                <div style={{fontWeight:700,fontSize:14,color:"#475569"}}>{subject}</div>
                                 <div style={{fontSize:12,color:"#78350f"}}>
                                   {chapters.length} chapter{chapters.length!==1?"s":""} · {topicTotal} topic{topicTotal!==1?"s":""}
                                 </div>
@@ -2873,8 +3051,8 @@ export default function AdminCoursesPage({ admin }) {
                               <button
                                 onClick={()=>handleBsubFetch(subject)}
                                 disabled={bsubFetching===subject}
-                                style={{fontSize:12,padding:"5px 12px",borderRadius:8,border:"1.5px solid #f59e0b",
-                                  background:"white",color:"#92400e",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
+                                style={{fontSize:12,padding:"5px 12px",borderRadius:8,border:"1.5px solid #5641ce",
+                                  background:"white",color:"#475569",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
                                 {bsubFetching===subject
                                   ? "Importing..."
                                   : <><MdRefresh size={14}/> Fetch from existing course</>}
@@ -2882,7 +3060,7 @@ export default function AdminCoursesPage({ admin }) {
                               <button
                                 onClick={()=>{ setBsubShowChapterForm(subject); setBsubChapterInput(""); }}
                                 style={{fontSize:12,padding:"5px 12px",borderRadius:8,border:"none",
-                                  background:"#f59e0b",color:"white",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
+                                  background:"#5641ce",color:"white",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5}}>
                                 <MdAdd size={14}/> Add Chapter
                               </button>
                             </div>
@@ -2890,14 +3068,14 @@ export default function AdminCoursesPage({ admin }) {
                             {/* Add chapter form */}
                             {bsubShowChapterForm===subject && (
                               <div style={{padding:"12px 16px",borderBottom:"1px solid #fde68a",background:"#fefce8"}}>
-                                <div style={{fontWeight:600,fontSize:13,color:"#92400e",marginBottom:8}}>New Chapter</div>
+                                <div style={{fontWeight:600,fontSize:13,color:"#475569",marginBottom:8}}>New Chapter</div>
                                 <div style={{display:"flex",gap:8}}>
                                   <input className="cr-input" placeholder="e.g. Cell Biology"
                                     value={bsubChapterInput}
                                     onChange={e=>setBsubChapterInput(e.target.value)}
                                     onKeyDown={e=>e.key==="Enter"&&handleBsubAddChapter(subject)}
                                     autoFocus style={{flex:1}}/>
-                                  <button className="cr-primary-btn" style={{background:"#f59e0b"}}
+                                  <button className="cr-primary-btn" style={{background:"#5641ce"}}
                                     onClick={()=>handleBsubAddChapter(subject)} disabled={saving}>
                                     {saving?"...":"Add"}
                                   </button>
@@ -2972,7 +3150,7 @@ export default function AdminCoursesPage({ admin }) {
                                             {lesson.videoType==="youtube"
                                               ?<FaYoutube size={15} color="#ef4444"/>
                                               :lesson.videoType==="bunny"
-                                                ?<FaVideo size={14} color="#6c47d4"/>
+                                                ?<FaVideo size={14} color="#5641ce"/>
                                                 :<MdVideoLibrary size={15} color="#9ca3af"/>}
                                             <span className="cr-lesson-title">{lesson.title}</span>
                                             {lesson.duration&&<span className="cr-lesson-duration"><MdTimelapse size={12}/> {lesson.duration}</span>}
@@ -3027,7 +3205,7 @@ export default function AdminCoursesPage({ admin }) {
                                           {editingLessonId===String(lesson._id) && (
                                             <div className="cr-lesson-form">
                                               <div className="cr-lesson-form-title">
-                                                <MdEdit size={15} color="#f59e0b"/> Edit Topic
+                                                <MdEdit size={15} color="#5641ce"/> Edit Topic
                                               </div>
                                               <input className="cr-input" placeholder="Topic title"
                                                 value={bsubLessonForm.title}
@@ -3036,10 +3214,10 @@ export default function AdminCoursesPage({ admin }) {
                                               <div className="cr-video-type-row">
                                                 <span className="cr-video-type-label">Video source:</span>
                                                 {[
-                                                  {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/>},
+                                                  {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#5641ce"}/>},
                                                   {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
-                                                  {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#6c47d4"}/>},
-                                                  {t:"none",label:"No Video",icon:"📄"},
+                                                  {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#5641ce"}/>},
+                                                  {t:"none",label:"No Video",icon:<MdDescription size={13}/>},
                                                 ].map(({t,label,icon})=>(
                                                   <button key={t}
                                                     className={`cr-video-type-btn ${bsubLessonForm.videoType===t?"cr-video-type-active":""}`}
@@ -3060,7 +3238,7 @@ export default function AdminCoursesPage({ admin }) {
                                                     value={bsubLessonForm.videoUrl}
                                                     onChange={e=>setBsubLessonForm({...bsubLessonForm,videoUrl:e.target.value})}/>
                                                   <div className="cr-video-url-hint">
-                                                    💡 Paste direct video URL from Vimeo, Google Drive, or S3.
+                                                    Paste direct video URL from Vimeo, Google Drive, or S3.
                                                   </div>
                                                 </>
                                               )}
@@ -3070,7 +3248,7 @@ export default function AdminCoursesPage({ admin }) {
                                                     onChange={e=>e.target.files[0]&&handleBsubBunnyUpload(e.target.files[0])}/>
                                                   {bsubLessonForm.videoUrl ? (
                                                     <div className="cr-bunny-success">
-                                                      <MdCheckCircle size={16} color="#10b981"/>
+                                                      <MdCheckCircle size={16} color="#5641ce"/>
                                                       <span>Video uploaded to Bunny CDN</span>
                                                       <button className="cr-bunny-change-btn"
                                                         onClick={()=>setBsubLessonForm(prev=>({...prev,videoUrl:""}))}>Change</button>
@@ -3089,7 +3267,7 @@ export default function AdminCoursesPage({ admin }) {
                                                         </div>
                                                       )}
                                                       <div className="cr-video-url-hint">
-                                                        💡 Video will be encoded and streamed via <strong>Bunny CDN</strong>.
+                                                        Video will be encoded and streamed via <strong>Bunny CDN</strong>.
                                                       </div>
                                                     </>
                                                   )}
@@ -3100,7 +3278,7 @@ export default function AdminCoursesPage({ admin }) {
                                                 onChange={e=>setBsubLessonForm({...bsubLessonForm,duration:e.target.value})}/>
 
                                               <div className="cr-lesson-form-btns">
-                                                <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#f59e0b"}}
+                                                <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#5641ce"}}
                                                   onClick={()=>handleBsubEditLesson(subject,String(ch._id),String(lesson._id))} disabled={saving}>
                                                   <MdCheckCircle size={15}/> {saving?"Saving...":"Save Changes"}
                                                 </button>
@@ -3118,7 +3296,7 @@ export default function AdminCoursesPage({ admin }) {
                                         {bsubShowLessonForm===chKey ? (
                                           <div className="cr-lesson-form">
                                             <div className="cr-lesson-form-title">
-                                              <MdVideoLibrary size={15} color="#f59e0b"/> Add New Topic
+                                              <MdVideoLibrary size={15} color="#5641ce"/> Add New Topic
                                             </div>
                                             <input className="cr-input" placeholder="Topic title"
                                               value={bsubLessonForm.title}
@@ -3128,10 +3306,10 @@ export default function AdminCoursesPage({ admin }) {
                                             <div className="cr-video-type-row">
                                               <span className="cr-video-type-label">Video source:</span>
                                               {[
-                                                {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#6c47d4"}/>},
+                                                {t:"bunny",label:"Upload",icon:<MdCloudUpload size={14} color={bsubLessonForm.videoType==="bunny"?"#fff":"#5641ce"}/>},
                                                 {t:"youtube",label:"YouTube",icon:<FaYoutube size={14} color={bsubLessonForm.videoType==="youtube"?"#fff":"#ef4444"}/>},
-                                                {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#6c47d4"}/>},
-                                                {t:"none",label:"No Video",icon:"📄"},
+                                                {t:"custom",label:"Custom URL",icon:<FaVideo size={13} color={bsubLessonForm.videoType==="custom"?"#fff":"#5641ce"}/>},
+                                                {t:"none",label:"No Video",icon:<MdDescription size={13}/>},
                                               ].map(({t,label,icon})=>(
                                                 <button key={t}
                                                   className={`cr-video-type-btn ${bsubLessonForm.videoType===t?"cr-video-type-active":""}`}
@@ -3152,7 +3330,7 @@ export default function AdminCoursesPage({ admin }) {
                                                   value={bsubLessonForm.videoUrl}
                                                   onChange={e=>setBsubLessonForm({...bsubLessonForm,videoUrl:e.target.value})}/>
                                                 <div className="cr-video-url-hint">
-                                                  💡 Paste direct video URL from Vimeo, Google Drive, or S3.
+                                                  Paste direct video URL from Vimeo, Google Drive, or S3.
                                                 </div>
                                               </>
                                             )}
@@ -3162,7 +3340,7 @@ export default function AdminCoursesPage({ admin }) {
                                                   onChange={e=>e.target.files[0]&&handleBsubBunnyUpload(e.target.files[0])}/>
                                                 {bsubLessonForm.videoUrl ? (
                                                   <div className="cr-bunny-success">
-                                                    <MdCheckCircle size={16} color="#10b981"/>
+                                                    <MdCheckCircle size={16} color="#5641ce"/>
                                                     <span>Video uploaded to Bunny CDN</span>
                                                     <button className="cr-bunny-change-btn"
                                                       onClick={()=>setBsubLessonForm(prev=>({...prev,videoUrl:""}))}>Change</button>
@@ -3181,7 +3359,7 @@ export default function AdminCoursesPage({ admin }) {
                                                       </div>
                                                     )}
                                                     <div className="cr-video-url-hint">
-                                                      💡 Video will be encoded and streamed via <strong>Bunny CDN</strong>.
+                                                      Video will be encoded and streamed via <strong>Bunny CDN</strong>.
                                                     </div>
                                                   </>
                                                 )}
@@ -3192,7 +3370,7 @@ export default function AdminCoursesPage({ admin }) {
                                               onChange={e=>setBsubLessonForm({...bsubLessonForm,duration:e.target.value})}/>
 
                                             <div className="cr-lesson-form-btns">
-                                              <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#f59e0b"}}
+                                              <button className="cr-primary-btn" style={{flex:1,justifyContent:"center",background:"#5641ce"}}
                                                 onClick={()=>handleBsubAddLesson(subject,String(ch._id))} disabled={saving}>
                                                 <MdCheckCircle size={15}/> {saving?"Adding...":"Add Topic"}
                                               </button>
@@ -3239,13 +3417,15 @@ export default function AdminCoursesPage({ admin }) {
                     allCourses={courses}
                     onFetchFromCourse={handleBmatFetchFromCourse}
                     fetchingFromCourse={bmatCourseFetching}
+                    onFetchSection={handleMatFetchSection}
+                    fetchingSection={matSectionFetching}
                   />
 
                   {/* ── FAQs SECTION ── */}
                   <div className="cr-chapters-card">
                     <div className="cr-chapters-header">
                       <div className="cr-chapters-title">
-                        <MdQuiz size={20} color="#6c47d4"/> FAQs
+                        <MdQuiz size={20} color="#5641ce"/> FAQs
                         <span className="cr-chapters-count">{selectedCourse.faqs?.length||0} FAQs</span>
                       </div>
                       <button className="cr-add-chapter-btn" onClick={()=>setShowFaqForm(true)}>
@@ -3327,7 +3507,7 @@ export default function AdminCoursesPage({ admin }) {
                   <div style={{background:"#f0f9ff",border:"1.5px solid #bae6fd",borderRadius:12,padding:20}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
                       <div style={{fontWeight:700,color:"#0369a1",fontSize:15,display:"flex",alignItems:"center",gap:8}}>
-                        📡 Online Classes Linked to This Course
+                        Live Classes Linked to This Course
                         <span style={{background:"#0369a1",color:"white",borderRadius:20,fontSize:11,padding:"2px 8px",fontWeight:600}}>
                           {linkedClasses.length}
                         </span>
@@ -3336,21 +3516,21 @@ export default function AdminCoursesPage({ admin }) {
                         href="/dashboard/admin/online-classes"
                         style={{fontSize:12,color:"#0369a1",textDecoration:"none",fontWeight:600,border:"1.5px solid #bae6fd",borderRadius:6,padding:"4px 10px"}}
                       >
-                        + Add Online Class →
+                        + Add Live Class →
                       </a>
                     </div>
                     {linkedClasses.length === 0 ? (
                       <div style={{textAlign:"center",padding:"20px 0",color:"#64748b",fontSize:13}}>
-                        <div style={{fontSize:32,marginBottom:8}}>📭</div>
+                        <MdFolderOpen size={38} color="#cbd5e1" style={{marginBottom:8}}/>
                         No online classes linked to this course yet.
                         <div style={{marginTop:8,fontSize:12}}>
-                          Go to <strong>Online Classes</strong> → Schedule a class → Select this course in "Link to Course" dropdown.
+                          Go to <strong>Live Classes</strong> → Schedule a class → Select this course in "Link to Course" dropdown.
                         </div>
                       </div>
                     ) : (
                       <div style={{display:"flex",flexDirection:"column",gap:8}}>
                         {linkedClasses.map(cls => {
-                          const statusColors = { upcoming:"#f59e0b", live:"#ef4444", completed:"#10b981" };
+                          const statusColors = { upcoming:"#64748b", live:"#b91c1c", completed:ACCENT };
                           return (
                             <div key={cls._id} style={{background:"white",borderRadius:8,padding:"10px 14px",display:"flex",alignItems:"center",gap:12,border:"1px solid #e0f2fe"}}>
                               <span style={{width:8,height:8,borderRadius:"50%",background:statusColors[cls.status]||"#9ca3af",flexShrink:0}}/>
@@ -3369,7 +3549,7 @@ export default function AdminCoursesPage({ admin }) {
                       </div>
                     )}
                     <div style={{marginTop:12,fontSize:11,color:"#0369a1",background:"#e0f2fe",borderRadius:6,padding:"8px 10px"}}>
-                      ✓ Only students enrolled in this course can access these online classes.
+                      Only students enrolled in this course can access these online classes.
                       {selectedCourse.isFree ? " (Free course — students enroll directly)" : " (Paid course — students must purchase first)"}
                     </div>
                   </div>
@@ -3389,11 +3569,14 @@ export default function AdminCoursesPage({ admin }) {
 /* ─────────────────────────────────────────
    MATERIALS PANEL
 ───────────────────────────────────────── */
-function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching, allCourses, onFetchFromCourse, fetchingFromCourse }) {
+function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching, allCourses, onFetchFromCourse, fetchingFromCourse, onFetchSection, fetchingSection }) {
   const [openSection, setOpenSection] = useState(null); // "books" | "tma" | etc
   const [inlineForm, setInlineForm]   = useState({ title:"", fileUrl:"" });
   const [localUploading, setLocalUploading] = useState(false);
   const [importCourseId, setImportCourseId] = useState("");
+  // Source course chosen per section for the "Fetch from another course" row,
+  // keyed by section so switching sections doesn't carry the pick over.
+  const [sectionSrc, setSectionSrc] = useState({});
 
   const isBundle = course.courseType === "bundle";
   const subjects = isBundle ? (course.bundledSubjects || []) : [course.subject || "General"];
@@ -3432,6 +3615,13 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
   const totalForSubject = (sub) =>
     MATERIAL_SECTIONS.reduce((a, s) => a + getMaterials(sub, s.key).length, 0);
 
+  // Courses that already hold files in this section, so the section's "Fetch
+  // from another course" dropdown only ever offers something worth importing.
+  const sourcesForSection = (secKey) =>
+    (allCourses || [])
+      .filter(c => String(c._id) !== String(course._id) && (c.materials?.[secKey]?.length || 0) > 0)
+      .sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+
   const doUpload = async (file, onUrl) => {
     if (!file) return;
     setLocalUploading(true);
@@ -3458,7 +3648,7 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
     <div className="cr-chapters-card">
       <div className="cr-chapters-header">
         <div className="cr-chapters-title">
-          <MdLibraryBooks size={20} color="#6c47d4"/> Study Materials
+          <MdLibraryBooks size={20} color="#5641ce"/> Study Materials
           <span className="cr-chapters-count">{isBundle ? `${subjects.length} subjects` : "Books · TMA · Notes · More"}</span>
         </div>
       </div>
@@ -3472,14 +3662,14 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
             const isAllTab = sub === ALL_TAB;
             return (
               <button key={sub} onClick={()=>{ setActiveTab(sub); setOpenSection(null); setInlineForm({title:"",fileUrl:""}); }}
-                style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#6c47d4":isAllTab?"#d1d5db":"#e5e7eb"}`,
-                  background:isSel?"#6c47d4":isAllTab?"#f9fafb":"white",color:isSel?"white":"#374151",
+                style={{padding:"7px 18px",borderRadius:10,border:`2px solid ${isSel?"#5641ce":isAllTab?"#d1d5db":"#e5e7eb"}`,
+                  background:isSel?"#5641ce":isAllTab?"#f9fafb":"white",color:isSel?"white":"#374151",
                   fontWeight:700,fontSize:13,cursor:"pointer",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6,
                   fontStyle:isAllTab?"italic":"normal"
                 }}
               >
                 {sub}
-                {cnt>0 && <span style={{background:isSel?"rgba(255,255,255,0.25)":"#ede9fe",color:isSel?"white":"#6c47d4",
+                {cnt>0 && <span style={{background:isSel?"rgba(255,255,255,0.25)":"#ede9fe",color:isSel?"white":"#5641ce",
                   borderRadius:20,padding:"1px 7px",fontSize:11,fontWeight:700}}>{cnt}</span>}
               </button>
             );
@@ -3491,8 +3681,8 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
           <button
             onClick={()=>onFetch(activeSubject)}
             disabled={fetching===activeSubject}
-            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #6c47d4",
-              background:"white",color:"#6c47d4",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>
+            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #5641ce",
+              background:"white",color:"#5641ce",fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>
             {fetching===activeSubject
               ? "Importing..."
               : <><MdRefresh size={14}/> Fetch from existing course</>}
@@ -3514,8 +3704,8 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
           <button
             onClick={()=>{ if (importCourseId) onFetchFromCourse(importCourseId); }}
             disabled={!importCourseId || fetchingFromCourse===importCourseId}
-            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #6c47d4",
-              background:"white",color:"#6c47d4",fontWeight:600,cursor:importCourseId?"pointer":"not-allowed",display:"flex",alignItems:"center",gap:5}}>
+            style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"1.5px solid #5641ce",
+              background:"white",color:"#5641ce",fontWeight:600,cursor:importCourseId?"pointer":"not-allowed",display:"flex",alignItems:"center",gap:5}}>
             {fetchingFromCourse===importCourseId
               ? "Importing..."
               : <><MdRefresh size={14}/> Import</>}
@@ -3529,20 +3719,52 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
           const files = getMaterials(activeSubject, sec.key);
           const isOpen = openSection === sec.key;
           return (
-            <div key={sec.key} style={{border:`1.5px solid ${isOpen?sec.color:"#e5e7eb"}`,borderRadius:12,overflow:"hidden",transition:"border-color 0.15s"}}>
+            <div key={sec.key} style={{border:`1.5px solid ${isOpen?ACCENT:"#e5e7eb"}`,borderRadius:12,overflow:"hidden",transition:"border-color 0.15s"}}>
               {/* Section header row */}
-              <div style={{display:"flex",alignItems:"center",padding:"11px 16px",background:isOpen?`${sec.color}10`:"#fafafa",cursor:"pointer",gap:10}}
+              <div style={{display:"flex",alignItems:"center",padding:"11px 16px",background:isOpen?`${ACCENT}10`:"#fafafa",cursor:"pointer",gap:10}}
                 onClick={()=>{ setOpenSection(isOpen?null:sec.key); setInlineForm({title:"",fileUrl:""}); }}
               >
-                <span style={{fontSize:18}}>{sec.icon}</span>
-                <span style={{fontWeight:700,fontSize:14,color:isOpen?sec.color:"#374151",flex:1}}>{sec.label}</span>
-                {files.length>0 && <span style={{fontSize:12,fontWeight:600,background:`${sec.color}18`,color:sec.color,padding:"2px 10px",borderRadius:20}}>{files.length} file{files.length>1?"s":""}</span>}
+                <sec.Icon size={17} color={isOpen?ACCENT:"#64748b"}/>
+                <span style={{fontWeight:700,fontSize:14,color:isOpen?ACCENT:"#374151",flex:1}}>{sec.label}</span>
+                {files.length>0 && <span style={{fontSize:12,fontWeight:600,background:`${ACCENT}18`,color:ACCENT,padding:"2px 10px",borderRadius:20}}>{files.length} file{files.length>1?"s":""}</span>}
                 <span style={{color:"#9ca3af",fontSize:18,lineHeight:1}}>{isOpen?"−":"+"}</span>
               </div>
 
               {/* Expanded content */}
               {isOpen && (
-                <div style={{padding:"12px 16px",background:"white",borderTop:`1px solid ${sec.color}30`}}>
+                <div style={{padding:"12px 16px",background:"white",borderTop:`1px solid ${ACCENT}30`}}>
+                  {/* Import this section's files from a course that already has them */}
+                  {onFetchSection && (() => {
+                    const srcs    = sourcesForSection(sec.key);
+                    const pickId  = sectionSrc[sec.key] || "";
+                    const busyKey = `${sec.key}::${pickId}`;
+                    const busy    = fetchingSection === busyKey;
+                    if (!srcs.length) return null;
+                    return (
+                      <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center",padding:10,marginBottom:12,
+                        border:"1.5px dashed #d1d5db",borderRadius:10,background:"#fafafa"}}>
+                        <span style={{fontSize:12,color:"#6b7280",fontWeight:600}}>Fetch {sec.label} from another course:</span>
+                        <select className="cr-input" style={{flex:"1 1 220px",padding:"6px 10px",fontSize:12}}
+                          value={pickId} onChange={e=>setSectionSrc(p=>({...p,[sec.key]:e.target.value}))}>
+                          <option value="">Select course...</option>
+                          {srcs.map(c => (
+                            <option key={c._id} value={c._id}>
+                              {c.title} — {c.materials[sec.key].length} file{c.materials[sec.key].length>1?"s":""}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={()=>{ if (pickId) onFetchSection(pickId, sec.key, sec.label); }}
+                          disabled={!pickId || busy}
+                          style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:`1.5px solid ${ACCENT}`,
+                            background:"white",color:ACCENT,fontWeight:600,cursor:pickId?"pointer":"not-allowed",
+                            display:"flex",alignItems:"center",gap:5,opacity:busy?0.6:1}}>
+                          {busy ? "Importing..." : <><MdRefresh size={14}/> Fetch</>}
+                        </button>
+                      </div>
+                    );
+                  })()}
+
                   {/* Existing files */}
                   {files.length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:12}}>
@@ -3550,10 +3772,10 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
                         const displayTitle = isBundle ? mat.title.replace(`${activeSubject} | `,"") : mat.title;
                         return (
                           <div key={mat._id} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",background:"#fafafa",border:"1px solid #e5e7eb",borderRadius:8}}>
-                            <span style={{fontSize:16}}>📄</span>
+                            <MdDescription size={16} color="#94a3b8"/>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{fontWeight:600,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>
-                              <a href={mat.fileUrl} target="_blank" rel="noreferrer" style={{fontSize:11,color:"#6c47d4",textDecoration:"none"}}>View / Download ↗</a>
+                              <a href={mat.fileUrl} target="_blank" rel="noreferrer" style={{fontSize:11,color:"#5641ce",textDecoration:"none"}}>View / Download ↗</a>
                             </div>
                             <button onClick={()=>handleDelete(sec.key,mat._id)}
                               style={{background:"#fee2e2",border:"none",cursor:"pointer",color:"#ef4444",padding:"5px 7px",borderRadius:7,flexShrink:0}}>
@@ -3566,27 +3788,27 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
                   )}
 
                   {/* Upload form */}
-                  <div style={{background:`${sec.color}08`,border:`1px dashed ${sec.color}50`,borderRadius:10,padding:14}}>
-                    <div style={{fontWeight:600,fontSize:12,color:sec.color,marginBottom:10}}>+ Add {sec.label}</div>
+                  <div style={{background:`${ACCENT}08`,border:`1px dashed ${ACCENT}50`,borderRadius:10,padding:14}}>
+                    <div style={{fontWeight:600,fontSize:12,color:ACCENT,marginBottom:10}}>+ Add {sec.label}</div>
                     <input className="cr-input" placeholder={`Title e.g. ${activeSubject} ${sec.label} Chapter 1`}
                       value={inlineForm.title} onChange={e=>setInlineForm(f=>({...f,title:e.target.value}))}
                       style={{marginBottom:8}}/>
                     <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:inlineForm.fileUrl?8:0}}>
                       <input className="cr-input" placeholder="Paste file URL (Google Drive, etc.)"
                         value={inlineForm.fileUrl} onChange={e=>setInlineForm(f=>({...f,fileUrl:e.target.value}))}/>
-                      <label style={{cursor:"pointer",padding:"9px 14px",background:localUploading?"#e5e7eb":`${sec.color}18`,
-                        color:sec.color,borderRadius:8,fontWeight:700,fontSize:12,whiteSpace:"nowrap",flexShrink:0,border:`1.5px solid ${sec.color}40`}}>
-                        {localUploading?"⏳...":"📎 Upload"}
+                      <label style={{cursor:"pointer",padding:"9px 14px",background:localUploading?"#e5e7eb":`${ACCENT}18`,
+                        color:ACCENT,borderRadius:8,fontWeight:700,fontSize:12,whiteSpace:"nowrap",flexShrink:0,border:`1.5px solid ${ACCENT}40`}}>
+                        {localUploading?"Uploading...":<><MdAttachFile size={13}/> Upload</>}
                         <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xlsx" style={{display:"none"}} disabled={localUploading}
                           onChange={e=>doUpload(e.target.files[0], url=>setInlineForm(f=>({...f,fileUrl:url})))}/>
                       </label>
                     </div>
                     {inlineForm.fileUrl && (
-                      <div style={{fontSize:11,color:"#166534",background:"#f0fdf4",padding:"5px 10px",borderRadius:6,marginBottom:8}}>
-                        ✓ Ready: {inlineForm.fileUrl.split("/").pop()}
+                      <div style={{fontSize:11,color:"#475569",background:"#f1f5f9",padding:"5px 10px",borderRadius:6,marginBottom:8}}>
+                        Ready: {inlineForm.fileUrl.split("/").pop()}
                       </div>
                     )}
-                    <button className="cr-primary-btn" style={{marginTop:4,background:sec.color}}
+                    <button className="cr-primary-btn" style={{marginTop:4,background:ACCENT}}
                       onClick={()=>doAdd(activeSubject,sec.key)} disabled={saving}>
                       <MdCheckCircle size={14}/> {saving?"Saving...":"Save File"}
                     </button>
@@ -3696,8 +3918,8 @@ function CourseFormFields({ form, setForm, compact=false }) {
         <label className="cr-label">Status</label>
         <div className="cr-status-row">
           {[
-            {val:"draft",     label:"Save as Draft",Icon:MdDrafts, activeColor:"#f59e0b",activeBg:"#fef3c7",activeText:"#92400e"},
-            {val:"published", label:"Publish Now",  Icon:MdPublish,activeColor:"#10b981",activeBg:"#d1fae5",activeText:"#065f46"},
+            {val:"draft",     label:"Save as Draft",Icon:MdDrafts, activeColor:"#5641ce",activeBg:"#f1f5f9",activeText:"#475569"},
+            {val:"published", label:"Publish Now",  Icon:MdPublish,activeColor:"#5641ce",activeBg:"#f1eefc",activeText:"#5641ce"},
           ].map(s=>(
             <button key={s.val}
               className={`cr-status-btn ${form.status===s.val?"cr-status-btn-active":""}`}

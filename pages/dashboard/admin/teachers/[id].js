@@ -7,7 +7,7 @@ import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
-import { CLASS_OPTIONS } from "@/lib/classOptions";
+import { CLASS_OPTIONS, subjectsForClasses } from "@/lib/classOptions";
 import {
   MdArrowBack, MdRefresh, MdSchool, MdEventNote, MdCheckCircle, MdSchedule,
   MdLiveTv, MdAccessTime, MdBarChart, MdMenuBook, MdHistory, MdSave,
@@ -45,7 +45,7 @@ export default function TeacherDetailPage() {
         phone: data.data.phone || "",
         qualification: data.data.qualification || "",
         username: data.data.username || "",
-        subjects: (data.data.subjects || []).join(", "),
+        subjects: data.data.subjects || [],
         classes: data.data.classes || [],
         status: data.data.status || "active",
         password: "",
@@ -64,7 +64,7 @@ export default function TeacherDetailPage() {
     try {
       const body = {
         ...edit,
-        subjects: edit.subjects.split(",").map((s) => s.trim()).filter(Boolean),
+        subjects: edit.subjects,
         classes: edit.classes || [],
       };
       if (!body.password) delete body.password;
@@ -325,14 +325,19 @@ export default function TeacherDetailPage() {
                               onChange={(e) => setEdit((f) => ({ ...f, qualification: e.target.value }))} />
                           </Field>
                         </div>
-                        <Field label="Subjects (comma separated)">
-                          <input style={inputStyle} value={edit.subjects}
-                            onChange={(e) => setEdit((f) => ({ ...f, subjects: e.target.value }))} />
-                        </Field>
                         <Field label="Class (select one or more)">
                           <ClassPicker
                             selected={edit.classes || []}
-                            onChange={(next) => setEdit((f) => ({ ...f, classes: next }))}
+                            onChange={(next) =>
+                              setEdit((f) => ({ ...f, classes: next, subjects: pruneSubjects(next, f.subjects || []) }))
+                            }
+                          />
+                        </Field>
+                        <Field label="Subjects (select one or more)">
+                          <SubjectPicker
+                            classes={edit.classes || []}
+                            selected={edit.subjects || []}
+                            onChange={(next) => setEdit((f) => ({ ...f, subjects: next }))}
                           />
                         </Field>
                         <div style={gridTwo}>
@@ -405,9 +410,11 @@ const ClassPicker = ({ selected = [], onChange }) => {
   const toggle = (cls) =>
     onChange(selected.includes(cls) ? selected.filter((c) => c !== cls) : [...selected, cls]);
 
+  const options = [...CLASS_OPTIONS, ...selected.filter((c) => !CLASS_OPTIONS.includes(c))];
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-      {CLASS_OPTIONS.map((cls) => {
+      {options.map((cls) => {
         const on = selected.includes(cls);
         return (
           <button
@@ -426,6 +433,59 @@ const ClassPicker = ({ selected = [], onChange }) => {
             }}
           >
             {cls}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+const pruneSubjects = (classes, subjects) => {
+  const allowed = subjectsForClasses(classes);
+  return subjects.filter((s) => allowed.includes(s));
+};
+
+// Multi-select for the subjects a teacher takes. Only the subjects of the
+// classes already picked are offered, so a Class 10 teacher is never shown a
+// Class 12 subject. Anything stored earlier that is no longer offered stays
+// visible so editing a teacher cannot silently drop it.
+const SubjectPicker = ({ classes = [], selected = [], onChange }) => {
+  const available = subjectsForClasses(classes);
+  const extras = selected.filter((s) => !available.includes(s));
+  const options = [...available, ...extras];
+
+  const toggle = (sub) =>
+    onChange(selected.includes(sub) ? selected.filter((s) => s !== sub) : [...selected, sub]);
+
+  if (!classes.length) {
+    return (
+      <p style={{ margin: 0, fontSize: "0.8rem", color: "#6b7a99" }}>
+        Select a class first to see its subjects.
+      </p>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+      {options.map((sub) => {
+        const on = selected.includes(sub);
+        return (
+          <button
+            key={sub}
+            type="button"
+            onClick={() => toggle(sub)}
+            style={{
+              padding: "6px 13px",
+              borderRadius: 99,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              border: `1.5px solid ${on ? "#5641CE" : "#e3e6f0"}`,
+              background: on ? "#5641CE" : "#fff",
+              color: on ? "#fff" : "#6b7a99",
+            }}
+          >
+            {sub}
           </button>
         );
       })}

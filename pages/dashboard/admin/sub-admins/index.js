@@ -14,7 +14,7 @@ import {
 const FEATURE_LABELS = {
   blogs: "Blogs", faqs: "FAQs", students: "Students", courses: "Courses",
   admissions: "Applications", announcements: "Announcements", leads: "Leads",
-  "student-success": "Student Success", "online-classes": "Online Classes",
+  "student-success": "Student Success", "online-classes": "Live Classes",
   invoices: "Invoices", enrollments: "Enrollments",
 };
 

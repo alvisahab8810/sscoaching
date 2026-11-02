@@ -4,6 +4,7 @@
 // until this one is switched on (MSG91_SMS_OTP_ENABLED=true) and wired to the UI.
 import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
+import { DISABLED_MESSAGE } from "@/lib/studentAuth";
 import PhoneOTP from "@/models/PhoneOTP";
 import { sendSmsOtp } from "@/lib/msg91";
 
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, message: "If this number is registered, you will receive a reset code." });
     }
     if (!student.isActive) {
-      return res.status(403).json({ success: false, message: "Account disabled. Contact support." });
+      return res.status(403).json({ success: false, message: DISABLED_MESSAGE });
     }
 
     // Rate limit: 1 OTP per minute

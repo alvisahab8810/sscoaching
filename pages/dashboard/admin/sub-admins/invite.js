@@ -17,7 +17,7 @@ const ALL_FEATURES = [
   { key: "announcements", label: "Announcements", desc: "Create and manage announcements" },
   { key: "leads", label: "Leads", desc: "Track and manage leads" },
   { key: "student-success", label: "Student Success", desc: "Manage student success stories" },
-  { key: "online-classes", label: "Online Classes", desc: "Manage live video classes" },
+  { key: "online-classes", label: "Live Classes", desc: "Manage live video classes" },
   { key: "invoices", label: "Invoices", desc: "View and manage billing" },
   { key: "enrollments", label: "Enrollments", desc: "Track student enrollments" },
   { key: "pages", label: "Pages", desc: "Edit website page content" },

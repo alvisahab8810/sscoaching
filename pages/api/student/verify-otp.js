@@ -32,6 +32,14 @@ export default async function handler(req, res) {
       isNewUser = true;
     }
 
+    // A deactivated number can neither log in nor be signed up again.
+    if (student.isActive === false || student.deletedAt) {
+      return res.status(403).json({
+        success: false,
+        message: "This account has been deactivated. Please contact SS Coaching support.",
+      });
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       {

@@ -44,6 +44,12 @@ const LiveClassSchema = new mongoose.Schema(
       default: "",
     },
 
+    part: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
     topic: {
       type: String,
       trim: true,

@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
 import LiveClass from "@/models/LiveClassModel";
 import { logActivity } from "@/lib/logActivity";
+import { requireAdminApi } from "@/lib/requireAdminApi";
+import { LIVE_CLASS_STATUSES } from "@/lib/liveClassStatus";
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -18,7 +20,7 @@ export default async function handler(req, res) {
 
   if (req.method === "PUT") {
     try {
-      const { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
+      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
       if (!title || !teacher || !subject || !batch || !date || !time || !streamLink) {
         return res.status(400).json({ success: false, message: "Please fill all required fields" });
       }
@@ -26,7 +28,7 @@ export default async function handler(req, res) {
       const before = await LiveClass.findById(id).lean();
       const updated = await LiveClass.findByIdAndUpdate(
         id,
-        { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status, course: course || null },
+        { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course: course || null },
         { new: true, runValidators: true }
       ).populate("course", "title subject batch isFree price");
 
@@ -41,6 +43,42 @@ export default async function handler(req, res) {
       });
 
       return res.status(200).json({ success: true, message: "Live class updated successfully", data: updated });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message || "Server error" });
+    }
+  }
+
+  // Status on its own, so the table can close out or reopen a class
+  // without sending the whole class back through PUT.
+  if (req.method === "PATCH") {
+    try {
+      const admin = requireAdminApi(req, "online-classes");
+      if (!admin) return res.status(401).json({ success: false, message: "Not authorised" });
+
+      const { status } = req.body || {};
+      if (!LIVE_CLASS_STATUSES.includes(status))
+        return res.status(400).json({ success: false, message: "Unknown status" });
+
+      const before = await LiveClass.findById(id).lean();
+      if (!before) return res.status(404).json({ success: false, message: "Live class not found" });
+
+      const updated = await LiveClass.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true, runValidators: true }
+      ).populate("course", "title subject batch isFree price");
+
+      await logActivity(req, {
+        feature: "online-classes",
+        action: "update",
+        entityId: id,
+        entityType: "LiveClass",
+        description: `Set live class "${before.title}" to ${status}`,
+        before: { status: before.status },
+        after: { status },
+      });
+
+      return res.status(200).json({ success: true, message: "Status updated", data: updated });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message || "Server error" });
     }

@@ -4663,6 +4663,31 @@
     margin-left: 16%;
   }
 
+  /* Dashboard shell — the header and the sidebar are pinned and never move;
+     only the content column to their right scrolls. The header sits above the
+     sidebar, which starts underneath it, so the logo is never covered. */
+  .dashboard-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    background: #fff;
+  }
+
+  /* The header is out of flow, so the row below it is pushed down by exactly
+     the header's measured height (the fallback covers the first paint). */
+  .dashboard-navbar ~ .d-flex {
+    padding-top: var(--admin-topbar-h, 70px);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .dashboard-navbar ~ .d-flex > .flex-grow-1 {
+    height: 100%;
+    overflow-y: auto;
+  }
+
   /* Thin styled scrollbar inside sidebar */
   .dashboard-sidebar0-area::-webkit-scrollbar {
     width: 4px;

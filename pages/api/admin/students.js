@@ -77,8 +77,18 @@ export default async function handler(req, res) {
     try {
       const { id } = req.query;
       if (!id) return res.status(400).json({ success: false, message: "Student ID required" });
+      // Only the fields the admin screens actually edit are written, so a
+      // stray key in the body cannot reach password, wishlist or cart.
+      const update = {};
+      for (const key of ["name", "email", "phone", "className", "batch", "isActive"]) {
+        if (key in req.body) update[key] = req.body[key];
+      }
+      if ("isActive" in update) update.isActive = !!update.isActive;
+      if (Object.keys(update).length === 0)
+        return res.status(400).json({ success: false, message: "Nothing to update" });
+
       const before = await StudentUser.findById(id).lean();
-      const updated = await StudentUser.findByIdAndUpdate(id, req.body, { new: true });
+      const updated = await StudentUser.findByIdAndUpdate(id, update, { new: true });
 
       const statusChanged = before?.isActive !== updated?.isActive;
       await logActivity(req, {

@@ -3,7 +3,9 @@ import Invoice from "@/models/Invoice";
 import Enrollment from "@/models/EnrollmentModel";
 import StudentUser from "@/models/StudentUser";
 import Course from "@/models/CourseModel";
+import CourseProgress from "@/models/CourseProgress";
 import jwt from "jsonwebtoken";
+import { lessonMinutesByCourse, studyTotals } from "@/lib/studyHours";
 
 function verifyAdmin(req) {
   try {
@@ -127,6 +129,33 @@ export default async function handler(req, res) {
       .lean(),
   ]);
 
+  /* ── Study hours ───────────────────────────────────────────────────────
+   * How many hours the enrolled students have actually studied. There is
+   * no watch-time meter in the player, so this is the time held by the
+   * lessons they have marked complete: every completed lesson id is
+   * priced at that lesson's own duration.
+   *
+   * Only the courses that progress records point at are read, and only
+   * their lesson ids and durations, so the heavy chapter bodies stay out
+   * of this request.
+   */
+  const progressDocs = await CourseProgress.find({})
+    .select("student course completedLessons")
+    .lean();
+
+  const progressCourseIds = [...new Set(progressDocs.map((p) => String(p.course)).filter(Boolean))];
+
+  const progressCourses = progressCourseIds.length
+    ? await Course.find({ _id: { $in: progressCourseIds } })
+        .select(
+          "chapters.lessons._id chapters.lessons.duration " +
+          "subjectContents.chapters.lessons._id subjectContents.chapters.lessons.duration"
+        )
+        .lean()
+    : [];
+
+  const study = studyTotals(progressDocs, lessonMinutesByCourse(progressCourses));
+
   // Map monthly data to the 6-month labels
   const mapMonthly = (data, key = "total") =>
     months.map(m => {
@@ -150,6 +179,12 @@ export default async function handler(req, res) {
       totalStudents,
       monthStudents,
       publishedCourses,
+      studyHours:          study.studyHours,
+      studyMinutes:        study.studyMinutes,
+      studyingStudents:    study.studyingStudents,
+      lessonsCompleted:    study.lessonsCompleted,
+      lessonsUntimed:      study.lessonsUntimed,
+      avgHoursPerStudent:  study.avgHoursPerStudent,
     },
     revenueMonthly:     mapMonthly(revenueByMonth, "total"),
     enrollmentsMonthly: mapMonthly(enrollmentsByMonth, "count"),

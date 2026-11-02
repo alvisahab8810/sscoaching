@@ -31,11 +31,15 @@ export default async function handler(req, res) {
 
   // Check phone not already registered
   const phoneExists = await StudentUser.findOne({ phone: normalPhone });
+  if (phoneExists && phoneExists.isActive === false)
+    return res.status(403).json({ success: false, message: "This account has been deactivated. Please contact SS Coaching support." });
   if (phoneExists)
     return res.status(409).json({ success: false, message: "This phone number is already registered. Please login." });
 
   // Check email not already registered
   const emailExists = await StudentUser.findOne({ email: normalEmail });
+  if (emailExists && emailExists.isActive === false)
+    return res.status(403).json({ success: false, message: "This account has been deactivated. Please contact SS Coaching support." });
   if (emailExists)
     return res.status(409).json({ success: false, message: "This email is already registered. Please login." });
 

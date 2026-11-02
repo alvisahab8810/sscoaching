@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
+import { getLeadAttribution } from "@/lib/leadSource";
 
 export default function Popup() {
   const [showPopup, setShowPopup] = useState(false);
@@ -107,6 +108,7 @@ export default function Popup() {
       lookingFor: form.lookingFor,
       city: form.city,
       formType: form.formType,
+      attribution: getLeadAttribution(),
     };
 
     try {

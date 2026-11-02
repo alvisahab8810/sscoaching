@@ -15,6 +15,7 @@ import Script from 'next/script';
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import AnnouncementBar from '@/components/home/AnnouncementBar';
+import { captureLeadSource } from '@/lib/leadSource';
 AnnouncementBar
 const beVietnam = Be_Vietnam_Pro({
   subsets: ['latin'],
@@ -41,6 +42,12 @@ function MyApp({ Component, pageProps }) {
   import('bootstrap/dist/js/bootstrap.bundle.min.js');
   fetch("/api/faqs").catch(() => {}); // ← warm up DB
 }, []);
+
+  // Recorded on every page view, so a visitor who lands on an ad URL and fills
+  // the form three pages later is still credited to that ad.
+  useEffect(() => {
+    captureLeadSource();
+  }, [router.asPath]);
 
   return (
 

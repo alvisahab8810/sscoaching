@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import StudentUser from "@/models/StudentUser";
+import { DISABLED_MESSAGE } from "@/lib/studentAuth";
 import EmailOTP from "@/models/EmailOTP";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
 
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
     if (!student)
       return res.status(404).json({ success: false, message: "No account found. Please register first." });
     if (!student.isActive)
-      return res.status(403).json({ success: false, message: "Account disabled. Contact support." });
+      return res.status(403).json({ success: false, message: DISABLED_MESSAGE });
     if (!student.email)
       return res.status(400).json({ success: false, message: "No email linked to this account. Contact support." });
 

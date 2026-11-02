@@ -2,18 +2,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getCachedAdminSession, fetchAdminSession, clearAdminSession } from "@/lib/adminSession";
 
 export default function Topbar() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(() => getCachedAdminSession());
   const pathname = usePathname();
   const heartbeatRef = useRef(null);
 
   useEffect(() => {
-    fetch("/api/admin/me")
-      .then(r => r.json())
-      .then(data => { if (data.role) setSession(data); })
-      .catch(() => {});
-  }, []);
+    if (session) return;
+    let alive = true;
+    fetchAdminSession().then((data) => { if (alive && data) setSession(data); });
+    return () => { alive = false; };
+  }, [session]);
 
   // Sub-admin heartbeat — sends current page every 30s
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function Topbar() {
   const displayInitial = displayName.charAt(0).toUpperCase();
 
   const logout = async () => {
+    clearAdminSession();
     if (session?.role === "sub") {
       await fetch("/api/subadmin/logout", { method: "POST" });
       window.location.href = "/dashboard/subadmin/login";

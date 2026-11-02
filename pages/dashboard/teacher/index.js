@@ -154,7 +154,7 @@ export default function TeacherDashboard({ teacher }) {
         <div style={{ background: "#fff", borderBottom: "1px solid #e8eaf5", padding: "0 1.5rem" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", gap: 4 }}>
             {[
-              { key: "classes", label: "Online Classes", icon: <MdVideoCall size={17} /> },
+              { key: "classes", label: "Live Classes", icon: <MdVideoCall size={17} /> },
               { key: "report", label: "My Report", icon: <MdBarChart size={17} /> },
             ].map((t) => (
               <button key={t.key} onClick={() => setTab(t.key)}
@@ -197,7 +197,7 @@ export default function TeacherDashboard({ teacher }) {
             <div style={cardStyle}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.2rem", flexWrap: "wrap", gap: 10 }}>
                 <div>
-                  <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0f1f3d", margin: 0 }}>My Online Classes</h2>
+                  <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0f1f3d", margin: 0 }}>My Live Classes</h2>
                   <p style={{ color: "#6b7a99", margin: "3px 0 0", fontSize: "0.85rem" }}>Classes you have scheduled</p>
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>

@@ -101,6 +101,16 @@ export default function StudentLogin() {
   const [forgotError, setForgotError] = useState("");
   const [forgotCooldown, startForgotCooldown] = useCountdown();
 
+  // The dashboard sends the student here with ?message= when the server
+  // ends their session -- an expired token, or an account the admin
+  // deactivated or deleted -- so they are told why rather than just
+  // landing on an empty login form.
+  useEffect(() => {
+    if (!router.isReady) return;
+    const notice = router.query.message;
+    if (notice) setLoginError(String(notice));
+  }, [router.isReady, router.query.message]);
+
   const saveAndRedirect = (data) => {
     localStorage.setItem("studentToken", data.token);
     localStorage.setItem("studentInfo", JSON.stringify({

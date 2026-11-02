@@ -12,9 +12,29 @@ export default async function handler(req, res) {
     return res.status(400).json({ success: false, message: "Name, email and password are required" });
 
   try {
-    const existing = await StudentUser.findOne({ email: email.toLowerCase().trim() });
+    const normalPhone = (phone || "").replace(/\D/g, "");
+
+    // An account that exists already blocks a second signup on the same
+    // email or number. When that account has been deactivated the student
+    // is told so plainly instead of being pointed at the login screen.
+    const existing = await StudentUser.findOne({
+      $or: [
+        { email: email.toLowerCase().trim() },
+        ...(normalPhone ? [{ phone: normalPhone }] : []),
+      ],
+    });
+    if (existing && existing.isActive === false)
+      return res.status(403).json({
+        success: false,
+        message: "This account has been deactivated. Please contact SS Coaching support.",
+      });
     if (existing)
-      return res.status(409).json({ success: false, message: "Email already registered" });
+      return res.status(409).json({
+        success: false,
+        message: existing.email === email.toLowerCase().trim()
+          ? "Email already registered"
+          : "This phone number is already registered. Please login.",
+      });
 
     const hashed = await bcrypt.hash(password, 10);
     const student = await StudentUser.create({

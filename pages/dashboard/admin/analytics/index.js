@@ -6,7 +6,8 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import {
   MdTrendingUp, MdPeople, MdSchool, MdPlayLesson,
-  MdCurrencyRupee, MdBarChart, MdRefresh,
+  MdCurrencyRupee, MdRefresh,
+  MdSchedule, MdTimelapse,
 } from "react-icons/md";
 
 function fmt(n) {
@@ -17,14 +18,27 @@ function fmt(n) {
 function fmtFull(n) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n || 0);
 }
+// Study time, written the way the number deserves: minutes while it is
+// still under an hour, one decimal up to a thousand hours, then "1.2K h".
+function fmtHours(hours) {
+  const h = Number(hours) || 0;
+  if (h <= 0) return "0 h";
+  if (h < 1) return Math.round(h * 60) + " min";
+  if (h >= 1000) return (h / 1000).toFixed(1) + "K h";
+  return (Math.round(h * 10) / 10).toLocaleString("en-IN") + " h";
+}
+
 function fmtDate(d) {
   return d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 }
 
-function KpiCard({ icon, label, value, sub, color, bg }) {
+// Every card used to carry its own colour, which made the grid read as a
+// palette instead of a set of numbers. The icon is slate by default; `accent`
+// marks the cards that matter most.
+function KpiCard({ icon, label, value, sub, accent }) {
   return (
     <div className="an-kpi">
-      <div className="an-kpi-icon" style={{ background: bg, color }}>
+      <div className={`an-kpi-icon ${accent ? "accent" : ""}`}>
         {icon}
       </div>
       <div className="an-kpi-body">
@@ -36,7 +50,7 @@ function KpiCard({ icon, label, value, sub, color, bg }) {
   );
 }
 
-function BarChart({ data, color, formatValue }) {
+function BarChart({ data, formatValue }) {
   if (!data || !data.length) return null;
   const max = Math.max(...data.map(d => d.value), 1);
   return (
@@ -47,7 +61,7 @@ function BarChart({ data, color, formatValue }) {
           <div className="an-bar-wrap">
             <div
               className="an-bar"
-              style={{ height: `${Math.max((d.value / max) * 100, d.value > 0 ? 4 : 0)}%`, background: color }}
+              style={{ height: `${Math.max((d.value / max) * 100, d.value > 0 ? 4 : 0)}%` }}
             />
           </div>
           <div className="an-bar-label">{d.label}</div>
@@ -59,8 +73,8 @@ function BarChart({ data, color, formatValue }) {
 
 function TypeBreakdown({ data, total }) {
   const items = [
-    { key: "paid",  label: "Online Payment", color: "#4441e5" },
-    { key: "free",  label: "Free / Coupon", color: "#10b981" },
+    { key: "paid",  label: "Online Payment", tone: "accent" },
+    { key: "free",  label: "Free / Coupon", tone: "slate" },
   ];
   return (
     <div className="an-type-list">
@@ -69,7 +83,7 @@ function TypeBreakdown({ data, total }) {
         const pct = total > 0 ? Math.round((count / total) * 100) : 0;
         return (
           <div key={item.key} className="an-type-row">
-            <div className="an-type-dot" style={{ background: item.color }} />
+            <div className={`an-type-dot ${item.tone}`} />
             <div className="an-type-info">
               <span className="an-type-label">{item.label}</span>
               <span className="an-type-count">{count} enrollments</span>
@@ -77,7 +91,7 @@ function TypeBreakdown({ data, total }) {
             <div className="an-type-right">
               <div className="an-type-pct">{pct}%</div>
               <div className="an-type-bar-bg">
-                <div className="an-type-bar-fill" style={{ width: `${pct}%`, background: item.color }} />
+                <div className={`an-type-bar-fill ${item.tone}`} style={{ width: `${pct}%` }} />
               </div>
             </div>
           </div>
@@ -128,18 +142,18 @@ export default function AnalyticsDashboard() {
         <AdminOffcanvas />
         <div className="d-flex" style={{ minHeight: "100vh" }}>
           <Sidebar />
-          <div className="flex-grow-1 bg-light">
+          <div className="flex-grow-1 an-bg" style={{ minWidth: 0 }}>
             <div className="container-fluid p-4">
           <div className="an-page">
 
             {/* Page header */}
             <div className="an-page-header">
               <div>
-                <h1 className="an-page-title"><MdBarChart size={26} /> Analytics</h1>
-                <p className="an-page-sub">Platform overview — revenue, enrollments, and student growth</p>
+                <h4 className="an-page-title">Analytics</h4>
+                <p className="an-page-sub">Platform overview — revenue, enrollments, and student growth.</p>
               </div>
               <button className="an-refresh-btn" onClick={load} disabled={loading}>
-                <MdRefresh size={17} style={{ marginRight: 6 }} />
+                <span className="an-ico"><MdRefresh size={16} /></span>
                 {loading ? "Loading…" : "Refresh"}
               </button>
             </div>
@@ -155,45 +169,58 @@ export default function AnalyticsDashboard() {
                 {/* ── KPI Cards ── */}
                 <div className="an-kpi-grid">
                   <KpiCard
-                    icon={<MdCurrencyRupee size={22} />}
+                    icon={<MdCurrencyRupee size={20} />}
                     label="Total Revenue"
                     value={fmt(kpi.totalRevenue)}
                     sub={`${fmtFull(kpi.monthRevenue)} this month`}
-                    color="#4441e5" bg="#eef2ff"
+                    accent
                   />
                   <KpiCard
-                    icon={<MdTrendingUp size={22} />}
+                    icon={<MdTrendingUp size={20} />}
                     label="This Month Revenue"
                     value={fmt(kpi.monthRevenue)}
                     sub="from paid enrollments"
-                    color="#059669" bg="#d1fae5"
+                    accent
                   />
                   <KpiCard
-                    icon={<MdPlayLesson size={22} />}
+                    icon={<MdPlayLesson size={20} />}
                     label="Total Enrollments"
                     value={kpi.totalEnrollments?.toLocaleString()}
                     sub={`+${kpi.monthEnrollments} this month`}
-                    color="#d97706" bg="#fef3c7"
+                    accent
                   />
                   <KpiCard
-                    icon={<MdPeople size={22} />}
+                    icon={<MdPeople size={20} />}
                     label="Total Students"
                     value={kpi.totalStudents?.toLocaleString()}
                     sub={`+${kpi.monthStudents} joined this month`}
-                    color="#7c3aed" bg="#f5f3ff"
                   />
                   <KpiCard
-                    icon={<MdSchool size={22} />}
+                    icon={<MdSchedule size={20} />}
+                    label="Student Study Hours"
+                    value={fmtHours(kpi.studyHours)}
+                    sub={`${(kpi.lessonsCompleted || 0).toLocaleString()} lessons completed by ${kpi.studyingStudents || 0} students`}
+                  />
+                  <KpiCard
+                    icon={<MdTimelapse size={20} />}
+                    label="Avg. Study / Active Student"
+                    value={fmtHours(kpi.avgHoursPerStudent)}
+                    sub={
+                      kpi.studyingStudents
+                        ? `across ${kpi.studyingStudents} students who have started`
+                        : "no lessons completed yet"
+                    }
+                  />
+                  <KpiCard
+                    icon={<MdSchool size={20} />}
                     label="Published Courses"
                     value={kpi.publishedCourses?.toLocaleString()}
-                    color="#0284c7" bg="#e0f2fe"
                   />
                   <KpiCard
-                    icon={<MdTrendingUp size={22} />}
+                    icon={<MdTrendingUp size={20} />}
                     label="Avg. Revenue / Paid Enrollment"
                     value={paidEnroll > 0 ? fmt(Math.round(kpi.totalRevenue / paidEnroll)) : "₹0"}
                     sub={`across ${paidEnroll} paid enrollments`}
-                    color="#e11d48" bg="#fff1f2"
                   />
                 </div>
 
@@ -206,7 +233,6 @@ export default function AnalyticsDashboard() {
                     </div>
                     <BarChart
                       data={data.revenueMonthly}
-                      color="#4441e5"
                       formatValue={v => v === 0 ? "₹0" : fmt(v)}
                     />
                   </div>
@@ -218,7 +244,6 @@ export default function AnalyticsDashboard() {
                     </div>
                     <BarChart
                       data={data.enrollmentsMonthly}
-                      color="#10b981"
                       formatValue={v => v}
                     />
                   </div>
@@ -241,7 +266,6 @@ export default function AnalyticsDashboard() {
                     </div>
                     <BarChart
                       data={data.studentsMonthly}
-                      color="#7c3aed"
                       formatValue={v => v}
                     />
                   </div>
@@ -263,8 +287,8 @@ export default function AnalyticsDashboard() {
                           <div className="an-course-info">
                             <div className="an-course-name">{c.title}</div>
                             <div className="an-course-meta">
-                              {c.subject && <span className="an-subj-chip">{c.subject}</span>}
-                              {c.isFree ? <span className="an-free-chip">Free</span> : <span className="an-price-chip">{fmtFull(c.price)}</span>}
+                              {c.subject && <span className="an-chip">{c.subject}</span>}
+                              {c.isFree ? <span className="an-chip">Free</span> : <span className="an-chip accent">{fmtFull(c.price)}</span>}
                             </div>
                           </div>
                           <div className="an-course-enroll">
@@ -302,7 +326,7 @@ export default function AnalyticsDashboard() {
                               </td>
                               <td className="an-course-cell">{e.course?.title || "—"}</td>
                               <td>
-                                <span className={`an-type-badge an-type-${e.type}`}>
+                                <span className={`an-chip ${e.type === "paid" ? "accent" : ""}`}>
                                   {e.type === "paid" ? "Online" : e.type === "cod" ? "COD" : "Free"}
                                 </span>
                               </td>
@@ -323,156 +347,147 @@ export default function AnalyticsDashboard() {
       </div>
 
       <style jsx global>{`
-        .an-page {
-          max-width: 1200px;
-        }
+        .an-bg { background: #f1f5f9; }
+        .an-page { max-width: 1200px; }
+
+        /* react-icons renders its own svg, which styled-jsx will not scope,
+           so every icon that needs sizing sits inside a span. */
+        .an-ico { display: inline-flex; align-items: center; }
 
         /* Header */
         .an-page-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          gap: 16px;
-          margin-bottom: 28px;
+          gap: 12px;
+          margin-bottom: 16px;
           flex-wrap: wrap;
         }
         .an-page-title {
-          font-size: 22px;
-          font-weight: 800;
-          color: #0f1f3d;
-          margin: 0 0 4px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-family: 'Poppins', sans-serif;
-        }
-        .an-page-sub {
-          font-size: 13px;
-          color: #8491a8;
+          font-weight: 700;
+          color: #0f172a;
           margin: 0;
         }
+        .an-page-sub {
+          font-size: 0.86rem;
+          color: #64748b;
+          margin: 4px 0 0;
+        }
         .an-refresh-btn {
-          display: flex;
+          display: inline-flex;
           align-items: center;
+          gap: 8px;
           background: #fff;
-          border: 1.5px solid #e2e5f8;
-          border-radius: 8px;
-          padding: 8px 16px;
-          font-size: 13px;
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          padding: 9px 18px;
+          font-size: 0.88rem;
           font-weight: 600;
-          color: #4441e5;
-          cursor: pointer;
-          transition: all 0.15s;
+          color: #334155;
           white-space: nowrap;
         }
-        .an-refresh-btn:hover { background: #f0eeff; }
-        .an-refresh-btn:disabled { opacity: 0.6; cursor: default; }
+        .an-refresh-btn:hover:not(:disabled) { background: #f8fafc; border-color: #cbd5e1; }
+        .an-refresh-btn:disabled { opacity: 0.6; }
 
         .an-error {
           background: #fef2f2;
           border: 1px solid #fecaca;
-          color: #991b1b;
-          border-radius: 8px;
+          color: #b91c1c;
+          border-radius: 10px;
           padding: 12px 16px;
-          font-size: 13px;
-          margin-bottom: 20px;
+          font-size: 0.85rem;
+          margin-bottom: 14px;
         }
 
         /* Skeleton */
         .an-skeleton-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          margin-bottom: 24px;
+          gap: 14px;
         }
         .an-skeleton-kpi {
-          height: 100px;
-          background: linear-gradient(90deg, #f0f0f5 25%, #e8e8f0 50%, #f0f0f5 75%);
-          background-size: 200% 100%;
-          animation: shimmer 1.3s infinite;
-          border-radius: 12px;
-        }
-        @keyframes shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+          height: 96px;
+          background: #fff;
+          border: 1px solid #e2e8f0;
+          border-radius: 14px;
         }
 
         /* KPI Grid */
         .an-kpi-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          margin-bottom: 24px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+          margin-bottom: 14px;
         }
         .an-kpi {
           background: #fff;
-          border: 1.5px solid #e8eaf5;
+          border: 1px solid #e2e8f0;
           border-radius: 14px;
-          padding: 20px;
+          padding: 16px;
           display: flex;
           align-items: flex-start;
-          gap: 16px;
-          transition: box-shadow 0.18s;
+          gap: 14px;
         }
-        .an-kpi:hover { box-shadow: 0 4px 20px rgba(68,65,229,0.09); }
         .an-kpi-icon {
-          width: 48px; height: 48px;
-          border-radius: 12px;
+          width: 40px; height: 40px;
+          border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
+          background: #f1f5f9;
+          color: #475569;
         }
+        .an-kpi-icon.accent { background: #f1eefc; color: #5641ce; }
         .an-kpi-body { min-width: 0; }
         .an-kpi-val {
-          font-size: 24px;
-          font-weight: 900;
-          color: #0f1f3d;
-          font-family: 'Poppins', sans-serif;
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #0f172a;
           line-height: 1.1;
-          margin-bottom: 3px;
+          margin-bottom: 4px;
         }
         .an-kpi-label {
-          font-size: 12px;
-          color: #6b7a99;
-          font-weight: 600;
+          font-size: 0.7rem;
+          color: #94a3b8;
+          font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.05em;
         }
         .an-kpi-sub {
-          font-size: 11px;
+          font-size: 0.74rem;
           color: #94a3b8;
-          margin-top: 4px;
+          margin-top: 6px;
+          line-height: 1.4;
         }
 
         /* Charts */
         .an-charts-row {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 20px;
-          margin-bottom: 20px;
+          gap: 14px;
+          margin-bottom: 14px;
         }
         .an-chart-card {
           background: #fff;
-          border: 1.5px solid #e8eaf5;
+          border: 1px solid #e2e8f0;
           border-radius: 14px;
-          padding: 22px 24px;
+          padding: 16px;
         }
         .an-chart-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 20px;
+          margin-bottom: 18px;
           flex-wrap: wrap;
           gap: 6px;
         }
         .an-chart-title {
-          font-size: 14px;
+          font-size: 0.92rem;
           font-weight: 700;
-          color: #0f1f3d;
-          font-family: 'Poppins', sans-serif;
+          color: #0f172a;
         }
         .an-chart-total {
-          font-size: 12px;
-          color: #8491a8;
+          font-size: 0.78rem;
+          color: #94a3b8;
           font-weight: 600;
         }
 
@@ -492,7 +507,7 @@ export default function AnalyticsDashboard() {
           height: 100%;
         }
         .an-bar-val {
-          font-size: 10px;
+          font-size: 0.68rem;
           font-weight: 700;
           color: #475569;
           margin-bottom: 4px;
@@ -503,18 +518,19 @@ export default function AnalyticsDashboard() {
           width: 100%;
           display: flex;
           align-items: flex-end;
-          background: #f8f9ff;
+          background: #f8fafc;
           border-radius: 6px 6px 0 0;
           overflow: hidden;
         }
         .an-bar {
           width: 100%;
+          background: #5641ce;
           border-radius: 5px 5px 0 0;
-          transition: height 0.5s ease;
+          transition: height 0.4s ease;
           min-height: 0;
         }
         .an-bar-label {
-          font-size: 10px;
+          font-size: 0.68rem;
           color: #94a3b8;
           font-weight: 600;
           margin-top: 6px;
@@ -524,88 +540,102 @@ export default function AnalyticsDashboard() {
         /* Type breakdown */
         .an-type-list { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
         .an-type-row { display: flex; align-items: center; gap: 12px; }
-        .an-type-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .an-type-info { display: flex; flex-direction: column; gap: 1px; min-width: 120px; }
-        .an-type-label { font-size: 13px; font-weight: 600; color: #0f1f3d; }
-        .an-type-count { font-size: 11px; color: #94a3b8; }
+        .an-type-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .an-type-dot.accent { background: #5641ce; }
+        .an-type-dot.slate { background: #cbd5e1; }
+        .an-type-info { display: flex; flex-direction: column; gap: 2px; min-width: 120px; }
+        .an-type-label { font-size: 0.85rem; font-weight: 600; color: #0f172a; }
+        .an-type-count { font-size: 0.74rem; color: #94a3b8; }
         .an-type-right { flex: 1; }
-        .an-type-pct { font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; text-align: right; }
-        .an-type-bar-bg { background: #f1f5f9; border-radius: 100px; height: 8px; overflow: hidden; }
-        .an-type-bar-fill { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
+        .an-type-pct { font-size: 0.78rem; font-weight: 700; color: #475569; margin-bottom: 4px; text-align: right; }
+        .an-type-bar-bg { background: #f1f5f9; border-radius: 6px; height: 8px; overflow: hidden; }
+        .an-type-bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s ease; }
+        .an-type-bar-fill.accent { background: #5641ce; }
+        .an-type-bar-fill.slate { background: #cbd5e1; }
 
         /* Bottom row */
         .an-bottom-row {
           display: grid;
           grid-template-columns: 1fr 1.5fr;
-          gap: 20px;
+          gap: 14px;
           margin-bottom: 24px;
         }
 
         /* Top courses */
-        .an-course-list { display: flex; flex-direction: column; gap: 12px; }
+        .an-course-list { display: flex; flex-direction: column; gap: 10px; }
         .an-course-row {
           display: flex;
           align-items: center;
-          gap: 14px;
+          gap: 12px;
           padding: 12px;
-          background: #f8f9ff;
+          background: #f8fafc;
+          border: 1px solid #f1f5f9;
           border-radius: 10px;
         }
         .an-course-rank {
-          font-size: 13px;
-          font-weight: 900;
-          color: #4441e5;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #5641ce;
           width: 28px;
           text-align: center;
           flex-shrink: 0;
         }
         .an-course-info { flex: 1; min-width: 0; }
         .an-course-name {
-          font-size: 13px;
-          font-weight: 700;
-          color: #0f1f3d;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #0f172a;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .an-course-meta { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
-        .an-subj-chip, .an-free-chip, .an-price-chip {
-          font-size: 10px;
-          padding: 2px 8px;
-          border-radius: 100px;
+        .an-course-meta { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+        .an-chip {
+          display: inline-block;
+          background: #f1f5f9;
+          color: #475569;
+          font-size: 0.7rem;
+          padding: 3px 9px;
+          border-radius: 6px;
           font-weight: 700;
+          white-space: nowrap;
         }
-        .an-subj-chip { background: #eef2ff; color: #4441e5; }
-        .an-free-chip { background: #d1fae5; color: #065f46; }
-        .an-price-chip { background: #fef3c7; color: #92400e; }
+        .an-chip.accent {
+          background: #f1eefc;
+          color: #4634ad;
+          border: 1px solid #ded7f6;
+        }
         .an-course-enroll { text-align: right; flex-shrink: 0; }
-        .an-enroll-num { display: block; font-size: 18px; font-weight: 900; color: #0f1f3d; line-height: 1; }
-        .an-enroll-lbl { font-size: 10px; color: #94a3b8; font-weight: 600; }
+        .an-enroll-num { display: block; font-size: 1.05rem; font-weight: 700; color: #0f172a; line-height: 1; }
+        .an-enroll-lbl { font-size: 0.68rem; color: #94a3b8; font-weight: 600; }
 
         /* Recent enrollments table */
         .an-table-wrap { overflow-x: auto; }
         .an-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 13px;
+          font-size: 0.85rem;
         }
         .an-table th {
           text-align: left;
-          font-size: 10px;
-          font-weight: 800;
-          color: #8491a8;
+          font-size: 0.7rem;
+          font-weight: 700;
+          color: #94a3b8;
           text-transform: uppercase;
-          letter-spacing: 0.06em;
-          padding: 0 12px 12px;
+          letter-spacing: 0.05em;
+          padding: 10px 12px;
+          border-bottom: 1px solid #e2e8f0;
           white-space: nowrap;
         }
         .an-table td {
-          padding: 10px 12px;
-          border-top: 1px solid #f1f5f9;
+          padding: 12px;
+          border-bottom: 1px solid #f1f5f9;
           vertical-align: middle;
+          color: #334155;
         }
-        .an-stu-name { font-weight: 600; color: #0f1f3d; }
-        .an-stu-email { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+        .an-table tbody tr:hover { background: #f8fafc; }
+        .an-stu-name { font-weight: 600; color: #0f172a; }
+        .an-stu-email { font-size: 0.74rem; color: #94a3b8; margin-top: 2px; }
         .an-course-cell {
           max-width: 180px;
           overflow: hidden;
@@ -613,31 +643,25 @@ export default function AnalyticsDashboard() {
           white-space: nowrap;
           color: #475569;
         }
-        .an-date-cell { color: #94a3b8; font-size: 12px; white-space: nowrap; }
-        .an-type-badge {
-          display: inline-block;
-          font-size: 10px;
-          font-weight: 700;
-          padding: 3px 9px;
-          border-radius: 100px;
-        }
-        .an-type-paid { background: #eef2ff; color: #4441e5; }
-        .an-type-cod  { background: #fef3c7; color: #92400e; }
-        .an-type-free { background: #d1fae5; color: #065f46; }
+        .an-date-cell { color: #94a3b8; font-size: 0.78rem; white-space: nowrap; }
 
-        .an-empty { color: #94a3b8; font-size: 13px; text-align: center; padding: 24px; }
+        .an-empty { color: #94a3b8; font-size: 0.85rem; text-align: center; padding: 28px; }
 
         /* Responsive */
+        @media (max-width: 1400px) {
+          .an-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (max-width: 1100px) {
           .an-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+          .an-skeleton-grid { grid-template-columns: repeat(2, 1fr); }
           .an-bottom-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 800px) {
           .an-charts-row { grid-template-columns: 1fr; }
-          .an-kpi-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 520px) {
           .an-kpi-grid { grid-template-columns: 1fr; }
+          .an-skeleton-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </>

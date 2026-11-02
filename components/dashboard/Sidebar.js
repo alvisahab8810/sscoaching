@@ -6,6 +6,11 @@ import { FiClipboard, FiFileText, FiSearch } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
 import { MdHistory, MdBarChart, MdNotifications, MdSchool } from "react-icons/md";
+import { getCachedAdminSession, fetchAdminSession } from "@/lib/adminSession";
+
+// Remembered across navigations so the sidebar is positioned correctly on its
+// very first paint instead of jumping once the header has been measured.
+let lastTopbarHeight = 0;
 
 const FEATURE_PATHS = {
   blogs: "/dashboard/admin/blogs",
@@ -26,17 +31,42 @@ const FEATURE_PATHS = {
 export default function Sidebar() {
   const pathname = usePathname();
   const [blogOpen, setBlogOpen] = useState(false);
-  const [session, setSession] = useState(null);
-  const [sessionLoaded, setSessionLoaded] = useState(false);
+  const [session, setSession] = useState(() => getCachedAdminSession());
+  const [sessionLoaded, setSessionLoaded] = useState(() => !!getCachedAdminSession());
+  // Height of the dashboard header, so the fixed sidebar can start below it
+  // instead of covering the logo in the top-left corner.
+  const [topbarHeight, setTopbarHeight] = useState(lastTopbarHeight);
 
   useEffect(() => {
-    fetch("/api/admin/me")
-      .then(r => r.json())
-      .then(data => {
-        if (data.role) setSession(data);
-      })
-      .catch(() => {})
-      .finally(() => setSessionLoaded(true));
+    if (sessionLoaded) return;
+    let alive = true;
+    fetchAdminSession().then((data) => {
+      if (!alive) return;
+      if (data) setSession(data);
+      setSessionLoaded(true);
+    });
+    return () => { alive = false; };
+  }, [sessionLoaded]);
+
+  useEffect(() => {
+    const nav = document.querySelector(".dashboard-navbar");
+    if (!nav) return;
+    const measure = () => {
+      const h = nav.offsetHeight;
+      lastTopbarHeight = h;
+      setTopbarHeight(h);
+      document.documentElement.style.setProperty("--admin-topbar-h", `${h}px`);
+    };
+    measure();
+    // The header's height changes with the viewport (the logo shrinks on
+    // small screens), so it is re-measured rather than hard-coded.
+    const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    observer?.observe(nav);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   const isSuperAdmin = session?.role === "super";
@@ -53,9 +83,9 @@ export default function Sidebar() {
     sidebar: {
       position: "fixed",
       left: 0,
-      top: 0,
+      top: topbarHeight,
       width: "16%",
-      height: "100vh",
+      height: `calc(100vh - ${topbarHeight}px)`,
       backgroundColor: "#1B1B46",
       color: "#fff",
       padding: "1rem",
@@ -118,7 +148,7 @@ export default function Sidebar() {
   };
 
   if (!sessionLoaded) {
-    return <div style={styles.sidebar} />;
+    return <div className="dashboard-sidebar0-area" style={styles.sidebar} />;
   }
 
   return (
@@ -195,6 +225,14 @@ export default function Sidebar() {
           </li>
         )}
 
+        {canSee("leads") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/follow-ups" style={styles.navLink(pathname?.startsWith("/dashboard/admin/follow-ups"))}>
+              <img src="/assets/icons/faq.svg" style={{ marginRight: "8px" }} alt="" /> Follow-ups
+            </Link>
+          </li>
+        )}
+
         {canSee("student-success") && (
           <li style={styles.navItem}>
             <Link href="/dashboard/admin/student-success" style={styles.navLink(pathname?.startsWith("/dashboard/admin/student-success"))}>
@@ -206,7 +244,7 @@ export default function Sidebar() {
         {canSee("online-classes") && (
           <li style={styles.navItem}>
             <Link href="/dashboard/admin/online-classes" style={styles.navLink(pathname?.startsWith("/dashboard/admin/online-classes"))}>
-              <img src="/assets/icons/videocall.svg" style={{ marginRight: "8px", width: "16px" }} alt="" /> Online Classes
+              <img src="/assets/icons/videocall.svg" style={{ marginRight: "8px", width: "16px" }} alt="" /> Live Classes
             </Link>
           </li>
         )}

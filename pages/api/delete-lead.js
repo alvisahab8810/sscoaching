@@ -1,9 +1,13 @@
 import dbConnect from "@/lib/dbConnect";
 import PopupForm from "@/models/PopupForm";
+import { requireAdminApi } from "@/lib/requireAdminApi";
 
 export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ message: "Method not allowed" });
+
+  const admin = requireAdminApi(req, "leads");
+  if (!admin) return res.status(401).json({ success: false, message: "Not authorised" });
 
   try {
     await dbConnect();

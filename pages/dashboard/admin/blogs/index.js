@@ -13,6 +13,8 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaFolder,
+  FaThLarge,
+  FaList,
 } from "react-icons/fa";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import * as XLSX from "xlsx";
@@ -26,6 +28,23 @@ export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
+  // Card view is the default; the admin's last choice is remembered so it
+  // survives a reload. Storage can throw in private mode, hence the guard.
+  const [view, setView] = useState("card");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("adminBlogsView");
+      if (saved === "table" || saved === "card") setView(saved);
+    } catch {}
+  }, []);
+
+  const changeView = (next) => {
+    setView(next);
+    try {
+      localStorage.setItem("adminBlogsView", next);
+    } catch {}
+  };
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -168,6 +187,28 @@ export default function BlogList() {
               <h4 className="fw-bold">Blog List</h4>
 
               <div className="d-flex align-items-center gap-2">
+                {/* Card / table view switch */}
+                <div className="btn-group" role="group" aria-label="View mode">
+                  <button
+                    type="button"
+                    className={`btn ${view === "card" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
+                    onClick={() => changeView("card")}
+                    title="Card view"
+                    aria-pressed={view === "card"}
+                  >
+                    <FaThLarge /> Cards
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${view === "table" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
+                    onClick={() => changeView("table")}
+                    title="Table view"
+                    aria-pressed={view === "table"}
+                  >
+                    <FaList /> Table
+                  </button>
+                </div>
+
                 <button
                   type="button"
                   className="btn btn-success"
@@ -238,6 +279,72 @@ export default function BlogList() {
               <p className="text-center">Loading blogs...</p>
             ) : blogs.length === 0 ? (
               <p className="text-center">No blogs found</p>
+            ) : view === "table" ? (
+              <div className="table-responsive bg-white" style={{ borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+                <table className="table table-hover align-middle mb-0">
+                  <thead className="table-light">
+                    <tr>
+                      <th style={{ width: 60 }}>#</th>
+                      <th style={{ width: 90 }}>Image</th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Author</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th style={{ width: 170 }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {blogs.map((blog, i) => (
+                      <tr key={blog._id}>
+                        {/* Numbered continuously across pages, not restarted on each one. */}
+                        <td>{(filters.page - 1) * filters.limit + i + 1}</td>
+                        <td>
+                          {blog.coverImage ? (
+                            <img
+                              src={blog.coverImage}
+                              alt={blog.title}
+                              style={{ width: 64, height: 40, objectFit: "cover", borderRadius: 4 }}
+                            />
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </td>
+                        <td style={{ fontWeight: 600, maxWidth: 320 }}>{blog.title}</td>
+                        <td>{blog.category || "—"}</td>
+                        <td>{blog.authorName || "Admin"}</td>
+                        <td style={{ whiteSpace: "nowrap" }}>
+                          {blog.publishDate ? new Date(blog.publishDate).toLocaleDateString() : "—"}
+                        </td>
+                        <td>
+                          {blog.status === "published" ? (
+                            <span className="badge bg-success">Published</span>
+                          ) : (
+                            <span className="badge bg-warning text-dark">Draft</span>
+                          )}
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2">
+                            <a
+                              href={`/dashboard/admin/blogs/edit/${blog._id}`}
+                              className="btn btn-sm d-flex align-items-center gap-1"
+                              style={{ background: "#624ce5", color: "#fff" }}
+                            >
+                              <FaEdit /> Edit
+                            </a>
+                            <button
+                              onClick={() => handleDelete(blog._id)}
+                              className="btn btn-sm btn-danger d-flex align-items-center gap-1"
+                            >
+                              <FaTrash /> Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <div className="blog-list-area row g-3">
                 {blogs.map((blog) => (

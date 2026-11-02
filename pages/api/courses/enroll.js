@@ -6,6 +6,7 @@ import Coupon from "@/models/CouponModel";
 import Invoice from "@/models/Invoice";
 import StudentUser from "@/models/StudentUser";
 import jwt from "jsonwebtoken";
+import { requireActiveStudent } from "@/lib/studentAuth";
 
 async function createFreeInvoiceAndEmail({ student, course, enrollment, couponCode = "", discount = 0 }) {
   try {
@@ -66,6 +67,10 @@ export default async function handler(req, res) {
   await dbConnect();
   const student = getStudent(req);
   if (!student) return res.status(401).json({ error: "Please login to continue" });
+
+  // A deactivated account must not be able to enrol or start a payment.
+  const session = await requireActiveStudent(req);
+  if (!session.ok) return res.status(session.status).json({ error: session.message });
 
   /* ── POST /api/courses/enroll ── */
   if (req.method === "POST") {

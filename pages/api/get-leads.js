@@ -1,13 +1,26 @@
 import dbConnect from "@/lib/dbConnect";
 import PopupForm from "@/models/PopupForm";
+import { requireAdminApi } from "@/lib/requireAdminApi";
 
 export default async function handler(req, res) {
   if (req.method !== "GET")
     return res.status(405).json({ message: "Method not allowed" });
 
+  const admin = requireAdminApi(req, "leads");
+  if (!admin) return res.status(401).json({ success: false, message: "Not authorised" });
+
   try {
     await dbConnect();
-    const leads = await PopupForm.find().sort({ createdAt: -1 });
+
+    // The Follow-ups tracker only ever wants the leads in that one status, and
+    // asking for all of them would ship the whole collection to the browser.
+    const query = {};
+    if (req.query.status) query.status = req.query.status;
+
+    const leads = await PopupForm.find(query)
+      .select("-gclid -fbclid -referrer -utmSource -utmMedium")
+      .sort({ createdAt: -1 })
+      .lean();
 
     return res.status(200).json({ success: true, leads });
   } catch (error) {

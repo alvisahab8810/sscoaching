@@ -89,11 +89,23 @@ export default function StudentDashboard() {
     setStudent(normalizeStu(cached));
 
     // Fetch fresh from server so app edits reflect on web immediately
+    // A 401 here means the session is over -- the token expired, or the
+    // account was deactivated or deleted from the admin panel. The cached
+    // copy in localStorage would otherwise keep the dashboard usable, so
+    // it is cleared and the student is sent back to login. A network
+    // failure is ignored: it must not sign anyone out.
     fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(d => {
-        if (d.success && d.user) {
-          const fresh = normalizeStu(d.user);
+      .then(async (r) => ({ status: r.status, body: await r.json().catch(() => ({})) }))
+      .then(({ status, body }) => {
+        if (status === 401) {
+          localStorage.removeItem("studentToken");
+          localStorage.removeItem("studentInfo");
+          const message = body?.message || "Your session has ended. Please login again.";
+          router.push("/student/login?message=" + encodeURIComponent(message));
+          return;
+        }
+        if (body?.success && body.user) {
+          const fresh = normalizeStu(body.user);
           localStorage.setItem("studentInfo", JSON.stringify(fresh));
           setStudent(fresh);
         }
@@ -383,7 +395,7 @@ export default function StudentDashboard() {
                           <div key={course._id} className="sdc-card" onClick={() => { setActiveCourse(course._id); navigate("courses"); }} style={{cursor:"pointer"}}>
                             <div
                               className={`sdc-card-thumb ${hasImg ? "sdc-thumb-has-img" : thumbClass}`}
-                              style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}}
+                              style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"center"} : {}}
                             />
                             <div className="sdc-card-body">
                               <div className="sdc-card-meta">
@@ -980,7 +992,7 @@ function CourseCard({ course, onEnrolled, onOpen, openDetail }) {
       {/* Thumb */}
       <div
         className={`sdc-card-thumb ${hasImg ? "sdc-thumb-has-img" : thumbClass}`}
-        style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"cover",backgroundPosition:"center"} : {}}
+        style={hasImg ? {backgroundImage:`url(${course.featureImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"center"} : {}}
       />
 
       {/* Body */}

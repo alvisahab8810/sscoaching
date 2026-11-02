@@ -3,6 +3,7 @@ import LiveClass from "@/models/LiveClassModel";
 import Enrollment from "@/models/EnrollmentModel";
 import Course from "@/models/CourseModel";
 import { logActivity } from "@/lib/logActivity";
+import { closePastLiveClasses } from "@/lib/closePastLiveClasses";
 import jwt from "jsonwebtoken";
 
 function getStudentId(req) {
@@ -62,6 +63,10 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
+      // Settle statuses against the clock before anything is read, so a
+      // finished class never goes out to the app still marked live.
+      await closePastLiveClasses();
+
       const { status, batch, course, page = 1, limit = 10 } = req.query;
       const filter = {};
       if (status) filter.status = status;
@@ -120,12 +125,12 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     try {
-      const { title, teacher, subject, chapter, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
+      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
       if (!title || !teacher || !subject || !batch || !date || !time || !streamLink) {
         return res.status(400).json({ success: false, message: "Please fill all required fields" });
       }
       const liveClass = await LiveClass.create({
-        title, teacher, subject, chapter, topic, batch, date, time, duration,
+        title, teacher, subject, chapter, part, topic, batch, date, time, duration,
         streamLink, description, status: status || "upcoming",
         course: course || null,
       });

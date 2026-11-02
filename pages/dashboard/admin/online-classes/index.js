@@ -642,6 +642,24 @@ import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
+import { CLASS_OPTIONS } from "@/lib/classOptions";
+import { LIVE_CLASS_STATUSES } from "@/lib/liveClassStatus";
+import {
+  FaRegStickyNote,
+  FaPen,
+  FaTrash,
+  FaTimes,
+  FaPlus,
+  FaListUl,
+  FaRegEye,
+  FaRegCalendarAlt,
+  FaInfoCircle,
+  FaVideo,
+  FaBook,
+  FaLink,
+  FaRegEdit,
+  FaPlay,
+} from "react-icons/fa";
 
 const subjects = [
   "Mathematics",
@@ -652,16 +670,6 @@ const subjects = [
   "Hindi",
   "Social Science",
   "Computer Science",
-];
-
-const batches = [
-  "Class 9",
-  "Class 10",
-  "Class 11",
-  "Class 12",
-  "NIOS Stream 1",
-  "NIOS Stream 2",
-  "Dropper Batch",
 ];
 
 const durations = [
@@ -679,6 +687,7 @@ const initialForm = {
   teacher: "",
   subject: "",
   chapter: "",
+  part: "",
   topic: "",
   batch: "",
   date: "",
@@ -699,9 +708,11 @@ function NotesManager({ cls, onClose, onUpdate }) {
   const [adding, setAdding] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [askDelete, setAskDelete] = useState(null);
+  const [deletingNote, setDeletingNote] = useState(false);
 
   const typeConfig = {
-    notes:      { label: "Notes",      color: "#6c47d4", bg: "#ede9ff" },
+    notes:      { label: "Notes",      color: "#5641ce", bg: "#ece9fb" },
     assignment: { label: "Assignment", color: "#d97706", bg: "#fef3c7" },
     solution:   { label: "Solution",   color: "#059669", bg: "#d1fae5" },
     other:      { label: "Other",      color: "#6b7280", bg: "#f3f4f6" },
@@ -739,7 +750,7 @@ function NotesManager({ cls, onClose, onUpdate }) {
   };
 
   const handleDelete = async (noteId) => {
-    if (!confirm("Delete this note?")) return;
+    setDeletingNote(true);
     try {
       const res = await fetch(`/api/admin/notes?id=${cls._id}&noteId=${noteId}`, {
         method: "DELETE",
@@ -753,6 +764,8 @@ function NotesManager({ cls, onClose, onUpdate }) {
     } catch {
       toast.error("Failed to delete");
     }
+    setDeletingNote(false);
+    setAskDelete(null);
   };
 
   return (
@@ -762,17 +775,17 @@ function NotesManager({ cls, onClose, onUpdate }) {
         {/* HEADER */}
         <div className="nm-header">
           <div>
-            <div className="nm-title">📎 Notes & Materials</div>
+            <div className="nm-title"><FaRegStickyNote /> Notes &amp; Materials</div>
             <div className="nm-subtitle">{cls.title}</div>
           </div>
-          <button className="nm-close-btn" onClick={onClose}>✕</button>
+          <button className="nm-close-btn" onClick={onClose}><FaTimes /></button>
         </div>
 
         {/* BODY */}
         <div className="nm-body">
           {notes.length === 0 && !adding ? (
             <div className="nm-empty">
-              <div className="nm-empty-icon">📭</div>
+              <div className="nm-empty-icon"><FaRegStickyNote /></div>
               <div>No notes added yet</div>
               <button className="nm-add-first-btn" onClick={() => setAdding(true)}>
                 + Add First Note
@@ -801,11 +814,36 @@ function NotesManager({ cls, onClose, onUpdate }) {
                       rel="noopener noreferrer"
                       className="nm-view-btn"
                     >
-                      👁 View
+                      <FaRegEye />
+                      <span>View</span>
                     </a>
-                    <button className="nm-del-btn" onClick={() => handleDelete(note._id)}>
-                      🗑
-                    </button>
+                    {askDelete === note._id ? (
+                      <span className="nm-confirm">
+                        <span className="nm-confirm-text">Delete?</span>
+                        <button
+                          className="nm-confirm-yes"
+                          onClick={() => handleDelete(note._id)}
+                          disabled={deletingNote}
+                        >
+                          {deletingNote ? "…" : "Yes"}
+                        </button>
+                        <button
+                          className="nm-confirm-no"
+                          onClick={() => setAskDelete(null)}
+                          disabled={deletingNote}
+                        >
+                          No
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        className="nm-del-btn"
+                        title="Delete material"
+                        onClick={() => setAskDelete(note._id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -856,7 +894,8 @@ function NotesManager({ cls, onClose, onUpdate }) {
                   onChange={(e) => setForm({ ...form, driveLink: e.target.value })}
                 />
                 <div className="nm-hint">
-                  📌 Make sure file is set to "Anyone with link can view" in Google Drive
+                  <FaInfoCircle />{" "}
+                  Make sure the file is set to "Anyone with link can view" in Google Drive
                 </div>
               </div>
 
@@ -865,7 +904,7 @@ function NotesManager({ cls, onClose, onUpdate }) {
                   Cancel
                 </button>
                 <button className="nm-save-btn" onClick={handleAdd} disabled={loading}>
-                  {loading ? "Adding..." : "✓ Add Note"}
+                  {loading ? "Adding..." : "Add Note"}
                 </button>
               </div>
             </div>
@@ -903,8 +942,14 @@ export default function OnlineClassesAdmin() {
   // Notes modal state
   const [notesModal, setNotesModal] = useState(null);
 
+  // The class waiting on a delete confirmation
+  const [confirming, setConfirming] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [statusSaving, setStatusSaving] = useState(null);
+
   // All published courses for linking
   const [allCourses, setAllCourses] = useState([]);
+  const [teacherList, setTeacherList] = useState([]);
 
   /* ================= FETCH ALL CLASSES ================= */
   const fetchClasses = async (currentPage = page) => {
@@ -934,10 +979,64 @@ export default function OnlineClassesAdmin() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    fetch("/api/admin/teachers?status=active&limit=200")
+      .then(r => r.json())
+      .then(d => { if (d.success) setTeacherList(d.data || []); })
+      .catch(() => {});
+  }, []);
+
   /* ================= FORM CHANGE ================= */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const selectedTeacher = teacherList.find((t) => t.name === form.teacher) || null;
+
+  const withCurrent = (list, current) =>
+    current && !list.includes(current) ? [...list, current] : list;
+
+  const classOptions = withCurrent(
+    selectedTeacher?.classes?.length ? selectedTeacher.classes : CLASS_OPTIONS,
+    form.batch
+  );
+  const subjectOptions = withCurrent(
+    selectedTeacher?.subjects?.length ? selectedTeacher.subjects : subjects,
+    form.subject
+  );
+  const teacherChosen = !!form.teacher;
+
+  // Switching teacher clears a class or subject the new teacher does not take,
+  // so a class can never be saved against the wrong pairing.
+  const handleTeacherChange = (e) => {
+    const name = e.target.value;
+    const teacher = teacherList.find((t) => t.name === name);
+    const allowedClasses = teacher?.classes || [];
+    const allowedSubjects = teacher?.subjects || [];
+    setForm((f) => ({
+      ...f,
+      teacher: name,
+      batch: allowedClasses.length && !allowedClasses.includes(f.batch) ? "" : f.batch,
+      subject: allowedSubjects.length && !allowedSubjects.includes(f.subject) ? "" : f.subject,
+    }));
+  };
+
+  // Live classes only run inside the Pro bundles, so the course link offers
+  // those alone, narrowed to the class and subject the form is already set to.
+  // The course currently linked always stays listed, so editing an older class
+  // cannot silently drop its link.
+  const same = (a, b) => String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+
+  const linkableCourses = allCourses.filter((c) => {
+    if (String(c._id) === String(form.course)) return true;
+    if (c.courseType !== "bundle") return false;
+    if (!/\bpro\b/i.test(c.title || "")) return false;
+    if (form.batch && !same(c.batch, form.batch)) return false;
+    // A bundle with no subject list covers every subject.
+    const bundled = c.bundledSubjects || [];
+    if (form.subject && bundled.length && !bundled.some((s) => same(s, form.subject))) return false;
+    return true;
+  });
 
   /* ================= RESET ================= */
   const resetForm = () => {
@@ -985,6 +1084,7 @@ export default function OnlineClassesAdmin() {
       teacher: item.teacher,
       subject: item.subject,
       chapter: item.chapter,
+      part: item.part || "",
       topic: item.topic,
       batch: item.batch,
       date: item.date,
@@ -999,14 +1099,40 @@ export default function OnlineClassesAdmin() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  /* ================= DELETE ================= */
-  const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this class?")) return;
+  /* ================= STATUS ================= */
+  // The listing endpoint settles statuses against the clock on its own;
+  // this is the manual override for a class that ran long or was cut short.
+  const changeStatus = async (item, status) => {
+    if (status === item.status) return;
+    setStatusSaving(item._id);
     try {
-      const res = await fetch(`/api/onlineClasses/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/onlineClasses/${item._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setClasses((prev) => prev.map((c) => (c._id === item._id ? { ...c, status } : c)));
+        toast.success(`Marked ${status}`);
+      } else {
+        toast.error(data.message || "Could not update status");
+      }
+    } catch {
+      toast.error("Server error");
+    }
+    setStatusSaving(null);
+  };
+
+  /* ================= DELETE ================= */
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/onlineClasses/${confirming._id}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) {
         toast.success("Class deleted successfully");
+        setConfirming(null);
         fetchClasses(page);
       } else {
         toast.error(data.message || "Delete failed");
@@ -1014,18 +1140,9 @@ export default function OnlineClassesAdmin() {
     } catch (err) {
       toast.error("Server error");
     }
+    setDeleting(false);
   };
 
-  /* ================= STATUS BADGE ================= */
-  const StatusBadge = ({ status }) => {
-    const config = {
-      upcoming:  { label: "Upcoming",  cls: "oc-badge-upcoming" },
-      live:      { label: "🔴 Live",   cls: "oc-badge-live" },
-      completed: { label: "Completed", cls: "oc-badge-completed" },
-    };
-    const { label, cls } = config[status] || config.upcoming;
-    return <span className={`oc-badge ${cls}`}>{label}</span>;
-  };
 
   return (
     <div className="oc-wrapper">
@@ -1041,7 +1158,7 @@ export default function OnlineClassesAdmin() {
             {/* ===== PAGE HEADER ===== */}
             <div className="oc-page-header mb-3">
               <div>
-                <h4 className="fw-bold mb-0">Online Classes</h4>
+                <h4 className="fw-bold mb-0">Live Classes</h4>
                 <p className="oc-page-subtitle">
                   Schedule and manage live streaming sessions for students
                 </p>
@@ -1054,13 +1171,15 @@ export default function OnlineClassesAdmin() {
                 className={`oc-tab-btn ${activeTab === "create" ? "oc-tab-active" : ""}`}
                 onClick={() => setActiveTab("create")}
               >
-                {editingId ? "✏️ Edit Class" : "➕ Schedule Class"}
+                {editingId ? <FaPen /> : <FaPlus />}
+                <span>{editingId ? "Edit Class" : "Schedule Class"}</span>
               </button>
               <button
                 className={`oc-tab-btn ${activeTab === "manage" ? "oc-tab-active" : ""}`}
                 onClick={() => { setActiveTab("manage"); fetchClasses(page); }}
               >
-                📋 All Classes
+                <FaListUl />
+                <span>All Classes</span>
               </button>
             </div>
 
@@ -1068,7 +1187,7 @@ export default function OnlineClassesAdmin() {
             {activeTab === "create" && (
               <div className="oc-card">
                 <div className="oc-card-header">
-                  <div className="oc-card-header-icon">🎬</div>
+                  <div className="oc-card-header-icon"><FaVideo /></div>
                   <div>
                     <div className="oc-card-header-title">
                       {editingId ? "Edit Live Class" : "Schedule New Live Class"}
@@ -1079,13 +1198,13 @@ export default function OnlineClassesAdmin() {
                   </div>
                   <div className="oc-live-badge">
                     <span className="oc-live-dot"></span>
-                    Online Classes
+                    Live Classes
                   </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="oc-form-body">
 
-                  <div className="oc-section-label">📡 Stream Information</div>
+                  <div className="oc-section-label"><FaVideo /> Stream Information</div>
                   <div className="row g-3 mb-4">
                     <div className="col-12">
                       <label className="form-label fw-semibold">
@@ -1106,7 +1225,7 @@ export default function OnlineClassesAdmin() {
                         YouTube Live Stream Link <span className="oc-req">*</span>
                       </label>
                       <div className="oc-link-input-wrap">
-                        <span className="oc-link-icon">▶</span>
+                        <span className="oc-link-icon"><FaPlay /></span>
                         <input
                           type="url"
                           className="form-control oc-input oc-link-input"
@@ -1120,35 +1239,44 @@ export default function OnlineClassesAdmin() {
                     </div>
                   </div>
 
-                  <div className="oc-section-label">📚 Class Details</div>
+                  <div className="oc-section-label"><FaBook /> Class Details</div>
                   <div className="row g-3 mb-4">
                     <div className="col-md-6">
                       <label className="form-label fw-semibold">
                         Teacher / Instructor <span className="oc-req">*</span>
                       </label>
-                      <input
-                        type="text"
-                        className="form-control oc-input"
+                      <select
+                        className="form-select oc-input"
                         name="teacher"
                         value={form.teacher}
-                        onChange={handleChange}
-                        placeholder="e.g. Mr. Riyaz Alvi"
+                        onChange={handleTeacherChange}
                         required
-                      />
+                      >
+                        <option value="">Select Teacher</option>
+                        {teacherList.map((t) => (
+                          <option key={t._id} value={t.name}>{t.name}</option>
+                        ))}
+                        {form.teacher && !teacherList.some((t) => t.name === form.teacher) && (
+                          <option value={form.teacher}>{form.teacher}</option>
+                        )}
+                      </select>
                     </div>
                     <div className="col-md-6">
                       <label className="form-label fw-semibold">
-                        Batch / Class <span className="oc-req">*</span>
+                        Class <span className="oc-req">*</span>
                       </label>
                       <select
                         className="form-select oc-input"
                         name="batch"
                         value={form.batch}
                         onChange={handleChange}
+                        disabled={!teacherChosen}
                         required
                       >
-                        <option value="">Select Batch</option>
-                        {batches.map((b) => (
+                        <option value="">
+                          {teacherChosen ? "Select Class" : "Select a teacher first"}
+                        </option>
+                        {teacherChosen && classOptions.map((b) => (
                           <option key={b} value={b}>{b}</option>
                         ))}
                       </select>
@@ -1162,10 +1290,13 @@ export default function OnlineClassesAdmin() {
                         name="subject"
                         value={form.subject}
                         onChange={handleChange}
+                        disabled={!teacherChosen}
                         required
                       >
-                        <option value="">Select Subject</option>
-                        {subjects.map((s) => (
+                        <option value="">
+                          {teacherChosen ? "Select Subject" : "Select a teacher first"}
+                        </option>
+                        {teacherChosen && subjectOptions.map((s) => (
                           <option key={s} value={s}>{s}</option>
                         ))}
                       </select>
@@ -1182,6 +1313,17 @@ export default function OnlineClassesAdmin() {
                       />
                     </div>
                     <div className="col-12">
+                      <label className="form-label fw-semibold">Part</label>
+                      <input
+                        type="text"
+                        className="form-control oc-input"
+                        name="part"
+                        value={form.part}
+                        onChange={handleChange}
+                        placeholder="e.g. Part 2"
+                      />
+                    </div>
+                    <div className="col-12">
                       <label className="form-label fw-semibold">Topic</label>
                       <input
                         type="text"
@@ -1194,7 +1336,7 @@ export default function OnlineClassesAdmin() {
                     </div>
                   </div>
 
-                  <div className="oc-section-label">🗓️ Schedule</div>
+                  <div className="oc-section-label"><FaRegCalendarAlt /> Schedule</div>
                   <div className="row g-3 mb-4">
                     <div className="col-md-4">
                       <label className="form-label fw-semibold">
@@ -1238,7 +1380,7 @@ export default function OnlineClassesAdmin() {
                     </div>
                   </div>
 
-                  <div className="oc-section-label">🔗 Course Link (Optional)</div>
+                  <div className="oc-section-label"><FaLink /> Course Link (Optional)</div>
                   <div className="row g-3 mb-4">
                     <div className="col-12">
                       <label className="form-label fw-semibold">Link to Course</label>
@@ -1248,21 +1390,22 @@ export default function OnlineClassesAdmin() {
                         value={form.course}
                         onChange={handleChange}
                       >
-                        <option value="">— No course link (subject+batch based access) —</option>
-                        {allCourses.map(c => (
+                        <option value="">— No course link (subject + class based access) —</option>
+                        {linkableCourses.map(c => (
                           <option key={c._id} value={c._id}>
                             {c.title} ({c.subject} · {c.batch}) {c.isFree ? "· FREE" : `· ₹${c.price}`}
                           </option>
                         ))}
                       </select>
                       <div className="form-text">
+                        Only Pro bundles matching the selected class and subject are listed.
                         If a course is selected, only students enrolled in that course can access this class.
                         Otherwise, access is granted to all students enrolled in any {form.subject || "matching"} course.
                       </div>
                     </div>
                   </div>
 
-                  <div className="oc-section-label">📝 Additional Info</div>
+                  <div className="oc-section-label"><FaRegEdit /> Additional Info</div>
                   <div className="row g-3 mb-4">
                     <div className="col-md-6">
                       <label className="form-label fw-semibold">Status</label>
@@ -1306,7 +1449,7 @@ export default function OnlineClassesAdmin() {
 
                   <div className="oc-form-footer">
                     <span className="oc-hint-text">
-                      ⚡ Fields marked with * are required
+                      <FaInfoCircle /> Fields marked with * are required
                     </span>
                     <div className="d-flex gap-2">
                       <button
@@ -1324,8 +1467,8 @@ export default function OnlineClassesAdmin() {
                         {loading
                           ? "Saving..."
                           : editingId
-                          ? "✏️ Update Class"
-                          : "🚀 Schedule Class"}
+                          ? "Update Class"
+                          : "Schedule Class"}
                       </button>
                     </div>
                   </div>
@@ -1338,7 +1481,7 @@ export default function OnlineClassesAdmin() {
             {activeTab === "manage" && (
               <div className="oc-card">
                 <div className="oc-card-header">
-                  <div className="oc-card-header-icon">📋</div>
+                  <div className="oc-card-header-icon"><FaListUl /></div>
                   <div>
                     <div className="oc-card-header-title">All Scheduled Classes</div>
                     <div className="oc-card-header-desc">
@@ -1350,7 +1493,7 @@ export default function OnlineClassesAdmin() {
                 <div className="p-3">
                   {classes.length === 0 ? (
                     <div className="oc-empty-state">
-                      <div className="oc-empty-icon">📭</div>
+                      <div className="oc-empty-icon"><FaRegCalendarAlt /></div>
                       <div className="oc-empty-title">No Classes Scheduled Yet</div>
                       <p className="text-muted">
                         Go to "Schedule Class" tab to create your first live class.
@@ -1366,12 +1509,12 @@ export default function OnlineClassesAdmin() {
                               <th>Title</th>
                               <th>Teacher</th>
                               <th>Subject</th>
-                              <th>Batch</th>
-                              <th>Linked Course</th>
+                              <th>Class</th>
+                              <th className="oc-col-course">Linked Course</th>
                               <th>Date</th>
                               <th>Time</th>
                               <th>Status</th>
-                              <th className="text-end">Actions</th>
+                              <th>Actions</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1382,8 +1525,10 @@ export default function OnlineClassesAdmin() {
                                 </td>
                                 <td>
                                   <div className="oc-table-title">{item.title}</div>
-                                  {item.chapter && (
-                                    <div className="oc-table-sub">{item.chapter}</div>
+                                  {(item.chapter || item.part) && (
+                                    <div className="oc-table-sub">
+                                      {[item.chapter, item.part].filter(Boolean).join(" · ")}
+                                    </div>
                                   )}
                                 </td>
                                 <td>{item.teacher}</td>
@@ -1391,48 +1536,68 @@ export default function OnlineClassesAdmin() {
                                 <td>
                                   <span className="oc-batch-tag">{item.batch}</span>
                                 </td>
-                                <td>
+                                <td className="oc-col-course">
                                   {item.course ? (
-                                    <span style={{fontSize:11,background:"#ede9ff",color:"#6c47d4",borderRadius:4,padding:"2px 6px",fontWeight:600}}>
+                                    <span
+                                      className="oc-course-tag"
+                                      title={item.course.title || "Linked"}
+                                    >
                                       {item.course.title || "Linked"}
                                     </span>
                                   ) : (
-                                    <span style={{color:"#9ca3af",fontSize:11}}>—</span>
+                                    <span className="oc-dash">—</span>
                                   )}
                                 </td>
                                 <td>{item.date}</td>
                                 <td>{item.time}</td>
                                 <td>
-                                  <StatusBadge status={item.status} />
+                                  <select
+                                    className={`oc-status-select is-${item.status}`}
+                                    value={item.status}
+                                    disabled={statusSaving === item._id}
+                                    onChange={(e) => changeStatus(item, e.target.value)}
+                                  >
+                                    {LIVE_CLASS_STATUSES.map((s) => (
+                                      <option key={s} value={s}>
+                                        {s.charAt(0).toUpperCase() + s.slice(1)}
+                                      </option>
+                                    ))}
+                                  </select>
                                 </td>
-                                <td className="text-end">
-                                  {/* 📎 NOTES BUTTON — NEW */}
-                                  <button
-                                    className="oc-icon-btn me-2"
-                                    title="Notes & Materials"
-                                    onClick={() => setNotesModal(item)}
-                                  >
-                                    📎
-                                    {item.notes?.length > 0 && (
-                                      <span className="oc-notes-count">
-                                        {item.notes.length}
+                                <td>
+                                  <div className="oc-actions">
+                                    <button
+                                      className="oc-action"
+                                      title="Notes & materials"
+                                      onClick={() => setNotesModal(item)}
+                                    >
+                                      <span className="oc-action-icon">
+                                        <FaRegStickyNote />
+                                        {item.notes?.length > 0 && (
+                                          <span className="oc-notes-count">{item.notes.length}</span>
+                                        )}
                                       </span>
-                                    )}
-                                  </button>
-                                  <button
-                                    className="oc-icon-btn me-2"
-                                    title="Edit"
-                                    onClick={() => handleEdit(item)}
-                                  >
-                                    ✏️
-                                  </button>
-                                  <button
-                                    className="oc-icon-btn text-danger"
-                                    title="Delete"
-                                    onClick={() => handleDelete(item._id)}
-                                  >
-                                    🗑️
-                                  </button>
+                                      <span className="oc-action-label">Notes</span>
+                                    </button>
+
+                                    <button className="oc-action" title="Edit" onClick={() => handleEdit(item)}>
+                                      <span className="oc-action-icon">
+                                        <FaPen />
+                                      </span>
+                                      <span className="oc-action-label">Edit</span>
+                                    </button>
+
+                                    <button
+                                      className="oc-action danger"
+                                      title="Delete"
+                                      onClick={() => setConfirming(item)}
+                                    >
+                                      <span className="oc-action-icon">
+                                        <FaTrash />
+                                      </span>
+                                      <span className="oc-action-label">Delete</span>
+                                    </button>
+                                  </div>
                                 </td>
                               </tr>
                             ))}
@@ -1486,6 +1651,44 @@ export default function OnlineClassesAdmin() {
           </div>
         </div>
       </div>
+
+      {/* ===== DELETE CONFIRMATION ===== */}
+      {confirming && (
+        <div className="oc-confirm-backdrop" onClick={() => !deleting && setConfirming(null)}>
+          <div className="oc-confirm" onClick={(e) => e.stopPropagation()}>
+            <div className="oc-confirm-head">
+              <div>
+                <h5>Delete class</h5>
+                <p>This cannot be undone</p>
+              </div>
+              <button onClick={() => setConfirming(null)} disabled={deleting}>
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="oc-confirm-body">
+              <p className="oc-confirm-name">{confirming.title}</p>
+              <p className="oc-confirm-meta">
+                {[confirming.teacher, confirming.subject, confirming.batch, confirming.date]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+              <p className="oc-confirm-sub">
+                The class and the notes attached to it will be removed permanently.
+              </p>
+            </div>
+
+            <div className="oc-confirm-foot">
+              <button className="oc-confirm-cancel" onClick={() => setConfirming(null)} disabled={deleting}>
+                Cancel
+              </button>
+              <button className="oc-confirm-go" onClick={handleDelete} disabled={deleting}>
+                {deleting ? "Deleting…" : "Delete Class"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== NOTES MODAL ===== */}
       {notesModal && (

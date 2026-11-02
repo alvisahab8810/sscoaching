@@ -81,6 +81,7 @@
 "use client";
 import React, { useState } from "react";
 import { Toaster, toast } from "sonner";
+import { getLeadAttribution } from "@/lib/leadSource";
 
 export default function QueryForm() {
   const [loading, setLoading] = useState(false);
@@ -109,6 +110,7 @@ export default function QueryForm() {
       city: form.city,
       lookingFor: form.lookingFor,
       formType: form.formType,
+      attribution: getLeadAttribution(),
     };
 
     const response = await fetch("/api/popup", {

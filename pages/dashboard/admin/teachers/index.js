@@ -6,7 +6,7 @@ import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
-import { CLASS_OPTIONS } from "@/lib/classOptions";
+import { CLASS_OPTIONS, subjectsForClasses } from "@/lib/classOptions";
 import {
   MdPersonAdd, MdSearch, MdRefresh, MdSchool, MdCheckCircle, MdBlock,
   MdDelete, MdVisibility, MdToggleOn, MdToggleOff, MdClose, MdVideoCall,
@@ -15,8 +15,14 @@ import {
 
 const EMPTY_INVITE = {
   name: "", email: "", username: "", password: "",
-  phone: "", subjects: "", qualification: "", classes: [],
+  phone: "", subjects: [], qualification: "", classes: [],
 };
+
+const pruneSubjects = (classes, subjects) => {
+  const allowed = subjectsForClasses(classes);
+  return subjects.filter((s) => allowed.includes(s));
+};
+
 
 export default function TeachersPage() {
   const [teachers, setTeachers] = useState([]);
@@ -75,7 +81,7 @@ export default function TeachersPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...invite,
-          subjects: invite.subjects.split(",").map((s) => s.trim()).filter(Boolean),
+          subjects: invite.subjects,
           classes: invite.classes,
         }),
       });
@@ -105,7 +111,7 @@ export default function TeachersPage() {
       username: t.username || "",
       phone: t.phone || "",
       qualification: t.qualification || "",
-      subjects: (t.subjects || []).join(", "),
+      subjects: t.subjects || [],
       classes: t.classes || [],
       status: t.status || "active",
       password: "",
@@ -125,7 +131,7 @@ export default function TeachersPage() {
           username: editForm.username,
           phone: editForm.phone,
           qualification: editForm.qualification,
-          subjects: editForm.subjects.split(",").map((x) => x.trim()).filter(Boolean),
+          subjects: editForm.subjects,
           classes: editForm.classes,
           status: editForm.status,
           // Left blank the password is not sent, so the current one stays.
@@ -402,14 +408,19 @@ export default function TeachersPage() {
                     onChange={(e) => setInvite((f) => ({ ...f, qualification: e.target.value }))} />
                 </Field>
               </div>
-              <Field label="Subjects (comma separated)">
-                <input style={inputStyle} value={invite.subjects} placeholder="Physics, Chemistry"
-                  onChange={(e) => setInvite((f) => ({ ...f, subjects: e.target.value }))} />
-              </Field>
               <Field label="Class (select one or more)">
                 <ClassPicker
                   selected={invite.classes}
-                  onChange={(next) => setInvite((f) => ({ ...f, classes: next }))}
+                  onChange={(next) =>
+                    setInvite((f) => ({ ...f, classes: next, subjects: pruneSubjects(next, f.subjects) }))
+                  }
+                />
+              </Field>
+              <Field label="Subjects (select one or more)">
+                <SubjectPicker
+                  classes={invite.classes}
+                  selected={invite.subjects}
+                  onChange={(next) => setInvite((f) => ({ ...f, subjects: next }))}
                 />
               </Field>
 
@@ -477,14 +488,19 @@ export default function TeachersPage() {
                     onChange={(e) => setEditForm((f) => ({ ...f, qualification: e.target.value }))} />
                 </Field>
               </div>
-              <Field label="Subjects (comma separated)">
-                <input style={inputStyle} value={editForm.subjects} placeholder="Physics, Chemistry"
-                  onChange={(e) => setEditForm((f) => ({ ...f, subjects: e.target.value }))} />
-              </Field>
               <Field label="Class (select one or more)">
                 <ClassPicker
                   selected={editForm.classes}
-                  onChange={(next) => setEditForm((f) => ({ ...f, classes: next }))}
+                  onChange={(next) =>
+                    setEditForm((f) => ({ ...f, classes: next, subjects: pruneSubjects(next, f.subjects) }))
+                  }
+                />
+              </Field>
+              <Field label="Subjects (select one or more)">
+                <SubjectPicker
+                  classes={editForm.classes}
+                  selected={editForm.subjects}
+                  onChange={(next) => setEditForm((f) => ({ ...f, subjects: next }))}
                 />
               </Field>
               <Field label="Status">
@@ -532,9 +548,11 @@ const ClassPicker = ({ selected = [], onChange }) => {
   const toggle = (cls) =>
     onChange(selected.includes(cls) ? selected.filter((c) => c !== cls) : [...selected, cls]);
 
+  const options = [...CLASS_OPTIONS, ...selected.filter((c) => !CLASS_OPTIONS.includes(c))];
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-      {CLASS_OPTIONS.map((cls) => {
+      {options.map((cls) => {
         const on = selected.includes(cls);
         return (
           <button
@@ -553,6 +571,55 @@ const ClassPicker = ({ selected = [], onChange }) => {
             }}
           >
             {cls}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+
+// Multi-select for the subjects a teacher takes. Only the subjects of the
+// classes already picked are offered, so a Class 10 teacher is never shown a
+// Class 12 subject. Anything stored earlier that is no longer offered stays
+// visible so editing a teacher cannot silently drop it.
+const SubjectPicker = ({ classes = [], selected = [], onChange }) => {
+  const available = subjectsForClasses(classes);
+  const extras = selected.filter((s) => !available.includes(s));
+  const options = [...available, ...extras];
+
+  const toggle = (sub) =>
+    onChange(selected.includes(sub) ? selected.filter((s) => s !== sub) : [...selected, sub]);
+
+  if (!classes.length) {
+    return (
+      <p style={{ margin: 0, fontSize: "0.8rem", color: "#6b7a99" }}>
+        Select a class first to see its subjects.
+      </p>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+      {options.map((sub) => {
+        const on = selected.includes(sub);
+        return (
+          <button
+            key={sub}
+            type="button"
+            onClick={() => toggle(sub)}
+            style={{
+              padding: "6px 13px",
+              borderRadius: 99,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              border: `1.5px solid ${on ? "#5641CE" : "#e3e6f0"}`,
+              background: on ? "#5641CE" : "#fff",
+              color: on ? "#fff" : "#6b7a99",
+            }}
+          >
+            {sub}
           </button>
         );
       })}
