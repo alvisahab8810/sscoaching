@@ -4,7 +4,7 @@ import { validateForSubmit } from "@/lib/onlineAdmission/validate";
 import {
   route, fail, ownApplication, currentDocs, plain, addEvent, studentActor, studentView,
 } from "@/lib/onlineAdmission/server";
-import { mailStudent } from "@/lib/onlineAdmission/mail";
+import { mailStaff, mailStudent } from "@/lib/onlineAdmission/mail";
 
 export default route({
   async POST(req) {
@@ -21,6 +21,7 @@ export default route({
     await addEvent(app, studentActor(applicant), "submitted",
       again ? "Corrections resubmitted for verification" : "Form and documents submitted for verification");
     await mailStudent(app, "submitted");
+    await mailStaff(app, again ? "Corrections resubmitted, verify again" : "New application to verify");
     return studentView(app);
   },
 });

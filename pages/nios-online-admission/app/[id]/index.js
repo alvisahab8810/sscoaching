@@ -298,6 +298,7 @@ function PayCard({ app, reload }) {
         <div>
           <b>Paid {rupee(app.payment.amount)}</b>
           <div className={`${a.small} ${a.muted}`}>Received {when(app.payment.paid_at)}. Includes NIOS admission and exam fees.</div>
+          <a href={`/api/online-admission/my/applications/${app.id}/receipt`} target="_blank" rel="noopener noreferrer" className={a.small} style={{ fontWeight: 600 }}>Download receipt</a>
         </div>
       </div>
     );

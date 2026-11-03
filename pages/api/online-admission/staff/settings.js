@@ -7,7 +7,7 @@ export default route({
     const s = await getSettings();
     return {
       launch_mode: s.launch_mode, price_10: s.price_10, price_12: s.price_12, centres_synced_at: s.centres_synced_at,
-      test_card: s.test_card !== false, test_price: s.test_price ?? 1,
+      test_card: s.test_card === true, test_price: s.test_price ?? 1,
       payment_mode: process.env.RAZORPAY_KEY_ID ? "razorpay" : "off",
       sms_mode: process.env.MSG91_SMS_OTP_ENABLED === "true" ? "msg91" : "off",
     };

@@ -8,7 +8,7 @@ const SettingsSchema = new mongoose.Schema(
     price_10: { type: Number, default: 11600 },
     price_12: { type: Number, default: 12600 },
     // Public test package on the landing page, to try the full flow with a real small payment
-    test_card: { type: Boolean, default: true },
+    test_card: { type: Boolean, default: false },
     test_price: { type: Number, default: 1 },
     centres_synced_at: { type: Date, default: null },
   },

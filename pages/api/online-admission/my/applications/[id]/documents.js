@@ -4,6 +4,7 @@ import Document from "@/models/onlineAdmission/Document";
 import {
   route, fail, ownApplication, parseMultipart, storeFile, studentView, addEvent, studentActor,
 } from "@/lib/onlineAdmission/server";
+import { mailStaff } from "@/lib/onlineAdmission/mail";
 
 export const config = { api: { bodyParser: false } };
 
@@ -21,7 +22,10 @@ export default route({
     await storeFile(app, file, slot.type, { accept: slot.accept });
     app.updated_at = new Date();
     await app.save();
-    if (replacing) await addEvent(app, studentActor(applicant), "doc_reuploaded", `${slot.label} uploaded again for verification`);
+    if (replacing) {
+      await addEvent(app, studentActor(applicant), "doc_reuploaded", `${slot.label} uploaded again for verification`);
+      await mailStaff(app, `${slot.label} uploaded again, review it`);
+    }
     return studentView(app);
   },
 });

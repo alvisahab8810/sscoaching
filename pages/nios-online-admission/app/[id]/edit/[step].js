@@ -235,7 +235,7 @@ function Wizard({ id, step, cfg, app, setApp, d, setD, errors, tried, markTried,
                 {inp("alt_mobile", { inputMode: "numeric", maxLength: 10, autoComplete: "tel-national" })}
               </Field>
             </div>
-            <Field label="Email" optional err={E("email")}>{inp("email", { type: "email", autoComplete: "email" })}</Field>
+            <Field label="Email" err={E("email")}>{inp("email", { type: "email", autoComplete: "email" })}</Field>
           </>
         )}
 

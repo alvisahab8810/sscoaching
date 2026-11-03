@@ -83,12 +83,14 @@ function File({ app, act, busy, isAdmin }) {
       <div>
         <ActionPanel app={app} act={act} busy={busy} isAdmin={isAdmin} onChangeCentre={() => setChanging(true)} />
         <SummaryPanel app={app} />
+        {(app.next || []).includes("cancelled") && <CancelFile app={app} act={act} busy={busy} />}
       </div>
     </div>
   );
 }
 
 function AllotCard({ app, act, changing, onDone }) {
+  const picking = useRef(false);
   const sci = app.subjects_full.some((s) => SCIENCE_CODES.includes(s.code));
   return (
     <div className={a.card} style={{ marginBottom: 16 }}>
@@ -105,7 +107,11 @@ function AllotCard({ app, act, changing, onDone }) {
         science={sci}
         compact
         onPick={async (c) => {
-          if (await act(`/staff/applications/${app.id}/centre`, { code: c.code }, `Allotted ${c.name}`)) onDone();
+          if (picking.current) return; // one allotment per click
+          picking.current = true;
+          const ok = await act(`/staff/applications/${app.id}/centre`, { code: c.code }, `Allotted ${c.name}`);
+          picking.current = false;
+          if (ok) onDone();
         }}
       />
     </div>
@@ -610,6 +616,25 @@ function ExamFeePanel({ app, act, busy }) {
   );
 }
 
+function CancelFile({ app, act, busy }) {
+  const [reason, setReason] = useState("");
+  return (
+    <details className={a.card} style={{ marginTop: 16 }}>
+      <summary className={a.small} style={{ cursor: "pointer" }}>Cancel this application</summary>
+      <p className={cx(a.tiny, a.muted)} style={{ marginTop: 8 }}>For a duplicate or wrong file. The student is emailed the reason.</p>
+      <div className={a.stack} style={{ marginTop: 8 }}>
+        <input className={a.input} placeholder="Reason, sent to the student" value={reason} onChange={(e) => setReason(e.target.value)} />
+        <button type="button" className={cx(a.btn, a.sm, a.danger)} disabled={busy}
+          onClick={() => (reason.trim()
+            ? window.confirm("Cancel this application? This cannot be undone.") && act(`/staff/applications/${app.id}/cancel`, { reason: reason.trim() }, "Application cancelled")
+            : toast.error("Give a reason"))}>
+          Cancel application
+        </button>
+      </div>
+    </details>
+  );
+}
+
 function SummaryPanel({ app }) {
   const pay = app.payments.find((p) => p.status === "paid");
   return (
@@ -619,7 +644,8 @@ function SummaryPanel({ app }) {
         <dt>Package</dt><dd>Class {app.class}th, {rupee(app.price)}</dd>
         <dt>Submitted</dt><dd>{when(app.submitted_at) || "-"}</dd>
         <dt>Verified</dt><dd>{when(app.verified_at) || "-"}</dd>
-        <dt>Payment</dt><dd>{pay ? `${rupee(pay.amount)} via ${pay.gateway}${pay.payment_id ? ` (${pay.payment_id})` : ""}` : "Not paid"}</dd>
+        <dt>Payment</dt><dd>{pay ? `${rupee(pay.amount)} via ${pay.gateway}${pay.payment_id ? ` (${pay.payment_id})` : ""}` : "Not paid"}
+          {pay && <> · <a href={`/api/online-admission/staff/applications/${app.id}/receipt`} target="_blank" rel="noopener noreferrer">Receipt</a></>}</dd>
         <dt>Centre</dt><dd>{app.centre ? `${app.centre.code}, ${app.centre.district}` : "-"}</dd>
         <dt>NIOS ref.</dt><dd>{app.nios_ref || "-"}</dd>
         <dt>Enrollment</dt><dd className={a.num}>{app.enrollment_no || "-"}</dd>

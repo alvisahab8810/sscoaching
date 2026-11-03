@@ -24,7 +24,7 @@ export default route({
 
     // The test package (when switched on) is a Class 10th file at the test price
     const isTest = req.body?.test === true;
-    if (isTest && settings.test_card === false) throw fail(409, "The test package is switched off");
+    if (isTest && settings.test_card !== true) throw fail(409, "The test package is switched off");
 
     const dup = await Application.findOne({
       applicant: applicant._id, class: cls, status: { $ne: "cancelled" }, is_test: isTest ? true : { $ne: true },

@@ -81,6 +81,7 @@ const ACTIONS = {
     const c = await findCentre(text(b.code));
     if (!c) throw fail(404, "Centre code not found in the NIOS list");
     if (!["paid", "form_in_progress"].includes(app.status)) throw fail(409, "Allot a centre after the payment is received");
+    if (app.status === "form_in_progress" && app.centre_code === c.code) return; // double click: already allotted
     if (!offersCourse(c, app.class)) throw fail(409, `${c.name} does not offer Class ${app.class}th`);
     if (app.status === "paid") setStatus(app, "form_in_progress");
     app.centre_code = c.code;
@@ -158,6 +159,16 @@ const ACTIONS = {
     await app.save();
     await addEvent(app, staffActor(staff), "step_back", `Moved back to "${STATUS_BY_KEY[back].label}": ${reason}`, back === "changes_requested");
     if (back === "changes_requested") await mailStudent(app, "changes_requested", { note: reason });
+  },
+
+  async cancel(app, staff, b) {
+    const reason = text(b.reason);
+    if (!reason) throw fail(400, "Give a reason");
+    setStatus(app, "cancelled");
+    claim(app, staff);
+    await app.save();
+    await addEvent(app, staffActor(staff), "cancelled", "Application cancelled: " + reason);
+    await mailStudent(app, "cancelled", { reason });
   },
 
   async note(app, staff, b) {
