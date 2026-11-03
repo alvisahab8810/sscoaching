@@ -25,7 +25,7 @@ export default function DeskSettings() {
     if (!(+s.price_10 > 0) || !(+s.price_12 > 0)) return toast.error("Enter both prices");
     setBusy(true);
     try {
-      await api("PUT", "/staff/settings", { launch_mode: s.launch_mode, price_10: s.price_10, price_12: s.price_12 });
+      await api("PUT", "/staff/settings", { launch_mode: s.launch_mode, price_10: s.price_10, price_12: s.price_12, test_price: s.test_price, test_card: s.test_card });
       toast.success("Saved. New applications use these prices.");
     } catch (e) {
       toast.error(e.message);
@@ -77,6 +77,23 @@ export default function DeskSettings() {
                 </Field>
                 <Field label="Class 12th price (₹)">
                   <input className={cx(a.input, a.num)} inputMode="numeric" value={s.price_12} onChange={(e) => setS({ ...s, price_12: e.target.value.replace(/\D/g, "") })} />
+                </Field>
+              </div>
+              <div className={a.sep} />
+              <h4 style={{ marginBottom: 6 }}>Test package</h4>
+              <p className={cx(a.small, a.muted)} style={{ marginTop: 0 }}>
+                Shows a test card on the admission page. It opens a Class 10th form at the test price, so you can try the whole
+                flow with a real small payment. Anyone visiting the page can see it, so switch it off after testing.
+              </p>
+              <div className={a.grid2}>
+                <Field label="Test card on the admission page">
+                  <select className={a.input} value={s.test_card ? "on" : "off"} onChange={(e) => setS({ ...s, test_card: e.target.value === "on" })}>
+                    <option value="on">Shown</option>
+                    <option value="off">Hidden</option>
+                  </select>
+                </Field>
+                <Field label="Test price (₹)">
+                  <input className={cx(a.input, a.num)} inputMode="numeric" value={s.test_price} onChange={(e) => setS({ ...s, test_price: e.target.value.replace(/D/g, "") })} />
                 </Field>
               </div>
               <button type="button" className={a.btn} disabled={busy} onClick={save}>Save</button>

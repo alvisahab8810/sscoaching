@@ -15,14 +15,16 @@ export default function StartAdmission() {
   useEffect(() => {
     if (!me) return;
     const cls = router.query.cls;
-    if (!["10", "12"].includes(cls)) {
+    if (!["10", "12", "test"].includes(cls)) {
       router.replace("/nios-online-admission");
       return;
     }
     (async () => {
       try {
         const cfg = await api("GET", "/config");
-        const r = await api("POST", "/my/applications", { class: cls, stream: "1", block: cfg.current_block });
+        const r = await api("POST", "/my/applications", cls === "test"
+          ? { class: "10", test: true, stream: "1", block: cfg.current_block }
+          : { class: cls, stream: "1", block: cfg.current_block });
         router.replace(r.existing ? `/nios-online-admission/app/${r.id}` : `/nios-online-admission/app/${r.id}/edit/1`);
       } catch (e) {
         if (e.status === 401) toLogin(router);

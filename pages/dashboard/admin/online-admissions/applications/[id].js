@@ -59,6 +59,7 @@ function Header({ app, act, busy }) {
     <div className={d.dhead} style={{ margin: 0 }}>
       <div className={d.avatar}>{photo ? <img src={photo.doc.url} alt="" /> : <FiFileText size={24} />}</div>
       <Pill status={app.status}>{app.status_info?.label}</Pill>
+      {app.is_test && <Pill tone="warn">Test file, ₹{app.price}</Pill>}
       {app.consultant ? (
         <span className={cx(a.small, a.muted)}>With {app.consultant.name}</span>
       ) : (

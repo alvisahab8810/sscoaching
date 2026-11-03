@@ -15,6 +15,7 @@ const ApplicationSchema = new mongoose.Schema(
     block: { type: String, default: null },
     status: { type: String, default: "draft", index: true },
     price: { type: Number, required: true },
+    is_test: { type: Boolean, default: false },
     form: { type: mongoose.Schema.Types.Mixed, default: {} },
     subjects: { type: [Number], default: [] },
     checklist: { type: mongoose.Schema.Types.Mixed, default: {} },

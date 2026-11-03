@@ -58,7 +58,7 @@ export default function NiosOnlineAdmission({ live, packages, inclusions }) {
             <div className={s.pkgCard}>
               <h3>Choose your class</h3>
               <div className={s.pkgs}>
-                {["12", "10"].map((id) => {
+                {["12", "10", ...(packages.test ? ["test"] : [])].map((id) => {
                   const p = packages[id];
                   return (
                     <button
@@ -193,6 +193,7 @@ export async function getServerSideProps() {
     const st = await getSettings();
     packages["10"].price = +st.price_10;
     packages["12"].price = +st.price_12;
+    if (st.test_card !== false) packages.test = { label: "Test package", price: +st.test_price || 1, tagline: "Only for testing the payment flow (Class 10th form)", level: "Secondary" };
     live = st.launch_mode === "live";
   } catch (e) {
     console.error("online admission settings", e);

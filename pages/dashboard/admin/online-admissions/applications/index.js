@@ -105,7 +105,7 @@ export default function AdmissionQueue() {
                 return (
                   <tr key={x.id} className={d.click} tabIndex={0} onClick={open} onKeyDown={(e) => e.key === "Enter" && open()}>
                     <td>
-                      <b>{x.name || "Not filled yet"}</b>
+                      <b>{x.name || "Not filled yet"}</b>{x.is_test && <> <Pill tone="warn">Test ₹{x.price}</Pill></>}
                       <div className={cx(a.small, a.muted, a.num)}>{[x.ref_no, x.mobile].filter(Boolean).join(", ")}</div>
                     </td>
                     <td>

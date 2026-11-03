@@ -16,7 +16,7 @@ const safeNext = (n) => (typeof n === "string" && n.startsWith("/nios-online-adm
 export default function NiosOnlineAdmissionLogin() {
   const router = useRouter();
   const next = safeNext(router.query.next);
-  const cls = router.query.c || (next.match(/\/start\/(10|12)/) || [])[1];
+  const cls = router.query.c || (next.match(/\/start\/(10|12|test)/) || [])[1];
   const [packages, setPackages] = useState(PACKAGES);
   const pkg = packages[cls] || null;
   const [step, setStep] = useState("mobile"); // mobile -> otp

@@ -28,7 +28,7 @@ export default route({
         const ad = a.form?.address || {};
         return {
           id: String(a._id), ref_no: a.ref_no, class: a.class, stream: a.stream, block: a.block, status: a.status,
-          price: a.price, updated_at: a.updated_at, enrollment_no: a.enrollment_no, name: a.form?.full_name || "",
+          price: a.price, is_test: !!a.is_test, updated_at: a.updated_at, enrollment_no: a.enrollment_no, name: a.form?.full_name || "",
           district: ad.district, state: ad.state, pincode: ad.pincode, mobile: a.applicant?.mobile,
           consultant: a.consultant?.name || null, status_label: STATUS_BY_KEY[a.status]?.label,
         };

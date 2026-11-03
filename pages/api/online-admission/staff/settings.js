@@ -7,6 +7,7 @@ export default route({
     const s = await getSettings();
     return {
       launch_mode: s.launch_mode, price_10: s.price_10, price_12: s.price_12, centres_synced_at: s.centres_synced_at,
+      test_card: s.test_card !== false, test_price: s.test_price ?? 1,
       payment_mode: process.env.RAZORPAY_KEY_ID ? "razorpay" : "off",
       sms_mode: process.env.MSG91_SMS_OTP_ENABLED === "true" ? "msg91" : "off",
     };
@@ -24,6 +25,12 @@ export default route({
         set[k] = v;
       }
     }
+    if (b.test_price != null && b.test_price !== "") {
+      const v = Math.round(+b.test_price);
+      if (!(v >= 1)) throw fail(400, "Test price must be at least ₹1");
+      set.test_price = v;
+    }
+    if (typeof b.test_card === "boolean") set.test_card = b.test_card;
     await getSettings();
     await Settings.updateOne({ _id: "main" }, { $set: set });
     return { ok: true };
