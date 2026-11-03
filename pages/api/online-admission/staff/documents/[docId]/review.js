@@ -3,6 +3,7 @@ import Document from "@/models/onlineAdmission/Document";
 import Application from "@/models/onlineAdmission/Application";
 import { docSlots } from "@/lib/onlineAdmission/config";
 import { route, fail, requireStaff, claim, addEvent, staffActor, staffView } from "@/lib/onlineAdmission/server";
+import { mailStudent } from "@/lib/onlineAdmission/mail";
 
 export default route({
   async POST(req) {
@@ -24,11 +25,22 @@ export default route({
     d.reviewed_at = new Date();
     await d.save();
 
+    // A rejected document reopens verification, so the payment link closes until it is fixed
+    const reopened = status === "rejected" && app.status === "verified";
+    if (reopened) {
+      app.status = "submitted";
+      app.verified_at = null;
+    }
     claim(app, staff);
     app.updated_at = new Date();
     await app.save();
     const label = (docSlots(app.toObject()).find((s) => s.type === d.type) || { label: d.type }).label;
     await addEvent(app, staffActor(staff), "doc_" + status, `${label}: ${status}${remark ? " — " + remark : ""}`, false);
+    if (status === "rejected") {
+      await addEvent(app, staffActor(staff), "doc_reupload", `Please upload your ${label} again: ${remark}`);
+      if (reopened) await addEvent(app, staffActor(staff), "reopened", "Back to verification until the document is fixed", false);
+      await mailStudent(app, "doc_rejected", { label, remark });
+    }
     return staffView(app);
   },
 });

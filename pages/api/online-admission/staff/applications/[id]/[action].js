@@ -10,6 +10,7 @@ import {
   route, fail, requireStaff, staffApplication, staffView, setStatus, claim, addEvent, staffActor,
   parseMultipart, storeFile, currentDocs, plain, markPaid, money,
 } from "@/lib/onlineAdmission/server";
+import { mailStudent } from "@/lib/onlineAdmission/mail";
 
 export const config = { api: { bodyParser: false } };
 
@@ -44,6 +45,7 @@ const ACTIONS = {
     claim(app, staff);
     await app.save();
     await addEvent(app, staffActor(staff), "changes_requested", "Corrections needed: " + note);
+    await mailStudent(app, "changes_requested", { note });
   },
 
   async verify(app, staff) {
@@ -61,6 +63,7 @@ const ACTIONS = {
     claim(app, staff);
     await app.save();
     await addEvent(app, staffActor(staff), "verified", `Documents and details verified. Payment link unlocked (${money(app.price)})`);
+    await mailStudent(app, "verified");
   },
 
   async "offline-payment"(app, staff, b, file) {
@@ -84,6 +87,7 @@ const ACTIONS = {
     claim(app, staff);
     await app.save();
     await addEvent(app, staffActor(staff), "centre", `Study centre allotted: ${c.name} (${c.code}), ${c.district}`);
+    await mailStudent(app, "centre", c);
   },
 
   async checklist(app, staff, b) {
@@ -108,6 +112,7 @@ const ACTIONS = {
     app.nios_submitted_at = new Date();
     await app.save();
     await addEvent(app, staffActor(staff), "nios_submitted", `NIOS admission form submitted (reference ${app.nios_ref})`);
+    await mailStudent(app, "nios_submitted");
   },
 
   async enrollment(app, staff, b) {
@@ -122,6 +127,7 @@ const ACTIONS = {
     app.enrolled_at = new Date();
     await app.save();
     await addEvent(app, staffActor(staff), "enrolled", `NIOS enrollment number issued: ${no}`);
+    await mailStudent(app, "enrolled");
   },
 
   async "exam-fee"(app, staff, b, file) {
@@ -139,6 +145,7 @@ const ACTIONS = {
     app.exam_fee_at = new Date();
     await app.save();
     await addEvent(app, staffActor(staff), "exam_fee", `Exam fee submitted to NIOS for ${fee.session} (receipt ${fee.receipt_no})`);
+    await mailStudent(app, "exam_fee");
   },
 
   async "step-back"(app, staff, b) {
@@ -150,6 +157,7 @@ const ACTIONS = {
     if (back === "changes_requested") app.review_note = reason;
     await app.save();
     await addEvent(app, staffActor(staff), "step_back", `Moved back to "${STATUS_BY_KEY[back].label}": ${reason}`, back === "changes_requested");
+    if (back === "changes_requested") await mailStudent(app, "changes_requested", { note: reason });
   },
 
   async note(app, staff, b) {

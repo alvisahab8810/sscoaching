@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { FiCheck, FiClock, FiLock, FiPhone } from "react-icons/fi";
+import { FiAlertCircle, FiCheck, FiClock, FiLock, FiPhone, FiUpload } from "react-icons/fi";
 import StudentShell, { useStudent, toLogin } from "@/components/OnlineAdmission/StudentShell";
 import { api, rupee, when, dateOnly, loadScript } from "@/components/OnlineAdmission/client";
 import { CopyBtn, Pill, Spinner, cx } from "@/components/OnlineAdmission/ui";
@@ -113,7 +113,17 @@ function Overview({ app, reload }) {
                 <Link href={`${base}/edit/${rejected.length ? 6 : 1}`} className={`${a.btn} ${a.block}`}>Fix and resubmit</Link>
               </div>
             )}
-            {s === "submitted" && (
+            {s === "submitted" && rejected.length > 0 && (
+              <div className={cx(a.card, a.statusCard, a.statusBad)}>
+                <span className={a.statusIcon}><FiAlertCircle size={22} /></span>
+                <div className={a.grow}>
+                  <h3>Upload {rejected.length === 1 ? "this document" : "these documents"} again</h3>
+                  <p className={cx(a.muted, a.small)}>Our consultant could not accept {rejected.length === 1 ? "it" : "them"}. Upload a clear copy and we will check it again.</p>
+                  {rejected.map((x) => <Reupload key={x.type} id={app.id} slot={x} reload={reload} />)}
+                </div>
+              </div>
+            )}
+            {s === "submitted" && !rejected.length && (
               <div className={cx(a.card, a.statusCard)}>
                 <span className={a.statusIcon}><FiClock size={22} /></span>
                 <div className={a.grow}>
@@ -208,6 +218,44 @@ function Overview({ app, reload }) {
 }
 
 const TimelineRow = ({ k, v }) => (<><dt>{k}</dt><dd>{v}</dd></>);
+
+function Reupload({ id, slot, reload }) {
+  const ref = useRef(null);
+  const [busy, setBusy] = useState(false);
+
+  const upload = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) return toast.error("File is larger than 5 MB. Use a smaller photo or PDF.");
+    if (slot.accept === "image" && !file.type.startsWith("image/")) return toast.error("Upload a photo (JPG or PNG) for this one");
+    const fd = new FormData();
+    fd.append("type", slot.type);
+    fd.append("file", file);
+    setBusy(true);
+    try {
+      await api("POST", `/my/applications/${id}/documents`, fd);
+      toast.success(slot.label + " uploaded. We will check it again.");
+      await reload();
+    } catch (err) {
+      toast.error(err.message);
+    }
+    setBusy(false);
+  };
+
+  return (
+    <div className={a.reup}>
+      <div className={a.grow}>
+        <b className={a.small}>{slot.label}</b>
+        <div className={a.small} style={{ color: "var(--bad)" }}>{slot.doc.remark || "Upload a clearer copy"}</div>
+      </div>
+      <button type="button" className={cx(a.btn, a.sm)} disabled={busy} onClick={() => ref.current?.click()}>
+        <FiUpload size={15} /> {busy ? "Uploading…" : "Upload again"}
+      </button>
+      <input ref={ref} type="file" hidden accept={slot.accept === "image" ? "image/*" : "image/*,application/pdf"} onChange={upload} />
+    </div>
+  );
+}
 
 function PayCard({ app, reload }) {
   const [busy, setBusy] = useState(false);
