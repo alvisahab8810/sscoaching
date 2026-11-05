@@ -19,19 +19,20 @@ export default async function handler(req, res) {
 
   try {
     // Anonymize student data instead of hard delete (preserves enrollment records for admin).
-    // phone is unique + sparse: it must be removed, not set to "", or the second
-    // deleted account collides with the first on the unique index.
+    // The live phone index is unique and NOT sparse, so "" or a missing phone
+    // counts as a value and the second deleted account collides with the
+    // first. A per-account placeholder is unique and can never match a login.
     await StudentUser.findByIdAndUpdate(id, {
       $set: {
         name: "Deleted User",
         email: `deleted_${id}@deleted.invalid`,
+        phone: `deleted_${id}`,
         avatar: "",
         password: "",
         expoPushToken: "",
         isActive: false,
         deletedAt: new Date(),
       },
-      $unset: { phone: 1 },
     });
 
     return res.status(200).json({ success: true, message: "Account deleted successfully" });
