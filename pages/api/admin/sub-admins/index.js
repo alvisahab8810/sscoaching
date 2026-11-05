@@ -82,7 +82,9 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     const { status, search, page = 1, limit = 20 } = req.query;
-    const filter = {};
+    // Sales people are managed on the Sales Team page, which also takes care
+    // of their leads when they are removed.
+    const filter = { isSales: { $ne: true } };
     if (status) filter.status = status;
     if (search) {
       filter.$or = [

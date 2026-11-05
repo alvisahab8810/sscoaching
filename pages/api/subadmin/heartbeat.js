@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import dbConnect from "@/lib/dbConnect";
 import SubAdminLiveSession from "@/models/SubAdminLiveSession";
+import SubAdmin from "@/models/SubAdmin";
+import { clearSubAdminCookie } from "@/lib/salesAccess";
 
 const FEATURE_MAP = {
   "/dashboard/admin/blogs": { feature: "blogs", label: "Blogs" },
@@ -49,6 +51,15 @@ export default async function handler(req, res) {
     ? null : rawIp.replace("::ffff:", "");
 
   await dbConnect();
+
+  // An account the admin has deactivated or deleted is signed out here, on
+  // its next heartbeat, instead of keeping its 8-hour token.
+  const account = await SubAdmin.findById(decoded.id).select("status").lean();
+  if (!account || account.status !== "active") {
+    await SubAdminLiveSession.deleteOne({ subAdminId: decoded.id });
+    clearSubAdminCookie(res);
+    return res.status(401).json({ success: false, loggedOut: true, message: "Account inactive" });
+  }
 
   await SubAdminLiveSession.findOneAndUpdate(
     { subAdminId: decoded.id },

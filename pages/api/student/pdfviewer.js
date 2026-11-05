@@ -53,17 +53,18 @@ export default function handler(req, res) {
     const WM_TEXT   = 'SS Coaching — Protected';
     const WM_TEXT2  = '© ss coaching.in';
 
-    function drawWatermark(ctx, w, h) {
+    // k scales the watermark with the canvas so it looks the same at any render size
+    function drawWatermark(ctx, w, h, k = 1) {
       ctx.save();
       ctx.globalAlpha = 0.10;
-      ctx.font = 'bold 28px Arial';
+      ctx.font = 'bold ' + Math.round(28 * k) + 'px Arial';
       ctx.fillStyle = '#6c47d4';
       ctx.translate(w / 2, h / 2);
       ctx.rotate(-30 * Math.PI / 180);
       ctx.textAlign = 'center';
-      for (let y = -h; y < h; y += 120) {
+      for (let y = -h; y < h; y += 120 * k) {
         ctx.fillText(WM_TEXT, 0, y);
-        ctx.fillText(WM_TEXT2, 0, y + 36);
+        ctx.fillText(WM_TEXT2, 0, y + 36 * k);
       }
       ctx.restore();
     }
@@ -171,17 +172,27 @@ export default function handler(req, res) {
             state.wrap.style.width  = size.w + 'px';
             state.wrap.style.height = size.h + 'px';
 
+            // iOS WebKit caps the total memory of all canvases on a page; past
+            // it, canvases silently go blank (the "PDF shows, then turns
+            // blank" report on iPhone). Rasterize at the size the page is
+            // actually shown at (times screen density, capped at 2x) instead
+            // of a fixed 1.8 scale, which keeps each canvas several times
+            // smaller with no visible loss of sharpness.
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const rs  = Math.min(1.8, (size.w * dpr) / (state.vp.width / 1.8));
+            const rvp = state.page.getViewport({ scale: rs });
+
             const canvas = document.createElement('canvas');
-            canvas.width  = state.vp.width;
-            canvas.height = state.vp.height;
+            canvas.width  = Math.floor(rvp.width);
+            canvas.height = Math.floor(rvp.height);
             canvas.style.display = 'block';
             canvas.style.width  = size.w + 'px';
             canvas.style.height = size.h + 'px';
             canvas.style.boxShadow = '0 4px 20px rgba(0,0,0,.5)';
             canvas.style.borderRadius = '2px';
             const ctx = canvas.getContext('2d');
-            await state.page.render({ canvasContext: ctx, viewport: state.vp }).promise;
-            drawWatermark(ctx, state.vp.width, state.vp.height);
+            await state.page.render({ canvasContext: ctx, viewport: rvp }).promise;
+            drawWatermark(ctx, canvas.width, canvas.height, rs / 1.8);
             state.wrap.innerHTML = '';
             state.wrap.appendChild(canvas);
             state.canvas = canvas;
@@ -194,6 +205,9 @@ export default function handler(req, res) {
         let resident = 0; // how many pages currently have a rendered canvas
         function unrenderPage(state) {
           if (!state.canvas) return;
+          // iOS only frees a canvas's memory once it is resized to zero
+          state.canvas.width = 0;
+          state.canvas.height = 0;
           state.wrap.innerHTML = '<div class="pspin"></div>';
           state.canvas = null;
           resident--;
@@ -212,7 +226,7 @@ export default function handler(req, res) {
         // has rendered it stays rendered permanently: zero blank space.
         // Only genuinely long documents (50+ page books) start recycling
         // old pages, which is the original OOM-crash protection, preserved.
-        const MAX_RESIDENT = 24;
+        const MAX_RESIDENT = 12;
         const offscreenQueue = [];
         function evictIfNeeded() {
           while (resident > MAX_RESIDENT) {

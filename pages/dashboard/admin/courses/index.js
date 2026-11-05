@@ -1872,6 +1872,34 @@ export default function AdminCoursesPage({ admin }) {
     } catch { toast.error("Network error"); }
   };
 
+  /* ── Reorder study material files via drag & drop ── */
+  const handleReorderMaterials = async (section, orderedIds) => {
+    // Same slot logic as the API, so the optimistic order matches what gets saved
+    const list   = selectedCourse.materials?.[section] || [];
+    const byId   = new Map(list.map(m => [String(m._id), m]));
+    const picked = new Set(orderedIds);
+    const slots  = list.map((m, i) => (picked.has(String(m._id)) ? i : -1)).filter(i => i >= 0);
+    const next   = [...list];
+    slots.forEach((slot, k) => { next[slot] = byId.get(orderedIds[k]); });
+    const optimisticCourse = { ...selectedCourse, materials: { ...selectedCourse.materials, [section]: next } };
+    setSelectedCourse(optimisticCourse);
+    setCourses(prev => prev.map(c => c._id === optimisticCourse._id ? optimisticCourse : c));
+
+    try {
+      const res  = await fetch(`/api/courses/${selectedCourse._id}?action=reorder-materials`, {
+        method:"PUT", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ section, materialIds: orderedIds }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedCourse(data.course);
+        setCourses(prev => prev.map(c => c._id===data.course._id ? data.course : c));
+      } else {
+        toast.error(data.error || "Failed to reorder files");
+      }
+    } catch { toast.error("Network error"); }
+  };
+
   /* ── FAQs ── */
   const handleAddFaq = async () => {
     if (!faqForm.question.trim() || !faqForm.answer.trim()) { toast.error("Question and answer required"); return; }
@@ -3411,6 +3439,7 @@ export default function AdminCoursesPage({ admin }) {
                     handlePdfUpload={handlePdfUpload}
                     handleAdd={handleAddMaterial}
                     handleDelete={handleDeleteMaterial}
+                    onReorder={handleReorderMaterials}
                     saving={saving}
                     onFetch={handleBmatFetch}
                     fetching={bmatFetching}
@@ -3569,8 +3598,10 @@ export default function AdminCoursesPage({ admin }) {
 /* ─────────────────────────────────────────
    MATERIALS PANEL
 ───────────────────────────────────────── */
-function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, saving, onFetch, fetching, allCourses, onFetchFromCourse, fetchingFromCourse, onFetchSection, fetchingSection }) {
+function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTab, setActiveTab, uploadingPdf, handlePdfUpload, handleAdd, handleDelete, onReorder, saving, onFetch, fetching, allCourses, onFetchFromCourse, fetchingFromCourse, onFetchSection, fetchingSection }) {
   const [openSection, setOpenSection] = useState(null); // "books" | "tma" | etc
+  const [dragMatIdx, setDragMatIdx]         = useState(null);
+  const [dragOverMatIdx, setDragOverMatIdx] = useState(null);
   const [inlineForm, setInlineForm]   = useState({ title:"", fileUrl:"" });
   const [localUploading, setLocalUploading] = useState(false);
   const [importCourseId, setImportCourseId] = useState("");
@@ -3768,10 +3799,35 @@ function MaterialsPanel({ course, showForm, setShowForm, form, setForm, activeTa
                   {/* Existing files */}
                   {files.length > 0 && (
                     <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:12}}>
-                      {files.map(mat => {
+                      {files.map((mat, mi) => {
                         const displayTitle = isBundle ? mat.title.replace(`${activeSubject} | `,"") : mat.title;
+                        const isOver = dragOverMatIdx===mi && dragMatIdx!==null && dragMatIdx!==mi;
                         return (
-                          <div key={mat._id} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",background:"#fafafa",border:"1px solid #e5e7eb",borderRadius:8}}>
+                          <div key={mat._id}
+                            style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",background:"#fafafa",
+                              border:`1px solid ${isOver?ACCENT:"#e5e7eb"}`,borderRadius:8,
+                              boxShadow:isOver?`inset 0 2px 0 ${ACCENT}`:"none",opacity:dragMatIdx===mi?0.45:1}}
+                            onDragOver={(e)=>{e.preventDefault(); if(dragOverMatIdx!==mi) setDragOverMatIdx(mi);}}
+                            onDragLeave={()=>{ if(dragOverMatIdx===mi) setDragOverMatIdx(null); }}
+                            onDrop={(e)=>{
+                              e.preventDefault();
+                              const from = dragMatIdx;
+                              setDragMatIdx(null); setDragOverMatIdx(null);
+                              if (from===null || from===mi || !onReorder) return;
+                              const ids = files.map(f => String(f._id));
+                              const [moved] = ids.splice(from, 1);
+                              ids.splice(mi, 0, moved);
+                              onReorder(sec.key, ids);
+                            }}
+                          >
+                            <span title="Drag to reorder" draggable
+                              style={{cursor:"grab",color:"#94a3b8",display:"flex",flexShrink:0}}
+                              onDragStart={(e)=>{ e.dataTransfer.effectAllowed="move"; setDragMatIdx(mi); }}
+                              onDragEnd={()=>{ setDragMatIdx(null); setDragOverMatIdx(null); }}
+                            >
+                              <MdDragIndicator size={16}/>
+                            </span>
+                            <span style={{fontSize:12,fontWeight:700,color:"#94a3b8",minWidth:18,textAlign:"right",flexShrink:0}}>{mi+1}</span>
                             <MdDescription size={16} color="#94a3b8"/>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{fontWeight:600,fontSize:13,color:"#111827",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{displayTitle}</div>

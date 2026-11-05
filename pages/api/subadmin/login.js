@@ -32,6 +32,7 @@ export default async function handler(req, res) {
       email: subAdmin.email,
       role: "subadmin",
       permissions: subAdmin.permissions,
+      isSales: !!subAdmin.isSales,
     },
     process.env.JWT_SECRET,
     { expiresIn: "8h" }

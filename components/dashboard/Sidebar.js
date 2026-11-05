@@ -325,7 +325,20 @@ export default function Sidebar() {
               </Link>
             </li>
             <li style={styles.navItem}>
-              <Link href="/dashboard/admin/teachers" style={styles.navLink(pathname?.startsWith("/dashboard/admin/teachers"))}>
+              <Link
+                href="/dashboard/admin/sales"
+                style={styles.navLink(pathname?.startsWith("/dashboard/admin/sales") && pathname !== "/dashboard/admin/sales/reports")}
+              >
+                <BsPeople style={{ marginRight: "8px" }} size={16} /> Sales Team
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/sales/reports" style={styles.navLink(pathname === "/dashboard/admin/sales/reports")}>
+                <MdBarChart style={{ marginRight: "8px" }} size={16} /> Sales Reports
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/teachers"style={styles.navLink(pathname?.startsWith("/dashboard/admin/teachers"))}>
                 <MdSchool style={{ marginRight: "8px" }} size={16} /> Teachers
               </Link>
             </li>
@@ -340,20 +353,6 @@ export default function Sidebar() {
               </Link>
             </li>
           </>
-        )}
-
-        {/* Sub-Admin logout option */}
-        {isSubAdmin && (
-          <li style={{ marginTop: "auto", paddingTop: "1rem" }}>
-            <button
-              onClick={async () => {
-                await fetch("/api/subadmin/logout", { method: "POST" });
-                window.location.href = "/dashboard/subadmin/login";
-              }}
-              style={{ ...styles.navLink(), width: "100%", border: "none", cursor: "pointer", background: "rgba(239,68,68,0.1)", color: "#fca5a5" }}>
-              <span style={{ marginRight: "8px" }}>🔓</span> Logout
-            </button>
-          </li>
         )}
 
       </ul>

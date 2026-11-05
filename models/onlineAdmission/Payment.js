@@ -5,7 +5,7 @@ const PaymentSchema = new mongoose.Schema(
     application: { type: mongoose.Schema.Types.ObjectId, ref: "OnlineAdmissionApplication", required: true, index: true },
     amount: { type: Number, required: true },
     status: { type: String, enum: ["created", "paid", "failed"], default: "created" },
-    gateway: { type: String, enum: ["razorpay", "offline"], required: true },
+    gateway: { type: String, enum: ["razorpay", "offline", "apple"], required: true },
     order_id: { type: String, required: true, unique: true },
     payment_id: { type: String, default: null },
     note: { type: String, default: null },

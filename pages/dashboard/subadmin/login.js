@@ -45,6 +45,12 @@ export default function SubAdminLogin() {
             <h2 style={{ fontWeight: 800, color: "#0f1f3d", fontSize: "1.4rem", marginBottom: 4 }}>Sub-Admin Login</h2>
             <p style={{ color: "#6b7a99", fontSize: "0.88rem", marginBottom: "1.5rem" }}>Enter your credentials to access the staff portal</p>
 
+            {!error && router.query.reason === "inactive" && (
+              <div style={{ background: "#fee2e2", border: "1.5px solid #fecaca", color: "#dc2626", borderRadius: 10, padding: "0.7rem 1rem", marginBottom: "1rem", fontSize: "0.88rem", fontWeight: 500 }}>
+                Your account has been deactivated by the administrator. You have been signed out.
+              </div>
+            )}
+
             {error && (
               <div style={{ background: "#fee2e2", border: "1.5px solid #fecaca", color: "#dc2626", borderRadius: 10, padding: "0.7rem 1rem", marginBottom: "1rem", fontSize: "0.88rem", fontWeight: 500 }}>
                 {error}

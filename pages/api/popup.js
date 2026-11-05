@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import PopupForm from "@/models/PopupForm";
 import { resolveLeadSource } from "@/lib/leadSource";
 import { nextLeadId } from "@/lib/leadId";
+import { autoAssignLead } from "@/lib/salesAssign";
 
 export default async function handler(req, res) {
   if (req.method !== "POST")
@@ -34,6 +35,9 @@ export default async function handler(req, res) {
       referrer: attr.referrer || "",
       landingPage: attr.landingPage || "",
     });
+
+    // Hand the lead to whoever's turn it is in the sales rotation.
+    await autoAssignLead(saved._id);
 
     return res.status(201).json({
       success: true,

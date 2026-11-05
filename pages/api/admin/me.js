@@ -18,6 +18,7 @@ export default function handler(req, res) {
           username: decoded.username,
           email: decoded.email,
           permissions: decoded.permissions || [],
+          isSales: !!decoded.isSales,
         });
       }
     } catch {}

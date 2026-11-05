@@ -8,6 +8,7 @@ export default async function handler(req, res) {
 
   const admin = requireAdminApi(req, "leads");
   if (!admin) return res.status(401).json({ success: false, message: "Not authorised" });
+  if (admin.isSales) return res.status(403).json({ success: false, message: "Only the admin can delete leads" });
 
   try {
     await dbConnect();

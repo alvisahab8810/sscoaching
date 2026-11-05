@@ -17,8 +17,10 @@ import {
   scoreBand,
   normalizeStatus,
   FOLLOWUP_SLOTS,
+  SALE_STATUS,
 } from "@/lib/leadPipeline";
 import { FaTrash, FaSync, FaTimes, FaBolt, FaSearch } from "react-icons/fa";
+import { getCachedAdminSession, fetchAdminSession } from "@/lib/adminSession";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
@@ -53,6 +55,12 @@ export default function Leads() {
 
   const [page, setPage] = useState(1);
   const limit = 20;
+
+  // Sales people see only their own leads and cannot delete them.
+  const [isSales, setIsSales] = useState(() => !!getCachedAdminSession()?.isSales);
+  useEffect(() => {
+    fetchAdminSession().then((s) => setIsSales(!!s?.isSales)).catch(() => {});
+  }, []);
 
   const load = async () => {
     setLoading(true);
@@ -177,6 +185,8 @@ export default function Leads() {
       Campaign: l.utmCampaign || "",
       Connects: l.connects || 0,
       Status: normalizeStatus(l.status),
+      "Converted On": l.convertedAt ? fmtDate(l.convertedAt) : "",
+      Remark: l.outcomeNote || "",
       "Assigned To": l.assignedToName || "Unassigned",
       "Lead Score": l.scored ? `${l.score}/${MAX_SCORE}` : "",
       Temperature: l.scored ? scoreBand(l.score).label : "",
@@ -347,6 +357,9 @@ export default function Leads() {
                               <td>
                                 <div className="crm-strong">{lead.fullName}</div>
                                 {lead.city && <div className="crm-faint">{lead.city}</div>}
+                                {!isSales && lead.assignedToName && (
+                                  <div className="crm-faint">Assigned: {lead.assignedToName}</div>
+                                )}
                               </td>
 
                               <td className="crm-nowrap">{displayPhone(lead.phone)}</td>
@@ -388,6 +401,14 @@ export default function Leads() {
                                     </option>
                                   ))}
                                 </select>
+                                {st === SALE_STATUS && lead.convertedAt && (
+                                  <div className="crm-converted">Converted on {fmtDate(lead.convertedAt)}</div>
+                                )}
+                                {lead.outcomeNote && (
+                                  <div className="crm-faint crm-remark" title={lead.outcomeNote}>
+                                    {lead.outcomeNote}
+                                  </div>
+                                )}
                               </td>
 
                               <td>
@@ -413,13 +434,15 @@ export default function Leads() {
                               </td>
 
                               <td>
-                                <button
-                                  className="crm-icon-btn danger sm"
-                                  onClick={() => setConfirming(lead)}
-                                  title="Delete lead"
-                                >
-                                  <FaTrash />
-                                </button>
+                                {!isSales && (
+                                  <button
+                                    className="crm-icon-btn danger sm"
+                                    onClick={() => setConfirming(lead)}
+                                    title="Delete lead"
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                )}
                               </td>
                             </tr>
                         );
@@ -803,6 +826,20 @@ export default function Leads() {
           font-weight: 600;
         }
 
+        .crm-converted {
+          margin-top: 4px;
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: #15803d;
+          white-space: nowrap;
+        }
+        .crm-remark {
+          max-width: 160px;
+          margin-top: 2px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         .crm-status {
           border-radius: 8px;
           border: 1px solid #cbd5e1;

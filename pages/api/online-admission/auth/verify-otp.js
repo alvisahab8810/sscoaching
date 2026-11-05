@@ -44,7 +44,9 @@ export default route({
     applicant.lastLoginAt = new Date();
     await applicant.save();
 
-    startApplicantSession(res, applicant);
-    return { ok: true, user: { id: String(applicant._id), name: applicant.name, mobile: applicant.mobile } };
+    const token = startApplicantSession(res, applicant);
+    const user = { id: String(applicant._id), name: applicant.name, mobile: applicant.mobile };
+    // The app keeps the token itself; the website relies on the httpOnly cookie.
+    return req.headers["x-source"] === "app" ? { ok: true, user, token } : { ok: true, user };
   },
 });

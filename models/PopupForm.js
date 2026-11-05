@@ -51,6 +51,13 @@ const PopupFormSchema = new mongoose.Schema(
     assignedToName: { type: String, default: "" },
     assignedAt: { type: Date, default: null },
 
+    // When the lead last moved to Converted, so a sale is counted in the
+    // month it was closed rather than the month the enquiry came in.
+    convertedAt: { type: Date, default: null },
+
+    // The closing remark written when a follow-up ends in an outcome.
+    outcomeNote: { type: String, default: "" },
+
     // The reminder the tracker sorts and colours by.
     nextFollowUpAt: { type: Date, default: null },
     lastFollowUpAt: { type: Date, default: null },

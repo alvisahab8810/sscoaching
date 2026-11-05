@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import PopupForm from "@/models/PopupForm";
 import { requireAdminApi } from "@/lib/requireAdminApi";
+import { leadAccess, clearSubAdminCookie } from "@/lib/salesAccess";
 
 export default async function handler(req, res) {
   if (req.method !== "GET")
@@ -16,6 +17,14 @@ export default async function handler(req, res) {
     // asking for all of them would ship the whole collection to the browser.
     const query = {};
     if (req.query.status) query.status = req.query.status;
+
+    // A sales person sees only the leads assigned to them.
+    const access = await leadAccess(admin);
+    if (!access.allowed) {
+      clearSubAdminCookie(res);
+      return res.status(401).json({ success: false, message: "Account inactive" });
+    }
+    if (access.salesId) query.assignedTo = access.salesId;
 
     const leads = await PopupForm.find(query)
       .select("-gclid -fbclid -referrer -utmSource -utmMedium")

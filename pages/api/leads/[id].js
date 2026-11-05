@@ -3,6 +3,7 @@ import PopupForm from "@/models/PopupForm";
 import SubAdmin from "@/models/SubAdmin";
 import { requireAdminApi } from "@/lib/requireAdminApi";
 import { logActivity } from "@/lib/logActivity";
+import { leadAccess, clearSubAdminCookie } from "@/lib/salesAccess";
 import {
   LEAD_STATUSES,
   SCORE_QUESTIONS,
@@ -10,6 +11,7 @@ import {
   scoreFromAnswers,
   slotUnlocked,
   normalizeStatus,
+  SALE_STATUS,
 } from "@/lib/leadPipeline";
 
 /**
@@ -33,6 +35,22 @@ export default async function handler(req, res) {
     await dbConnect();
     const lead = await PopupForm.findById(id);
     if (!lead) return res.status(404).json({ success: false, message: "Lead not found" });
+
+    // A sales person works only their own leads, and cannot delete or hand
+    // them on — that stays with the admin.
+    const access = await leadAccess(admin);
+    if (!access.allowed) {
+      clearSubAdminCookie(res);
+      return res.status(401).json({ success: false, message: "Account inactive" });
+    }
+    if (access.salesId) {
+      if (String(lead.assignedTo || "") !== access.salesId)
+        return res.status(404).json({ success: false, message: "Lead not found" });
+      if (req.method === "DELETE")
+        return res.status(403).json({ success: false, message: "Only the admin can delete leads" });
+      if (req.method === "PATCH" && readBody(req).assignedTo !== undefined)
+        return res.status(403).json({ success: false, message: "Only the admin can reassign leads" });
+    }
 
     // A lead saved under the old Open/Won/Lost vocabulary cannot be saved
     // again until its status is one this schema allows.
@@ -71,8 +89,13 @@ async function updateLead(req, res, lead) {
   if (body.status !== undefined) {
     if (!LEAD_STATUSES.includes(body.status))
       return res.status(400).json({ success: false, message: "Unknown status" });
+    if (body.status === SALE_STATUS && lead.status !== SALE_STATUS) lead.convertedAt = new Date();
+    if (body.status !== SALE_STATUS) lead.convertedAt = null;
     lead.status = body.status;
   }
+
+  // The closing remark written when a follow-up ends in an outcome.
+  if (body.outcomeNote !== undefined) lead.outcomeNote = String(body.outcomeNote || "").trim().slice(0, 2000);
 
   if (body.connects !== undefined) {
     const n = Number(body.connects);

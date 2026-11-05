@@ -10,23 +10,33 @@ export default async function handler(req, res) {
   const token = (req.headers.authorization || "").replace("Bearer ", "").trim();
   if (!token) return res.status(401).json({ success: false, message: "Unauthorized" });
 
+  let id;
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    ({ id } = jwt.verify(token, process.env.JWT_SECRET));
+  } catch {
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
+  }
 
-    // Anonymize student data instead of hard delete (preserves enrollment records for admin)
+  try {
+    // Anonymize student data instead of hard delete (preserves enrollment records for admin).
+    // phone is unique + sparse: it must be removed, not set to "", or the second
+    // deleted account collides with the first on the unique index.
     await StudentUser.findByIdAndUpdate(id, {
-      name: "Deleted User",
-      email: `deleted_${id}@deleted.invalid`,
-      phone: "",
-      avatar: "",
-      password: "",
-      expoPushToken: "",
-      isActive: false,
-      deletedAt: new Date(),
+      $set: {
+        name: "Deleted User",
+        email: `deleted_${id}@deleted.invalid`,
+        avatar: "",
+        password: "",
+        expoPushToken: "",
+        isActive: false,
+        deletedAt: new Date(),
+      },
+      $unset: { phone: 1 },
     });
 
     return res.status(200).json({ success: true, message: "Account deleted successfully" });
-  } catch {
-    return res.status(401).json({ success: false, message: "Invalid or expired token" });
+  } catch (err) {
+    console.error("delete-account failed:", err);
+    return res.status(500).json({ success: false, message: "Could not delete account" });
   }
 }

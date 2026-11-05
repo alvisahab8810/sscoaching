@@ -263,6 +263,28 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, course });
       }
 
+      // Reorder files inside one section. In a bundle the admin only sees one
+      // subject's files at a time, so materialIds can be a subset: those files are
+      // re-laid into the slots they already occupy and everything else stays put.
+      if (action === "reorder-materials") {
+        const { section, materialIds } = req.body;
+        const list = course.materials?.[section];
+        if (!list) return res.status(400).json({ error: "Section not found" });
+        if (!Array.isArray(materialIds) || !materialIds.length || new Set(materialIds).size !== materialIds.length)
+          return res.status(400).json({ error: "materialIds required" });
+        const byId = new Map(list.map(m => [m._id.toString(), m]));
+        if (materialIds.some(mid => !byId.has(mid)))
+          return res.status(400).json({ error: "materialIds must match existing files" });
+        const picked = new Set(materialIds);
+        const slots = list.map((m, i) => (picked.has(m._id.toString()) ? i : -1)).filter(i => i >= 0);
+        const next = [...list];
+        slots.forEach((slot, k) => { next[slot] = byId.get(materialIds[k]); });
+        course.materials[section] = next;
+        course.markModified("materials");
+        await course.save();
+        return res.status(200).json({ success: true, course });
+      }
+
       // FAQs
       if (action === "add-faq") {
         const { question, answer } = req.body;

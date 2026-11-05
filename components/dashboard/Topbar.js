@@ -26,7 +26,16 @@ export default function Topbar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ page: pathname }),
         keepalive: true,
-      }).catch(() => {});
+      })
+        .then((res) => {
+          // The admin deactivated or removed this account: the server has
+          // already cleared the cookie, so leave the dashboard.
+          if (res.status === 401) {
+            clearAdminSession();
+            window.location.href = "/dashboard/subadmin/login?reason=inactive";
+          }
+        })
+        .catch(() => {});
     };
 
     sendHeartbeat(); // immediate on page change
@@ -35,7 +44,7 @@ export default function Topbar() {
   }, [session, pathname]);
 
   const displayName = session?.role === "sub" ? session.name : "Admin";
-  const displayRole = session?.role === "sub" ? "Sub-Admin" : "System Administrator";
+  const displayRole = session?.role === "sub" ? (session.isSales ? "Sales Executive" : "Sub-Admin") : "System Administrator";
   const displayInitial = displayName.charAt(0).toUpperCase();
 
   const logout = async () => {
@@ -108,9 +117,9 @@ export default function Topbar() {
               </li>
 
               <li className="mb-2 mt-2 pt-2">
-                <a className="dropdown-item user-item d-flex" href="#">
+                <Link className="dropdown-item user-item d-flex" href="/dashboard/profile">
                   <img src="/assets/icons/avtar.svg" className="me-2" alt="" /> Profile
-                </a>
+                </Link>
               </li>
 
               <li className="pb-2">

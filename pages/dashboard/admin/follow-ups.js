@@ -5,11 +5,20 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { FOLLOWUP_SLOTS, FOLLOWUP_STATUS, slotUnlocked, reminderState } from "@/lib/leadPipeline";
+import { FOLLOWUP_SLOTS, FOLLOWUP_STATUS, SALE_STATUS, slotUnlocked, reminderState } from "@/lib/leadPipeline";
 import { FaLock, FaPlus, FaSync, FaTimes, FaSearch } from "react-icons/fa";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 const SLOTS = Array.from({ length: FOLLOWUP_SLOTS }, (_, i) => i + 1);
+
+// How a follow-up can end. Picking one moves the lead out of this tracker.
+const OUTCOMES = [
+  { status: SALE_STATUS, label: "Converted", desc: "Admission done / fee paid" },
+  { status: "Qualified", label: "Qualified", desc: "Interested and eligible, joining soon" },
+  { status: "Not Interested", label: "Not Interested", desc: "Said no" },
+  { status: "Not Qualified", label: "Not Qualified", desc: "Not eligible for any course" },
+  { status: "No Answer", label: "No Answer", desc: "Stopped picking up" },
+];
 
 const lower = (v) => String(v || "").toLowerCase();
 const digitsOnly = (phone) => String(phone || "").replace(/[^0-9]/g, "");
@@ -36,6 +45,9 @@ export default function FollowUps() {
   // The cell being written: { lead, slot, note, nextFollowUpAt }
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  // The lead being closed: { lead, status, note }
+  const [closing, setClosing] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -112,6 +124,32 @@ export default function FollowUps() {
       setLeads((list) => list.map((l) => (l._id === data.lead._id ? { ...l, ...data.lead } : l)));
       toast.success(`Follow-up ${editing.slot} saved`);
       setEditing(null);
+    } catch (err) {
+      toast.error(err.message);
+    }
+    setSaving(false);
+  };
+
+  const closeLead = async () => {
+    if (!closing.status) {
+      toast.error("Pick an outcome");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/leads/${closing.lead._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: closing.status, outcomeNote: closing.note }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Could not save");
+
+      // It is no longer in Follow Up, so it leaves this list.
+      setLeads((list) => list.filter((l) => l._id !== closing.lead._id));
+      toast.success(`${closing.lead.fullName} marked ${closing.status}. It stays on the Leads page.`);
+      setClosing(null);
     } catch (err) {
       toast.error(err.message);
     }
@@ -213,6 +251,7 @@ export default function FollowUps() {
                             Follow-up {s}
                           </th>
                         ))}
+                        <th className="c-outcome">Outcome</th>
                       </tr>
                     </thead>
 
@@ -269,6 +308,16 @@ export default function FollowUps() {
                                 </td>
                               );
                             })}
+
+                            <td>
+                              <button
+                                className={`fu-close ${notes.length >= FOLLOWUP_SLOTS ? "due" : ""}`}
+                                onClick={() => setClosing({ lead, status: "", note: "" })}
+                                title="Record how this follow-up ended"
+                              >
+                                Close Lead
+                              </button>
+                            </td>
                           </tr>
                         );
                       })}
@@ -326,7 +375,117 @@ export default function FollowUps() {
         </div>
       )}
 
+      {closing && (
+        <div className="fu-modal-backdrop" onClick={() => setClosing(null)}>
+          <div className="fu-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="fu-modal-head">
+              <div>
+                <h5>Close Lead · {closing.lead.fullName}</h5>
+                <p>
+                  {closing.lead.leadId || digitsOnly(closing.lead.phone)} ·{" "}
+                  {(closing.lead.followUps || []).length} follow-ups written
+                </p>
+              </div>
+              <button onClick={() => setClosing(null)}>
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="fu-modal-body">
+              <label>How did it end?</label>
+              <div className="fu-outcomes">
+                {OUTCOMES.map((o) => (
+                  <button
+                    key={o.status}
+                    type="button"
+                    className={`fu-outcome ${closing.status === o.status ? "active" : ""}`}
+                    onClick={() => setClosing({ ...closing, status: o.status })}
+                  >
+                    <span className="fu-outcome-name">{o.label}</span>
+                    <span className="fu-outcome-desc">{o.desc}</span>
+                  </button>
+                ))}
+              </div>
+
+              <label>Remark (optional)</label>
+              <textarea
+                rows={3}
+                value={closing.note}
+                onChange={(e) => setClosing({ ...closing, note: e.target.value })}
+                placeholder="Paid the first instalment, joined the Class 10 batch"
+                maxLength={2000}
+              />
+            </div>
+
+            <div className="fu-modal-foot">
+              <button className="fu-btn-ghost" onClick={() => setClosing(null)}>
+                Cancel
+              </button>
+              <button className="fu-btn" disabled={saving || !closing.status} onClick={closeLead}>
+                {saving ? "Saving…" : "Save Outcome"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
+        .fu-table .c-outcome {
+          width: 150px;
+        }
+        .fu-close {
+          width: 100%;
+          min-height: 54px;
+          border-radius: 10px;
+          border: 1px solid #ded7f6;
+          background: #f1eefc;
+          color: #4634ad;
+          font-size: 0.8rem;
+          font-weight: 700;
+        }
+        .fu-close:hover {
+          border-color: #5641ce;
+        }
+        .fu-close.due {
+          background: #5641ce;
+          border-color: #5641ce;
+          color: #fff;
+        }
+        .fu-outcomes {
+          display: grid;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+        .fu-outcome {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+          border: 1px solid #e2e8f0;
+          background: #fff;
+          border-radius: 10px;
+          padding: 9px 12px;
+        }
+        .fu-outcome:hover {
+          border-color: #cbd5e1;
+        }
+        .fu-outcome.active {
+          border-color: #5641ce;
+          background: #f1eefc;
+        }
+        .fu-outcome-name {
+          font-weight: 700;
+          color: #0f172a;
+          font-size: 0.88rem;
+        }
+        .fu-outcome.active .fu-outcome-name {
+          color: #4634ad;
+        }
+        .fu-outcome-desc {
+          font-size: 0.76rem;
+          color: #64748b;
+        }
+
         .fu-bg {
           background: #f1f5f9;
         }
@@ -495,7 +654,7 @@ export default function FollowUps() {
           border-spacing: 0;
           font-size: 0.85rem;
           table-layout: fixed;
-          width: 1710px;
+          width: 1860px;
         }
         .fu-table thead th {
           text-align: left;

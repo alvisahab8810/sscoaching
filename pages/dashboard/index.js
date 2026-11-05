@@ -4,6 +4,7 @@ import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import React, { useEffect, useState } from "react";
+import SalesDashboard from "@/components/dashboard/sales/SalesDashboard";
 
 export default function Dashboard() {
   const emptyCounts = { total: 0, published: 0, draft: 0 };
@@ -59,6 +60,8 @@ export default function Dashboard() {
               Welcome, {welcomeName} 👋
             </h4>
 
+            {session?.isSales && <SalesDashboard />}
+
             {/* Only show stats the sub-admin has permission for */}
             {(canSee("blogs") || canSee("faqs")) && (
               <div className="stats-cards">
@@ -108,7 +111,7 @@ export default function Dashboard() {
 
             {/* No accessible stats message for sub-admins with no matching permissions */}
             {!session && null}
-            {session && !canSee("blogs") && !canSee("faqs") && (
+            {session && !session.isSales && !canSee("blogs") && !canSee("faqs") && (
               <div style={{ color: "#9ca3af", fontSize: "0.9rem", marginTop: "1rem" }}>
                 No dashboard stats available for your account.
               </div>
