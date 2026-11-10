@@ -224,6 +224,7 @@ export default function CouponsPage() {
           font-weight: 600;
           font-size: 0.85rem;
           color: #475569;
+          white-space: nowrap;
         }
         .cp-seg button + button {
           border-left: 1px solid #e2e8f0;
@@ -499,18 +500,16 @@ export default function CouponsPage() {
               <input className="sl-input" maxLength={300} value={form.description} onChange={(e) => set("description", e.target.value)} />
 
               <div className="cp-section">Discount</div>
+              <label className="sl-label">Type</label>
+              <div className="cp-seg" style={{ marginBottom: 12 }}>
+                <button type="button" className={form.type === "percent" ? "on" : ""} onClick={() => set("type", "percent")}>
+                  Percentage
+                </button>
+                <button type="button" className={form.type === "flat" ? "on" : ""} onClick={() => set("type", "flat")}>
+                  Flat amount
+                </button>
+              </div>
               <div className="cp-row">
-                <div>
-                  <label className="sl-label">Type</label>
-                  <div className="cp-seg">
-                    <button type="button" className={form.type === "percent" ? "on" : ""} onClick={() => set("type", "percent")}>
-                      Percentage
-                    </button>
-                    <button type="button" className={form.type === "flat" ? "on" : ""} onClick={() => set("type", "flat")}>
-                      Flat amount
-                    </button>
-                  </div>
-                </div>
                 <div>
                   <label className="sl-label">{form.type === "percent" ? "Discount (%)" : "Discount (₹)"}</label>
                   <input type="number" min={1} max={form.type === "percent" ? 100 : undefined} className="sl-input" value={form.value} onChange={(e) => set("value", e.target.value)} />

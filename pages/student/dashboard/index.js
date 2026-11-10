@@ -23,6 +23,7 @@ import {
 } from "react-icons/fa";
 import { BiSolidBookOpen } from "react-icons/bi";
 import { BsCollection } from "react-icons/bs";
+import { deviceHeaders } from "@/lib/clientDevice";
 
 /* ─── Subject helpers ─── */
 const subjectColors = {
@@ -1742,7 +1743,7 @@ function BunnyPlayer({ src, videoId, courseId, compactQuality }) {
       if (!video.duration || isNaN(video.duration)) return;
       fetch(`/api/watch-progress/${videoId}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, ...deviceHeaders() },
         body: JSON.stringify({
           courseId,
           watchedTime: Math.floor(video.currentTime),

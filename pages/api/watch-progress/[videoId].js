@@ -7,6 +7,8 @@ import dbConnect from "@/lib/dbConnect";
 import WatchProgress from "@/models/WatchProgress";
 import Enrollment from "@/models/EnrollmentModel";
 import jwt from "jsonwebtoken";
+import { recordWatchTime } from "@/lib/watchTime";
+import { deviceFromRequest } from "@/lib/deviceInfo";
 
 function getStudent(req) {
   try {
@@ -53,17 +55,32 @@ export default async function handler(req, res) {
       ? Math.min(100, Math.round((watchedTime / duration) * 100))
       : 0;
 
-    const progress = await WatchProgress.findOneAndUpdate(
+    // new: false hands back the previous tick, which is what the watch-time
+    // count compares against.
+    const prev = await WatchProgress.findOneAndUpdate(
       { userId: student.id, videoId },
       { $set: { courseId, watchedTime, duration, watchPercentage } },
-      { upsert: true, new: true }
-    );
+      { upsert: true, new: false }
+    ).lean();
+
+    try {
+      await recordWatchTime({
+        prev,
+        userId: student.id,
+        courseId,
+        videoId,
+        watchedTime,
+        device: deviceFromRequest(req),
+      });
+    } catch (err) {
+      console.error("watch time:", err.message);
+    }
 
     return res.status(200).json({
       success: true,
-      watchedTime: progress.watchedTime,
-      duration: progress.duration,
-      watchPercentage: progress.watchPercentage,
+      watchedTime,
+      duration,
+      watchPercentage,
     });
   }
 
