@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import ReferEarnSection from "@/components/student/ReferEarnSection";
 import {
   MdDashboard, MdLiveTv, MdCalendarToday, MdCheckCircle,
   MdLogout, MdMenu, MdPlayCircle, MdPauseCircle, MdNotifications,
@@ -14,7 +15,7 @@ import {
   MdAttachFile, MdArrowForward, MdReceipt, MdDownload, MdOpenInNew,
   MdPayment, MdFavorite, MdFavoriteBorder,
   MdMenuBook, MdAssignment, MdArticle, MdStickyNote2, MdInventory2,
-  MdViewList, MdChevronRight,
+  MdViewList, MdChevronRight, MdCardGiftcard,
 } from "react-icons/md";
 import {
   FaGraduationCap, FaRupeeSign,
@@ -243,6 +244,7 @@ export default function StudentDashboard() {
                 { key:"dashboard", Icon:MdDashboard,     label:"Dashboard" },
                 { key:"courses",   Icon:BsCollection,    label:"Courses",          badge: enrolledCourses.length || 0 },
                 { key:"invoices",  Icon:MdReceipt,       label:"My Invoices" },
+                { key:"referral",  Icon:MdCardGiftcard,  label:"Refer & Earn" },
                 { key:"live",      Icon:MdLiveTv,        label:"Live Classes",     badge: liveClasses.length || 0 },
                 { key:"upcoming",  Icon:MdCalendarToday, label:"Upcoming Classes" },
                 { key:"completed", Icon:MdCheckCircle,   label:"Completed Classes" },
@@ -482,6 +484,7 @@ export default function StudentDashboard() {
 
             {/* ── INVOICES TAB ── */}
             {activeMenu === "invoices" && <InvoicesSection />}
+            {activeMenu === "referral" && <ReferEarnSection />}
 
             {/* LIVE */}
             {activeMenu === "live" && (

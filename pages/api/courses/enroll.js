@@ -2,7 +2,8 @@
 import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
-import Coupon from "@/models/CouponModel";
+import mongoose from "mongoose";
+import { quote, saveCheckoutOrder, settleCheckoutOrder } from "@/lib/checkout";
 import Invoice from "@/models/Invoice";
 import StudentUser from "@/models/StudentUser";
 import jwt from "jsonwebtoken";
@@ -104,38 +105,30 @@ export default async function handler(req, res) {
       let discount    = 0;
       let appliedCode = "";
 
+      // Same rules as checkout (lib/checkout.js).
+      let q = null;
       if (couponCode) {
-        const coupon = await Coupon.findOne({
-          code: couponCode.toUpperCase().trim(),
-          isActive: true,
-        });
-
-        if (!coupon) return res.status(400).json({ error: "Invalid coupon code" });
-        if (coupon.expiresAt && new Date() > coupon.expiresAt)
-          return res.status(400).json({ error: "Coupon has expired" });
-        if (coupon.maxUses > 0 && coupon.usedCount >= coupon.maxUses)
-          return res.status(400).json({ error: "Coupon usage limit reached" });
-        if (course.price < coupon.minAmount)
-          return res.status(400).json({ error: `Minimum order ₹${coupon.minAmount} required` });
-
-        if (coupon.type === "percent") {
-          discount = Math.round((course.price * coupon.value) / 100);
-        } else {
-          discount = Math.min(coupon.value, course.price);
-        }
+        q = await quote({ studentId: student.id, courseIds: [courseId], couponCode, source });
+        if (q.couponError) return res.status(400).json({ error: q.couponError });
+        discount    = q.discount;
         finalPrice  = Math.max(0, course.price - discount);
-        appliedCode = coupon.code;
+        appliedCode = q.coupon.code;
       }
 
       // If finalPrice is 0 after coupon — enroll for free
       if (finalPrice === 0) {
+        const orderId = `coupon_${new mongoose.Types.ObjectId()}`;
         const enrollment = await Enrollment.create({
           student: student.id, course: courseId,
-          type: "paid", amountPaid: 0,
+          type: "paid", amountPaid: 0, orderId,
           couponCode: appliedCode, discount, source,
         });
         await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
-        if (appliedCode) await Coupon.findOneAndUpdate({ code: appliedCode }, { $inc: { usedCount: 1 } });
+        // Records the coupon use against this student.
+        if (q) {
+          await saveCheckoutOrder({ orderId, studentId: student.id, q, source });
+          await settleCheckoutOrder(orderId);
+        }
         // Create invoice + send email (non-blocking)
         const studentDoc = await StudentUser.findById(student.id).select("name email phone").lean();
         const fullStudent = { ...student, name: studentDoc?.name || "", email: studentDoc?.email || "", phone: studentDoc?.phone || "" };

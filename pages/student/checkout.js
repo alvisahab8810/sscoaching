@@ -99,9 +99,77 @@ export default function CheckoutPage() {
     } catch { router.push("/student/dashboard"); }
   }, []);
 
+  /* ── Offers & wallet: priced by the server (/api/checkout/quote) ── */
+  const [quote, setQuote]           = useState(null);
+  const [offers, setOffers]         = useState([]);
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCode, setAppliedCode] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [useWallet, setUseWallet]   = useState(false);
+  const [quoting, setQuoting]       = useState(false);
+  const paidIds = cart.filter((c) => !c.isFree).map((c) => c._id);
+
+  async function refreshQuote({ code = appliedCode, wallet = useWallet, withOffers = false } = {}) {
+    if (!paidIds.length) return null;
+    setQuoting(true);
+    try {
+      const res = await fetch("/api/checkout/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("studentToken")}` },
+        body: JSON.stringify({ courseIds: paidIds, couponCode: code, useWallet: wallet, offers: withOffers }),
+      });
+      const data = await res.json();
+      if (!data.success) return null;
+      setQuote(data.quote);
+      if (withOffers) setOffers(data.coupons || []);
+      return data.quote;
+    } catch { return null; }
+    finally { setQuoting(false); }
+  }
+
+  // First price, with any coupon picked in the cart drawer.
+  useEffect(() => {
+    if (!paidIds.length) return;
+    // The cart drawer saves { code, discount }; older saves may be a plain code.
+    let saved = "";
+    try {
+      const raw = localStorage.getItem("ss_checkout_coupon") || "";
+      saved = raw.startsWith("{") ? JSON.parse(raw).code || "" : raw;
+    } catch {}
+    refreshQuote({ code: saved, wallet: false, withOffers: true }).then((q) => {
+      if (saved && q?.coupon) { setAppliedCode(q.coupon.code); setCouponInput(q.coupon.code); }
+    });
+  }, [paidIds.join(",")]);
+
+  async function applyCoupon(code) {
+    const c = String(code || "").toUpperCase().trim();
+    if (!c) return;
+    setCouponError("");
+    const q = await refreshQuote({ code: c });
+    if (!q) { setCouponError("Could not check this coupon. Please try again."); return; }
+    if (q.couponError) { setCouponError(q.couponError); await refreshQuote({ code: appliedCode }); return; }
+    setAppliedCode(q.coupon.code);
+    setCouponInput(q.coupon.code);
+    localStorage.setItem("ss_checkout_coupon", JSON.stringify({ code: q.coupon.code, discount: q.discount }));
+  }
+
+  async function removeCoupon() {
+    setAppliedCode(""); setCouponInput(""); setCouponError("");
+    localStorage.removeItem("ss_checkout_coupon");
+    await refreshQuote({ code: "" });
+  }
+
+  async function toggleWallet() {
+    const next = !useWallet;
+    setUseWallet(next);
+    await refreshQuote({ wallet: next });
+  }
+
   /* ── Amounts ── */
   const subtotal = cart.reduce((a, c) => a + (c.isFree ? 0 : Number(c.price || 0)), 0);
-  const total    = subtotal; // no discount on checkout page (coupon was in cart drawer)
+  const discount   = quote?.discount || 0;
+  const walletUsed = quote?.walletUsed || 0;
+  const total      = quote ? quote.total : subtotal;
 
   /* ── Validation ── */
   function validate() {
@@ -178,12 +246,29 @@ export default function CheckoutPage() {
       const res  = await fetch("/api/courses/payment", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ courseIds: paidCourses.map((c) => c._id) }),
+        body: JSON.stringify({
+          courseIds: paidCourses.map((c) => c._id),
+          ...(appliedCode ? { couponCode: appliedCode } : {}),
+          ...(useWallet && walletUsed > 0 ? { useWallet: true } : {}),
+        }),
       });
       const data = await res.json();
       if (!data.success) {
         setSubmitting(false);
         setGlobalError(data.error || "Could not start payment. Please try again.");
+        refreshQuote();
+        return;
+      }
+
+      // The wallet covered everything: already enrolled, nothing to pay.
+      if (data.completed) {
+        (data.results || []).forEach((r) => {
+          const course = paidCourses.find((c) => c._id === r.courseId);
+          results.push({ course, success: r.success, invoiceNumber: r.invoiceNumber, emailSent: r.emailSent, error: r.error });
+        });
+        localStorage.removeItem("ss_checkout_coupon");
+        setSubmitting(false);
+        finishOrder(results);
         return;
       }
 
@@ -211,6 +296,7 @@ export default function CheckoutPage() {
             const verifyData = await verifyRes.json();
             setSubmitting(false);
             if (verifyData.success) {
+              localStorage.removeItem("ss_checkout_coupon");
               (verifyData.results || []).forEach((r) => {
                 const course = paidCourses.find((c) => c._id === r.courseId);
                 results.push({ course, success: r.success, invoiceNumber: r.invoiceNumber, emailSent: r.emailSent, error: r.error });
@@ -447,7 +533,7 @@ export default function CheckoutPage() {
               {submitting ? (
                 <><div className="co-btn-spinner" /> Processing...</>
               ) : (
-                <><MdLock size={16} /> Pay {fmt(total)}</>
+                <><MdLock size={16} /> {total === 0 && walletUsed > 0 ? "Pay with wallet" : `Pay ${fmt(total)}`}</>
               )}
             </button>
 
@@ -506,9 +592,82 @@ export default function CheckoutPage() {
                 })}
               </div>
 
+              {/* Offers & wallet */}
+              {paidIds.length > 0 && (
+                <div className="co-offers">
+                  <div className="co-offers-title"><MdLocalOffer size={15} /> Offers &amp; Wallet</div>
+
+                  {appliedCode && quote?.coupon ? (
+                    <div className="co-applied">
+                      <div>
+                        <div className="co-applied-code">{quote.coupon.code}</div>
+                        <div className="co-applied-sub">You save {fmt(discount)}{quote.coupon.title ? ` · ${quote.coupon.title}` : ""}</div>
+                      </div>
+                      <button className="co-link-btn" onClick={removeCoupon} disabled={quoting}>Remove</button>
+                    </div>
+                  ) : (
+                    <div className="co-coupon-row">
+                      <input
+                        className="co-input co-coupon-input"
+                        placeholder="Enter coupon code"
+                        value={couponInput}
+                        maxLength={20}
+                        onChange={(e) => { setCouponInput(e.target.value.toUpperCase().replace(/\s/g, "")); setCouponError(""); }}
+                        onKeyDown={(e) => e.key === "Enter" && applyCoupon(couponInput)}
+                      />
+                      <button className="co-apply-btn" onClick={() => applyCoupon(couponInput)} disabled={quoting || !couponInput}>
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                  {couponError && <div className="co-err" style={{ marginTop: 6 }}>{couponError}</div>}
+
+                  {offers.filter((o) => o.code !== appliedCode).length > 0 && (
+                    <div className="co-offer-list">
+                      {offers.filter((o) => o.code !== appliedCode).map((o) => (
+                        <div key={o.code} className={`co-offer ${o.usable ? "" : "co-offer-off"}`}>
+                          <div className="co-offer-body">
+                            <div className="co-offer-head">
+                              <span className="co-offer-code">{o.code}</span>
+                              {o.usable && o.saving > 0 && <span className="co-offer-save">Save {fmt(o.saving)}</span>}
+                            </div>
+                            {o.title && o.title !== o.code && <div className="co-offer-title">{o.title}</div>}
+                            <div className="co-offer-terms">{o.terms}</div>
+                            {!o.usable && <div className="co-offer-reason">{o.reason}</div>}
+                          </div>
+                          <button className="co-link-btn" disabled={!o.usable || quoting} onClick={() => applyCoupon(o.code)}>
+                            Apply
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {quote?.walletBalance > 0 && (
+                    <label className={`co-wallet ${quote.walletUsable > 0 ? "" : "co-offer-off"}`}>
+                      <input type="checkbox" checked={useWallet} disabled={quoting || quote.walletUsable <= 0} onChange={toggleWallet} />
+                      <div style={{ flex: 1 }}>
+                        <div className="co-wallet-title">Use wallet balance</div>
+                        <div className="co-wallet-sub">
+                          Balance {fmt(quote.walletBalance)}
+                          {quote.walletUsable < quote.walletBalance && quote.walletUsable > 0 ? ` · up to ${fmt(quote.walletUsable)} on this order` : ""}
+                        </div>
+                      </div>
+                      {useWallet && walletUsed > 0 && <span className="co-wallet-amt">−{fmt(walletUsed)}</span>}
+                    </label>
+                  )}
+                </div>
+              )}
+
               {/* Totals */}
               <div className="co-totals">
                 <div className="co-total-row"><span>Subtotal</span><span>{fmt(subtotal)}</span></div>
+                {discount > 0 && (
+                  <div className="co-total-row co-total-green"><span>Coupon ({appliedCode})</span><span>−{fmt(discount)}</span></div>
+                )}
+                {walletUsed > 0 && (
+                  <div className="co-total-row co-total-green"><span>Wallet</span><span>−{fmt(walletUsed)}</span></div>
+                )}
                 <div className="co-total-divider" />
                 <div className="co-total-row co-total-final">
                   <span>Total</span>
@@ -660,6 +819,36 @@ export default function CheckoutPage() {
         .co-total-divider { border:none; border-top:1px solid #f0f1fa; margin:8px 0; }
         .co-total-final { font-size:1rem; font-weight:900; color:#0f1f3d; padding-top:6px; }
         .co-total-final span:last-child { color:#6c47d4; }
+
+        .co-total-green { color:#059669; font-weight:600; }
+
+        /* Offers & wallet */
+        .co-offers { border-top:1.5px solid #f0f1fa; padding:14px 0; }
+        .co-offers-title { font-size:0.8rem; font-weight:800; color:#0f1f3d; display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+        .co-coupon-row { display:flex; gap:8px; }
+        .co-coupon-input { text-transform:uppercase; font-weight:700; letter-spacing:0.04em; }
+        .co-apply-btn { padding:0 16px; border:none; border-radius:8px; background:#6c47d4; color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer; }
+        .co-apply-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .co-applied { display:flex; align-items:center; justify-content:space-between; gap:10px; border:1.5px dashed #6ee7b7; background:#ecfdf5; border-radius:10px; padding:10px 12px; }
+        .co-applied-code { font-weight:800; font-size:0.85rem; color:#065f46; letter-spacing:0.04em; }
+        .co-applied-sub { font-size:0.72rem; color:#047857; margin-top:1px; }
+        .co-link-btn { background:none; border:none; color:#6c47d4; font-weight:800; font-size:0.78rem; cursor:pointer; padding:4px 2px; white-space:nowrap; }
+        .co-link-btn:disabled { color:#c4c9dd; cursor:not-allowed; }
+        .co-offer-list { display:flex; flex-direction:column; gap:8px; margin-top:12px; max-height:260px; overflow-y:auto; }
+        .co-offer { display:flex; align-items:flex-start; gap:10px; border:1.5px solid #e2e5f8; border-radius:10px; padding:10px 12px; }
+        .co-offer-off { opacity:0.6; }
+        .co-offer-body { flex:1; min-width:0; }
+        .co-offer-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .co-offer-code { font-weight:800; font-size:0.78rem; color:#0f1f3d; border:1px dashed #c4b5fd; background:#faf8ff; border-radius:5px; padding:1px 7px; letter-spacing:0.04em; }
+        .co-offer-save { font-size:0.7rem; font-weight:800; color:#059669; }
+        .co-offer-title { font-size:0.76rem; font-weight:700; color:#374151; margin-top:4px; }
+        .co-offer-terms { font-size:0.7rem; color:#8491a8; margin-top:2px; line-height:1.45; }
+        .co-offer-reason { font-size:0.7rem; color:#b45309; margin-top:3px; font-weight:600; }
+        .co-wallet { display:flex; align-items:center; gap:10px; margin-top:12px; border:1.5px solid #e2e5f8; border-radius:10px; padding:10px 12px; cursor:pointer; }
+        .co-wallet input { width:16px; height:16px; accent-color:#6c47d4; }
+        .co-wallet-title { font-size:0.8rem; font-weight:700; color:#0f1f3d; }
+        .co-wallet-sub { font-size:0.7rem; color:#8491a8; }
+        .co-wallet-amt { font-size:0.82rem; font-weight:800; color:#059669; }
 
         /* Invoice note */
         .co-invoice-note { display:flex; align-items:center; gap:6px; font-size:0.72rem; color:#8491a8; margin-top:14px; padding-top:12px; border-top:1px solid #f0f1fa; }

@@ -15,6 +15,7 @@ import Script from 'next/script';
 // ✅ Next.js optimized fonts (removes render-blocking)
 import { Be_Vietnam_Pro, Outfit } from 'next/font/google';
 import AnnouncementBar from '@/components/home/AnnouncementBar';
+import SupportWidget from '@/components/support/SupportWidget';
 import { captureLeadSource } from '@/lib/leadSource';
 AnnouncementBar
 const beVietnam = Be_Vietnam_Pro({
@@ -166,6 +167,7 @@ function MyApp({ Component, pageProps }) {
         
         <Component {...pageProps} />
          {!router.pathname.startsWith("/dashboard") && <AnnouncementBar />}
+         {!router.pathname.startsWith("/dashboard") && <SupportWidget />}
 
        
       </div>

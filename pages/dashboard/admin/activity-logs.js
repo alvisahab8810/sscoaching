@@ -24,6 +24,7 @@ const ALL_FEATURES = [
   { key: "online-classes", label: "Live Classes" }, { key: "invoices", label: "Invoices" },
   { key: "enrollments", label: "Enrollments" },
   { key: "pages", label: "Pages" },
+  { key: "support", label: "Support Chat" },
 ];
 
 const FEATURE_LABELS = ALL_FEATURES.reduce((acc, f) => {

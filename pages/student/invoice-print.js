@@ -247,6 +247,12 @@ export default function InvoicePrintPage() {
                     <td style={{ padding:"8px 13px", fontSize:12, fontWeight:600, color:"#10b981", textAlign:"right" }}>− {fmt(invoice.discount)}</td>
                   </tr>
                 )}
+                {invoice.walletUsed > 0 && (
+                  <tr style={{ borderTop:`1px solid ${C.border}` }}>
+                    <td colSpan={4} style={{ padding:"8px 13px", fontSize:12, color:"#10b981", textAlign:"right" }}>Paid from wallet</td>
+                    <td style={{ padding:"8px 13px", fontSize:12, fontWeight:600, color:"#10b981", textAlign:"right" }}>− {fmt(invoice.walletUsed)}</td>
+                  </tr>
+                )}
                 {invoice.tax > 0 && (
                   <tr style={{ borderTop:`1px solid ${C.border}` }}>
                     <td colSpan={4} style={{ padding:"8px 13px", fontSize:12, color:C.gray, textAlign:"right" }}>Tax (GST)</td>

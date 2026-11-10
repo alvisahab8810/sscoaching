@@ -21,6 +21,7 @@ const ALL_FEATURES = [
   { key: "invoices", label: "Invoices", desc: "View and manage billing" },
   { key: "enrollments", label: "Enrollments", desc: "Track student enrollments" },
   { key: "pages", label: "Pages", desc: "Edit website page content" },
+  { key: "support", label: "Support Chat", desc: "Answer student chats handed over by the bot" },
 ];
 
 function generatePassword(len = 12) {

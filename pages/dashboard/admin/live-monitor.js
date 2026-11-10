@@ -22,6 +22,7 @@ const FEATURE_LABELS = {
   invoices: "Invoices",
   enrollments: "Enrollments",
   pages: "Pages",
+  support: "Support Chat",
   dashboard: "Dashboard",
   other: "Other",
 };

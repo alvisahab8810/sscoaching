@@ -15,7 +15,7 @@ const FEATURE_LABELS = {
   blogs: "Blogs", faqs: "FAQs", students: "Students", courses: "Courses",
   admissions: "Applications", announcements: "Announcements", leads: "Leads",
   "student-success": "Student Success", "online-classes": "Live Classes",
-  invoices: "Invoices", enrollments: "Enrollments",
+  invoices: "Invoices", enrollments: "Enrollments", support: "Support Chat",
 };
 
 export default function SubAdminsPage() {

@@ -83,6 +83,13 @@ const StudentUserSchema = new mongoose.Schema(
       default: null,
     },
 
+    // Refer and earn (lib/referral.js). Wallet money is only spent on courses.
+    walletBalance: { type: Number, default: 0, min: 0 },
+    referralCode: { type: String, unique: true, sparse: true, uppercase: true, trim: true },
+    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: "StudentUser", default: null },
+    referredAt: { type: Date, default: null },
+    referralRewarded: { type: Boolean, default: false },
+
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpiry: { type: Date, select: false },
   },

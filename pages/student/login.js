@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   MdLiveTv, MdMenuBook, MdEmojiEvents,
   MdEmail, MdLock, MdPerson, MdPhone,
-  MdCheckCircle, MdArrowBack, MdRefresh,
+  MdCheckCircle, MdArrowBack, MdRefresh, MdCardGiftcard,
 } from "react-icons/md";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -82,6 +82,7 @@ export default function StudentLogin() {
   const [regPass, setRegPass]   = useState("");
   const [regPhone, setRegPhone] = useState("");
   const [regClass, setRegClass] = useState("");
+  const [regRef, setRegRef]     = useState(""); // optional friend's referral code
   const [regLoading, setRegLoading] = useState(false);
   const [regError, setRegError] = useState("");
 
@@ -111,13 +112,43 @@ export default function StudentLogin() {
     if (notice) setLoginError(String(notice));
   }, [router.isReady, router.query.message]);
 
+  // A friend's invite link (/refer/CODE) lands here with ?ref= and also
+  // leaves the code in localStorage, so it is filled in on the register form.
+  useEffect(() => {
+    if (!router.isReady) return;
+    let ref = typeof router.query.ref === "string" ? router.query.ref : "";
+    try { ref = ref || localStorage.getItem("ss_ref") || ""; } catch {}
+    ref = ref.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+    if (ref) setRegRef(ref);
+    if (router.query.ref) setMode("register");
+  }, [router.isReady, router.query.ref]);
+
+  // Adds the referral code to the new account. A wrong code must not
+  // block signup; the student can add it later from Refer & Earn.
+  const applyReferral = async (token) => {
+    const code = regRef.trim();
+    if (!code || !token) return;
+    try {
+      await fetch("/api/referral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ code }),
+      });
+      localStorage.removeItem("ss_ref");
+    } catch {}
+  };
+
   const saveAndRedirect = (data) => {
     localStorage.setItem("studentToken", data.token);
     localStorage.setItem("studentInfo", JSON.stringify({
       id: data.user._id, name: data.user.name, phone: data.user.phone,
       className: data.user.class, email: data.user.email, avatar: data.user.avatar,
     }));
-    router.push("/student/dashboard");
+    // ?next= sends the student back to the page they came from (for
+    // example the support chat). Only paths on this site are allowed.
+    const next = typeof router.query.next === "string" ? router.query.next : "";
+    const safe = next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\");
+    router.push(safe ? next : "/student/dashboard");
   };
 
   /* ── Login ── */
@@ -159,7 +190,7 @@ export default function StudentLogin() {
         body: JSON.stringify({ phone: regPhone, otp: otp.trim() }),
       });
       const data = await res.json();
-      if (data.success) saveAndRedirect(data);
+      if (data.success) { await applyReferral(data.token); saveAndRedirect(data); }
       else setOtpError(data.message || "Wrong OTP");
     } catch { setOtpError("Server error. Please try again."); }
     setOtpLoading(false);
@@ -364,6 +395,16 @@ export default function StudentLogin() {
                           <MdLock className="sl-ii" size={16}/>
                           <input type="password" className="sl-input" placeholder="Min. 6 characters"
                             value={regPass} onChange={e => setRegPass(e.target.value)} required minLength={6}/>
+                        </div>
+                      </div>
+                      {/* Referral code (optional) */}
+                      <div className="sl-field">
+                        <label className="sl-label">Referral code <span style={{ fontWeight: 500, color: "#9ca3af" }}>(optional)</span></label>
+                        <div className="sl-iw">
+                          <MdCardGiftcard className="sl-ii" size={16}/>
+                          <input type="text" className="sl-input" placeholder="Friend's code, if you have one"
+                            value={regRef} maxLength={12}
+                            onChange={e => setRegRef(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))}/>
                         </div>
                       </div>
                       {regError && <div className="sl-err">{regError}</div>}

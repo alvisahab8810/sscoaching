@@ -30,7 +30,8 @@ const InvoiceSchema = new mongoose.Schema(
     subtotal:   { type: Number, default: 0 },
     discount:   { type: Number, default: 0 },
     couponCode: { type: String, default: "" },
-    tax:        { type: Number, default: 0 },
+    walletUsed: { type: Number, default: 0 },
+    tax:       { type: Number, default: 0 },
     total:      { type: Number, required: true },
 
     /* ── Status ──

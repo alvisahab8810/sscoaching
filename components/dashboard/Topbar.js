@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getCachedAdminSession, fetchAdminSession, clearAdminSession } from "@/lib/adminSession";
+import SupportAlert from "@/components/dashboard/SupportAlert";
 
 export default function Topbar() {
   const [session, setSession] = useState(() => getCachedAdminSession());
@@ -60,6 +61,7 @@ export default function Topbar() {
 
   return (
     <div className="dashboard-navbar">
+      <SupportAlert session={session} />
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
         <div className="container-fluid">
           <Link href="/dashboard">

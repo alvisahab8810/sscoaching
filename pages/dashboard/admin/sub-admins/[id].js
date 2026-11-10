@@ -24,6 +24,7 @@ const ALL_FEATURES = [
   { key: "invoices", label: "Invoices", desc: "Billing" },
   { key: "enrollments", label: "Enrollments", desc: "Enrollments" },
   { key: "pages", label: "Pages", desc: "Website page content" },
+  { key: "support", label: "Support Chat", desc: "Student support chats" },
 ];
 
 const ACTION_COLORS = {

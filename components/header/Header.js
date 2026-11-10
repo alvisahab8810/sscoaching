@@ -205,7 +205,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi"; // dropdown arrow icon
-import { FaPhoneAlt, FaSignInAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaSignInAlt, FaUserCircle } from "react-icons/fa";
+import useStudentName from "./useStudentName";
 import { FiDownload } from "react-icons/fi";
 import GoogleTranslate from "../home/Googletranslate";
 import Breadcrumb from "../home/Breadcrumb";
@@ -216,6 +217,7 @@ const PLAY_STORE_URL =
 export default function Header() {
   
   const [openDropdown, setOpenDropdown] = useState(null);
+  const studentName = useStudentName();
   const pathname = usePathname();
 
   const toggleDropdown = (menu) => {
@@ -526,12 +528,21 @@ export default function Header() {
               {/* Student login replaces the contact button in the header.
                  The old Contact Us button is kept below, commented out, so it
                  can be restored without rebuilding the markup. */}
-              <Link href="/student/login" className="header-download-btn">
-                Login
-                <span className="header-contact-btn__icon">
-                  <FaSignInAlt />
-                </span>
-              </Link>
+              {studentName ? (
+                <Link href="/student/dashboard" className="header-download-btn" title="My dashboard">
+                  {studentName}
+                  <span className="header-contact-btn__icon">
+                    <FaUserCircle />
+                  </span>
+                </Link>
+              ) : (
+                <Link href="/student/login" className="header-download-btn">
+                  Login
+                  <span className="header-contact-btn__icon">
+                    <FaSignInAlt />
+                  </span>
+                </Link>
+              )}
 
               {/* <button
                 className="header-contact-btn"

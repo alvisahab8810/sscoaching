@@ -43,11 +43,7 @@ export default function CartDrawer({ open, onClose, cart, removeFromCart, onEnro
   const [enrollingFree, setEnrollingFree] = useState(false);
 
   const subtotal = cart.reduce((a, c) => a + (c.isFree ? 0 : Number(c.price || 0)), 0);
-  const discount = couponApplied
-    ? couponApplied.type === "percent"
-      ? Math.round((subtotal * couponApplied.value) / 100)
-      : Math.min(couponApplied.value, subtotal)
-    : 0;
+  const discount = couponApplied ? Math.min(couponApplied.discount, subtotal) : 0;
   const total    = Math.max(0, subtotal - discount);
   const hasPaid  = cart.some((c) => !c.isFree);
   const allFree  = cart.every((c) => c.isFree);
@@ -57,21 +53,20 @@ export default function CartDrawer({ open, onClose, cart, removeFromCart, onEnro
     if (!coupon.trim()) return;
     setCouponLoading(true); setCouponError("");
     try {
-      const paidCourse = cart.find((c) => !c.isFree);
-      if (!paidCourse) { setCouponError("No paid courses in cart"); setCouponLoading(false); return; }
+      const paidIds = cart.filter((c) => !c.isFree).map((c) => c._id);
+      if (!paidIds.length) { setCouponError("No paid courses in cart"); setCouponLoading(false); return; }
       const token = localStorage.getItem("studentToken");
-      const res   = await fetch("/api/courses/enroll", {
+      // Only checks the code; the discount is taken at checkout.
+      const res   = await fetch("/api/checkout/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ courseId: paidCourse._id, couponCode: coupon }),
+        body: JSON.stringify({ courseIds: paidIds, couponCode: coupon, offers: false }),
       });
       const data = await res.json();
-      if (data.success && data.type === "paid") {
-        setCouponApplied({ code: data.couponCode, discount: data.discount, type: "flat", value: data.discount });
-      } else if (data.success && data.type === "free") {
-        setCouponApplied({ code: coupon.toUpperCase(), discount: subtotal, type: "flat", value: subtotal });
+      if (data.success && data.quote?.coupon) {
+        setCouponApplied({ code: data.quote.coupon.code, discount: data.quote.discount });
       } else {
-        setCouponError(data.error || "Invalid coupon"); setCouponApplied(null);
+        setCouponError(data.quote?.couponError || data.message || "Invalid coupon"); setCouponApplied(null);
       }
     } catch { setCouponError("Network error"); }
     setCouponLoading(false);

@@ -12,6 +12,7 @@ import dbConnect from "@/lib/dbConnect";
 import Course from "@/models/CourseModel";
 import Enrollment from "@/models/EnrollmentModel";
 import jwt from "jsonwebtoken";
+import { rewardReferral } from "@/lib/referral";
 import {
   BUNDLE_ID,
   accountTokenForStudent,
@@ -58,6 +59,10 @@ async function enrolFromTransaction(jws, studentId) {
       source:    "app",
     });
     await Course.findByIdAndUpdate(courseId, { $inc: { enrolledCount: 1 } });
+    // Sandbox (TestFlight) purchases are not real money, so they earn no referral reward.
+    if (tx.environment !== "Sandbox") {
+      await rewardReferral(studentId, tx.price ? Math.round(tx.price / 1000) : 0, `apple:${tx.transactionId}`);
+    }
     return { ...base, success: true, environment: tx.environment };
   } catch (err) {
     if (err.code === 11000) return { ...base, success: true, alreadyEnrolled: true };

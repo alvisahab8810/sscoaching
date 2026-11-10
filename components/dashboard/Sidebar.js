@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiClipboard, FiFileText, FiSearch } from "react-icons/fi";
+import { FiClipboard, FiFileText, FiSearch, FiMessageSquare, FiGitBranch, FiTag, FiGift } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
 import { MdHistory, MdBarChart, MdNotifications, MdSchool } from "react-icons/md";
@@ -26,6 +26,7 @@ const FEATURE_PATHS = {
   enrollments: "/dashboard/admin/enrollments",
   pages: "/dashboard/admin/pages",
   analytics: "/dashboard/admin/analytics",
+  support: "/dashboard/admin/support",
 };
 
 export default function Sidebar() {
@@ -313,6 +314,14 @@ export default function Sidebar() {
           </li>
         )}
 
+        {canSee("support") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/support" style={styles.navLink(pathname === "/dashboard/admin/support")}>
+              <FiMessageSquare style={{ marginRight: "8px" }} size={16} /> Support Inbox
+            </Link>
+          </li>
+        )}
+
         {/* Super Admin Only Section */}
         {isSuperAdmin && (
           <>
@@ -340,6 +349,21 @@ export default function Sidebar() {
             <li style={styles.navItem}>
               <Link href="/dashboard/admin/teachers"style={styles.navLink(pathname?.startsWith("/dashboard/admin/teachers"))}>
                 <MdSchool style={{ marginRight: "8px" }} size={16} /> Teachers
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/support/bot" style={styles.navLink(pathname === "/dashboard/admin/support/bot")}>
+                <FiGitBranch style={{ marginRight: "8px" }} size={16} /> Support Bot
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/coupons" style={styles.navLink(pathname?.startsWith("/dashboard/admin/coupons"))}>
+                <FiTag style={{ marginRight: "8px" }} size={16} /> Coupons
+              </Link>
+            </li>
+            <li style={styles.navItem}>
+              <Link href="/dashboard/admin/referrals" style={styles.navLink(pathname?.startsWith("/dashboard/admin/referrals"))}>
+                <FiGift style={{ marginRight: "8px" }} size={16} /> Refer &amp; Earn
               </Link>
             </li>
             <li style={styles.navItem}>

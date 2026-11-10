@@ -203,9 +203,11 @@
 import React from "react";
 import Link from "next/link";
 import { FiDownload } from "react-icons/fi";
-import { FaPhoneAlt, FaSignInAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaSignInAlt, FaUserCircle } from "react-icons/fa";
+import useStudentName from "./useStudentName";
 import GoogleTranslate from "../home/Googletranslate";  
 export default function Offcanvas() {
+  const studentName = useStudentName();
   // Bootstrap cannot hand over from one offcanvas to another through data
   // attributes: dismissing this panel tears down the shared backdrop while the
   // second one is opening, so it flashes and closes again. Chain them by hand.
@@ -542,10 +544,17 @@ export default function Offcanvas() {
               {/* Student login replaces Contact Us in the mobile menu, matching
                  the header. The old entry is kept below, commented out. */}
               <li className="nav-item">
-                <Link href="/student/login" className="nav-link mob-canvas-login-link">
-                  Login
-                  <FaSignInAlt className="mob-canvas-login-icon" />
-                </Link>
+                {studentName ? (
+                  <Link href="/student/dashboard" className="nav-link mob-canvas-login-link">
+                    {studentName}
+                    <FaUserCircle className="mob-canvas-login-icon" />
+                  </Link>
+                ) : (
+                  <Link href="/student/login" className="nav-link mob-canvas-login-link">
+                    Login
+                    <FaSignInAlt className="mob-canvas-login-icon" />
+                  </Link>
+                )}
               </li>
 
               {/* <li className="nav-item">
