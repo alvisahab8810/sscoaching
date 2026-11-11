@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import ReferEarnSection from "@/components/student/ReferEarnSection";
+import ClassSchedule, { TodayClassesCard } from "@/components/student/ClassSchedule";
 import {
   MdDashboard, MdLiveTv, MdCalendarToday, MdCheckCircle,
   MdLogout, MdMenu, MdPlayCircle, MdPauseCircle, MdNotifications,
@@ -78,6 +79,7 @@ export default function StudentDashboard() {
   const [sidebarOpen, setSidebarOpen]   = useState(false);
   const [activeCourse, setActiveCourse]   = useState(null);
   const [detailCourseId, setDetailCourseId] = useState(null);
+  const [schedules, setSchedules]       = useState([]);
 
   /* ── Auth + init ── */
   useEffect(() => {
@@ -116,6 +118,11 @@ export default function StudentDashboard() {
 
     fetchClasses(token);
     fetchCourses(token);
+    // Timetables of the Pro batches this student has bought (empty otherwise).
+    fetch("/api/class-schedule", { headers:{ Authorization:`Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setSchedules(d.schedules); })
+      .catch(() => {});
   }, []);
 
   /* ── Restore active tab + course from URL on load / refresh ── */
@@ -244,6 +251,7 @@ export default function StudentDashboard() {
               {[
                 { key:"dashboard", Icon:MdDashboard,     label:"Dashboard" },
                 { key:"courses",   Icon:BsCollection,    label:"Courses",          badge: enrolledCourses.length || 0 },
+                ...(schedules.length ? [{ key:"schedule", Icon:MdDateRange, label:"Class Schedule" }] : []),
                 { key:"invoices",  Icon:MdReceipt,       label:"My Invoices" },
                 { key:"referral",  Icon:MdCardGiftcard,  label:"Refer & Earn" },
                 { key:"live",      Icon:MdLiveTv,        label:"Live Classes",     badge: liveClasses.length || 0 },
@@ -384,6 +392,8 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
+                <TodayClassesCard schedules={schedules} onOpen={() => navigate("schedule")} />
+
                 {/* Continue Watching */}
                 {enrolledCourses.length > 0 && (
                   <div className="sdd-cw-section">
@@ -486,6 +496,7 @@ export default function StudentDashboard() {
             {/* ── INVOICES TAB ── */}
             {activeMenu === "invoices" && <InvoicesSection />}
             {activeMenu === "referral" && <ReferEarnSection />}
+            {activeMenu === "schedule" && <ClassSchedule schedules={schedules} />}
 
             {/* LIVE */}
             {activeMenu === "live" && (

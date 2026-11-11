@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { FiClipboard, FiFileText, FiSearch, FiMessageSquare, FiGitBranch, FiTag, FiGift } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { BsChevronDown, BsPlusCircle, BsListUl, BsPeople, BsCollection, BsShieldLock } from "react-icons/bs";
-import { MdHistory, MdBarChart, MdNotifications, MdSchool } from "react-icons/md";
+import { MdHistory, MdBarChart, MdNotifications, MdSchool, MdSchedule } from "react-icons/md";
 import { getCachedAdminSession, fetchAdminSession } from "@/lib/adminSession";
 
 // Remembered across navigations so the sidebar is positioned correctly on its
@@ -262,6 +262,14 @@ export default function Sidebar() {
           <li style={styles.navItem}>
             <Link href="/dashboard/admin/courses" style={styles.navLink(pathname?.startsWith("/dashboard/admin/courses"))}>
               <BsCollection style={{ marginRight: "8px" }} size={18} /> Courses
+            </Link>
+          </li>
+        )}
+
+        {canSee("courses") && (
+          <li style={styles.navItem}>
+            <Link href="/dashboard/admin/class-schedule" style={styles.navLink(pathname?.startsWith("/dashboard/admin/class-schedule"))}>
+              <MdSchedule style={{ marginRight: "8px" }} size={18} /> Class Schedule
             </Link>
           </li>
         )}
