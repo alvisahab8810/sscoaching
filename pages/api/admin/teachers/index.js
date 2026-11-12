@@ -4,6 +4,7 @@ import LiveClass from "@/models/LiveClassModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { requireAdminApi } from "@/lib/requireAdminApi";
 
 /**
  * Teacher accounts, managed by the super admin.
@@ -23,6 +24,13 @@ function isSuperAdmin(req) {
     return false;
   }
 }
+
+// Login secrets never leave the server, not even to the admin's browser.
+const SECRET_FIELDS = "-password -passwordHash";
+const withoutSecrets = (doc) => {
+  const { password, passwordHash, ...rest } = doc?.toObject ? doc.toObject() : doc;
+  return rest;
+};
 
 function createTransporter() {
   return nodemailer.createTransport({
@@ -85,7 +93,18 @@ function buildInviteEmail({ name, username, password, loginUrl }) {
 }
 
 export default async function handler(req, res) {
-  if (!isSuperAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+  // A sub-admin who schedules online classes needs the teacher dropdown:
+  // names, subjects and classes of active teachers only, nothing else.
+  if (!isSuperAdmin(req)) {
+    if (req.method !== "GET" || !requireAdminApi(req, "online-classes"))
+      return res.status(403).json({ message: "Forbidden" });
+    await dbConnect();
+    const data = await Teacher.find({ status: "active" })
+      .select("name subjects classes status")
+      .sort({ name: 1 })
+      .lean();
+    return res.status(200).json({ success: true, data, total: data.length, page: 1, pages: 1 });
+  }
 
   await dbConnect();
 
@@ -103,7 +122,7 @@ export default async function handler(req, res) {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const [teachers, total] = await Promise.all([
-      Teacher.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).lean(),
+      Teacher.find(filter).select(SECRET_FIELDS).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).lean(),
       Teacher.countDocuments(filter),
     ]);
 
@@ -200,13 +219,13 @@ export default async function handler(req, res) {
       // The account exists either way -- the admin can resend from the list.
       return res.status(201).json({
         success: true,
-        data: teacher,
+        data: withoutSecrets(teacher),
         emailSent: false,
         emailError: err.message,
       });
     }
 
-    return res.status(201).json({ success: true, data: teacher, emailSent: true });
+    return res.status(201).json({ success: true, data: withoutSecrets(teacher), emailSent: true });
   }
 
   return res.status(405).end();

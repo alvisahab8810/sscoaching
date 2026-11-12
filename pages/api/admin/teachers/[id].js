@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "GET") {
-    const teacher = await Teacher.findById(id).lean();
+    const teacher = await Teacher.findById(id).select("-password -passwordHash").lean();
     if (!teacher) return res.status(404).json({ message: "Teacher not found" });
 
     const [classes, logs] = await Promise.all([
@@ -90,7 +90,9 @@ export default async function handler(req, res) {
       update.passwordHash = await bcrypt.hash(password, 10);
     }
 
-    const teacher = await Teacher.findByIdAndUpdate(id, update, { new: true }).lean();
+    const teacher = await Teacher.findByIdAndUpdate(id, update, { new: true })
+      .select("-password -passwordHash")
+      .lean();
     if (!teacher) return res.status(404).json({ message: "Teacher not found" });
 
     return res.status(200).json({ success: true, data: teacher });
