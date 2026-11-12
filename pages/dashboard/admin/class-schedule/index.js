@@ -6,7 +6,12 @@ import { withAdminAuth } from "@/lib/withAdminAuth";
 import Topbar from "@/components/dashboard/Topbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
-import { WEEK, dayName, fmt12, TEMPLATES, suggestTemplate } from "@/lib/classSchedule";
+import { WEEK, dayName, fmt12, TEMPLATES, suggestTemplate, matchSubject, SLOT_TYPES, slotTitle } from "@/lib/classSchedule";
+
+// Printed timing, with each subject renamed to the course's own subject name.
+// A subject the course doesn't teach is left blank for the admin to pick.
+const fromTemplate = (t, subjects) =>
+  t.slots.map((x) => ({ ...x, type: "class", days: [], subject: subjects.length ? matchSubject(x.subject, subjects) : x.subject }));
 
 const daysText = (days) => WEEK.filter((w) => days.includes(w.d)).map((w) => w.short).join(", ");
 
@@ -32,7 +37,10 @@ export default function ClassSchedulePage() {
   const open = (course) => {
     const s = course.schedule;
     if (s) {
-      setEdit({ course, active: s.active, days: [...s.days], slots: s.slots.map((x) => ({ ...x })), note: s.note || "" });
+      setEdit({
+        course, active: s.active, days: [...s.days], note: s.note || "",
+        slots: s.slots.map((x) => ({ ...x, type: x.type || "class", days: [...(x.days || [])] })),
+      });
     } else {
       // New timetable: start from the matching printed timing, if any.
       const t = suggestTemplate(course.title);
@@ -40,7 +48,7 @@ export default function ClassSchedulePage() {
         course,
         active: true,
         days: t ? [...t.days] : [1, 3, 5],
-        slots: t ? t.slots.map((x) => ({ ...x })) : [{ start: "", end: "", subject: "" }],
+        slots: t ? fromTemplate(t, course.subjects) : [{ start: "", end: "", subject: "", type: "class", days: [] }],
         note: t?.note || "",
         fromTemplate: t?.label || "",
       });
@@ -50,7 +58,7 @@ export default function ClassSchedulePage() {
   const applyTemplate = (key) => {
     const t = TEMPLATES.find((x) => x.key === key);
     if (!t) return;
-    setEdit((e) => ({ ...e, days: [...t.days], slots: t.slots.map((x) => ({ ...x })), note: t.note, fromTemplate: t.label }));
+    setEdit((e) => ({ ...e, days: [...t.days], slots: fromTemplate(t, e.course.subjects), note: t.note, fromTemplate: t.label }));
   };
 
   const toggleDay = (d) =>
@@ -60,8 +68,15 @@ export default function ClassSchedulePage() {
   const addSlot = () =>
     setEdit((e) => {
       const last = e.slots[e.slots.length - 1];
-      return { ...e, slots: [...e.slots, { start: last?.end || "", end: "", subject: "" }] };
+      return { ...e, slots: [...e.slots, { start: last?.end || "", end: "", subject: "", type: "class", days: [] }] };
     });
+  // Own days of one row; none picked = the class days above.
+  const toggleSlotDay = (i, d) =>
+    setEdit((e) => ({
+      ...e,
+      slots: e.slots.map((s, j) =>
+        j !== i ? s : { ...s, days: s.days.includes(d) ? s.days.filter((x) => x !== d) : [...s.days, d] }),
+    }));
   const removeSlot = (i) => setEdit((e) => ({ ...e, slots: e.slots.filter((_, j) => j !== i) }));
 
   const save = async () => {
@@ -103,8 +118,10 @@ export default function ClassSchedulePage() {
               <div className="cs-page">
                 <h4 className="cs-title">Class Schedule</h4>
                 <p className="cs-sub">
-                  Weekly class timing of each Pro batch. A student sees only the timing of the Pro batch they have bought,
-                  on the website dashboard and in the app.
+                  Weekly class and doubt session timing of each Pro batch. A student sees only the timing of the course they have bought,
+                  on the website dashboard and in the app. Single subject courses (except TMA and question banks) show their
+                  subject's timing from the Pro batch of the same class, so they need no separate schedule. A live class link
+                  added under Online Classes shows as a Join button on the matching slot while the class is on.
                 </p>
 
                 <div className="cs-card">
@@ -140,7 +157,13 @@ export default function ClassSchedulePage() {
                               <td className="cs-nowrap">{s ? daysText(s.days) || "—" : "—"}</td>
                               <td className="cs-list">
                                 {s ? s.slots.map((x, i) => (
-                                  <div key={i}>{fmt12(x.start)} – {fmt12(x.end)} · {x.subject}</div>
+                                  <div key={i}>
+                                    {fmt12(x.start)} – {fmt12(x.end)} · {slotTitle(x)}
+                                    {x.days?.length > 0 && <span className="cs-muted"> · {daysText(x.days)}</span>}
+                                    {c.subjects.length > 0 && x.subject && !c.subjects.includes(x.subject) && (
+                                      <span className="cs-bad"> (not in this course, hidden from students)</span>
+                                    )}
+                                  </div>
                                 )) : "—"}
                               </td>
                               <td className="cs-right">
@@ -181,6 +204,14 @@ export default function ClassSchedulePage() {
                 </select>
                 {edit.fromTemplate && <span className="cs-muted">Filled from {edit.fromTemplate}. Check before saving.</span>}
               </div>
+              {(() => {
+                const fits = suggestTemplate(edit.course.title);
+                return edit.fromTemplate && fits && fits.label !== edit.fromTemplate ? (
+                  <div className="cs-warn">
+                    This course looks like {fits.label}, but the timing was filled from {edit.fromTemplate}.
+                  </div>
+                ) : null;
+              })()}
 
               <label className="cs-label">Class days</label>
               <div className="cs-days">
@@ -200,14 +231,55 @@ export default function ClassSchedulePage() {
               <label className="cs-label">Classes (IST)</label>
               <table className="cs-table cs-slots">
                 <thead>
-                  <tr><th>Start</th><th>End</th><th>Subject</th><th /></tr>
+                  <tr><th>Start</th><th>End</th><th>Type</th><th>Subject</th><th>Days</th><th /></tr>
                 </thead>
                 <tbody>
                   {edit.slots.map((s, i) => (
                     <tr key={i}>
                       <td><input type="time" className="cs-input" value={s.start} onChange={(e) => setSlot(i, "start", e.target.value)} /></td>
                       <td><input type="time" className="cs-input" value={s.end} onChange={(e) => setSlot(i, "end", e.target.value)} /></td>
-                      <td><input className="cs-input cs-wide" value={s.subject} placeholder="Subject" onChange={(e) => setSlot(i, "subject", e.target.value)} /></td>
+                      <td>
+                        <select className="cs-input" value={s.type} onChange={(e) => setSlot(i, "type", e.target.value)}>
+                          {SLOT_TYPES.map((t) => <option key={t.key} value={t.key}>{t.label}</option>)}
+                        </select>
+                      </td>
+                      <td>
+                        {edit.course.subjects.length ? (
+                          // Only the subjects this course actually has.
+                          <select
+                            className={`cs-input cs-wide ${s.subject && !edit.course.subjects.includes(s.subject) ? "cs-input-bad" : ""}`}
+                            value={s.subject}
+                            onChange={(e) => setSlot(i, "subject", e.target.value)}
+                          >
+                            <option value="">{s.type === "doubt" ? "All subjects" : "Choose subject…"}</option>
+                            {s.subject && !edit.course.subjects.includes(s.subject) && (
+                              <option value={s.subject}>{s.subject} (not in this course)</option>
+                            )}
+                            {edit.course.subjects.map((sub) => <option key={sub} value={sub}>{sub}</option>)}
+                          </select>
+                        ) : (
+                          <input className="cs-input cs-wide" value={s.subject} placeholder="Subject" onChange={(e) => setSlot(i, "subject", e.target.value)} />
+                        )}
+                      </td>
+                      <td>
+                        <div className="cs-mini-days" title="Leave all off to use the class days above">
+                          {WEEK.map((w) => {
+                            const own = s.days.length > 0;
+                            const on = own ? s.days.includes(w.d) : edit.days.includes(w.d);
+                            return (
+                              <button
+                                key={w.d}
+                                type="button"
+                                className={`${on ? "on" : ""} ${own ? "" : "inherit"}`}
+                                onClick={() => toggleSlotDay(i, w.d)}
+                                title={w.long}
+                              >
+                                {w.short[0]}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </td>
                       <td>
                         <button className="cs-icon" onClick={() => removeSlot(i)} title="Remove"><FiTrash2 size={15} /></button>
                       </td>
@@ -215,7 +287,11 @@ export default function ClassSchedulePage() {
                   ))}
                 </tbody>
               </table>
-              <button className="cs-btn" onClick={addSlot}><FiPlus size={14} /> Add class</button>
+              <button className="cs-btn" onClick={addSlot}><FiPlus size={14} /> Add class or doubt session</button>
+              <div className="cs-hint">
+                Days column: light purple means the row follows the class days above. Tap a day to give that row its own days,
+                for example a doubt session only on Saturday.
+              </div>
 
               <label className="cs-label">Note for students (optional)</label>
               <textarea
@@ -232,12 +308,16 @@ export default function ClassSchedulePage() {
                 Show this schedule to enrolled students
               </label>
 
-              {edit.days.length > 0 && edit.slots.some((s) => s.start && s.subject) && (
-                <div className="cs-preview">
-                  Students will see: {WEEK.filter((w) => edit.days.includes(w.d)).map((w) => dayName(w.d)).join(", ")} ·{" "}
-                  {edit.slots.filter((s) => s.start && s.subject).length} classes
-                </div>
-              )}
+              {edit.days.length > 0 && edit.slots.some((s) => s.start && (s.subject || s.type === "doubt")) && (() => {
+                const ready = edit.slots.filter((s) => s.start && (s.subject || s.type === "doubt"));
+                const doubts = ready.filter((s) => s.type === "doubt").length;
+                return (
+                  <div className="cs-preview">
+                    Students will see: {WEEK.filter((w) => edit.days.includes(w.d)).map((w) => dayName(w.d)).join(", ")} ·{" "}
+                    {ready.length - doubts} classes{doubts ? `, ${doubts} doubt session${doubts > 1 ? "s" : ""}` : ""}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="cs-modal-foot">
@@ -279,7 +359,7 @@ export default function ClassSchedulePage() {
         .cs-btn.primary:hover:not(:disabled) { background: #4634ad; }
 
         .cs-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 16px; }
-        .cs-modal { background: #fff; border-radius: 14px; width: 100%; max-width: 640px; max-height: 92vh; display: flex; flex-direction: column; }
+        .cs-modal { background: #fff; border-radius: 14px; width: 100%; max-width: 860px; max-height: 92vh; display: flex; flex-direction: column; }
         .cs-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 18px; border-bottom: 1px solid #e2e8f0; }
         .cs-modal-title { font-weight: 700; color: #0f172a; font-size: 1rem; }
         .cs-x { background: none; border: none; font-size: 1.5rem; line-height: 1; color: #64748b; }
@@ -290,15 +370,24 @@ export default function ClassSchedulePage() {
         .cs-input { border: 1px solid #e2e8f0; border-radius: 9px; padding: 7px 10px; font-size: 0.86rem; color: #0f172a; background: #fff; min-width: 0; }
         .cs-input:focus { outline: none; border-color: #5641ce; }
         .cs-wide { width: 100%; }
+        .cs-input-bad { border-color: #dc2626; color: #b91c1c; }
+        .cs-bad { color: #b91c1c; font-weight: 600; }
         .cs-note { width: 100%; resize: vertical; }
         .cs-days { display: flex; gap: 6px; flex-wrap: wrap; }
         .cs-days button { border: 1px solid #e2e8f0; background: #fff; border-radius: 9px; padding: 7px 0; width: 56px; font-size: 0.84rem; font-weight: 600; color: #475569; }
         .cs-days button.on { background: #5641ce; border-color: #5641ce; color: #fff; }
         .cs-slots { margin-bottom: 10px; border: 1px solid #e2e8f0; }
         .cs-slots td { padding: 6px 8px; }
+        .cs-mini-days { display: flex; gap: 3px; }
+        .cs-mini-days button { width: 24px; height: 28px; border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; font-size: 0.72rem; font-weight: 700; color: #94a3b8; padding: 0; }
+        .cs-mini-days button.on { background: #5641ce; border-color: #5641ce; color: #fff; }
+        .cs-mini-days button.on.inherit { background: #ede9fb; border-color: #ded7f6; color: #4634ad; }
+        .cs-hint { font-size: 0.76rem; color: #94a3b8; margin-top: 6px; }
+        .cs-slots { display: block; overflow-x: auto; }
         .cs-icon { background: none; border: none; color: #94a3b8; padding: 4px; }
         .cs-icon:hover { color: #b91c1c; }
         .cs-check { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; color: #334155; margin: 14px 0 0; }
+        .cs-warn { margin-top: 8px; font-size: 0.8rem; color: #92400e; background: #fef3c7; border-radius: 9px; padding: 9px 12px; }
         .cs-preview { margin-top: 12px; font-size: 0.8rem; color: #4634ad; background: #f1eefc; border-radius: 9px; padding: 9px 12px; }
       `}</style>
     </>

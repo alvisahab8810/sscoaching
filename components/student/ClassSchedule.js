@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import css from "styled-jsx/css";
-import { MdChevronLeft, MdChevronRight, MdAccessTime, MdCalendarToday } from "react-icons/md";
+import { MdChevronLeft, MdChevronRight, MdAccessTime, MdCalendarToday, MdPlayArrow } from "react-icons/md";
 import {
   WEEK, dayName, fmt12, toMin, istNow, weekOf, fmtDay, slotStatus, nextClass,
+  slotsOn, slotTitle, liveFor, canJoin,
 } from "@/lib/classSchedule";
 
 const STATUS = {
@@ -11,7 +12,19 @@ const STATUS = {
   done: { label: "Completed", cls: "done" },
 };
 
+const WEEK_MS = 7 * 86400000;
 const daysText = (days) => WEEK.filter((w) => days.includes(w.d)).map((w) => w.long).join(", ");
+const daysShort = (days) => WEEK.filter((w) => days.includes(w.d)).map((w) => w.short).join(", ");
+
+// Join button for the teacher's live class of this slot, while it is on.
+function JoinLink({ lc, status, small }) {
+  if (!canJoin(lc, status)) return null;
+  return (
+    <a className={`csd-join ${small ? "sm" : ""}`} href={lc.streamLink} target="_blank" rel="noopener noreferrer">
+      <MdPlayArrow size={small ? 15 : 17} /> Join class
+    </a>
+  );
+}
 
 // IST "now", refreshed every minute so a class flips to "Going on now" on time.
 function useIstNow() {
@@ -30,34 +43,45 @@ function useIstNow() {
 export default function ClassSchedule({ schedules = [] }) {
   const now = useIstNow();
   const [courseId, setCourseId] = useState(schedules[0]?.courseId || "");
-  const [weekShift, setWeekShift] = useState(0);
-  const [selected, setSelected] = useState(() => now.date.getTime());
+  // null = automatic: today if it has classes, else the next class day.
+  const [weekShift, setWeekShift] = useState(null);
+  const [selectedMs, setSelected] = useState(null);
 
   const schedule = schedules.find((s) => s.courseId === courseId) || schedules[0];
-  const week = useMemo(
-    () => weekOf(new Date(now.date.getTime() + weekShift * 7 * 86400000)),
-    [now.date.getTime(), weekShift]
-  );
 
   if (!schedule) {
     return (
       <div className="csd-empty">
-        Class timing is shown here after you buy a Pro batch.
+        Class timing is shown here after you buy a course.
       </div>
     );
   }
 
-  const selDate = new Date(selected);
-  const isClassDay = schedule.days.includes(selDate.getUTCDay());
   const next = nextClass(schedule, now);
   const todayMs = now.date.getTime();
+  const autoMs = schedule.days.includes(now.day) ? todayMs : next ? next.date.getTime() : todayMs;
+  const shift = weekShift ?? Math.round((weekOf(new Date(autoMs))[0] - weekOf(now.date)[0]) / WEEK_MS);
+  // Only the days that have classes are shown in the strip.
+  const classDaysOf = (s) =>
+    weekOf(new Date(todayMs + s * WEEK_MS)).filter((d) => schedule.days.includes(d.getUTCDay()));
+  const fullWeek = weekOf(new Date(todayMs + shift * WEEK_MS));
+  const week = classDaysOf(shift);
+  const selected = selectedMs ?? autoMs;
+  const selDate = new Date(selected);
+  const daySlots = slotsOn(schedule, selDate.getUTCDay());
+  const isClassDay = daySlots.length > 0;
 
   const moveWeek = (by) => {
-    const shift = weekShift + by;
-    setWeekShift(shift);
-    // Land on today when back on this week, else on that week's Monday.
-    const target = weekOf(new Date(todayMs + shift * 7 * 86400000));
-    setSelected(shift === 0 ? todayMs : target[0].getTime());
+    const s = shift + by;
+    const days = classDaysOf(s).map((d) => d.getTime());
+    setWeekShift(s);
+    // Today if it is in that week, else its first class day still ahead, else its first class day.
+    setSelected(days.includes(todayMs) ? todayMs : days.find((ms) => ms > todayMs) ?? days[0]);
+  };
+  const pickCourse = (id) => {
+    setCourseId(id);
+    setWeekShift(null);
+    setSelected(null);
   };
 
   return (
@@ -75,7 +99,7 @@ export default function ClassSchedule({ schedules = [] }) {
             <button
               key={s.courseId}
               className={`csd-chip ${s.courseId === schedule.courseId ? "on" : ""}`}
-              onClick={() => setCourseId(s.courseId)}
+              onClick={() => pickCourse(s.courseId)}
             >
               {s.courseTitle}
             </button>
@@ -88,7 +112,7 @@ export default function ClassSchedule({ schedules = [] }) {
         <div className="csd-next">
           <MdAccessTime size={18} />
           <span>
-            Next class: <b>{next.slot.subject}</b>,{" "}
+            Next: <b>{slotTitle(next.slot)}</b>,{" "}
             {next.date.getTime() === todayMs ? "today" : fmtDay(next.date, { weekday: "long", day: "numeric", month: "short" })}{" "}
             at {fmt12(next.slot.start)}
           </span>
@@ -99,11 +123,11 @@ export default function ClassSchedule({ schedules = [] }) {
       <div className="csd-week-bar">
         <button className="csd-arrow" onClick={() => moveWeek(-1)} aria-label="Previous week"><MdChevronLeft size={22} /></button>
         <div className="csd-month">
-          {fmtDay(week[0], { day: "numeric", month: "short" })} – {fmtDay(week[6], { day: "numeric", month: "short", year: "numeric" })}
+          {fmtDay(fullWeek[0], { day: "numeric", month: "short" })} – {fmtDay(fullWeek[6], { day: "numeric", month: "short", year: "numeric" })}
         </div>
         <button className="csd-arrow" onClick={() => moveWeek(1)} aria-label="Next week"><MdChevronRight size={22} /></button>
       </div>
-      <div className="csd-week">
+      <div className="csd-week" style={{ gridTemplateColumns: `repeat(${week.length}, 1fr)` }}>
         {week.map((d) => {
           const ms = d.getTime();
           const hasClass = schedule.days.includes(d.getUTCDay());
@@ -128,19 +152,27 @@ export default function ClassSchedule({ schedules = [] }) {
       </div>
       {isClassDay ? (
         <div className="csd-list">
-          {schedule.slots.map((s, i) => {
-            const st = STATUS[slotStatus(s, selDate, now)];
+          {daySlots.map((s, i) => {
+            const status = slotStatus(s, selDate, now);
+            const st = STATUS[status];
+            const lc = liveFor(schedule, s, selDate);
             return (
-              <div key={i} className={`csd-class ${st.cls}`}>
+              <div key={i} className={`csd-class ${st.cls} ${s.type === "doubt" ? "doubt" : ""}`}>
                 <div className="csd-time">
                   <div className="csd-time-start">{fmt12(s.start)}</div>
                   <div className="csd-time-end">{fmt12(s.end)}</div>
                 </div>
                 <div className="csd-class-body">
-                  <div className="csd-subject">{s.subject}</div>
-                  <div className="csd-meta">{toMin(s.end) - toMin(s.start)} min · {schedule.batch || "Pro batch"}</div>
+                  <div className="csd-subject">{slotTitle(s)}</div>
+                  <div className="csd-meta">
+                    {toMin(s.end) - toMin(s.start)} min · {s.type === "doubt" ? "Live doubt session" : schedule.batch || "Pro batch"}
+                    {lc && status !== "done" && !canJoin(lc, status) && " · Link added"}
+                  </div>
                 </div>
-                <span className={`csd-status ${st.cls}`}>{st.label}</span>
+                <div className="csd-side">
+                  <span className={`csd-status ${st.cls}`}>{st.label}</span>
+                  <JoinLink lc={lc} status={status} />
+                </div>
               </div>
             );
           })}
@@ -160,13 +192,14 @@ export default function ClassSchedule({ schedules = [] }) {
       <div className="csd-table-wrap">
         <table className="csd-table">
           <thead>
-            <tr><th>Time</th><th>Subject</th></tr>
+            <tr><th>Time</th><th>Class</th><th>Days</th></tr>
           </thead>
           <tbody>
             {schedule.slots.map((s, i) => (
               <tr key={i}>
                 <td className="csd-nowrap">{fmt12(s.start)} – {fmt12(s.end)}</td>
-                <td>{s.subject}</td>
+                <td>{slotTitle(s)}</td>
+                <td className="csd-nowrap">{daysShort(s.days || schedule.days)}</td>
               </tr>
             ))}
           </tbody>
@@ -188,8 +221,7 @@ export function TodayClassesCard({ schedules = [], onOpen }) {
   if (!schedules.length) return null;
 
   const today = schedules
-    .filter((s) => s.days.includes(now.day))
-    .flatMap((s) => s.slots.map((slot) => ({ slot, course: s.courseTitle })))
+    .flatMap((s) => slotsOn(s, now.day).map((slot) => ({ slot, course: s.courseTitle, schedule: s })))
     .sort((a, b) => a.slot.start.localeCompare(b.slot.start));
   const next = schedules
     .map((s) => ({ ...nextClass(s, now), course: s.courseTitle }))
@@ -204,16 +236,18 @@ export function TodayClassesCard({ schedules = [], onOpen }) {
       </div>
       {today.length ? (
         <div className="csd-card-list">
-          {today.map(({ slot, course }, i) => {
-            const st = STATUS[slotStatus(slot, now.date, now)];
+          {today.map(({ slot, course, schedule }, i) => {
+            const status = slotStatus(slot, now.date, now);
+            const st = STATUS[status];
             return (
               <div key={i} className="csd-card-row">
                 <span className="csd-card-time">{fmt12(slot.start)}</span>
                 <span className="csd-card-subject">
-                  {slot.subject}
+                  {slotTitle(slot)}
                   {schedules.length > 1 && <span className="csd-card-course"> · {course}</span>}
                 </span>
                 <span className={`csd-status ${st.cls}`}>{st.label}</span>
+                <JoinLink lc={liveFor(schedule, slot, now.date)} status={status} small />
               </div>
             );
           })}
@@ -222,7 +256,7 @@ export function TodayClassesCard({ schedules = [], onOpen }) {
         <div className="csd-card-none">
           No class today.
           {next && (
-            <> Next: <b>{next.slot.subject}</b> on {fmtDay(next.date, { weekday: "long", day: "numeric", month: "short" })} at {fmt12(next.slot.start)}.</>
+            <> Next: <b>{slotTitle(next.slot)}</b> on {fmtDay(next.date, { weekday: "long", day: "numeric", month: "short" })} at {fmt12(next.slot.start)}.</>
           )}
         </div>
       )}
@@ -248,7 +282,7 @@ const STYLES = css`
   .csd-week-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
   .csd-month { font-weight: 600; color: #1e1b2e; font-size: 0.92rem; }
   .csd-arrow { background: #fff; border: 1px solid #ece8f7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #4c3a9e; }
-  .csd-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
+  .csd-week { display: grid; gap: 8px; margin-top: 10px; max-width: 420px; }
   .csd-day {
     background: #fff; border: 1px solid #ece8f7; border-radius: 12px; padding: 9px 0 7px; display: flex; flex-direction: column;
     align-items: center; gap: 2px; color: #94a3b8; min-width: 0;
@@ -273,6 +307,15 @@ const STYLES = css`
   .csd-class-body { flex: 1; min-width: 0; }
   .csd-subject { font-weight: 700; color: #1e1b2e; }
   .csd-meta { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
+  .csd-class.doubt { border-left-color: #b45309; }
+  .csd-class.doubt.done { border-left-color: #cbd5e1; }
+  .csd-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .csd-join {
+    display: inline-flex; align-items: center; gap: 4px; background: #16a34a; color: #fff; border-radius: 8px;
+    padding: 6px 12px; font-size: 0.8rem; font-weight: 700; text-decoration: none; white-space: nowrap;
+  }
+  .csd-join:hover { background: #15803d; color: #fff; }
+  .csd-join.sm { padding: 4px 9px; font-size: 0.74rem; }
   .csd-status { font-size: 0.72rem; font-weight: 700; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
   .csd-status.live { background: #dcfce7; color: #166534; }
   .csd-status.upcoming { background: #f1eefc; color: #4c3a9e; }

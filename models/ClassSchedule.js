@@ -10,7 +10,11 @@ import mongoose from "mongoose";
 const SlotSchema = new mongoose.Schema({
   start:   { type: String, required: true },
   end:     { type: String, required: true },
-  subject: { type: String, required: true, trim: true },
+  // Blank only for a doubt session open to every subject.
+  subject: { type: String, default: "", trim: true },
+  type:    { type: String, enum: ["class", "doubt"], default: "class" },
+  // Own days for this slot (a Saturday doubt session); empty = schedule's days.
+  days:    { type: [Number], default: [] },
 }, { _id: false });
 
 const ClassScheduleSchema = new mongoose.Schema({

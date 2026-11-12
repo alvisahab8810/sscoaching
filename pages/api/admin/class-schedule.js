@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     const [courses, schedules] = await Promise.all([
-      Course.find({ courseType: "bundle" }).select("title batch status").sort({ title: 1 }).lean(),
+      Course.find({ courseType: "bundle" }).select("title batch status bundledSubjects").sort({ title: 1 }).lean(),
       ClassSchedule.find({}).lean(),
     ]);
     const byCourse = new Map(schedules.map((s) => [String(s.course), s]));
@@ -32,6 +32,7 @@ export default async function handler(req, res) {
           title: c.title,
           batch: c.batch || "",
           status: c.status,
+          subjects: c.bundledSubjects || [],
           schedule: s ? { active: s.active, days: s.days, slots: s.slots, note: s.note, updatedAt: s.updatedAt } : null,
         };
       }),
@@ -40,29 +41,40 @@ export default async function handler(req, res) {
 
   if (req.method === "PUT") {
     const { courseId, active = true, days = [], slots = [], note = "" } = req.body || {};
-    const course = courseId && (await Course.findById(courseId).select("title courseType").lean().catch(() => null));
+    const course = courseId && (await Course.findById(courseId).select("title courseType bundledSubjects").lean().catch(() => null));
     if (!course) return res.status(404).json({ success: false, message: "Course not found" });
     if (course.courseType !== "bundle")
       return res.status(400).json({ success: false, message: "Schedule can be set only on Pro batch (bundle) courses" });
 
-    const cleanDays = [...new Set((Array.isArray(days) ? days : []).map(Number))].filter((d) => Number.isInteger(d) && d >= 0 && d <= 6);
+    const dayList = (v) => [...new Set((Array.isArray(v) ? v : []).map(Number))].filter((d) => Number.isInteger(d) && d >= 0 && d <= 6);
+    const cleanDays = dayList(days);
     const cleanSlots = [];
     for (const [i, s] of (Array.isArray(slots) ? slots : []).entries()) {
       const start = String(s?.start || "").trim();
       const end = String(s?.end || "").trim();
       const subject = String(s?.subject || "").trim();
-      if (!TIME.test(start) || !TIME.test(end) || !subject)
+      const type = s?.type === "doubt" ? "doubt" : "class";
+      // A doubt session may be left open to every subject.
+      if (!TIME.test(start) || !TIME.test(end) || (type === "class" && !subject))
         return res.status(400).json({ success: false, message: `Row ${i + 1}: enter start time, end time and subject` });
+      if (subject && course.bundledSubjects?.length && !course.bundledSubjects.includes(subject))
+        return res.status(400).json({ success: false, message: `Row ${i + 1}: ${subject} is not a subject of this course` });
       if (end <= start)
         return res.status(400).json({ success: false, message: `Row ${i + 1}: end time must be after start time` });
-      cleanSlots.push({ start, end, subject: subject.slice(0, 80) });
+      cleanSlots.push({ start, end, subject: subject.slice(0, 80), type, days: dayList(s?.days) });
     }
     if (active && (!cleanDays.length || !cleanSlots.length))
       return res.status(400).json({ success: false, message: "Pick at least one day and add at least one class" });
     cleanSlots.sort((a, b) => a.start.localeCompare(b.start));
-    for (let i = 1; i < cleanSlots.length; i++) {
-      if (cleanSlots[i].start < cleanSlots[i - 1].end)
-        return res.status(400).json({ success: false, message: `${cleanSlots[i - 1].subject} and ${cleanSlots[i].subject} overlap` });
+    // Two slots clash only when they run on a common day.
+    const name = (x) => (x.type === "doubt" ? `Doubt session${x.subject ? ` (${x.subject})` : ""}` : x.subject);
+    const on = (x) => (x.days.length ? x.days : cleanDays);
+    for (let i = 0; i < cleanSlots.length; i++) {
+      for (let j = i + 1; j < cleanSlots.length; j++) {
+        const a = cleanSlots[i], b = cleanSlots[j];
+        if (b.start < a.end && on(a).some((d) => on(b).includes(d)))
+          return res.status(400).json({ success: false, message: `${name(a)} and ${name(b)} overlap` });
+      }
     }
 
     const saved = await ClassSchedule.findOneAndUpdate(
