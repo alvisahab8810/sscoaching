@@ -3,6 +3,7 @@ import LiveClass from "@/models/LiveClassModel";
 import { logActivity } from "@/lib/logActivity";
 import { requireAdminApi } from "@/lib/requireAdminApi";
 import { LIVE_CLASS_STATUSES } from "@/lib/liveClassStatus";
+import { pickCourseIds } from "@/lib/liveClassCourses";
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -10,7 +11,9 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const liveClass = await LiveClass.findById(id).populate("course", "title subject batch isFree price");
+      const liveClass = await LiveClass.findById(id)
+        .populate("course", "title subject batch isFree price")
+        .populate("courses", "title subject batch isFree price");
       if (!liveClass) return res.status(404).json({ success: false, message: "Live class not found" });
       return res.status(200).json({ success: true, data: liveClass });
     } catch (error) {
@@ -20,7 +23,8 @@ export default async function handler(req, res) {
 
   if (req.method === "PUT") {
     try {
-      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
+      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status } = req.body;
+      const { course, courses } = pickCourseIds(req.body);
       if (!title || !teacher || !subject || !batch || !date || !time || !streamLink) {
         return res.status(400).json({ success: false, message: "Please fill all required fields" });
       }
@@ -28,9 +32,11 @@ export default async function handler(req, res) {
       const before = await LiveClass.findById(id).lean();
       const updated = await LiveClass.findByIdAndUpdate(
         id,
-        { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course: course || null },
+        { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course, courses },
         { new: true, runValidators: true }
-      ).populate("course", "title subject batch isFree price");
+      )
+        .populate("course", "title subject batch isFree price")
+        .populate("courses", "title subject batch isFree price");
 
       if (!updated) return res.status(404).json({ success: false, message: "Live class not found" });
 

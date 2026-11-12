@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import LiveClass from "@/models/LiveClassModel";
 import Teacher from "@/models/Teacher";
 import { requireTeacherApi, logTeacherActivity } from "@/lib/teacherAuth";
+import { pickCourseIds } from "@/lib/liveClassCourses";
 
 /**
  * A teacher's own online classes.
@@ -27,6 +28,7 @@ export default async function handler(req, res) {
     const [data, total] = await Promise.all([
       LiveClass.find(filter)
         .populate("course", "title subject batch")
+        .populate("courses", "title subject batch")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit))
@@ -59,8 +61,9 @@ export default async function handler(req, res) {
 
     const {
       title, subject, chapter, topic, batch, date, time,
-      duration, streamLink, description, status, course,
+      duration, streamLink, description, status,
     } = req.body;
+    const { course, courses } = pickCourseIds(req.body);
 
     if (!title || !subject || !batch || !date || !time || !streamLink) {
       return res.status(400).json({ success: false, message: "Please fill all required fields" });
@@ -74,7 +77,7 @@ export default async function handler(req, res) {
       subject, chapter, topic, batch, date, time, duration,
       streamLink, description,
       status: status || "upcoming",
-      course: course || null,
+      course, courses,
       createdByTeacher: session.id,
       createdByName: session.name,
       createdByRole: "teacher",

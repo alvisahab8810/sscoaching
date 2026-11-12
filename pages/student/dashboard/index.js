@@ -16,8 +16,9 @@ import {
   MdAttachFile, MdArrowForward, MdReceipt, MdDownload, MdOpenInNew,
   MdPayment, MdFavorite, MdFavoriteBorder,
   MdMenuBook, MdAssignment, MdArticle, MdStickyNote2, MdInventory2,
-  MdViewList, MdChevronRight, MdCardGiftcard,
+  MdViewList, MdChevronRight, MdCardGiftcard, MdQuestionAnswer,
 } from "react-icons/md";
+import { ofKind } from "@/lib/classSchedule";
 import {
   FaGraduationCap, FaRupeeSign,
   FaYoutube, FaVideo, FaMoneyBillWave,
@@ -251,7 +252,8 @@ export default function StudentDashboard() {
               {[
                 { key:"dashboard", Icon:MdDashboard,     label:"Dashboard" },
                 { key:"courses",   Icon:BsCollection,    label:"Courses",          badge: enrolledCourses.length || 0 },
-                ...(schedules.length ? [{ key:"schedule", Icon:MdDateRange, label:"Class Schedule" }] : []),
+                ...(ofKind(schedules, "class").length ? [{ key:"schedule", Icon:MdDateRange, label:"Class Schedule" }] : []),
+                ...(ofKind(schedules, "doubt").length ? [{ key:"doubts", Icon:MdQuestionAnswer, label:"Doubt Sessions" }] : []),
                 { key:"invoices",  Icon:MdReceipt,       label:"My Invoices" },
                 { key:"referral",  Icon:MdCardGiftcard,  label:"Refer & Earn" },
                 { key:"live",      Icon:MdLiveTv,        label:"Live Classes",     badge: liveClasses.length || 0 },
@@ -496,7 +498,8 @@ export default function StudentDashboard() {
             {/* ── INVOICES TAB ── */}
             {activeMenu === "invoices" && <InvoicesSection />}
             {activeMenu === "referral" && <ReferEarnSection />}
-            {activeMenu === "schedule" && <ClassSchedule schedules={schedules} />}
+            {activeMenu === "schedule" && <ClassSchedule schedules={schedules} kind="class" />}
+            {activeMenu === "doubts" && <ClassSchedule schedules={schedules} kind="doubt" />}
 
             {/* LIVE */}
             {activeMenu === "live" && (

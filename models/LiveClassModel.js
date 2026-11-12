@@ -107,6 +107,13 @@ const LiveClassSchema = new mongoose.Schema(
       default: null,
     },
 
+    // Every course the class is linked to; students of any of them may
+    // join. "course" above keeps the first one for older readers.
+    courses: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+      default: [],
+    },
+
     // Who scheduled this class. Classes created before teacher accounts
     // existed keep the defaults below, so nothing that already works
     // changes -- the admin screens just show "Admin" for them.

@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import LiveClass from "@/models/LiveClassModel";
 import { requireTeacherApi, logTeacherActivity } from "@/lib/teacherAuth";
+import { pickCourseIds } from "@/lib/liveClassCourses";
 
 /** Update or remove one of the signed-in teacher's own classes. */
 export default async function handler(req, res) {
@@ -33,12 +34,13 @@ export default async function handler(req, res) {
 
     const allowed = [
       "title", "subject", "chapter", "topic", "batch", "date", "time",
-      "duration", "streamLink", "description", "status", "course",
+      "duration", "streamLink", "description", "status",
     ];
     for (const key of allowed) {
-      if (req.body[key] !== undefined) {
-        existing[key] = key === "course" ? req.body[key] || null : req.body[key];
-      }
+      if (req.body[key] !== undefined) existing[key] = req.body[key];
+    }
+    if (req.body.course !== undefined || req.body.courses !== undefined) {
+      Object.assign(existing, pickCourseIds(req.body));
     }
 
     await existing.save();

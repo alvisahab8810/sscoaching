@@ -7,6 +7,7 @@ import { getStudentIdFromReq, getStudentAccess, isClassUnlocked } from "@/lib/li
 import { closePastLiveClasses } from "@/lib/closePastLiveClasses";
 import { todayInIndia } from "@/lib/liveClassStatus";
 import { matchSubject, NO_SCHEDULE_COURSE } from "@/lib/classSchedule";
+import { linkedCourseIds } from "@/lib/liveClassCourses";
 
 /**
  * GET /api/class-schedule  (student, Bearer token)
@@ -59,7 +60,8 @@ export default async function handler(req, res) {
     end: slot.end,
     subject: slot.subject || "",
     type: slot.type || "class",
-    days: sortDays(slot.days?.length ? slot.days : s.days || []),
+    // Doubt sessions are held on Saturday only, also for rows saved before that rule.
+    days: slot.type === "doubt" ? [6] : sortDays(slot.days?.length ? slot.days : s.days || []),
   });
   const pack = (course, slots, note) => {
     const days = sortDays([...new Set(slots.flatMap((x) => x.days))]);
@@ -118,7 +120,7 @@ export default async function handler(req, res) {
       const until = todayInIndia(new Date(Date.now() + 14 * 86400000));
       const [classes, access] = await Promise.all([
         LiveClass.find({ date: { $gte: today, $lte: until } })
-          .select("title teacher subject batch date time duration status streamLink course")
+          .select("title teacher subject batch date time duration status streamLink course courses")
           .lean(),
         getStudentAccess(studentId),
       ]);
@@ -126,7 +128,8 @@ export default async function handler(req, res) {
       for (const sch of out) {
         sch.live = open
           .filter((cls) => {
-            if (cls.course) return String(cls.course) === sch.courseId || isForBatch(cls, sch);
+            const linked = linkedCourseIds(cls);
+            if (linked.length) return linked.includes(sch.courseId) || isForBatch(cls, sch);
             return isForBatch(cls, sch);
           })
           .map((cls) => ({

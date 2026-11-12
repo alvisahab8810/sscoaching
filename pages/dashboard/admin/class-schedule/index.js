@@ -159,7 +159,8 @@ export default function ClassSchedulePage() {
                                 {s ? s.slots.map((x, i) => (
                                   <div key={i}>
                                     {fmt12(x.start)} – {fmt12(x.end)} · {slotTitle(x)}
-                                    {x.days?.length > 0 && <span className="cs-muted"> · {daysText(x.days)}</span>}
+                                    {x.type === "doubt" ? <span className="cs-muted"> · Sat</span>
+                                      : x.days?.length > 0 && <span className="cs-muted"> · {daysText(x.days)}</span>}
                                     {c.subjects.length > 0 && x.subject && !c.subjects.includes(x.subject) && (
                                       <span className="cs-bad"> (not in this course, hidden from students)</span>
                                     )}
@@ -262,6 +263,9 @@ export default function ClassSchedulePage() {
                         )}
                       </td>
                       <td>
+                        {s.type === "doubt" ? (
+                          <span className="cs-sat">Saturday only</span>
+                        ) : (
                         <div className="cs-mini-days" title="Leave all off to use the class days above">
                           {WEEK.map((w) => {
                             const own = s.days.length > 0;
@@ -279,6 +283,7 @@ export default function ClassSchedulePage() {
                             );
                           })}
                         </div>
+                        )}
                       </td>
                       <td>
                         <button className="cs-icon" onClick={() => removeSlot(i)} title="Remove"><FiTrash2 size={15} /></button>
@@ -289,8 +294,8 @@ export default function ClassSchedulePage() {
               </table>
               <button className="cs-btn" onClick={addSlot}><FiPlus size={14} /> Add class or doubt session</button>
               <div className="cs-hint">
-                Days column: light purple means the row follows the class days above. Tap a day to give that row its own days,
-                for example a doubt session only on Saturday.
+                Days column: light purple means the row follows the class days above. Tap a day to give that row its own days.
+                Doubt sessions are always held on Saturday.
               </div>
 
               <label className="cs-label">Note for students (optional)</label>
@@ -379,6 +384,7 @@ export default function ClassSchedulePage() {
         .cs-slots { margin-bottom: 10px; border: 1px solid #e2e8f0; }
         .cs-slots td { padding: 6px 8px; }
         .cs-mini-days { display: flex; gap: 3px; }
+        .cs-sat { font-size: 0.8rem; font-weight: 600; color: #4634ad; white-space: nowrap; }
         .cs-mini-days button { width: 24px; height: 28px; border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; font-size: 0.72rem; font-weight: 700; color: #94a3b8; padding: 0; }
         .cs-mini-days button.on { background: #5641ce; border-color: #5641ce; color: #fff; }
         .cs-mini-days button.on.inherit { background: #ede9fb; border-color: #ded7f6; color: #4634ad; }

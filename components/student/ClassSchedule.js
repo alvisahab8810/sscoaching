@@ -3,7 +3,7 @@ import css from "styled-jsx/css";
 import { MdChevronLeft, MdChevronRight, MdAccessTime, MdCalendarToday, MdPlayArrow } from "react-icons/md";
 import {
   WEEK, dayName, fmt12, toMin, istNow, weekOf, fmtDay, slotStatus, nextClass,
-  slotsOn, slotTitle, liveFor, canJoin,
+  slotsOn, slotTitle, slotSubject, liveFor, canJoin, ofKind,
 } from "@/lib/classSchedule";
 
 const STATUS = {
@@ -40,8 +40,11 @@ function useIstNow() {
  * Weekly timetable of the Pro batches the student has bought
  * (from /api/class-schedule). Shown under "Class Schedule" in the dashboard.
  */
-export default function ClassSchedule({ schedules = [] }) {
+export default function ClassSchedule({ schedules: all = [], kind = "class" }) {
   const now = useIstNow();
+  // "class" = class timetable, "doubt" = doubt sessions; separate menus.
+  const doubt = kind === "doubt";
+  const schedules = ofKind(all, kind);
   const [courseId, setCourseId] = useState(schedules[0]?.courseId || "");
   // null = automatic: today if it has classes, else the next class day.
   const [weekShift, setWeekShift] = useState(null);
@@ -52,7 +55,7 @@ export default function ClassSchedule({ schedules = [] }) {
   if (!schedule) {
     return (
       <div className="csd-empty">
-        Class timing is shown here after you buy a course.
+        {doubt ? "Doubt session timing" : "Class timing"} is shown here after you buy a course.
       </div>
     );
   }
@@ -88,7 +91,7 @@ export default function ClassSchedule({ schedules = [] }) {
     <div className="csd">
       <div className="csd-head">
         <div>
-          <h2 className="csd-title">Class Schedule</h2>
+          <h2 className="csd-title">{doubt ? "Doubt Sessions" : "Class Schedule"}</h2>
           <p className="csd-sub">{daysText(schedule.days)} · all timings in IST</p>
         </div>
       </div>
@@ -112,7 +115,7 @@ export default function ClassSchedule({ schedules = [] }) {
         <div className="csd-next">
           <MdAccessTime size={18} />
           <span>
-            Next: <b>{slotTitle(next.slot)}</b>,{" "}
+            Next: <b>{doubt ? slotSubject(next.slot) : slotTitle(next.slot)}</b>,{" "}
             {next.date.getTime() === todayMs ? "today" : fmtDay(next.date, { weekday: "long", day: "numeric", month: "short" })}{" "}
             at {fmt12(next.slot.start)}
           </span>
@@ -127,6 +130,10 @@ export default function ClassSchedule({ schedules = [] }) {
         </div>
         <button className="csd-arrow" onClick={() => moveWeek(1)} aria-label="Next week"><MdChevronRight size={22} /></button>
       </div>
+      {doubt ? (
+        // One day a week, so a short note instead of a single big day tile.
+        <div className="csd-doubt-note">Doubt sessions are held every Saturday.</div>
+      ) : (
       <div className="csd-week" style={{ gridTemplateColumns: `repeat(${week.length}, 1fr)` }}>
         {week.map((d) => {
           const ms = d.getTime();
@@ -144,6 +151,7 @@ export default function ClassSchedule({ schedules = [] }) {
           );
         })}
       </div>
+      )}
 
       {/* Classes of the selected day */}
       <div className="csd-day-head">
@@ -163,9 +171,9 @@ export default function ClassSchedule({ schedules = [] }) {
                   <div className="csd-time-end">{fmt12(s.end)}</div>
                 </div>
                 <div className="csd-class-body">
-                  <div className="csd-subject">{slotTitle(s)}</div>
+                  <div className="csd-subject">{doubt ? slotSubject(s) : slotTitle(s)}</div>
                   <div className="csd-meta">
-                    {toMin(s.end) - toMin(s.start)} min · {s.type === "doubt" ? "Live doubt session" : schedule.batch || "Pro batch"}
+                    {toMin(s.end) - toMin(s.start)} min · {doubt ? "Live online" : schedule.batch || "Pro batch"}
                     {lc && status !== "done" && !canJoin(lc, status) && " · Link added"}
                   </div>
                 </div>
@@ -181,8 +189,8 @@ export default function ClassSchedule({ schedules = [] }) {
         <div className="csd-off">
           <MdCalendarToday size={22} />
           <div>
-            <div className="csd-off-title">No class on {dayName(selDate.getUTCDay())}</div>
-            <div className="csd-off-sub">Classes are held on {daysText(schedule.days)}.</div>
+            <div className="csd-off-title">No {doubt ? "doubt session" : "class"} on {dayName(selDate.getUTCDay())}</div>
+            <div className="csd-off-sub">{doubt ? "Doubt sessions are" : "Classes are"} held on {daysText(schedule.days)}.</div>
           </div>
         </div>
       )}
@@ -198,7 +206,7 @@ export default function ClassSchedule({ schedules = [] }) {
             {schedule.slots.map((s, i) => (
               <tr key={i}>
                 <td className="csd-nowrap">{fmt12(s.start)} – {fmt12(s.end)}</td>
-                <td>{slotTitle(s)}</td>
+                <td>{doubt ? slotSubject(s) : slotTitle(s)}</td>
                 <td className="csd-nowrap">{daysShort(s.days || schedule.days)}</td>
               </tr>
             ))}
@@ -283,6 +291,7 @@ const STYLES = css`
   .csd-month { font-weight: 600; color: #1e1b2e; font-size: 0.92rem; }
   .csd-arrow { background: #fff; border: 1px solid #ece8f7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #4c3a9e; }
   .csd-week { display: grid; gap: 8px; margin-top: 10px; max-width: 420px; }
+  .csd-doubt-note { margin-top: 10px; font-size: 0.85rem; color: #64748b; }
   .csd-day {
     background: #fff; border: 1px solid #ece8f7; border-radius: 12px; padding: 9px 0 7px; display: flex; flex-direction: column;
     align-items: center; gap: 2px; color: #94a3b8; min-width: 0;

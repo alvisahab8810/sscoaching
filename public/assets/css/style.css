@@ -11049,9 +11049,9 @@
 /* ── Feature grid: 3 per row ── */
 .app-promo-features {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   justify-content: start;
-  column-gap: 40px;
+  column-gap: 28px;
   row-gap: 22px;
   margin-bottom: 32px;
 }
@@ -11072,7 +11072,7 @@
 
 .app-promo-feature span {
   font-family: "DM Sans", sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 18px;
   color: #ffffff;

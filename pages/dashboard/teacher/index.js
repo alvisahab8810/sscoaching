@@ -8,11 +8,13 @@ import {
   MdClose, MdBarChart, MdEventNote, MdCheckCircle, MdSchedule,
   MdAccessTime, MdLiveTv, MdMenuBook,
 } from "react-icons/md";
+import { linkedCourseIds, linkableCourses } from "@/lib/liveClassCourses";
+import CourseLinkPicker from "@/components/admin/CourseLinkPicker";
 
 const EMPTY_FORM = {
   title: "", subject: "", chapter: "", topic: "", batch: "",
   date: "", time: "", duration: "", streamLink: "", description: "",
-  status: "upcoming", course: "",
+  status: "upcoming", courses: [],
 };
 
 export default function TeacherDashboard({ teacher }) {
@@ -84,7 +86,7 @@ export default function TeacherDashboard({ teacher }) {
       topic: cls.topic || "", batch: cls.batch || "", date: cls.date || "",
       time: cls.time || "", duration: cls.duration || "", streamLink: cls.streamLink || "",
       description: cls.description || "", status: cls.status || "upcoming",
-      course: cls.course?._id || cls.course || "",
+      courses: linkedCourseIds(cls),
     });
     setShowForm(true);
   };
@@ -97,7 +99,7 @@ export default function TeacherDashboard({ teacher }) {
       const res = await fetch(url, {
         method: editing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, course: form.course || null }),
+        body: JSON.stringify({ ...form, course: form.courses[0] || null }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message || "Could not save");
@@ -237,7 +239,7 @@ export default function TeacherDashboard({ teacher }) {
                             <div>{c.date}</div>
                             <div style={{ fontSize: "0.78rem", color: "#6b7a99" }}>{c.time}{c.duration ? ` · ${c.duration}` : ""}</div>
                           </td>
-                          <td style={tdStyle}>{c.course?.title || "—"}</td>
+                          <td style={tdStyle}>{(c.courses?.length ? c.courses : [c.course]).map((x) => x?.title).filter(Boolean).join(", ") || "—"}</td>
                           <td style={tdStyle}><StatusPill status={c.status} /></td>
                           <td style={{ ...tdStyle, textAlign: "right", whiteSpace: "nowrap" }}>
                             <button onClick={() => openEdit(c)} style={iconBtn("#5641CE")} title="Edit"><MdEdit size={17} /></button>
@@ -345,16 +347,12 @@ export default function TeacherDashboard({ teacher }) {
                 </Field>
               </Row>
               <Row>
-                <Field label="Link to Course">
-                  <select style={inputStyle} value={form.course}
-                    onChange={(e) => setForm((f) => ({ ...f, course: e.target.value }))}>
-                    <option value="">Not linked</option>
-                    {courses.map((c) => (
-                      <option key={c._id} value={c._id}>
-                        {c.title}{c.batch ? ` — ${c.batch}` : ""}
-                      </option>
-                    ))}
-                  </select>
+                <Field label="Link to Courses">
+                  <CourseLinkPicker
+                    courses={linkableCourses(courses, { batch: form.batch, subject: form.subject, keep: form.courses })}
+                    value={form.courses}
+                    onChange={(list) => setForm((f) => ({ ...f, courses: list }))}
+                  />
                 </Field>
                 <Field label="Status">
                   <select style={inputStyle} value={form.status}

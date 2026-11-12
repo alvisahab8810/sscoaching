@@ -4,6 +4,7 @@ import LiveClassChat from "@/models/LiveClassChat";
 import Enrollment from "@/models/EnrollmentModel";
 import Course from "@/models/CourseModel";
 import jwt from "jsonwebtoken";
+import { linkedCourseIds } from "@/lib/liveClassCourses";
 
 function getStudentFromReq(req) {
   try {
@@ -15,7 +16,7 @@ function getStudentFromReq(req) {
 }
 
 async function isAccessAllowed(studentId, classId) {
-  const cls = await LiveClass.findById(classId).select("course subject batch").lean();
+  const cls = await LiveClass.findById(classId).select("course courses subject batch").lean();
   if (!cls) return false;
 
   const enrollments = await Enrollment.find({ student: studentId, status: "active" }).select("course").lean();
@@ -23,11 +24,12 @@ async function isAccessAllowed(studentId, classId) {
 
   const enrolledIds = new Set(enrollments.map(e => String(e.course)));
 
-  if (cls.course) {
-    // Direct course link — check course enrollment (including bundle children)
-    if (enrolledIds.has(String(cls.course))) return true;
-    // Check if any enrolled bundle includes this course
-    const bundles = await Course.find({ _id: { $in: [...enrolledIds] }, courseType: "bundle", includedCourses: cls.course }).lean();
+  const linked = linkedCourseIds(cls);
+  if (linked.length) {
+    // Direct course link — enrolled in any linked course (including bundle children)
+    if (linked.some((cid) => enrolledIds.has(cid))) return true;
+    // Check if any enrolled bundle includes one of these courses
+    const bundles = await Course.find({ _id: { $in: [...enrolledIds] }, courseType: "bundle", includedCourses: { $in: linked } }).lean();
     return bundles.length > 0;
   } else {
     // Subject::batch fallback

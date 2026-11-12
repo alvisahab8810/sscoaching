@@ -4344,3 +4344,56 @@ h1.hg-intro-h1 {
     padding: 12px 16px;
   }
 }
+
+/* ===========================================================
+   FOLDABLES AND TABLETS (Galaxy Z Fold open is about 880px wide)
+   The 768-1024px block hid the desktop hero while the 768-1240px block
+   hides the phone hero, so these screens had no hero at all. The desktop
+   hero runs here, as that block intends.
+   =========================================================== */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .hero-desktop-section {
+    display: block !important;
+  }
+
+  /* 8 features in 4 columns ran under the phone mockup */
+  .app-promo-content {
+    max-width: 58%;
+  }
+
+  .app-promo-features {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  /* 57px line height was left over from the 50px heading */
+  .app-promo .app-promo-title {
+    line-height: 1.25;
+  }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1240px) {
+  .app-promo .app-promo-title {
+    line-height: 1.25;
+  }
+}
+
+/* Exactly 768px still runs the phone layout (max-width: 768px), which hides
+   the desktop hero, so the phone hero comes back at that one width. */
+@media only screen and (min-width: 768px) and (max-width: 768px) {
+  .mobile-hero-section {
+    display: block !important;
+  }
+}
+
+/* MEET OUR STARS - a fixed 220px / 190px height on a card whose width
+   changes with the screen cropped the photos differently on every device.
+   The card now keeps one shape and the photo is cut from the bottom, so
+   the face stays in view. */
+.students-section .student-card {
+  height: auto;
+  aspect-ratio: 4 / 5;
+}
+
+.students-section .student-image {
+  object-position: center top;
+}

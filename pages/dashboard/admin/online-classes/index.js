@@ -644,6 +644,8 @@ import AdminOffcanvas from "@/components/dashboard/AdminOffcanvas";
 import { toast } from "sonner";
 import { CLASS_OPTIONS } from "@/lib/classOptions";
 import { LIVE_CLASS_STATUSES } from "@/lib/liveClassStatus";
+import { linkedCourseIds, linkableCourses as coursesFor } from "@/lib/liveClassCourses";
+import CourseLinkPicker from "@/components/admin/CourseLinkPicker";
 import {
   FaRegStickyNote,
   FaPen,
@@ -696,7 +698,7 @@ const initialForm = {
   streamLink: "",
   description: "",
   status: "upcoming",
-  course: "",
+  courses: [],
 };
 
 /* ================================================================
@@ -1021,21 +1023,10 @@ export default function OnlineClassesAdmin() {
     }));
   };
 
-  // Live classes only run inside the Pro bundles, so the course link offers
-  // those alone, narrowed to the class and subject the form is already set to.
-  // The course currently linked always stays listed, so editing an older class
-  // cannot silently drop its link.
-  const same = (a, b) => String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
-
-  const linkableCourses = allCourses.filter((c) => {
-    if (String(c._id) === String(form.course)) return true;
-    if (c.courseType !== "bundle") return false;
-    if (!/\bpro\b/i.test(c.title || "")) return false;
-    if (form.batch && !same(c.batch, form.batch)) return false;
-    // A bundle with no subject list covers every subject.
-    const bundled = c.bundledSubjects || [];
-    if (form.subject && bundled.length && !bundled.some((s) => same(s, form.subject))) return false;
-    return true;
+  // Pro batches and single courses of the class and subject the form is set
+  // to. A class can be linked to several of them at once.
+  const linkableCourses = coursesFor(allCourses, {
+    batch: form.batch, subject: form.subject, keep: form.courses,
   });
 
   /* ================= RESET ================= */
@@ -1058,7 +1049,8 @@ export default function OnlineClassesAdmin() {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        // "course" is the first linked course, for readers that know only one.
+        body: JSON.stringify({ ...form, course: form.courses[0] || null }),
       });
       const data = await res.json();
       if (data.success) {
@@ -1093,7 +1085,7 @@ export default function OnlineClassesAdmin() {
       streamLink: item.streamLink,
       description: item.description,
       status: item.status,
-      course: item.course?._id || item.course || "",
+      courses: linkedCourseIds(item),
     });
     setActiveTab("create");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1383,24 +1375,16 @@ export default function OnlineClassesAdmin() {
                   <div className="oc-section-label"><FaLink /> Course Link (Optional)</div>
                   <div className="row g-3 mb-4">
                     <div className="col-12">
-                      <label className="form-label fw-semibold">Link to Course</label>
-                      <select
-                        className="form-select oc-input"
-                        name="course"
-                        value={form.course}
-                        onChange={handleChange}
-                      >
-                        <option value="">— No course link (subject + class based access) —</option>
-                        {linkableCourses.map(c => (
-                          <option key={c._id} value={c._id}>
-                            {c.title} ({c.subject} · {c.batch}) {c.isFree ? "· FREE" : `· ₹${c.price}`}
-                          </option>
-                        ))}
-                      </select>
+                      <label className="form-label fw-semibold">Link to Courses</label>
+                      <CourseLinkPicker
+                        courses={linkableCourses}
+                        value={form.courses}
+                        onChange={(courses) => setForm((f) => ({ ...f, courses }))}
+                      />
                       <div className="form-text">
-                        Only Pro bundles matching the selected class and subject are listed.
-                        If a course is selected, only students enrolled in that course can access this class.
-                        Otherwise, access is granted to all students enrolled in any {form.subject || "matching"} course.
+                        Pro batches and single courses of the selected class and subject are listed. Tick
+                        one or more: students of any ticked course can join this class with the same link.
+                        With none ticked, every student of a {form.subject || "matching"} course of this class can join.
                       </div>
                     </div>
                   </div>
@@ -1537,13 +1521,16 @@ export default function OnlineClassesAdmin() {
                                   <span className="oc-batch-tag">{item.batch}</span>
                                 </td>
                                 <td className="oc-col-course">
-                                  {item.course ? (
-                                    <span
-                                      className="oc-course-tag"
-                                      title={item.course.title || "Linked"}
-                                    >
-                                      {item.course.title || "Linked"}
-                                    </span>
+                                  {linkedCourseIds(item).length ? (
+                                    (item.courses?.length ? item.courses : [item.course]).map((c, i) => (
+                                      <span
+                                        key={c?._id || i}
+                                        className="oc-course-tag"
+                                        title={c?.title || "Linked"}
+                                      >
+                                        {c?.title || "Linked"}
+                                      </span>
+                                    ))
                                   ) : (
                                     <span className="oc-dash">—</span>
                                   )}

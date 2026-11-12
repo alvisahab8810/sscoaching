@@ -61,7 +61,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: `Row ${i + 1}: ${subject} is not a subject of this course` });
       if (end <= start)
         return res.status(400).json({ success: false, message: `Row ${i + 1}: end time must be after start time` });
-      cleanSlots.push({ start, end, subject: subject.slice(0, 80), type, days: dayList(s?.days) });
+      // Doubt sessions are held on Saturday only.
+      cleanSlots.push({ start, end, subject: subject.slice(0, 80), type, days: type === "doubt" ? [6] : dayList(s?.days) });
     }
     if (active && (!cleanDays.length || !cleanSlots.length))
       return res.status(400).json({ success: false, message: "Pick at least one day and add at least one class" });

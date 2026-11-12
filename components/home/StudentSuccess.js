@@ -194,7 +194,9 @@ export default function StudentSuccess() {
 
           // 🔽 Reduce unnecessary recalculations
           watchSlidesProgress={false}
-          updateOnWindowResize={false}
+          // Re-measure when a foldable opens or a phone turns, else the
+          // slides keep their old width and the photos look broken.
+          updateOnWindowResize
           observer={false}
           observeParents={false}
 
@@ -214,15 +216,19 @@ export default function StudentSuccess() {
                 className="student-card"
                 style={{ backgroundColor: student.bgColor || "#ffeed1" }}
               >
-                <img
-                  src={student.image || "/assets/images/default-student.png"}
-                  alt={meta.alt}
-                  title={meta.title}
-                  loading="lazy"
-                  width="170"
-                  height="200"
-                  className="student-image"
-                />
+                {student.image && (
+                  <img
+                    src={student.image}
+                    alt={meta.alt}
+                    title={meta.title}
+                    loading="lazy"
+                    width="170"
+                    height="200"
+                    className="student-image"
+                    // A missing photo leaves the coloured card, not alt text.
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
+                  />
+                )}
 
                 <div className="student-overlay">
                   <div className="student-score">{student.score}</div>

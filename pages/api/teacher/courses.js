@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
   await dbConnect();
 
-  const courses = await Course.find({}, "title subject batch status")
+  const courses = await Course.find({}, "title subject batch status courseType bundledSubjects isFree price")
     .sort({ title: 1 })
     .lean();
 

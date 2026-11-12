@@ -7,11 +7,13 @@ const ICON_BASE = "/assets/images/home/icons";
 
 const FEATURES = [
   { icon: "live-classes.svg", label: "Live Classes" },
+  { icon: "recorded-classes.svg", label: "Recorded Classes" },
   { icon: "doubt-clearing-sessions.svg", label: "Doubt Clearing Sessions" },
+  { icon: "student-support.svg", label: "Student support" },
+  { icon: "question-bank.svg", label: "Question Bank" },
   { icon: "study-materials.svg", label: "Study Materials" },
   { icon: "solved-tmas.svg", label: "Solved TMA's" },
-  { icon: "experienced-teachers.svg", label: "experienced teachers" },
-  { icon: "question-bank.svg", label: "Question Bank" },
+  { icon: "solved-practicals.svg", label: "Solved Practicals" },
 ];
 
 export default function AppPromo() {
@@ -23,12 +25,12 @@ export default function AppPromo() {
             <p className="app-promo-eyebrow">Study Anywhere</p>
 
             <h2 className="app-promo-title">
-              Join On SS Coaching <br /> App  Today!
+              Join 1 Lakh+ Students On <br /> SS Coaching App Today!
             </h2>
 
             <div className="app-promo-features">
               {FEATURES.map((f) => (
-                <div className="app-promo-feature" key={f.icon}>
+                <div className="app-promo-feature" key={f.label}>
                   <img
                     src={`${ICON_BASE}/${f.icon}`}
                     alt=""

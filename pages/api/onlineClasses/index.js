@@ -5,6 +5,7 @@ import Course from "@/models/CourseModel";
 import { logActivity } from "@/lib/logActivity";
 import { closePastLiveClasses } from "@/lib/closePastLiveClasses";
 import jwt from "jsonwebtoken";
+import { linkedCourseIds, pickCourseIds } from "@/lib/liveClassCourses";
 
 function getStudentId(req) {
   try {
@@ -71,12 +72,14 @@ export default async function handler(req, res) {
       const filter = {};
       if (status) filter.status = status;
       if (batch) filter.batch = { $regex: `^${batch}$`, $options: "i" };
-      if (course) filter.course = course;
+      // Classes linked to this course, alone or along with other courses.
+      if (course) filter.$or = [{ course }, { courses: course }];
       const skip = (Number(page) - 1) * Number(limit);
 
       const [data, total] = await Promise.all([
         LiveClass.find(filter)
           .populate("course", "title subject batch isFree price")
+          .populate("courses", "title subject batch isFree price")
           .sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
         LiveClass.countDocuments(filter),
       ]);
@@ -98,9 +101,10 @@ export default async function handler(req, res) {
 
         let isUnlocked = false;
 
-        // If class is linked to a specific course — check direct course enrollment
-        if (obj.course) {
-          isUnlocked = enrolledCourseIds.has(String(obj.course._id || obj.course));
+        // If class is linked to courses — enrolled in any one of them
+        const linked = linkedCourseIds(obj);
+        if (linked.length) {
+          isUnlocked = linked.some((id) => enrolledCourseIds.has(id));
         } else {
           // Fall back to subject::batch matching
           const key = `${(obj.subject || "").toLowerCase()}::${(obj.batch || "").toLowerCase()}`;
@@ -125,14 +129,15 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     try {
-      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status, course } = req.body;
+      const { title, teacher, subject, chapter, part, topic, batch, date, time, duration, streamLink, description, status } = req.body;
+      const { course, courses } = pickCourseIds(req.body);
       if (!title || !teacher || !subject || !batch || !date || !time || !streamLink) {
         return res.status(400).json({ success: false, message: "Please fill all required fields" });
       }
       const liveClass = await LiveClass.create({
         title, teacher, subject, chapter, part, topic, batch, date, time, duration,
         streamLink, description, status: status || "upcoming",
-        course: course || null,
+        course, courses,
       });
 
       await logActivity(req, {
